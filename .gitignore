@@ -1,0 +1,17 @@
+# Secrets
+.env
+
+# Python
+__pycache__/
+*.pyc
+
+# OS
+Thumbs.db
+Desktop.ini
+
+# Probe/debug scripts (one-off diagnostics, not part of the system)
+probe_*.py
+debug_*.py
+kill5000.py
+poll_signals.py
+verify_final.py
