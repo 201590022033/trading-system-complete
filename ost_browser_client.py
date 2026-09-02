@@ -73,6 +73,9 @@ class OSTBrowserClient:
         return self._command("prepare_order", ticker=ticker, action=action,
                              quantity=quantity)
 
+    def inspect(self) -> Dict:
+        return self._command("inspect")
+
     def close(self) -> Dict:
         resp = self._command("close")
         if self._proc is not None:

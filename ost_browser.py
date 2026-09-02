@@ -100,20 +100,22 @@ class Worker:
             return {"ok": False, "open": False, "message": f"Status check failed: {exc}"}
 
     def close(self) -> Dict:
-        try:
-            if self.context is not None:
+        errors = []
+        if self.context is not None:
+            try:
                 self.context.close()
-        except Exception:
-            pass
+            except Exception as exc:
+                errors.append(str(exc))
         self.context = None
         self.page = None
         if self.pw is not None:
             try:
                 self.pw.stop()
-            except Exception:
-                pass
+            except Exception as exc:
+                errors.append(str(exc))
             self.pw = None
-        return {"ok": True, "open": False, "logged_in": False, "message": "Browser closed."}
+        msg = "Browser closed." if not errors else f"Closed with warnings: {'; '.join(errors)}"
+        return {"ok": True, "open": False, "logged_in": False, "message": msg}
 
     # ---------- order ticket (Pass 2: auto-fill, human confirms) ----------
 
@@ -295,7 +297,8 @@ class Worker:
     # ---------- read ----------
 
     def read(self) -> Dict:
-        if self.page is None:
+        page = self._active_page()
+        if page is None:
             return {"ok": False, "message": "Browser is not open."}
         try:
             if not self._detect_login():
@@ -306,15 +309,16 @@ class Worker:
                                "browser window first.",
                 }
 
-            navigated = self._try_navigate_to_portfolio()
-            body = self.page.inner_text("body")
+            navigated = self._try_navigate_to_portfolio(page)
+            page = self._active_page()  # nav may have opened another tab
+            body = page.inner_text("body")
             cash = self._extract_cash(body)
-            holdings = self._extract_holdings()
+            holdings = self._extract_holdings(page)
 
             return {
                 "ok": True,
                 "logged_in": True,
-                "url": self.page.url,
+                "url": page.url,
                 "navigated_to_portfolio": navigated,
                 "cash_available": cash,
                 "holdings": holdings,
@@ -323,34 +327,92 @@ class Worker:
                     "Portfolio read."
                     if (cash is not None or holdings)
                     else "Logged in, but no portfolio table found on this page. "
-                         "One manual look at the page structure will finish the "
-                         "calibration (Pass 1)."
+                         "Run 'Inspect Labels' so we can map the real label names."
                 ),
             }
         except Exception as exc:
             return {"ok": False, "message": f"Read failed: {exc}"}
 
+    def inspect_labels(self) -> Dict:
+        """Calibration helper: list every money amount on the page together with
+        the text around it, so we can map the real OST labels ('Available Funds',
+        'JSET balance', etc.) without guessing."""
+        page = self._active_page()
+        if page is None:
+            return {"ok": False, "message": "Browser is not open."}
+        try:
+            body = page.inner_text("body")
+            lines = [ln.strip() for ln in body.splitlines() if ln.strip()]
+
+            pairs = []
+            for i, ln in enumerate(lines):
+                if re.search(r"R\s*[\d\s,]+\.\d{2}", ln) or re.fullmatch(r"[\d\s,]+\.\d{2}", ln):
+                    context = " | ".join(lines[max(0, i - 2):i + 1])
+                    pairs.append(context[:220])
+
+            tabs = []
+            if self.context is not None:
+                for p in self.context.pages:
+                    try:
+                        tabs.append({"url": p.url, "title": p.title()})
+                    except Exception:
+                        pass
+
+            return {
+                "ok": True,
+                "url": page.url,
+                "title": page.title(),
+                "tabs": tabs,
+                "amount_contexts": pairs[:40],
+                "headings": [h.strip() for h in re.findall(r"^(.*?)$", body, re.M) if h.strip()][:0],
+                "message": f"{len(pairs)} amount contexts found across {len(tabs)} tab(s).",
+            }
+        except Exception as exc:
+            return {"ok": False, "message": f"Inspect failed: {exc}"}
+
     # ---------- helpers ----------
+
+    def _active_page(self):
+        """Return the most relevant page across ALL tabs (portfolio tab may be tab 2)."""
+        if self.context is None:
+            return None
+        pages = self.context.pages
+        if not pages:
+            return None
+        # Prefer a page whose body mentions portfolio/holdings/cash
+        for p in pages:
+            try:
+                body = p.inner_text("body")[:6000].lower()
+                if any(k in body for k in ("portfolio", "holdings", "available", "cash")):
+                    return p
+            except Exception:
+                continue
+        # Fall back to the last opened tab (OST often opens the app in a new tab)
+        return pages[-1]
 
     def _detect_login(self) -> bool:
         try:
-            if LOGIN_MARKER.lower() in self.page.url.lower():
+            page = self._active_page()
+            if page is None:
                 return False
-            if self.page.locator("input[type='password']").count() > 0:
+            if LOGIN_MARKER.lower() in page.url.lower():
                 return False
-            body = self.page.inner_text("body")[:8000].lower()
+            if page.locator("input[type='password']").count() > 0:
+                return False
+            body = page.inner_text("body")[:8000].lower()
             return any(k in body for k in ("logout", "log out", "portfolio",
                                            "holdings", "account", "watchlist"))
         except Exception:
             return False
 
-    def _try_navigate_to_portfolio(self) -> bool:
+    def _try_navigate_to_portfolio(self, page) -> bool:
+        """Click a Portfolio/Holdings link if one is visible, on any tab."""
         for text in ("Portfolio", "Holdings", "My Portfolio", "Accounts"):
             try:
-                link = self.page.get_by_text(text, exact=False).first
+                link = page.get_by_text(text, exact=False).first
                 if link.count() > 0:
                     link.click(timeout=4000)
-                    self.page.wait_for_load_state("domcontentloaded", timeout=10000)
+                    page.wait_for_load_state("domcontentloaded", timeout=10000)
                     return True
             except Exception:
                 continue
@@ -421,6 +483,8 @@ def main():
                 action=req.get("action", ""),
                 quantity=int(req.get("quantity", 0) or 0),
             )
+        elif cmd == "inspect":
+            resp = worker.inspect_labels()
         elif cmd == "close":
             resp = worker.close()
             print(json.dumps(resp), flush=True)
