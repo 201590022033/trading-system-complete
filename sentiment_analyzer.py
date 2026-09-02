@@ -138,6 +138,8 @@ class MacroReport:
 # =========================
 
 _OLLAMA_API_KEY = os.environ.get("OLLAMA_API_KEY", "").strip()
+_CLOUD_MODEL = os.environ.get("OLLAMA_CLOUD_MODEL", "gpt-oss:20b-cloud")
+_LOCAL_MODEL = os.environ.get("OLLAMA_LOCAL_MODEL", "llama3")
 
 
 def _ollama_available() -> bool:
@@ -246,8 +248,9 @@ def _llm_analyze(headline: str, source: str, text: str) -> Optional[Dict]:
     """Ask the local LLM to read the item. Returns parsed dict or None."""
     try:
         client = _get_ollama()
+        model = _CLOUD_MODEL if _OLLAMA_API_KEY else _LOCAL_MODEL
         response = client.generate(
-            model="llama3",
+            model=model,
             prompt=_LLM_PROMPT.format(headline=headline, source=source, text=text[:800]),
         )
         raw = response.get("response", "")
