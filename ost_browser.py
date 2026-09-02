@@ -1,53 +1,92 @@
-"""OST browser worker process.
+"""OST browser worker — runs as a separate process with its own HTTP API.
 
-Runs as a SEPARATE PROCESS (not a thread) because Playwright's sync API
-conflicts with gevent's monkey-patching in the dashboard app.
+Why a process + HTTP (not stdio pipes): the dashboard runs under gevent's
+monkey.patch_all(), which breaks subprocess stdin/stdout pipes on Windows
+(OSError 22 in gevent's threadpool). A tiny HTTP server on 127.0.0.1:5051
+sidesteps all of that.
 
-Communication: a tiny JSON-lines control channel over stdin/stdout.
-The dashboard app spawns this process and sends one command per line:
+Endpoints:
+  POST /open            -> launch visible Chromium at the OST portal
+  GET  /status          -> open/logged-in state
+  POST /read            -> scrape cash + holdings from the logged-in portal
+  POST /inspect         -> list amounts + nearby labels (calibration helper)
+  POST /prepare-order   -> fill the order ticket (never submits)
+  POST /close           -> shut down browser + this server
 
-  {"cmd": "open"}     -> launch visible Chromium at the OST portal
-  {"cmd": "status"}   -> report open/logged-in state
-  {"cmd": "read"}     -> scrape cash + holdings from the logged-in portal
-  {"cmd": "close"}    -> shut down
+Start manually:  python ost_browser.py
+The dashboard talks to it via ost_browser_client.py.
 
-Each command gets exactly one JSON response line on stdout.
-Log/diagnostic lines are prefixed with "LOG:" so the parent can ignore them.
-
-Pass 1 is read-only: it never clicks order buttons and never sees your
-credentials — you type them into the visible browser window yourself.
+Pass 1/2 are read-only / form-fill-only: the worker never clicks the bank's
+Confirm button and never sees credentials — the user logs in manually in the
+visible window.
 """
 
 from __future__ import annotations
 
 import json
 import re
-import sys
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from typing import Dict, List, Optional
 
 OST_HOME = "https://securities.standardbank.co.za/ost/"
 LOGIN_MARKER = "VIEW_LOGIN_EVENT"
 PROFILE_DIR = Path(__file__).parent / ".ost-browser-profile"
+PORT = 5051
 
 CASH_PATTERNS = [
-    r"(?:available\s+(?:funds|cash)|cash\s+balance|available\s+to\s+invest)"
+    r"(?:available\s+(?:funds|cash)|cash\s+balance|available\s+to\s+invest|"
+    r"trading\s+(?:account\s+)?(?:balance|funds)|jset\s+balance)"
     r"[^R0-9]{0,40}R?\s*([\d\s,]+\.\d{2})",
-    r"R\s*([\d\s,]+\.\d{2})\s*(?:available)",
+    r"R\s*([\d\s,]+\.\d{2})\s*(?:available|to invest)",
 ]
-
-
-def log(msg: str):
-    print(f"LOG:{msg}", flush=True)
 
 
 class Worker:
     def __init__(self):
         self.pw = None
         self.context = None
-        self.page = None
 
-    # ---------- lifecycle ----------
+    # ---------- page helpers ----------
+
+    def _pages(self):
+        if self.context is None:
+            return []
+        try:
+            return self.context.pages
+        except Exception:
+            return []
+
+    def _active_page(self):
+        """Pick the most portfolio-looking tab (OST opens the app in tab 2)."""
+        pages = self._pages()
+        if not pages:
+            return None
+        for p in pages:
+            try:
+                body = p.inner_text("body")[:6000].lower()
+                if any(k in body for k in ("portfolio", "holdings", "available", "cash")):
+                    return p
+            except Exception:
+                continue
+        return pages[-1]
+
+    def _detect_login(self) -> bool:
+        page = self._active_page()
+        if page is None:
+            return False
+        try:
+            if LOGIN_MARKER.lower() in page.url.lower():
+                return False
+            if page.locator("input[type='password']").count() > 0:
+                return False
+            body = page.inner_text("body")[:8000].lower()
+            return any(k in body for k in ("logout", "log out", "portfolio",
+                                           "holdings", "account", "watchlist"))
+        except Exception:
+            return False
+
+    # ---------- commands ----------
 
     def open(self) -> Dict:
         try:
@@ -58,22 +97,19 @@ class Worker:
                 PROFILE_DIR.mkdir(exist_ok=True)
                 self.context = self.pw.chromium.launch_persistent_context(
                     str(PROFILE_DIR),
-                    headless=False,  # visible: the user logs in themselves
+                    headless=False,
                     viewport={"width": 1280, "height": 900},
                 )
-                self.page = (
-                    self.context.pages[0] if self.context.pages else self.context.new_page()
-                )
-            if self.page is None:
-                self.page = self.context.new_page()
-            self.page.goto(OST_HOME, timeout=30000, wait_until="domcontentloaded")
-            logged_in = self._detect_login()
+            page = self._active_page()
+            if page is None:
+                page = self.context.new_page()
+            page.goto(OST_HOME, timeout=30000, wait_until="domcontentloaded")
+            page.bring_to_front()
             return {
-                "ok": True,
-                "open": True,
-                "logged_in": logged_in,
-                "current_url": self.page.url,
-                "message": "Browser open. Log in to OST in the window, then read the portfolio.",
+                "ok": True, "open": True,
+                "logged_in": self._detect_login(),
+                "current_url": page.url,
+                "message": "Browser open. Log in to OST in that window, then use Read Portfolio.",
             }
         except Exception as exc:
             return {"ok": False, "open": False, "message": f"Could not open browser: {exc}"}
@@ -82,51 +118,97 @@ class Worker:
         if self.context is None:
             return {"ok": True, "open": False, "logged_in": False,
                     "message": "Browser not started."}
+        if not self._pages():
+            self._shutdown_browser()
+            return {"ok": True, "open": False, "logged_in": False,
+                    "message": "Browser window was closed."}
+        page = self._active_page()
+        logged_in = self._detect_login()
+        return {
+            "ok": True, "open": True, "logged_in": logged_in,
+            "current_url": page.url if page else None,
+            "message": "Logged in." if logged_in else "Open, waiting for OST login.",
+        }
+
+    def read(self) -> Dict:
+        page = self._active_page()
+        if page is None:
+            return {"ok": False, "message": "Browser is not open."}
         try:
-            if not self.context.pages:
-                self.context = None
-                self.page = None
-                return {"ok": True, "open": False, "logged_in": False,
-                        "message": "Browser window was closed."}
-            logged_in = self._detect_login()
+            if not self._detect_login():
+                return {"ok": False, "logged_in": False,
+                        "message": "Not logged in yet — complete the OST login in the browser window first."}
+
+            navigated = self._try_navigate_to_portfolio(page)
+            page = self._active_page()  # navigation may open a new tab
+            body = page.inner_text("body")
+            cash = self._extract_cash(body)
+            holdings = self._extract_holdings(page)
+
             return {
-                "ok": True,
-                "open": True,
-                "logged_in": logged_in,
-                "current_url": self.page.url,
-                "message": "Logged in." if logged_in else "Open, waiting for OST login.",
+                "ok": True, "logged_in": True, "url": page.url,
+                "navigated_to_portfolio": navigated,
+                "cash_available": cash,
+                "holdings": holdings,
+                "holdings_found": len(holdings),
+                "message": ("Portfolio read." if (cash is not None or holdings)
+                            else "Logged in, but no amounts matched. Click 'Inspect Labels' "
+                                 "and paste the result back for calibration."),
             }
         except Exception as exc:
-            return {"ok": False, "open": False, "message": f"Status check failed: {exc}"}
+            return {"ok": False, "message": f"Read failed: {exc}"}
 
-    def close(self) -> Dict:
-        errors = []
-        if self.context is not None:
-            try:
-                self.context.close()
-            except Exception as exc:
-                errors.append(str(exc))
-        self.context = None
-        self.page = None
-        if self.pw is not None:
-            try:
-                self.pw.stop()
-            except Exception as exc:
-                errors.append(str(exc))
-            self.pw = None
-        msg = "Browser closed." if not errors else f"Closed with warnings: {'; '.join(errors)}"
-        return {"ok": True, "open": False, "logged_in": False, "message": msg}
+    @staticmethod
+    def _safe_title(page) -> str:
+        try:
+            return page.title()
+        except Exception:
+            return ""
 
-    # ---------- order ticket (Pass 2: auto-fill, human confirms) ----------
+    def inspect(self) -> Dict:
+        page = self._active_page()
+        if page is None:
+            return {"ok": False, "message": "Browser is not open."}
+        try:
+            body = page.inner_text("body")
+        except Exception:
+            # Tab may be mid-navigation — wait briefly and retry once
+            try:
+                page.wait_for_load_state("domcontentloaded", timeout=5000)
+                body = page.inner_text("body")
+            except Exception as exc:
+                return {"ok": False, "message": f"Page not readable yet (still loading?): {exc}"}
+        try:
+            lines = [ln.strip() for ln in body.splitlines() if ln.strip()]
+
+            pairs = []
+            for i, ln in enumerate(lines):
+                if re.search(r"R\s*[\d\s,]+\.\d{2}", ln) or re.fullmatch(r"[\d\s,]+\.\d{2}", ln):
+                    context = " | ".join(lines[max(0, i - 2):i + 1])
+                    pairs.append(context[:220])
+
+            tabs = []
+            for p in self._pages():
+                try:
+                    tabs.append({"url": p.url, "title": self._safe_title(p)})
+                except Exception:
+                    pass
+
+            return {
+                "ok": True,
+                "url": page.url,
+                "title": self._safe_title(page),
+                "tabs": tabs,
+                "amount_contexts": pairs[:40],
+                "message": f"{len(pairs)} amount contexts found across {len(tabs)} tab(s).",
+            }
+        except Exception as exc:
+            return {"ok": False, "message": f"Inspect failed: {exc}"}
 
     def prepare_order(self, ticker: str, action: str, quantity: int) -> Dict:
-        """Navigate to the OST order ticket and pre-fill it.
-
-        SAFETY: this NEVER clicks the final submit/confirm button. It fills
-        the form and leaves the cursor on the bank's own confirm control for
-        the human to press.
-        """
-        if self.page is None:
+        """Fill the OST order ticket. NEVER clicks submit/confirm."""
+        page = self._active_page()
+        if page is None:
             return {"ok": False, "message": "Browser is not open."}
         try:
             if not self._detect_login():
@@ -138,275 +220,59 @@ class Worker:
             if action not in ("buy", "sell"):
                 return {"ok": False, "message": f"Invalid action: {action}"}
 
-            steps = []
-
-            # 1) Navigate to the order/trade page
-            if self._goto_order_ticket(ticker, steps):
-                steps.append(f"On order page: {self.page.url}")
-            else:
-                # Fall back to the stock-search route
-                if self._search_and_open_stock(ticker, steps):
-                    steps.append(f"Opened {ticker} page: {self.page.url}")
-                    self._goto_order_ticket(ticker, steps)
+            steps: List[str] = []
+            if not self._goto_order_ticket(page, ticker, steps):
+                if self._search_and_open_stock(page, ticker, steps):
+                    page = self._active_page()
+                    self._goto_order_ticket(page, ticker, steps)
                 else:
-                    return {
-                        "ok": False,
-                        "calibration_needed": True,
-                        "steps": steps,
-                        "current_url": self.page.url,
-                        "message": "Could not find the order ticket. Open the "
-                                   "Buy/Sell form for this share manually in the "
-                                   "browser, then click 'Fill Form' again.",
-                    }
+                    return {"ok": False, "calibration_needed": True, "steps": steps,
+                            "current_url": page.url,
+                            "message": "Could not find the order ticket. Open the Buy/Sell "
+                                       "form manually in the browser, then retry."}
 
-            # 2) Fill the form
-            fill = self._fill_order_form(ticker, action, quantity)
+            page = self._active_page()
+            fill = self._fill_order_form(page, ticker, action, quantity)
             steps.extend(fill["steps"])
 
             return {
                 "ok": fill["filled"] >= 2,
                 "calibration_needed": fill["filled"] < 2,
                 "steps": steps,
-                "current_url": self.page.url,
+                "current_url": page.url,
                 "fields_filled": fill["filled"],
                 "fields_missing": fill["missing"],
-                "message": (
-                    "Form filled — REVIEW it and press the bank's own "
-                    "Confirm/Submit button. Nothing was submitted by us."
-                    if fill["filled"] >= 2
-                    else "Partial fill. Open the order form manually, then try "
-                         "'Fill Form' again — or tell me the exact field labels "
-                         "you see and I'll calibrate."
-                ),
+                "message": ("Form filled — REVIEW it and press the bank's own Confirm "
+                            "button. Nothing was submitted by us."
+                            if fill["filled"] >= 2 else
+                            "Partial fill. Open the order form manually and retry, or "
+                            "paste the Inspect Labels output so I can calibrate the fields."),
             }
         except Exception as exc:
             return {"ok": False, "message": f"Order prep failed: {exc}"}
 
-    def _goto_order_ticket(self, ticker: str, steps: List[str]) -> bool:
-        """Find and click a Buy/Sell/Trade control."""
-        for label in ("Buy", "Sell", "Trade", "Order", "Place Order", "New Order"):
-            try:
-                btn = self.page.get_by_role("button", name=re.compile(label, re.I)).first
-                if btn.count() == 0:
-                    btn = self.page.get_by_role("link", name=re.compile(label, re.I)).first
-                if btn.count() > 0 and btn.is_visible():
-                    btn.click(timeout=4000)
-                    self.page.wait_for_load_state("domcontentloaded", timeout=8000)
-                    steps.append(f"Clicked '{label}'")
-                    return True
-            except Exception:
-                continue
-        steps.append("No Buy/Sell/Trade control found on current page")
-        return False
+    def close(self) -> Dict:
+        self._shutdown_browser()
+        return {"ok": True, "open": False, "logged_in": False, "message": "Browser closed."}
 
-    def _search_and_open_stock(self, ticker: str, steps: List[str]) -> bool:
-        """Use the OST stock search to open the instrument page."""
+    def _shutdown_browser(self):
         try:
-            search = None
-            for ph in ("I'm looking for", "Search", "search"):
-                loc = self.page.locator(f"input[placeholder*='{ph}' i]")
-                if loc.count() > 0:
-                    search = loc.first
-                    break
-            if search is None:
-                steps.append("No search box found")
-                return False
-            search.fill(ticker)
-            self.page.keyboard.press("Enter")
-            self.page.wait_for_load_state("domcontentloaded", timeout=8000)
-            steps.append(f"Searched for {ticker}")
-            # Try to click the first result containing the ticker
-            try:
-                self.page.get_by_text(re.compile(ticker, re.I)).first.click(timeout=4000)
-                self.page.wait_for_load_state("domcontentloaded", timeout=8000)
-                steps.append(f"Opened {ticker} result")
-            except Exception:
-                steps.append("No clickable search result (may already be on the page)")
-            return True
-        except Exception as exc:
-            steps.append(f"Search failed: {exc}")
-            return False
-
-    def _fill_order_form(self, ticker: str, action: str, quantity: int) -> Dict:
-        """Fill whatever order form is currently visible. Never submits."""
-        filled = 0
-        missing = []
-        steps: List[str] = []
-
-        # Action (buy/sell): radio, select, or button toggle
-        try:
-            action_loc = self.page.get_by_label(re.compile(action, re.I)).first
-            if action_loc.count() > 0:
-                action_loc.check(timeout=2000) if action_loc.get_attribute("type") == "radio" else action_loc.click(timeout=2000)
-                filled += 1
-                steps.append(f"Set action: {action.upper()}")
-            else:
-                sel = self.page.locator("select").first
-                if sel.count() > 0:
-                    opts = sel.locator("option").all_inner_texts()
-                    for o in opts:
-                        if action in o.lower():
-                            sel.select_option(label=o)
-                            filled += 1
-                            steps.append(f"Set action via dropdown: {o}")
-                            break
-        except Exception:
-            pass
-        if filled == 0:
-            missing.append("buy/sell selector")
-
-        # Quantity: any visible number input labelled quantity/shares/units/volume
-        qty_done = False
-        for pattern in ("quant", "shares", "units", "volume", "amount"):
-            try:
-                loc = self.page.get_by_label(re.compile(pattern, re.I)).first
-                if loc.count() > 0 and loc.is_visible():
-                    loc.fill(str(quantity))
-                    qty_done = True
-                    filled += 1
-                    steps.append(f"Set quantity: {quantity} (field matched '{pattern}')")
-                    break
-            except Exception:
-                continue
-        if not qty_done:
-            # Last resort: the only visible numeric text input on the form
-            try:
-                nums = self.page.locator("input[type='number'], input[inputmode='numeric']")
-                if nums.count() > 0:
-                    nums.first.fill(str(quantity))
-                    qty_done = True
-                    filled += 1
-                    steps.append(f"Set quantity: {quantity} (first numeric field)")
-            except Exception:
-                pass
-        if not qty_done:
-            missing.append("quantity field")
-
-        # Ticker/instrument field (some forms have one even after navigation)
-        try:
-            inst = self.page.get_by_label(re.compile("instrument|security|share|code|stock", re.I)).first
-            if inst.count() > 0 and inst.is_visible() and not inst.input_value():
-                inst.fill(ticker)
-                filled += 1
-                steps.append(f"Set instrument: {ticker}")
-        except Exception:
-            pass
-
-        return {"filled": filled, "missing": missing, "steps": steps}
-
-    # ---------- read ----------
-
-    def read(self) -> Dict:
-        page = self._active_page()
-        if page is None:
-            return {"ok": False, "message": "Browser is not open."}
-        try:
-            if not self._detect_login():
-                return {
-                    "ok": False,
-                    "logged_in": False,
-                    "message": "Not logged in yet — complete the OST login in the "
-                               "browser window first.",
-                }
-
-            navigated = self._try_navigate_to_portfolio(page)
-            page = self._active_page()  # nav may have opened another tab
-            body = page.inner_text("body")
-            cash = self._extract_cash(body)
-            holdings = self._extract_holdings(page)
-
-            return {
-                "ok": True,
-                "logged_in": True,
-                "url": page.url,
-                "navigated_to_portfolio": navigated,
-                "cash_available": cash,
-                "holdings": holdings,
-                "holdings_found": len(holdings),
-                "message": (
-                    "Portfolio read."
-                    if (cash is not None or holdings)
-                    else "Logged in, but no portfolio table found on this page. "
-                         "Run 'Inspect Labels' so we can map the real label names."
-                ),
-            }
-        except Exception as exc:
-            return {"ok": False, "message": f"Read failed: {exc}"}
-
-    def inspect_labels(self) -> Dict:
-        """Calibration helper: list every money amount on the page together with
-        the text around it, so we can map the real OST labels ('Available Funds',
-        'JSET balance', etc.) without guessing."""
-        page = self._active_page()
-        if page is None:
-            return {"ok": False, "message": "Browser is not open."}
-        try:
-            body = page.inner_text("body")
-            lines = [ln.strip() for ln in body.splitlines() if ln.strip()]
-
-            pairs = []
-            for i, ln in enumerate(lines):
-                if re.search(r"R\s*[\d\s,]+\.\d{2}", ln) or re.fullmatch(r"[\d\s,]+\.\d{2}", ln):
-                    context = " | ".join(lines[max(0, i - 2):i + 1])
-                    pairs.append(context[:220])
-
-            tabs = []
             if self.context is not None:
-                for p in self.context.pages:
-                    try:
-                        tabs.append({"url": p.url, "title": p.title()})
-                    except Exception:
-                        pass
-
-            return {
-                "ok": True,
-                "url": page.url,
-                "title": page.title(),
-                "tabs": tabs,
-                "amount_contexts": pairs[:40],
-                "headings": [h.strip() for h in re.findall(r"^(.*?)$", body, re.M) if h.strip()][:0],
-                "message": f"{len(pairs)} amount contexts found across {len(tabs)} tab(s).",
-            }
-        except Exception as exc:
-            return {"ok": False, "message": f"Inspect failed: {exc}"}
-
-    # ---------- helpers ----------
-
-    def _active_page(self):
-        """Return the most relevant page across ALL tabs (portfolio tab may be tab 2)."""
-        if self.context is None:
-            return None
-        pages = self.context.pages
-        if not pages:
-            return None
-        # Prefer a page whose body mentions portfolio/holdings/cash
-        for p in pages:
-            try:
-                body = p.inner_text("body")[:6000].lower()
-                if any(k in body for k in ("portfolio", "holdings", "available", "cash")):
-                    return p
-            except Exception:
-                continue
-        # Fall back to the last opened tab (OST often opens the app in a new tab)
-        return pages[-1]
-
-    def _detect_login(self) -> bool:
-        try:
-            page = self._active_page()
-            if page is None:
-                return False
-            if LOGIN_MARKER.lower() in page.url.lower():
-                return False
-            if page.locator("input[type='password']").count() > 0:
-                return False
-            body = page.inner_text("body")[:8000].lower()
-            return any(k in body for k in ("logout", "log out", "portfolio",
-                                           "holdings", "account", "watchlist"))
+                self.context.close()
         except Exception:
-            return False
+            pass
+        self.context = None
+        try:
+            if self.pw is not None:
+                self.pw.stop()
+        except Exception:
+            pass
+        self.pw = None
 
-    def _try_navigate_to_portfolio(self, page) -> bool:
-        """Click a Portfolio/Holdings link if one is visible, on any tab."""
+    # ---------- form helpers ----------
+
+    @staticmethod
+    def _try_navigate_to_portfolio(page) -> bool:
         for text in ("Portfolio", "Holdings", "My Portfolio", "Accounts"):
             try:
                 link = page.get_by_text(text, exact=False).first
@@ -430,10 +296,11 @@ class Worker:
                     continue
         return None
 
-    def _extract_holdings(self) -> List[Dict]:
+    @staticmethod
+    def _extract_holdings(page) -> List[Dict]:
         holdings: List[Dict] = []
         try:
-            rows = self.page.locator("table tr")
+            rows = page.locator("table tr")
             count = min(rows.count(), 60)
             for i in range(count):
                 cells = rows.nth(i).locator("td")
@@ -445,8 +312,7 @@ class Worker:
                 if re.fullmatch(r"[A-Z0-9]{2,8}", code):
                     numbers = []
                     for t in texts[1:]:
-                        cleaned = (t.replace("R", "").replace(",", "")
-                                   .replace(" ", "").strip())
+                        cleaned = t.replace("R", "").replace(",", "").replace(" ", "").strip()
                         try:
                             numbers.append(float(cleaned))
                         except ValueError:
@@ -456,42 +322,190 @@ class Worker:
             pass
         return holdings
 
+    def _goto_order_ticket(self, page, ticker: str, steps: List[str]) -> bool:
+        for label in ("Buy", "Sell", "Trade", "Order", "Place Order", "New Order"):
+            try:
+                btn = page.get_by_role("button", name=re.compile(label, re.I)).first
+                if btn.count() == 0:
+                    btn = page.get_by_role("link", name=re.compile(label, re.I)).first
+                if btn.count() > 0 and btn.is_visible():
+                    btn.click(timeout=4000)
+                    page.wait_for_load_state("domcontentloaded", timeout=8000)
+                    steps.append(f"Clicked '{label}'")
+                    return True
+            except Exception:
+                continue
+        steps.append("No Buy/Sell/Trade control found on current page")
+        return False
+
+    def _search_and_open_stock(self, page, ticker: str, steps: List[str]) -> bool:
+        try:
+            search = None
+            for ph in ("I'm looking for", "Search", "search"):
+                loc = page.locator(f"input[placeholder*='{ph}' i]")
+                if loc.count() > 0:
+                    search = loc.first
+                    break
+            if search is None:
+                steps.append("No search box found")
+                return False
+            search.fill(ticker)
+            page.keyboard.press("Enter")
+            page.wait_for_load_state("domcontentloaded", timeout=8000)
+            steps.append(f"Searched for {ticker}")
+            try:
+                page.get_by_text(re.compile(ticker, re.I)).first.click(timeout=4000)
+                page.wait_for_load_state("domcontentloaded", timeout=8000)
+                steps.append(f"Opened {ticker} result")
+            except Exception:
+                steps.append("No clickable search result (may already be on the page)")
+            return True
+        except Exception as exc:
+            steps.append(f"Search failed: {exc}")
+            return False
+
+    def _fill_order_form(self, page, ticker: str, action: str, quantity: int) -> Dict:
+        filled = 0
+        missing = []
+        steps: List[str] = []
+
+        # Action (buy/sell)
+        try:
+            action_loc = page.get_by_label(re.compile(action, re.I)).first
+            if action_loc.count() > 0:
+                if action_loc.get_attribute("type") == "radio":
+                    action_loc.check(timeout=2000)
+                else:
+                    action_loc.click(timeout=2000)
+                filled += 1
+                steps.append(f"Set action: {action.upper()}")
+            else:
+                sel = page.locator("select").first
+                if sel.count() > 0:
+                    for o in sel.locator("option").all_inner_texts():
+                        if action in o.lower():
+                            sel.select_option(label=o)
+                            filled += 1
+                            steps.append(f"Set action via dropdown: {o}")
+                            break
+        except Exception:
+            pass
+        if filled == 0:
+            missing.append("buy/sell selector")
+
+        # Quantity
+        qty_done = False
+        for pattern in ("quant", "shares", "units", "volume", "amount"):
+            try:
+                loc = page.get_by_label(re.compile(pattern, re.I)).first
+                if loc.count() > 0 and loc.is_visible():
+                    loc.fill(str(quantity))
+                    qty_done = True
+                    filled += 1
+                    steps.append(f"Set quantity: {quantity} (field '{pattern}')")
+                    break
+            except Exception:
+                continue
+        if not qty_done:
+            try:
+                nums = page.locator("input[type='number'], input[inputmode='numeric']")
+                if nums.count() > 0:
+                    nums.first.fill(str(quantity))
+                    qty_done = True
+                    filled += 1
+                    steps.append(f"Set quantity: {quantity} (first numeric field)")
+            except Exception:
+                pass
+        if not qty_done:
+            missing.append("quantity field")
+
+        # Instrument code
+        try:
+            inst = page.get_by_label(re.compile("instrument|security|share|code|stock", re.I)).first
+            if inst.count() > 0 and inst.is_visible() and not inst.input_value():
+                inst.fill(ticker)
+                filled += 1
+                steps.append(f"Set instrument: {ticker}")
+        except Exception:
+            pass
+
+        return {"filled": filled, "missing": missing, "steps": steps}
+
+
+# =========================
+# HTTP wrapper
+# =========================
+
+worker = Worker()
+shutdown_requested = False
+
+
+class Handler(BaseHTTPRequestHandler):
+    def _send(self, payload: Dict, status: int = 200):
+        body = json.dumps(payload).encode()
+        self.send_response(status)
+        self.send_header("Content-Type", "application/json")
+        self.send_header("Content-Length", str(len(body)))
+        self.end_headers()
+        self.wfile.write(body)
+
+    def _body(self) -> Dict:
+        length = int(self.headers.get("Content-Length", 0) or 0)
+        if not length:
+            return {}
+        try:
+            return json.loads(self.rfile.read(length).decode() or "{}")
+        except json.JSONDecodeError:
+            return {}
+
+    def log_message(self, *args):  # silence request logging
+        pass
+
+    def do_GET(self):
+        if self.path == "/status":
+            self._send(worker.status())
+        elif self.path == "/health":
+            self._send({"ok": True})
+        else:
+            self._send({"ok": False, "message": "unknown endpoint"}, 404)
+
+    def do_POST(self):
+        global shutdown_requested
+        try:
+            data = self._body()
+
+            if self.path == "/open":
+                self._send(worker.open())
+            elif self.path == "/read":
+                self._send(worker.read())
+            elif self.path == "/inspect":
+                self._send(worker.inspect())
+            elif self.path == "/prepare-order":
+                self._send(worker.prepare_order(
+                    ticker=data.get("ticker", ""),
+                    action=data.get("action", ""),
+                    quantity=int(data.get("quantity", 0) or 0),
+                ))
+            elif self.path == "/close":
+                self._send(worker.close())
+                shutdown_requested = True
+            else:
+                self._send({"ok": False, "message": "unknown endpoint"}, 404)
+        except Exception as exc:
+            # Never let the worker die without answering — the dashboard needs
+            # a response even when the page is in a weird state.
+            try:
+                self._send({"ok": False, "message": f"Worker error: {exc}"})
+            except Exception:
+                pass
+
 
 def main():
-    worker = Worker()
-    log("ost_browser worker ready")
-    for line in sys.stdin:
-        line = line.strip()
-        if not line:
-            continue
-        try:
-            req = json.loads(line)
-        except json.JSONDecodeError:
-            print(json.dumps({"ok": False, "message": "bad command"}), flush=True)
-            continue
-
-        cmd = req.get("cmd")
-        if cmd == "open":
-            resp = worker.open()
-        elif cmd == "status":
-            resp = worker.status()
-        elif cmd == "read":
-            resp = worker.read()
-        elif cmd == "prepare_order":
-            resp = worker.prepare_order(
-                ticker=req.get("ticker", ""),
-                action=req.get("action", ""),
-                quantity=int(req.get("quantity", 0) or 0),
-            )
-        elif cmd == "inspect":
-            resp = worker.inspect_labels()
-        elif cmd == "close":
-            resp = worker.close()
-            print(json.dumps(resp), flush=True)
-            break
-        else:
-            resp = {"ok": False, "message": f"unknown command: {cmd}"}
-        print(json.dumps(resp), flush=True)
+    server = ThreadingHTTPServer(("127.0.0.1", PORT), Handler)
+    print(f"ost_browser worker listening on 127.0.0.1:{PORT}", flush=True)
+    while not shutdown_requested:
+        server.handle_request()
+    worker._shutdown_browser()
 
 
 if __name__ == "__main__":
