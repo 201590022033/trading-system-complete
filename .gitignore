@@ -15,3 +15,7 @@ debug_*.py
 kill5000.py
 poll_signals.py
 verify_final.py
+
+# OST browser session (contains login cookies — never commit)
+.ost-browser-profile/
+ost_page_sample.html
