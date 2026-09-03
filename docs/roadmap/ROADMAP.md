@@ -64,14 +64,19 @@ Acceptance: production/default signal remains legacy unless explicit config sele
 Evidence: `adaptive_fusion.py`, ADR 0005, and twenty-eight passing focused tests.
 Every engine decision logs a shadow comparison while returning the legacy action.
 
-## M7 — Backtest/evaluation upgrade [ACTIVE]
+## M7 — Backtest/evaluation upgrade [COMPLETE 2026-09-03]
 - Multi-horizon walk-forward.
 - Costs, slippage/spread assumptions, turnover, drawdown, MFE/MAE where data allows.
 - Segment results by bull/bear/range, volatility, sector and instrument profile.
 - Reliability calibration/ablation tests: technical-only vs macro-only vs source-only vs fused.
 Acceptance: report can justify or reject adaptive weighting.
 
-## M8 — Public specialist/community source expansion
+Evidence: `evaluation.py`, ADR 0006, thirty-three passing focused tests, and
+`adaptive_evaluation_report.*` with 760 daily observations per ticker. Missing
+historical context and unstable cross-ticker results support continued shadow,
+not adaptive promotion.
+
+## M8 — Public specialist/community source expansion [ACTIVE]
 Verify before integration; do not assume availability:
 - TradingView SA/JSE ideas;
 - IG South Africa public analysis/client sentiment where permitted;

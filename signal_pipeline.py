@@ -31,6 +31,24 @@ class SignalDecision:
     metadata: Dict = field(default_factory=dict)
 
 
+def legacy_technical_score(observation) -> float:
+    """Return the characterized fixed technical score for an observation."""
+    if observation.indicators is None:
+        return 0.0
+    score = 0.0
+    for signal, weight in (
+        (observation.indicators.rsi_signal, 0.35),
+        (observation.indicators.sma_signal, 0.30),
+        (observation.indicators.breakout_signal, 0.20),
+        (observation.indicators.stochastic_signal, 0.15),
+    ):
+        if signal == 1:
+            score += weight
+        elif signal == -1:
+            score -= weight
+    return score
+
+
 class JSESignalEngine:
     """Combines technical indicators, SA news sentiment and macro overlays."""
 
@@ -121,36 +139,7 @@ class JSESignalEngine:
                     self.pipeline.add_news(market_ticker, macro_item)
 
     def _score_technical(self, obs) -> float:
-        if obs.indicators is None:
-            return 0.0
-
-        score = 0.0
-        rsi = obs.indicators.rsi_signal
-        sma = obs.indicators.sma_signal
-        breakout = obs.indicators.breakout_signal
-        stochastic = obs.indicators.stochastic_signal
-
-        if rsi == 1:
-            score += 0.35
-        elif rsi == -1:
-            score -= 0.35
-
-        if sma == 1:
-            score += 0.30
-        elif sma == -1:
-            score -= 0.30
-
-        if breakout == 1:
-            score += 0.20
-        elif breakout == -1:
-            score -= 0.20
-
-        if stochastic == 1:
-            score += 0.15
-        elif stochastic == -1:
-            score -= 0.15
-
-        return score
+        return legacy_technical_score(obs)
 
     def score_ticker(self, ticker: str) -> SignalDecision:
         self._add_market_data(ticker)

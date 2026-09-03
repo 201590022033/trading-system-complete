@@ -98,6 +98,14 @@ Explainable `adaptive-fusion-v1` introduced in M6:
 - full legacy/adaptive comparison in signal metadata;
 - shadow-only output; public signal score and action remain legacy-controlled.
 
+### `evaluation.py`
+M7 walk-forward evaluation layer:
+- 1/3/5/20-session legacy, component and adaptive ablations;
+- configurable spread, fee and slippage costs;
+- win-rate intervals, aligned/net returns, turnover, drawdown and close-path MFE/MAE;
+- trend, volatility and profile segmentation with minimum-sample flags;
+- explicit unavailable contextual series and prefix-only decision state.
+
 ## Existing strengths
 - Good separation between ingestion, observations, signal fusion and governance.
 - Real SA/JSE adaptation already underway.
@@ -110,6 +118,6 @@ Explainable `adaptive-fusion-v1` introduced in M6:
 - Profiles exist, but sector/regime-specific expanded indicator weighting is not yet implemented.
 - No normalized source-provenance/evidence store.
 - No source reliability history by sector/ticker/regime/time horizon.
-- Limited transaction-cost/liquidity modelling in backtest.
+- Transaction costs are configurable in research evaluation; derivative spread/liquidity data remains unavailable.
 - Expanded features exist in research mode but are not yet fused or historically evaluated.
 - Legacy macro coefficients are explicit profile configuration; richer conditional macro features remain unimplemented.

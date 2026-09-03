@@ -1,6 +1,23 @@
 # Current Milestone
 
-**ACTIVE: M7 — Backtest/evaluation upgrade**
+**ACTIVE: M8 — Public specialist/community source expansion**
+
+## M7 acceptance record — 2026-09-03
+
+- [x] Added prefix-only multi-horizon walk-forward evaluation.
+- [x] Added configurable costs, turnover, drawdown and close-path MFE/MAE.
+- [x] Added trend/volatility/profile segments, Wilson intervals and minimum-sample flags.
+- [x] Added legacy, technical-only, macro-only, source-only and adaptive ablations.
+- [x] Generated a six-ticker report with 760 daily observations per ticker.
+- [x] Recorded that missing contextual history and mixed results do not support promotion.
+- [x] Focused suite passes: 33 tests.
+
+## M8 immediate checklist
+
+- [ ] Verify named public source access methods and current availability/terms.
+- [ ] Reuse existing collectors and add only independently disableable adapters that are permitted.
+- [ ] Normalize new outputs through evidence provenance with conservative authority tiers.
+- [ ] Keep private/authenticated community scraping excluded.
 
 ## M6 acceptance record — 2026-09-03
 
@@ -9,13 +26,6 @@
 - [x] Logged factor contributions and legacy-vs-adaptive comparison in decision metadata.
 - [x] Kept public/default score, action, confidence and thresholds on the legacy path.
 - [x] Focused suite passes: 28 tests, including unavailable-regime safety coverage.
-
-## M7 immediate checklist
-
-- [ ] Add multi-horizon walk-forward evaluation with no future data at decision time.
-- [ ] Report costs, turnover, drawdown and MFE/MAE where supported.
-- [ ] Segment by regime and market profile with sample-size uncertainty.
-- [ ] Compare legacy, technical-only, macro-only, source-only and adaptive ablations.
 
 ## M5 acceptance record — 2026-09-03
 
