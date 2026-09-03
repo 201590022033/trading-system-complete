@@ -1,6 +1,15 @@
 # Current Milestone
 
-**HR7 COMPLETE — HR8 not yet active**
+**HR8 COMPLETE — HR9 not yet active**
+
+## HR8 acceptance record — 2026-09-03
+
+- [x] Estimated effectiveness by indicator/instrument/profile/regime/volatility/horizon.
+- [x] Added costs, Wilson uncertainty, temporal stability and recency diagnostics.
+- [x] Added a 30-observation gate and 20-observation neutral-prior shrinkage.
+- [x] Bounded mature research reliability weights between 0.5 and 1.5.
+- [x] Ensured walk-forward weights see outcomes only after their horizon elapses.
+- [x] Persisted weak/harmful cells and kept all learned weights research-only.
 
 ## HR7 acceptance record — 2026-09-03
 
