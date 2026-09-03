@@ -1,0 +1,767 @@
+{
+  "registry_version": "technical-feature-registry-v1",
+  "features": [
+    {
+      "name": "accumulation_distribution",
+      "family": "volume_flow",
+      "required_inputs": [
+        "high",
+        "low",
+        "close",
+        "volume"
+      ],
+      "parameters": {},
+      "minimum_warmup": 1,
+      "supported_timeframes": [
+        "daily",
+        "intraday"
+      ],
+      "output_fields": [
+        "ad_line"
+      ],
+      "interpretation_notes": "Cumulative accumulation/distribution.",
+      "capability_requirements": [
+        "has_ohlc",
+        "has_volume"
+      ],
+      "version": "v1",
+      "implementation_source": "scheduled for HR5/HR6 deterministic implementation",
+      "implementation_status": "planned"
+    },
+    {
+      "name": "adx_dmi",
+      "family": "trend",
+      "required_inputs": [
+        "high",
+        "low",
+        "close"
+      ],
+      "parameters": {},
+      "minimum_warmup": 29,
+      "supported_timeframes": [
+        "daily",
+        "intraday"
+      ],
+      "output_fields": [
+        "adx",
+        "plus_di",
+        "minus_di"
+      ],
+      "interpretation_notes": "Trend strength and directional movement.",
+      "capability_requirements": [
+        "has_ohlc"
+      ],
+      "version": "v1",
+      "implementation_source": "research_indicators.py",
+      "implementation_status": "implemented"
+    },
+    {
+      "name": "aroon",
+      "family": "trend",
+      "required_inputs": [
+        "high",
+        "low"
+      ],
+      "parameters": {},
+      "minimum_warmup": 25,
+      "supported_timeframes": [
+        "daily",
+        "intraday"
+      ],
+      "output_fields": [
+        "aroon_up",
+        "aroon_down"
+      ],
+      "interpretation_notes": "Time since rolling high/low.",
+      "capability_requirements": [
+        "has_ohlc"
+      ],
+      "version": "v1",
+      "implementation_source": "scheduled for HR5/HR6 deterministic implementation",
+      "implementation_status": "planned"
+    },
+    {
+      "name": "atr",
+      "family": "volatility",
+      "required_inputs": [
+        "high",
+        "low",
+        "close"
+      ],
+      "parameters": {},
+      "minimum_warmup": 15,
+      "supported_timeframes": [
+        "daily",
+        "intraday"
+      ],
+      "output_fields": [
+        "atr"
+      ],
+      "interpretation_notes": "Mean true range; not a directional signal.",
+      "capability_requirements": [
+        "has_ohlc"
+      ],
+      "version": "v1",
+      "implementation_source": "research_indicators.py",
+      "implementation_status": "implemented"
+    },
+    {
+      "name": "bollinger",
+      "family": "volatility",
+      "required_inputs": [
+        "close"
+      ],
+      "parameters": {},
+      "minimum_warmup": 20,
+      "supported_timeframes": [
+        "daily",
+        "intraday"
+      ],
+      "output_fields": [
+        "bollinger_middle",
+        "bollinger_upper",
+        "bollinger_lower",
+        "close_zscore"
+      ],
+      "interpretation_notes": "Twenty-close population bands at two standard deviations.",
+      "capability_requirements": [],
+      "version": "v1",
+      "implementation_source": "research_indicators.py",
+      "implementation_status": "implemented"
+    },
+    {
+      "name": "candlestick_patterns",
+      "family": "candlestick",
+      "required_inputs": [
+        "open",
+        "high",
+        "low",
+        "close"
+      ],
+      "parameters": {},
+      "minimum_warmup": 3,
+      "supported_timeframes": [
+        "daily",
+        "intraday"
+      ],
+      "output_fields": [
+        "patterns",
+        "body_ratio",
+        "upper_wick_ratio",
+        "lower_wick_ratio"
+      ],
+      "interpretation_notes": "Deterministic patterns plus context; HR6.",
+      "capability_requirements": [
+        "has_ohlc"
+      ],
+      "version": "v1",
+      "implementation_source": "scheduled for HR5/HR6 deterministic implementation",
+      "implementation_status": "planned"
+    },
+    {
+      "name": "cci",
+      "family": "momentum",
+      "required_inputs": [
+        "high",
+        "low",
+        "close"
+      ],
+      "parameters": {},
+      "minimum_warmup": 20,
+      "supported_timeframes": [
+        "daily",
+        "intraday"
+      ],
+      "output_fields": [
+        "cci"
+      ],
+      "interpretation_notes": "Typical-price deviation.",
+      "capability_requirements": [
+        "has_ohlc"
+      ],
+      "version": "v1",
+      "implementation_source": "scheduled for HR5/HR6 deterministic implementation",
+      "implementation_status": "planned"
+    },
+    {
+      "name": "chaikin_money_flow",
+      "family": "volume_flow",
+      "required_inputs": [
+        "high",
+        "low",
+        "close",
+        "volume"
+      ],
+      "parameters": {},
+      "minimum_warmup": 20,
+      "supported_timeframes": [
+        "daily",
+        "intraday"
+      ],
+      "output_fields": [
+        "cmf"
+      ],
+      "interpretation_notes": "Location-weighted volume flow.",
+      "capability_requirements": [
+        "has_ohlc",
+        "has_volume"
+      ],
+      "version": "v1",
+      "implementation_source": "scheduled for HR5/HR6 deterministic implementation",
+      "implementation_status": "planned"
+    },
+    {
+      "name": "donchian",
+      "family": "structure",
+      "required_inputs": [
+        "high",
+        "low",
+        "close"
+      ],
+      "parameters": {},
+      "minimum_warmup": 20,
+      "supported_timeframes": [
+        "daily",
+        "intraday"
+      ],
+      "output_fields": [
+        "donchian_high",
+        "donchian_low",
+        "channel_position"
+      ],
+      "interpretation_notes": "Rolling channel and breakout distance.",
+      "capability_requirements": [
+        "has_ohlc"
+      ],
+      "version": "v1",
+      "implementation_source": "scheduled for HR5/HR6 deterministic implementation",
+      "implementation_status": "planned"
+    },
+    {
+      "name": "ema_structure",
+      "family": "trend",
+      "required_inputs": [
+        "close"
+      ],
+      "parameters": {},
+      "minimum_warmup": 26,
+      "supported_timeframes": [
+        "daily",
+        "intraday"
+      ],
+      "output_fields": [
+        "ema_fast",
+        "ema_slow",
+        "ema_spread"
+      ],
+      "interpretation_notes": "EMA levels and relative spread.",
+      "capability_requirements": [],
+      "version": "v1",
+      "implementation_source": "scheduled for HR5/HR6 deterministic implementation",
+      "implementation_status": "planned"
+    },
+    {
+      "name": "fibonacci_context",
+      "family": "fibonacci",
+      "required_inputs": [
+        "high",
+        "low",
+        "close"
+      ],
+      "parameters": {},
+      "minimum_warmup": 20,
+      "supported_timeframes": [
+        "daily",
+        "intraday"
+      ],
+      "output_fields": [
+        "swing_direction",
+        "nearest_level",
+        "distance_to_level"
+      ],
+      "interpretation_notes": "Contextual levels from a defined prior swing; never an action alone.",
+      "capability_requirements": [
+        "has_ohlc"
+      ],
+      "version": "v1",
+      "implementation_source": "scheduled for HR5/HR6 deterministic implementation",
+      "implementation_status": "planned"
+    },
+    {
+      "name": "ichimoku",
+      "family": "trend",
+      "required_inputs": [
+        "high",
+        "low",
+        "close"
+      ],
+      "parameters": {},
+      "minimum_warmup": 78,
+      "supported_timeframes": [
+        "daily",
+        "intraday"
+      ],
+      "output_fields": [
+        "tenkan",
+        "kijun",
+        "senkou_a",
+        "senkou_b",
+        "chikou_relation",
+        "cloud_state"
+      ],
+      "interpretation_notes": "Full point-in-time Ichimoku model; HR5.",
+      "capability_requirements": [
+        "has_ohlc"
+      ],
+      "version": "v1",
+      "implementation_source": "scheduled for HR5/HR6 deterministic implementation",
+      "implementation_status": "planned"
+    },
+    {
+      "name": "keltner",
+      "family": "volatility",
+      "required_inputs": [
+        "high",
+        "low",
+        "close"
+      ],
+      "parameters": {},
+      "minimum_warmup": 21,
+      "supported_timeframes": [
+        "daily",
+        "intraday"
+      ],
+      "output_fields": [
+        "keltner_middle",
+        "keltner_upper",
+        "keltner_lower"
+      ],
+      "interpretation_notes": "EMA and ATR channel.",
+      "capability_requirements": [
+        "has_ohlc"
+      ],
+      "version": "v1",
+      "implementation_source": "scheduled for HR5/HR6 deterministic implementation",
+      "implementation_status": "planned"
+    },
+    {
+      "name": "macd",
+      "family": "trend",
+      "required_inputs": [
+        "close"
+      ],
+      "parameters": {},
+      "minimum_warmup": 26,
+      "supported_timeframes": [
+        "daily",
+        "intraday"
+      ],
+      "output_fields": [
+        "macd"
+      ],
+      "interpretation_notes": "EMA12 minus EMA26; no signal line yet.",
+      "capability_requirements": [],
+      "version": "v1",
+      "implementation_source": "research_indicators.py",
+      "implementation_status": "implemented"
+    },
+    {
+      "name": "mfi",
+      "family": "volume_flow",
+      "required_inputs": [
+        "high",
+        "low",
+        "close",
+        "volume"
+      ],
+      "parameters": {},
+      "minimum_warmup": 15,
+      "supported_timeframes": [
+        "daily",
+        "intraday"
+      ],
+      "output_fields": [
+        "mfi"
+      ],
+      "interpretation_notes": "Money Flow Index.",
+      "capability_requirements": [
+        "has_ohlc",
+        "has_volume"
+      ],
+      "version": "v1",
+      "implementation_source": "scheduled for HR5/HR6 deterministic implementation",
+      "implementation_status": "planned"
+    },
+    {
+      "name": "obv",
+      "family": "volume_flow",
+      "required_inputs": [
+        "close",
+        "volume"
+      ],
+      "parameters": {},
+      "minimum_warmup": 2,
+      "supported_timeframes": [
+        "daily",
+        "intraday"
+      ],
+      "output_fields": [
+        "obv"
+      ],
+      "interpretation_notes": "Cumulative signed volume.",
+      "capability_requirements": [
+        "has_volume"
+      ],
+      "version": "v1",
+      "implementation_source": "scheduled for HR5/HR6 deterministic implementation",
+      "implementation_status": "planned"
+    },
+    {
+      "name": "parabolic_sar",
+      "family": "trend",
+      "required_inputs": [
+        "high",
+        "low"
+      ],
+      "parameters": {},
+      "minimum_warmup": 3,
+      "supported_timeframes": [
+        "daily",
+        "intraday"
+      ],
+      "output_fields": [
+        "sar",
+        "direction"
+      ],
+      "interpretation_notes": "Deterministic stop-and-reverse state.",
+      "capability_requirements": [
+        "has_ohlc"
+      ],
+      "version": "v1",
+      "implementation_source": "scheduled for HR5/HR6 deterministic implementation",
+      "implementation_status": "planned"
+    },
+    {
+      "name": "price_gap",
+      "family": "structure",
+      "required_inputs": [
+        "open",
+        "close"
+      ],
+      "parameters": {},
+      "minimum_warmup": 2,
+      "supported_timeframes": [
+        "daily",
+        "intraday"
+      ],
+      "output_fields": [
+        "gap_return"
+      ],
+      "interpretation_notes": "Current open versus prior close.",
+      "capability_requirements": [
+        "has_ohlc"
+      ],
+      "version": "v1",
+      "implementation_source": "scheduled for HR5/HR6 deterministic implementation",
+      "implementation_status": "planned"
+    },
+    {
+      "name": "realized_volatility",
+      "family": "volatility",
+      "required_inputs": [
+        "close"
+      ],
+      "parameters": {},
+      "minimum_warmup": 21,
+      "supported_timeframes": [
+        "daily",
+        "intraday"
+      ],
+      "output_fields": [
+        "realized_volatility_20",
+        "volatility_change"
+      ],
+      "interpretation_notes": "Close-return volatility and expansion/contraction.",
+      "capability_requirements": [],
+      "version": "v1",
+      "implementation_source": "scheduled for HR5/HR6 deterministic implementation",
+      "implementation_status": "planned"
+    },
+    {
+      "name": "relative_strength",
+      "family": "momentum",
+      "required_inputs": [
+        "close",
+        "benchmark_close"
+      ],
+      "parameters": {},
+      "minimum_warmup": 15,
+      "supported_timeframes": [
+        "daily",
+        "intraday"
+      ],
+      "output_fields": [
+        "relative_strength"
+      ],
+      "interpretation_notes": "Asset return minus aligned benchmark return.",
+      "capability_requirements": [
+        "has_benchmark"
+      ],
+      "version": "v1",
+      "implementation_source": "research_indicators.py",
+      "implementation_status": "implemented"
+    },
+    {
+      "name": "relative_volume",
+      "family": "volume_flow",
+      "required_inputs": [
+        "close",
+        "volume"
+      ],
+      "parameters": {},
+      "minimum_warmup": 21,
+      "supported_timeframes": [
+        "daily",
+        "intraday"
+      ],
+      "output_fields": [
+        "relative_volume",
+        "median_dollar_volume"
+      ],
+      "interpretation_notes": "Current volume relative to prior twenty and liquidity proxy.",
+      "capability_requirements": [
+        "has_volume"
+      ],
+      "version": "v1",
+      "implementation_source": "research_indicators.py",
+      "implementation_status": "implemented"
+    },
+    {
+      "name": "roc",
+      "family": "momentum",
+      "required_inputs": [
+        "close"
+      ],
+      "parameters": {},
+      "minimum_warmup": 21,
+      "supported_timeframes": [
+        "daily",
+        "intraday"
+      ],
+      "output_fields": [
+        "roc_20"
+      ],
+      "interpretation_notes": "Rate of change.",
+      "capability_requirements": [],
+      "version": "v1",
+      "implementation_source": "scheduled for HR5/HR6 deterministic implementation",
+      "implementation_status": "planned"
+    },
+    {
+      "name": "rsi",
+      "family": "momentum",
+      "required_inputs": [
+        "close"
+      ],
+      "parameters": {},
+      "minimum_warmup": 15,
+      "supported_timeframes": [
+        "daily",
+        "intraday"
+      ],
+      "output_fields": [
+        "rsi"
+      ],
+      "interpretation_notes": "Continuous RSI feature; legacy threshold signal remains separate.",
+      "capability_requirements": [],
+      "version": "v1",
+      "implementation_source": "scheduled for HR5/HR6 deterministic implementation",
+      "implementation_status": "planned"
+    },
+    {
+      "name": "session_context",
+      "family": "structure",
+      "required_inputs": [
+        "high",
+        "low",
+        "close",
+        "volume"
+      ],
+      "parameters": {},
+      "minimum_warmup": 5,
+      "supported_timeframes": [
+        "daily",
+        "intraday"
+      ],
+      "output_fields": [
+        "session_vwap",
+        "opening_range_high",
+        "opening_range_low"
+      ],
+      "interpretation_notes": "Intraday-only session VWAP and opening range.",
+      "capability_requirements": [
+        "has_ohlc",
+        "has_volume",
+        "intraday"
+      ],
+      "version": "v1",
+      "implementation_source": "research_indicators.py",
+      "implementation_status": "implemented"
+    },
+    {
+      "name": "sma_structure",
+      "family": "trend",
+      "required_inputs": [
+        "close"
+      ],
+      "parameters": {},
+      "minimum_warmup": 20,
+      "supported_timeframes": [
+        "daily",
+        "intraday"
+      ],
+      "output_fields": [
+        "sma_fast",
+        "sma_slow",
+        "sma_spread"
+      ],
+      "interpretation_notes": "Continuous moving-average structure; legacy state remains separate.",
+      "capability_requirements": [],
+      "version": "v1",
+      "implementation_source": "scheduled for HR5/HR6 deterministic implementation",
+      "implementation_status": "planned"
+    },
+    {
+      "name": "stochastic",
+      "family": "momentum",
+      "required_inputs": [
+        "high",
+        "low",
+        "close"
+      ],
+      "parameters": {},
+      "minimum_warmup": 14,
+      "supported_timeframes": [
+        "daily",
+        "intraday"
+      ],
+      "output_fields": [
+        "stochastic_k",
+        "stochastic_d"
+      ],
+      "interpretation_notes": "OHLC stochastic rather than legacy close-only simplification.",
+      "capability_requirements": [
+        "has_ohlc"
+      ],
+      "version": "v1",
+      "implementation_source": "scheduled for HR5/HR6 deterministic implementation",
+      "implementation_status": "planned"
+    },
+    {
+      "name": "supertrend",
+      "family": "trend",
+      "required_inputs": [
+        "high",
+        "low",
+        "close"
+      ],
+      "parameters": {},
+      "minimum_warmup": 15,
+      "supported_timeframes": [
+        "daily",
+        "intraday"
+      ],
+      "output_fields": [
+        "supertrend",
+        "direction"
+      ],
+      "interpretation_notes": "ATR-derived trailing structure.",
+      "capability_requirements": [
+        "has_ohlc"
+      ],
+      "version": "v1",
+      "implementation_source": "scheduled for HR5/HR6 deterministic implementation",
+      "implementation_status": "planned"
+    },
+    {
+      "name": "support_resistance",
+      "family": "structure",
+      "required_inputs": [
+        "high",
+        "low",
+        "close"
+      ],
+      "parameters": {},
+      "minimum_warmup": 20,
+      "supported_timeframes": [
+        "daily",
+        "intraday"
+      ],
+      "output_fields": [
+        "support",
+        "resistance",
+        "distance_support",
+        "distance_resistance"
+      ],
+      "interpretation_notes": "Rolling extrema context.",
+      "capability_requirements": [
+        "has_ohlc"
+      ],
+      "version": "v1",
+      "implementation_source": "scheduled for HR5/HR6 deterministic implementation",
+      "implementation_status": "planned"
+    },
+    {
+      "name": "swing_structure",
+      "family": "structure",
+      "required_inputs": [
+        "high",
+        "low",
+        "close"
+      ],
+      "parameters": {},
+      "minimum_warmup": 7,
+      "supported_timeframes": [
+        "daily",
+        "intraday"
+      ],
+      "output_fields": [
+        "swing_high",
+        "swing_low",
+        "structure_state"
+      ],
+      "interpretation_notes": "Confirmed local swings using only available bars.",
+      "capability_requirements": [
+        "has_ohlc"
+      ],
+      "version": "v1",
+      "implementation_source": "scheduled for HR5/HR6 deterministic implementation",
+      "implementation_status": "planned"
+    },
+    {
+      "name": "williams_r",
+      "family": "momentum",
+      "required_inputs": [
+        "high",
+        "low",
+        "close"
+      ],
+      "parameters": {},
+      "minimum_warmup": 14,
+      "supported_timeframes": [
+        "daily",
+        "intraday"
+      ],
+      "output_fields": [
+        "williams_r"
+      ],
+      "interpretation_notes": "Range-relative momentum.",
+      "capability_requirements": [
+        "has_ohlc"
+      ],
+      "version": "v1",
+      "implementation_source": "scheduled for HR5/HR6 deterministic implementation",
+      "implementation_status": "planned"
+    }
+  ]
+}

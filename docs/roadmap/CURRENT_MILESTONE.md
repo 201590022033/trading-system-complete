@@ -1,6 +1,15 @@
 # Current Milestone
 
-**HR3 COMPLETE — HR4 not yet active**
+**HR4 COMPLETE — HR5 not yet active**
+
+## HR4 acceptance record — 2026-09-03
+
+- [x] Added modular versioned technical-feature definitions and computation results.
+- [x] Wrapped existing research calculators without duplicating production logic.
+- [x] Preserved capability and as-of-index gates, including aligned benchmarks.
+- [x] Registered all required families with honest implemented/planned status.
+- [x] Prevented planned Ichimoku/Fibonacci/candlestick entries from masquerading as code.
+- [x] Kept every registry computation research/shadow-only.
 
 ## HR3 acceptance record — 2026-09-03
 
