@@ -1,6 +1,15 @@
 # Current Milestone
 
-**HR1 COMPLETE — HR2 not yet active**
+**HR2 COMPLETE — HR3 not yet active**
+
+## HR2 acceptance record — 2026-09-03
+
+- [x] Froze dated daily OHLCV for six JSE equities and a JSE All Share proxy.
+- [x] Froze USD/ZAR, VIX, S&P 500, DXY, US10Y, Brent, gold, platinum and palladium proxies.
+- [x] Recorded per-file dates, row counts, provider symbols and SHA-256 hashes.
+- [x] Applied conservative next-day bar availability and no forward filling.
+- [x] Marked release-vintage SA macro, real yields and licensed derivatives unavailable.
+- [x] Documented proxy, adjustment, licensing and timestamp limitations.
 
 ## HR1 acceptance record — 2026-09-03
 
