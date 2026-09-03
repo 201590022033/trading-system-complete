@@ -103,10 +103,14 @@ Acceptance: existing manager/executor interfaces remain stable or have a documen
 Evidence: `agent_intelligence.py`, ADR 0008, and forty-one passing focused tests,
 including context-on/context-off governance equivalence and paper-mode checks.
 
-## M10 — Promotion gate [ACTIVE]
+## M10 — Promotion gate [COMPLETE 2026-09-03]
 Do NOT automatically promote adaptive trading.
 Produce a final evidence report recommending one of:
 1. reject adaptive changes;
 2. continue shadow collection;
 3. enable adaptive recommendations/paper trading;
 4. propose a separate live-trading safety milestone for explicit user approval.
+
+Decision: **continue shadow collection**. See `FUSION_COMPLETION_REPORT.md`.
+Historical macro/source alignment is unavailable and only 9 of 24 sufficient-
+sample adaptive overall rows had positive mean net return.

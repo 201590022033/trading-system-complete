@@ -1,6 +1,14 @@
 # Current Milestone
 
-**ACTIVE: M10 — Promotion gate**
+**ROADMAP COMPLETE — no active milestone**
+
+## M10 acceptance record — 2026-09-03
+
+- [x] Audited roadmap, tests, reports, source status and security boundaries.
+- [x] Produced `FUSION_COMPLETION_REPORT.md`.
+- [x] Selected **continue shadow collection**; production defaults remain legacy.
+- [x] Confirmed no live trading capability was added or enabled.
+- [x] Final focused suite passes: 41 tests.
 
 ## M9 acceptance record — 2026-09-03
 
@@ -10,13 +18,6 @@
 - [x] Verified context-on/context-off proposal, risk and manager equivalence.
 - [x] Explicitly labelled simulated execution as paper-only.
 - [x] Focused suite passes: 41 tests.
-
-## M10 immediate checklist
-
-- [ ] Audit the full roadmap, tests, reports, source status and security boundaries.
-- [ ] Produce `FUSION_COMPLETION_REPORT.md` with evidence and limitations.
-- [ ] Select one promotion-gate recommendation without changing production defaults.
-- [ ] Commit the final documentation and leave the repository clean.
 
 ## M8 acceptance record — 2026-09-03
 
