@@ -38,12 +38,15 @@ Acceptance: no future leakage; deterministic tests; docs updated.
 
 Evidence: `regime_engine.py`, `regime_backtest.py`, `regime_stability_report.json`, and fourteen passing focused tests.
 
-## M4 — Sector/instrument profiles [ACTIVE]
+## M4 — Sector/instrument profiles [COMPLETE 2026-09-03]
 - Replace scattered ticker-specific macro logic with configurable profiles, while preserving legacy behaviour as benchmark.
 - Profiles: index futures/CFDs, SSF/share CFD, banks, gold miners, PGM/diversified mining, energy/Sasol, retail/consumer, agri-linked, USD/ZAR.
 Acceptance: profile selection tested; legacy mode unchanged.
 
-## M5 — Expanded indicator research layer
+Evidence: `market_profiles.py`, ADR 0003, and eighteen passing focused tests;
+legacy macro coefficients and clamp are characterized for equivalence.
+
+## M5 — Expanded indicator research layer [ACTIVE]
 - Add ADX/DMI, ATR, MACD, Bollinger/z-score, relative strength and volume/liquidity features where data supports them.
 - Add intraday VWAP/opening range only behind an intraday-data capability flag.
 - Do not pretend daily Yahoo data is intraday derivatives data.

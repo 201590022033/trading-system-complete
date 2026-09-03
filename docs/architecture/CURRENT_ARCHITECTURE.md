@@ -75,6 +75,14 @@ Research-only regime-v1 classifies trailing close history into independent label
 - version, confidence and feature snapshot are included in `MarketRegime`.
 `regime_backtest.py` measures rolling-label stability without changing production weights.
 
+### `market_profiles.py`
+Research/shadow sector and instrument context introduced in M4:
+- immutable, versioned profiles for required instrument and sector groups;
+- configurable, case-insensitive ticker-to-profile selection;
+- neutral single-stock fallback for unknown tickers;
+- legacy macro coefficients centralized without changing signal defaults;
+- selected profile identity included in signal decision metadata.
+
 ## Existing strengths
 - Good separation between ingestion, observations, signal fusion and governance.
 - Real SA/JSE adaptation already underway.
@@ -84,9 +92,9 @@ Research-only regime-v1 classifies trailing close history into independent label
 ## Existing gaps
 - Fixed signal/source weights rather than learned/contextual reliability.
 - Regime classifier exists in research/shadow mode but is not yet used by production fusion.
-- No sector/instrument-specific indicator profile.
+- Profiles exist, but sector/regime-specific expanded indicator weighting is not yet implemented.
 - No normalized source-provenance/evidence store.
 - No source reliability history by sector/ticker/regime/time horizon.
 - Limited transaction-cost/liquidity modelling in backtest.
 - Current technical feature set is narrow for intraday/geared instruments.
-- Macro relationships are encoded as simple ticker rules rather than testable conditional features.
+- Legacy macro coefficients are explicit profile configuration; richer conditional macro features remain unimplemented.

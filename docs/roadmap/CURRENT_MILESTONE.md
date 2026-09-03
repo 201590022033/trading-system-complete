@@ -1,6 +1,21 @@
 # Current Milestone
 
-**ACTIVE: M4 — Sector/instrument profiles**
+**ACTIVE: M5 — Expanded indicator research layer**
+
+## M4 acceptance record — 2026-09-03
+
+- [x] Added immutable, versioned sector/instrument profiles covering every required group.
+- [x] Moved ticker-specific legacy macro coefficients behind configurable profile selection.
+- [x] Preserved legacy scoring coefficients, thresholds and clamp with characterization tests.
+- [x] Added selected profile context to decision metadata as shadow-only output.
+- [x] Focused suite passes: 18 tests (the previous 14 plus 4 profile tests).
+
+## M5 immediate checklist
+
+- [ ] Add transparent ADX/DMI, ATR, MACD, Bollinger/z-score and relative-strength research features.
+- [ ] Add volume/liquidity features only when supported by input data.
+- [ ] Gate VWAP/opening-range features behind explicit intraday capability metadata.
+- [ ] Add deterministic no-lookahead and feature-availability tests.
 
 ## M3 acceptance record — 2026-09-03
 
@@ -8,13 +23,6 @@
 - [x] Added deterministic bull, bear, range, low/normal/high-volatility and risk-label tests.
 - [x] Added rolling stability report with 700 observations each for NPN, SASOL and BHP.
 - [x] Kept regime output research/shadow-only; production weights unchanged.
-
-## M4 immediate checklist
-
-- [ ] Define explicit sector and instrument profiles.
-- [ ] Move ticker-specific macro relationships behind configurable profiles.
-- [ ] Preserve legacy scoring as a benchmark and test profile selection.
-- [ ] Keep adaptive/profile output shadow-only.
 
 ## M2 acceptance record — 2026-09-03
 
@@ -46,10 +54,3 @@
 - [x] Restored canonical six-ticker two-year backtest; 24 report rows and finite metrics.
 - [x] Recorded baseline findings in `backtest_report.md` and the indicator bible.
 - [x] Committed M0 baseline artifacts.
-
-## M3 immediate checklist
-
-- [ ] Define transparent regime features from price history.
-- [ ] Implement versioned `MarketRegime` output.
-- [ ] Add deterministic tests with synthetic trending, ranging and high-volatility data.
-- [ ] Keep regime output research/shadow-only until validated.

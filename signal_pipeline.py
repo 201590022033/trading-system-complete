@@ -8,6 +8,7 @@ from typing import Dict, List, Optional
 
 from data_pipeline import MarketData, UnifiedDataPipeline
 from jse_adapter import JSEDataAdapter, DataSourceType
+from market_profiles import DEFAULT_PROFILE_REGISTRY, ProfileRegistry
 
 try:
     from sentiment_analyzer import MacroSentimentScanner
@@ -37,6 +38,7 @@ class JSESignalEngine:
         price_source: DataSourceType = DataSourceType.YAHOO_FINANCE,
         news_source: str = "mock",
         use_macro: bool = True,
+        profile_registry: ProfileRegistry = DEFAULT_PROFILE_REGISTRY,
     ):
         self.tickers = tickers or ["NPN", "SASOL", "BHP", "IMPJ", "SHPJ", "ABSPJ"]
         self.pipeline = UnifiedDataPipeline(jse_tickers=self.tickers)
@@ -44,6 +46,7 @@ class JSESignalEngine:
             price_source=price_source,
             news_source=news_source,
         )
+        self.profile_registry = profile_registry
         self.macro_report = None
         if use_macro and MACRO_AVAILABLE:
             try:
@@ -80,31 +83,16 @@ class JSESignalEngine:
         """Combine this ticker's direct mentions with the macro overlay."""
         if not self.macro_report:
             return 0.0
-        adjustment = 0.0
-
         direct = self.macro_report.tickers.get(ticker)
-        if direct:
-            adjustment += 0.10 * direct["score"]
+        direct_score = direct["score"] if direct else 0.0
 
         macro = self.macro_report.macro
-        zar = macro.get("ZAR", {}).get("score", 0.0)
-        gold = macro.get("GOLD", {}).get("score", 0.0)
-        oil = macro.get("OIL", {}).get("score", 0.0)
-
-        # Exporters/miners benefit from a weaker rand (negative ZAR score)
-        if ticker in ("NPN", "BHP", "IMPJ", "SASOL"):
-            adjustment += 0.05 * (-zar)
-        # Gold exposure
-        if ticker in ("GFI",):
-            adjustment += 0.08 * gold
-        # Oil exposure (Sasol)
-        if ticker == "SASOL":
-            adjustment += 0.08 * oil
-        # Banks/retail benefit from a stronger rand
-        if ticker in ("ABSPJ", "SHPJ", "TFMJ"):
-            adjustment += 0.05 * zar
-
-        return max(-0.15, min(0.15, adjustment))
+        macro_scores = {
+            factor: values.get("score", 0.0)
+            for factor, values in macro.items()
+        }
+        profile = self.profile_registry.select(ticker)
+        return profile.macro_adjustment(macro_scores, direct_score)
 
     def _add_market_data(self, ticker: str) -> None:
         price = self.adapter.get_price(ticker)
@@ -169,6 +157,7 @@ class JSESignalEngine:
         technical_score = self._score_technical(obs)
         sentiment_score = float(obs.news_sentiment_score)
         macro_adjustment = self._macro_adjustment(ticker)
+        profile = self.profile_registry.select(ticker)
 
         combined = (0.60 * technical_score) + (0.30 * sentiment_score) + macro_adjustment
 
@@ -201,6 +190,13 @@ class JSESignalEngine:
                 "news": obs.news,
                 "macro_factor": obs.macro_factor,
                 "recent_prices": [round(x, 2) for x in obs.recent_prices[-10:]],
+                "market_profile": {
+                    "id": profile.profile_id,
+                    "sector": profile.sector,
+                    "instrument_type": profile.instrument_type,
+                    "version": profile.version,
+                    "shadow_only": profile.shadow_only,
+                },
             },
         )
 
