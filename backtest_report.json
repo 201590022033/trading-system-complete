@@ -1,0 +1,271 @@
+{
+  "generated_at": "2026-09-03T06:23:13.021480+00:00",
+  "horizon_sessions": 5,
+  "method": "walk-forward close-only; signal at t evaluated at t+horizon",
+  "rows": [
+    {
+      "ticker": "NPN",
+      "indicator": "rsi",
+      "observations": 173,
+      "wins": 89,
+      "losses": 84,
+      "flat_outcomes": 0,
+      "win_rate": 0.5145,
+      "average_aligned_return": -0.004107,
+      "average_forward_return": 0.006615
+    },
+    {
+      "ticker": "NPN",
+      "indicator": "sma",
+      "observations": 717,
+      "wins": 328,
+      "losses": 389,
+      "flat_outcomes": 0,
+      "win_rate": 0.4575,
+      "average_aligned_return": -0.004281,
+      "average_forward_return": 0.002739
+    },
+    {
+      "ticker": "NPN",
+      "indicator": "breakout",
+      "observations": 170,
+      "wins": 85,
+      "losses": 85,
+      "flat_outcomes": 0,
+      "win_rate": 0.5,
+      "average_aligned_return": 0.001652,
+      "average_forward_return": 0.003151
+    },
+    {
+      "ticker": "NPN",
+      "indicator": "stochastic",
+      "observations": 451,
+      "wins": 228,
+      "losses": 223,
+      "flat_outcomes": 0,
+      "win_rate": 0.5055,
+      "average_aligned_return": -0.000154,
+      "average_forward_return": 0.002639
+    },
+    {
+      "ticker": "SASOL",
+      "indicator": "rsi",
+      "observations": 206,
+      "wins": 104,
+      "losses": 102,
+      "flat_outcomes": 0,
+      "win_rate": 0.5049,
+      "average_aligned_return": 0.009757,
+      "average_forward_return": 0.007866
+    },
+    {
+      "ticker": "SASOL",
+      "indicator": "sma",
+      "observations": 728,
+      "wins": 357,
+      "losses": 370,
+      "flat_outcomes": 1,
+      "win_rate": 0.4904,
+      "average_aligned_return": -0.001259,
+      "average_forward_return": 0.00111
+    },
+    {
+      "ticker": "SASOL",
+      "indicator": "breakout",
+      "observations": 197,
+      "wins": 97,
+      "losses": 100,
+      "flat_outcomes": 0,
+      "win_rate": 0.4924,
+      "average_aligned_return": -0.004991,
+      "average_forward_return": 0.012625
+    },
+    {
+      "ticker": "SASOL",
+      "indicator": "stochastic",
+      "observations": 455,
+      "wins": 237,
+      "losses": 218,
+      "flat_outcomes": 0,
+      "win_rate": 0.5209,
+      "average_aligned_return": 0.004751,
+      "average_forward_return": 0.008793
+    },
+    {
+      "ticker": "BHP",
+      "indicator": "rsi",
+      "observations": 157,
+      "wins": 105,
+      "losses": 52,
+      "flat_outcomes": 0,
+      "win_rate": 0.6688,
+      "average_aligned_return": 0.01243,
+      "average_forward_return": 0.001416
+    },
+    {
+      "ticker": "BHP",
+      "indicator": "sma",
+      "observations": 714,
+      "wins": 351,
+      "losses": 363,
+      "flat_outcomes": 0,
+      "win_rate": 0.4916,
+      "average_aligned_return": -0.000919,
+      "average_forward_return": 0.002901
+    },
+    {
+      "ticker": "BHP",
+      "indicator": "breakout",
+      "observations": 183,
+      "wins": 86,
+      "losses": 97,
+      "flat_outcomes": 0,
+      "win_rate": 0.4699,
+      "average_aligned_return": -0.003432,
+      "average_forward_return": 0.003802
+    },
+    {
+      "ticker": "BHP",
+      "indicator": "stochastic",
+      "observations": 440,
+      "wins": 233,
+      "losses": 207,
+      "flat_outcomes": 0,
+      "win_rate": 0.5295,
+      "average_aligned_return": 0.002038,
+      "average_forward_return": 0.0016
+    },
+    {
+      "ticker": "IMPJ",
+      "indicator": "rsi",
+      "observations": 163,
+      "wins": 94,
+      "losses": 69,
+      "flat_outcomes": 0,
+      "win_rate": 0.5767,
+      "average_aligned_return": 0.025667,
+      "average_forward_return": 0.0133
+    },
+    {
+      "ticker": "IMPJ",
+      "indicator": "sma",
+      "observations": 726,
+      "wins": 352,
+      "losses": 374,
+      "flat_outcomes": 0,
+      "win_rate": 0.4848,
+      "average_aligned_return": -0.012012,
+      "average_forward_return": 0.010239
+    },
+    {
+      "ticker": "IMPJ",
+      "indicator": "breakout",
+      "observations": 166,
+      "wins": 84,
+      "losses": 82,
+      "flat_outcomes": 0,
+      "win_rate": 0.506,
+      "average_aligned_return": -0.017634,
+      "average_forward_return": 0.023258
+    },
+    {
+      "ticker": "IMPJ",
+      "indicator": "stochastic",
+      "observations": 461,
+      "wins": 224,
+      "losses": 237,
+      "flat_outcomes": 0,
+      "win_rate": 0.4859,
+      "average_aligned_return": 0.008479,
+      "average_forward_return": 0.011746
+    },
+    {
+      "ticker": "SHPJ",
+      "indicator": "rsi",
+      "observations": 132,
+      "wins": 74,
+      "losses": 58,
+      "flat_outcomes": 0,
+      "win_rate": 0.5606,
+      "average_aligned_return": 0.008953,
+      "average_forward_return": -0.006454
+    },
+    {
+      "ticker": "SHPJ",
+      "indicator": "sma",
+      "observations": 719,
+      "wins": 330,
+      "losses": 389,
+      "flat_outcomes": 0,
+      "win_rate": 0.459,
+      "average_aligned_return": -0.004421,
+      "average_forward_return": 0.00186
+    },
+    {
+      "ticker": "SHPJ",
+      "indicator": "breakout",
+      "observations": 161,
+      "wins": 59,
+      "losses": 102,
+      "flat_outcomes": 0,
+      "win_rate": 0.3665,
+      "average_aligned_return": -0.011034,
+      "average_forward_return": 0.003385
+    },
+    {
+      "ticker": "SHPJ",
+      "indicator": "stochastic",
+      "observations": 467,
+      "wins": 256,
+      "losses": 211,
+      "flat_outcomes": 0,
+      "win_rate": 0.5482,
+      "average_aligned_return": 0.005757,
+      "average_forward_return": 0.001233
+    },
+    {
+      "ticker": "ABSPJ",
+      "indicator": "rsi",
+      "observations": 187,
+      "wins": 105,
+      "losses": 82,
+      "flat_outcomes": 0,
+      "win_rate": 0.5615,
+      "average_aligned_return": 0.004968,
+      "average_forward_return": -0.000382
+    },
+    {
+      "ticker": "ABSPJ",
+      "indicator": "sma",
+      "observations": 718,
+      "wins": 339,
+      "losses": 379,
+      "flat_outcomes": 0,
+      "win_rate": 0.4721,
+      "average_aligned_return": -0.002353,
+      "average_forward_return": 0.002514
+    },
+    {
+      "ticker": "ABSPJ",
+      "indicator": "breakout",
+      "observations": 160,
+      "wins": 73,
+      "losses": 87,
+      "flat_outcomes": 0,
+      "win_rate": 0.4562,
+      "average_aligned_return": 0.000154,
+      "average_forward_return": 0.001439
+    },
+    {
+      "ticker": "ABSPJ",
+      "indicator": "stochastic",
+      "observations": 436,
+      "wins": 235,
+      "losses": 201,
+      "flat_outcomes": 0,
+      "win_rate": 0.539,
+      "average_aligned_return": 0.001918,
+      "average_forward_return": 0.002583
+    }
+  ]
+}
