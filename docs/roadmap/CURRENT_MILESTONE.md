@@ -1,6 +1,14 @@
 # Current Milestone
 
-**ROADMAP COMPLETE — no active milestone**
+**HR0 COMPLETE — HR1 not yet active**
+
+## HR0 acceptance record — 2026-09-03
+
+- [x] Audited executable technical features rather than documentation/library availability.
+- [x] Classified implemented-and-used, implemented-but-unused and missing families.
+- [x] Confirmed Ichimoku, Fibonacci and deterministic candlestick families are absent.
+- [x] Identified `research_indicators.py` as the additive capability-gated extension point.
+- [x] Changed no strategy, score, threshold, weight or execution behavior.
 
 ## M10 acceptance record — 2026-09-03
 
