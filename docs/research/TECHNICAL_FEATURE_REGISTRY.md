@@ -29,10 +29,10 @@ strength calculation.
 The registry explicitly marks SMA/EMA structure, Aroon,
 Supertrend, Parabolic SAR, continuous RSI, OHLC stochastic, ROC, Williams %R,
 CCI, Keltner, realized-volatility change, OBV, MFI, Chaikin flow,
-accumulation/distribution, Donchian, support/resistance, swing structure, gaps,
-Fibonacci context and candlestick patterns as `planned`. HR5 and HR6 must supply
-deterministic calculators and tests before changing those statuses. Full
-Ichimoku became executable in HR5 through `ichimoku_features.py`.
+accumulation/distribution, Donchian, support/resistance, swing structure and gaps
+as planned. Full Ichimoku became executable in HR5. Fibonacci context and all
+specified deterministic candlestick patterns became executable in HR6 through
+`structure_pattern_features.py`; they remain non-directional research context.
 
 Fibonacci and candlestick entries are feature contexts, never unconditional
 BUY/SELL signals. No registry feature contributes to production/default weights.

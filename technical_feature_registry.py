@@ -9,6 +9,7 @@ from typing import Callable, Iterable, Optional
 
 from research_indicators import DataCapabilities, MarketBar, calculate_expanded_indicators
 from ichimoku_features import calculate_ichimoku
+from structure_pattern_features import calculate_candlestick_context, calculate_fibonacci_context
 
 
 REGISTRY_VERSION = "technical-feature-registry-v1"
@@ -102,6 +103,16 @@ def _ichimoku_adapter(bars, capabilities, as_of_index, benchmark_closes):
     return RegistryComputation("ichimoku", snapshot.available, snapshot.values, snapshot.reason, snapshot.version)
 
 
+def _fibonacci_adapter(bars, capabilities, as_of_index, benchmark_closes):
+    snapshot = calculate_fibonacci_context(bars, capabilities, as_of_index)
+    return RegistryComputation("fibonacci_context", snapshot.available, snapshot.values, snapshot.reason, snapshot.version)
+
+
+def _candlestick_adapter(bars, capabilities, as_of_index, benchmark_closes):
+    snapshot = calculate_candlestick_context(bars, capabilities, as_of_index)
+    return RegistryComputation("candlestick_patterns", snapshot.available, snapshot.values, snapshot.reason, snapshot.version)
+
+
 def _definition(
     name: str, family: str, inputs: tuple[str, ...], warmup: int,
     outputs: tuple[str, ...], notes: str, *, parameters: Optional[dict] = None,
@@ -149,8 +160,6 @@ def build_default_registry() -> TechnicalFeatureRegistry:
         _definition("support_resistance", "structure", ("high", "low", "close"), 20, ("support", "resistance", "distance_support", "distance_resistance"), "Rolling extrema context.", capabilities=("has_ohlc",)),
         _definition("swing_structure", "structure", ("high", "low", "close"), 7, ("swing_high", "swing_low", "structure_state"), "Confirmed local swings using only available bars.", capabilities=("has_ohlc",)),
         _definition("price_gap", "structure", ("open", "close"), 2, ("gap_return",), "Current open versus prior close.", capabilities=("has_ohlc",)),
-        _definition("fibonacci_context", "fibonacci", ("high", "low", "close"), 20, ("swing_direction", "nearest_level", "distance_to_level"), "Contextual levels from a defined prior swing; never an action alone.", capabilities=("has_ohlc",)),
-        _definition("candlestick_patterns", "candlestick", ("open", "high", "low", "close"), 3, ("patterns", "body_ratio", "upper_wick_ratio", "lower_wick_ratio"), "Deterministic patterns plus context; HR6.", capabilities=("has_ohlc",)),
     )
     for item in planned:
         registry.register(item)
@@ -166,6 +175,23 @@ def build_default_registry() -> TechnicalFeatureRegistry:
         capabilities=("has_ohlc",), status="implemented", source="ichimoku_features.py",
     )
     registry.register(ichimoku, _ichimoku_adapter)
+    fibonacci = _definition(
+        "fibonacci_context", "fibonacci", ("high", "low", "close"), 20,
+        ("swing_direction", "swing_high", "swing_low", "levels", "nearest_level",
+         "distance_to_level_ratio", "trend_confluence", "support_resistance_confluence"),
+        "Contextual levels from a defined preceding swing; automatic_action is always null.",
+        capabilities=("has_ohlc",), status="implemented", source="structure_pattern_features.py",
+    )
+    candles = _definition(
+        "candlestick_patterns", "candlestick", ("open", "high", "low", "close"), 3,
+        ("patterns", "preceding_trend", "near_resistance", "near_support", "body_ratio",
+         "upper_wick_ratio", "lower_wick_ratio", "realized_volatility_14",
+         "volume_confirmation", "next_bar_confirmation", "confirmation_available"),
+        "Deterministic patterns plus context; confirmation only after its bar is available.",
+        capabilities=("has_ohlc",), status="implemented", source="structure_pattern_features.py",
+    )
+    registry.register(fibonacci, _fibonacci_adapter)
+    registry.register(candles, _candlestick_adapter)
     return registry
 
 

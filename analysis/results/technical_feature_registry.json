@@ -146,17 +146,24 @@
       ],
       "output_fields": [
         "patterns",
+        "preceding_trend",
+        "near_resistance",
+        "near_support",
         "body_ratio",
         "upper_wick_ratio",
-        "lower_wick_ratio"
+        "lower_wick_ratio",
+        "realized_volatility_14",
+        "volume_confirmation",
+        "next_bar_confirmation",
+        "confirmation_available"
       ],
-      "interpretation_notes": "Deterministic patterns plus context; HR6.",
+      "interpretation_notes": "Deterministic patterns plus context; confirmation only after its bar is available.",
       "capability_requirements": [
         "has_ohlc"
       ],
       "version": "v1",
-      "implementation_source": "scheduled for HR5/HR6 deterministic implementation",
-      "implementation_status": "planned"
+      "implementation_source": "structure_pattern_features.py",
+      "implementation_status": "implemented"
     },
     {
       "name": "cci",
@@ -276,16 +283,21 @@
       ],
       "output_fields": [
         "swing_direction",
+        "swing_high",
+        "swing_low",
+        "levels",
         "nearest_level",
-        "distance_to_level"
+        "distance_to_level_ratio",
+        "trend_confluence",
+        "support_resistance_confluence"
       ],
-      "interpretation_notes": "Contextual levels from a defined prior swing; never an action alone.",
+      "interpretation_notes": "Contextual levels from a defined preceding swing; automatic_action is always null.",
       "capability_requirements": [
         "has_ohlc"
       ],
       "version": "v1",
-      "implementation_source": "scheduled for HR5/HR6 deterministic implementation",
-      "implementation_status": "planned"
+      "implementation_source": "structure_pattern_features.py",
+      "implementation_status": "implemented"
     },
     {
       "name": "ichimoku",

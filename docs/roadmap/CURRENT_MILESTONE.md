@@ -1,6 +1,15 @@
 # Current Milestone
 
-**HR5 COMPLETE — HR6 not yet active**
+**HR6 COMPLETE — HR7 not yet active**
+
+## HR6 acceptance record — 2026-09-03
+
+- [x] Implemented preceding-swing Fibonacci levels and contextual confluence fields.
+- [x] Ensured Fibonacci emits no automatic BUY/SELL action.
+- [x] Implemented all sixteen requested deterministic candlestick patterns.
+- [x] Added trend, support/resistance, volatility and optional volume context.
+- [x] Made next-bar confirmation unavailable until the next bar exists.
+- [x] Registered both families as deterministic shadow-only research features.
 
 ## HR5 acceptance record — 2026-09-03
 
