@@ -106,6 +106,14 @@ M7 walk-forward evaluation layer:
 - trend, volatility and profile segmentation with minimum-sample flags;
 - explicit unavailable contextual series and prefix-only decision state.
 
+### `source_catalog.py`
+M8 policy boundary for specialist/community sources:
+- independent enable/status/access metadata and polling intervals;
+- authority-tier provenance normalization into `EvidenceRecord`;
+- conversion into the existing reliability `SourceRegistry`;
+- only existing permitted Moneyweb/SENS routes enabled by default;
+- licensed, permission-dependent and prohibited automation disabled explicitly.
+
 ## Existing strengths
 - Good separation between ingestion, observations, signal fusion and governance.
 - Real SA/JSE adaptation already underway.

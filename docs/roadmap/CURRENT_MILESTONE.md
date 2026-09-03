@@ -1,6 +1,22 @@
 # Current Milestone
 
-**ACTIVE: M8 — Public specialist/community source expansion**
+**ACTIVE: M9 — Multi-agent integration**
+
+## M8 acceptance record — 2026-09-03
+
+- [x] Verified and documented access status for every named source category.
+- [x] Added independently configurable source policy, authority and poll intervals.
+- [x] Normalized source policy into evidence provenance and the reliability registry.
+- [x] Retained enabled Moneyweb/SENS collectors and disabled restricted/unverified automation.
+- [x] Disabled unauthenticated Reddit JSON fallback under current API terms.
+- [x] Focused suite passes: 38 tests.
+
+## M9 immediate checklist
+
+- [ ] Feed adaptive evidence/regime explanations into existing researchers.
+- [ ] Preserve Trader, Risk, Manager and Executor interfaces.
+- [ ] Add legacy/adaptive/bull/bear disagreement telemetry.
+- [ ] Keep execution paper/shadow-only and test compatibility.
 
 ## M7 acceptance record — 2026-09-03
 
@@ -11,13 +27,6 @@
 - [x] Generated a six-ticker report with 760 daily observations per ticker.
 - [x] Recorded that missing contextual history and mixed results do not support promotion.
 - [x] Focused suite passes: 33 tests.
-
-## M8 immediate checklist
-
-- [ ] Verify named public source access methods and current availability/terms.
-- [ ] Reuse existing collectors and add only independently disableable adapters that are permitted.
-- [ ] Normalize new outputs through evidence provenance with conservative authority tiers.
-- [ ] Keep private/authenticated community scraping excluded.
 
 ## M6 acceptance record — 2026-09-03
 

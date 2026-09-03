@@ -57,3 +57,38 @@ Each source should support:
 
 ## Access rule
 Before writing any scraper, verify whether an official feed/API/RSS or simpler existing collector already solves the need. Respect robots, rate limits, copyright and platform terms.
+
+## M8 verification record — 2026-09-03
+
+`source_catalog.py` is the executable policy record. Only the two already
+implemented public Moneyweb routes are enabled by default; all other sources
+remain independently disabled until their stated requirement is satisfied.
+
+| Source | Status | Permitted implementation boundary |
+| --- | --- | --- |
+| JSE official data/SENS | Licence required | JSE documents live/non-live and SENS products plus data agreements; use a licensed feed/distributor, not page scraping. |
+| Moneyweb RSS | Existing/live | Public RSS collector retained, five-minute catalogue poll gate. |
+| Moneyweb-hosted SENS | Existing/live | Existing public listing parser retained as the practical SENS route. |
+| Business Day/BusinessLIVE | Permission not verified | Manual/link evidence only until a licensed feed or written permission exists. |
+| Reuters South Africa | Licence required | Manual/link evidence or a licensed API/provider only. |
+| IG South Africa | Public pages, no stable ingestion API verified | Manual/link evidence only; do not automate client/platform data. |
+| Standard Bank/CIB | No stable public feed verified | Manual/link evidence only; OST remains separately read-only. |
+| TradingView ideas | Excluded | Current terms prohibit non-display algorithmic use of TradingView content/data. |
+| MyBroadband forums | Permission not verified | Public pages are active, but no automated collector without permission/terms clearance. |
+| Reddit r/PersonalFinanceZA | Active but approved API required | OAuth API only after an approved use case; unauthenticated JSON fallback disabled. |
+| Reddit r/JSE | Activity not verified | Disabled even if API access is later approved. |
+| X | Official API required | Disabled until approved/paid API access and retention terms are configured. |
+| BlackStone Futures Telegram | Public channel verified | Manual/link evidence only; no generic page scraper. |
+| Other Telegram | Not configured | Official API and channel permission required. |
+| Discord | Server permission/API required | Approved bot/API only; message-content permissions and platform policy apply. |
+
+Verification references:
+- JSE market-data policies: https://www.jse.co.za/market-data/data-agreements-policies
+- JSE market-data technical library: https://clientportal.jse.co.za/technical-library/market-data-documentation
+- Moneyweb tools/SENS: https://www.moneyweb.co.za/tools-and-data/
+- TradingView terms: https://www.tradingview.com/policies/
+- Reddit Data API terms: https://redditinc.com/policies/data-api-terms
+- IG South Africa research: https://www.ig.com/za/trading-research
+- Discord API/rate limits: https://docs.discord.com/developers/reference
+- Discord message-content restrictions: https://docs.discord.com/developers/events/gateway
+- BlackStone public channel: https://t.me/s/BSF_Official

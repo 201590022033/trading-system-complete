@@ -101,6 +101,7 @@ def normalize_news_item(
     observed_at=None,
     ingested_at=None,
     parser_version: str = PROVENANCE_VERSION,
+    metadata: Optional[Dict] = None,
 ) -> EvidenceRecord:
     """Convert an existing NewsItem while preserving its original semantics."""
     source_name = item.source or "unknown"
@@ -129,6 +130,7 @@ def normalize_news_item(
         score=score,
         confidence=min(1.0, abs(score)),
         parser_version=parser_version,
+        metadata=dict(metadata or {}),
     )
 
 

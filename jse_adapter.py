@@ -579,11 +579,11 @@ class RedditFetcher:
     """
     Fetch South African market chatter from Reddit.
 
-    Two modes:
-    - Public JSON API (no credentials): appends .json to subreddit URLs.
-      Rate-limited and occasionally blocked, but works for light polling.
-    - praw (full API): used automatically when REDDIT_CLIENT_ID /
+    Uses the approved OAuth API through praw when REDDIT_CLIENT_ID /
       REDDIT_CLIENT_SECRET / REDDIT_USER_AGENT env vars are set.
+
+    Unauthenticated public-JSON polling is deliberately disabled: current
+    Reddit Data API terms require approved access information.
 
     Subreddits watched: r/southafrica, r/JSE, r/PersonalFinanceZA,
     r/za_finance, r/investing (SA-filtered).
@@ -638,6 +638,8 @@ class RedditFetcher:
 
     def fetch_recent(self, limit: int = 10) -> List[NewsItem]:
         items: List[NewsItem] = []
+        if self._praw is None:
+            return items
         for sub in self.subreddits:
             if len(items) >= limit:
                 break
@@ -655,26 +657,6 @@ class RedditFetcher:
                             sentiment_label=label,
                             sentiment_score=score,
                             text=(post.selftext or "")[:300],
-                        ))
-                else:
-                    url = f"https://old.reddit.com/r/{sub}/hot.json?limit=15"
-                    response = requests.get(url, headers=self._HEADERS, timeout=12)
-                    if response.status_code >= 400 or not response.text.strip().startswith("{"):
-                        continue
-                    for child in response.json().get("data", {}).get("children", []):
-                        post = child.get("data", {})
-                        title = post.get("title", "")
-                        if not title or not self._relevant(title):
-                            continue
-                        label, score = self._classify(title)
-                        items.append(NewsItem(
-                            ticker="JSE",
-                            headline=title,
-                            source=f"Reddit r/{sub}",
-                            timestamp=datetime.fromtimestamp(post.get("created_utc", 0) or 0),
-                            sentiment_label=label,
-                            sentiment_score=score,
-                            text=(post.get("selftext") or "")[:300],
                         ))
             except Exception as exc:
                 print(f"[REDDIT] r/{sub} fetch failed: {exc}")

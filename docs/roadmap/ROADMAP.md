@@ -76,7 +76,7 @@ Evidence: `evaluation.py`, ADR 0006, thirty-three passing focused tests, and
 historical context and unstable cross-ticker results support continued shadow,
 not adaptive promotion.
 
-## M8 — Public specialist/community source expansion [ACTIVE]
+## M8 — Public specialist/community source expansion [COMPLETE 2026-09-03]
 Verify before integration; do not assume availability:
 - TradingView SA/JSE ideas;
 - IG South Africa public analysis/client sentiment where permitted;
@@ -90,7 +90,11 @@ Verify before integration; do not assume availability:
 Normalize as low/medium-authority evidence and learn reliability. No Facebook private-group credential scraping.
 Acceptance: access method documented, rate-limited, provenance preserved, source can be disabled independently.
 
-## M9 — Multi-agent integration
+Evidence: `source_catalog.py`, ADR 0007, current access verification in
+`DATA_SOURCES.md`, and thirty-eight passing focused tests. Only Moneyweb RSS and
+Moneyweb-hosted SENS are enabled; restricted/unverified routes remain disabled.
+
+## M9 — Multi-agent integration [ACTIVE]
 - Feed adaptive evidence/regime explanations into existing Bull/Bear/General researchers.
 - Preserve Risk/Manager governance.
 - Add disagreement telemetry: when legacy, adaptive, bull and bear strongly disagree.
