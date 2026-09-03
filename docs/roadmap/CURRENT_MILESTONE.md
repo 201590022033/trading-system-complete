@@ -1,6 +1,15 @@
 # Current Milestone
 
-**HR2 COMPLETE — HR3 not yet active**
+**HR3 COMPLETE — HR4 not yet active**
+
+## HR3 acceptance record — 2026-09-03
+
+- [x] Added point-in-time Rand trend, return, volatility and regime features.
+- [x] Separated USD gold from ZAR gold and DXY/yield/risk context.
+- [x] Separated Brent direction, momentum, volatility and Rand-denominated cost.
+- [x] Added platinum/palladium and Rand-translation features where exact dates align.
+- [x] Used prefix-only calculations, exact-date joins and no forward filling.
+- [x] Kept missing official macro vintages explicit and all features research-only.
 
 ## HR2 acceptance record — 2026-09-03
 

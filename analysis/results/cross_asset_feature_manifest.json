@@ -1,0 +1,23 @@
+{
+  "version": "sa-cross-asset-v1",
+  "path": "analysis/data/hr3/cross_asset_features.csv",
+  "sha256": "4fad72b2fcc0e40434f76b0374711915f7050ed0d1c85cabcc44bd7db167e2f4",
+  "rows": 2781,
+  "feature_columns": 84,
+  "first_event_time": "2016-01-01T00:00:00+00:00",
+  "last_event_time": "2026-09-03T00:00:00+00:00",
+  "no_lookahead": "rolling and return features use current/prior observations only; exact-date joins; no forward fill",
+  "interactions": [
+    "gold_zar",
+    "brent_zar",
+    "platinum_zar",
+    "palladium_zar"
+  ],
+  "unavailable": [
+    "SARB rate",
+    "SA yield curve",
+    "CPI vintages",
+    "economic surprises",
+    "US real yield"
+  ]
+}
