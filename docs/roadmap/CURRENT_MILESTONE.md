@@ -1,6 +1,15 @@
 # Current Milestone
 
-**HR0 COMPLETE — HR1 not yet active**
+**HR1 COMPLETE — HR2 not yet active**
+
+## HR1 acceptance record — 2026-09-03
+
+- [x] Added normalized raw/derived point-in-time feature and provenance contracts.
+- [x] Enforced timezone-aware event, availability and decision clocks.
+- [x] Added append-only persistence, stable identity and revision-aware as-of queries.
+- [x] Added explicit capability/missing-data and derived-lineage validation.
+- [x] Documented schema, storage, revisions, versioning and no-lookahead policy.
+- [x] Kept the store research/shadow-only and production behavior unchanged.
 
 ## HR0 acceptance record — 2026-09-03
 

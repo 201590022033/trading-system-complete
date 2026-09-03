@@ -1,0 +1,46 @@
+{
+  "store_version": "historical-feature-store-v1",
+  "format": "append-only JSON Lines; optional Parquet projection when an engine is installed",
+  "required_times": [
+    "event_time",
+    "available_time",
+    "decision_time"
+  ],
+  "eligibility_rule": "available_time <= decision_time",
+  "feature_groups": [
+    "commodity",
+    "cross_asset",
+    "fx",
+    "macro",
+    "raw_market",
+    "regime",
+    "source_event",
+    "technical"
+  ],
+  "revision_states": [
+    "final",
+    "initial",
+    "not_applicable",
+    "revised"
+  ],
+  "raw_derived_rule": "is_raw=false requires input_record_ids when available",
+  "required_identity": [
+    "instrument",
+    "asset_class",
+    "sector",
+    "profile",
+    "feature_name",
+    "feature_version"
+  ],
+  "capability_fields": [
+    "capability_available",
+    "unavailable_reason"
+  ],
+  "provenance_fields": [
+    "source_id",
+    "source_name",
+    "source_uri",
+    "licence",
+    "retrieval_id"
+  ]
+}
