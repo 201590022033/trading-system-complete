@@ -1,6 +1,16 @@
 # Current Milestone
 
-**ACTIVE: M1 — Evidence/provenance contracts**
+**ACTIVE: M2 — Source registry + reliability store**
+
+## M1 acceptance record — 2026-09-03
+
+- [x] Added additive `evidence.py` without replacing `NewsItem`.
+- [x] Added stable evidence IDs from source/headline/publication time/URL.
+- [x] Added provenance fields for source class/tier, timestamps, mappings, sentiment, confidence, horizon and parser version.
+- [x] Added deduplication preserving first-seen order.
+- [x] Added ADR 0001 documenting the compatibility decision.
+- [x] Focused suite passes: 6 tests (`test_evidence.py`, `test_legacy_scoring.py`).
+- [x] Network/credential-bearing scripts were not run by discovery; they remain manual-only (`test_cloud.py`, `test_ost_login.py`, browser probes).
 
 ## M0 acceptance record — 2026-09-03
 
@@ -14,10 +24,9 @@
 - [x] Recorded baseline findings in `backtest_report.md` and the indicator bible.
 - [x] Committed M0 baseline artifacts.
 
-## M1 immediate checklist
+## M2 immediate checklist
 
-- [ ] Inspect existing `NewsItem`, `MarketObservation`, sentiment and adapter fields.
-- [ ] Define a normalized evidence record with source, URL/id, published/observed/ingested timestamps, ticker/assets and parser version.
-- [ ] Add conversion adapters without replacing existing data structures.
-- [ ] Add deduplication keys and tests.
-- [ ] Keep current collectors and legacy signal behavior unchanged.
+- [ ] Define a configurable source registry for current collectors.
+- [ ] Add a local SQLite research store for evidence and outcomes.
+- [ ] Add sample-size-aware reliability updates without production weight changes.
+- [ ] Add synthetic tests demonstrating no-lookahead outcome evaluation.

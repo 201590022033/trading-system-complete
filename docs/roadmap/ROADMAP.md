@@ -13,13 +13,15 @@ Acceptance: baseline behaviour reproducible; no secrets committed; working tree 
 
 Evidence: `test_legacy_scoring.py` passes 3 characterization tests; the canonical two-year report contains 24 finite metric rows; `.env` is ignored and untracked.
 
-## M1 — Evidence/provenance contracts [ACTIVE]
+## M1 — Evidence/provenance contracts [COMPLETE 2026-09-03]
 - Add normalized evidence/source models without replacing current `NewsItem` immediately.
 - Add adapters/conversion from current news/macro objects.
 - Add deduplication keys and timestamps.
 Acceptance: existing collectors can emit/convert to evidence records; tests pass.
 
-## M2 — Source registry + reliability store
+Evidence: `evidence.py`, ADR 0001, and six passing focused tests.
+
+## M2 — Source registry + reliability store [ACTIVE]
 - Configurable registry for existing and planned sources.
 - Persistent local research store (SQLite is acceptable unless repo already has a preferred DB).
 - Outcome evaluation by horizon; sample-size-aware score.

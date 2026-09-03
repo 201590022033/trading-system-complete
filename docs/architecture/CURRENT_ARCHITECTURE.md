@@ -61,6 +61,12 @@ Existing walk-forward technical indicator research:
 - win rate and average aligned/forward returns;
 - explicit rule that research does not automatically alter production weights.
 
+### `evidence.py`
+Additive provenance boundary introduced in M1:
+- `EvidenceRecord` wraps existing `NewsItem` values;
+- stable evidence IDs support deduplication;
+- source identity/class/tier, timestamps, mappings, sentiment, confidence and parser version are preserved for future reliability learning.
+
 ## Existing strengths
 - Good separation between ingestion, observations, signal fusion and governance.
 - Real SA/JSE adaptation already underway.
