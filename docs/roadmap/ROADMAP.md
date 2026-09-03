@@ -55,13 +55,16 @@ Acceptance: unit tests + no-lookahead calculations + feature availability metada
 Evidence: `research_indicators.py`, ADR 0004, and twenty-three passing focused
 tests. Intraday and volume-dependent values are capability-gated.
 
-## M6 — Adaptive fusion in SHADOW mode [ACTIVE]
+## M6 — Adaptive fusion in SHADOW mode [COMPLETE 2026-09-03]
 - Create adaptive fusion beside legacy fixed score.
 - Weight by regime, sector/instrument profile, source reliability and feature evidence.
 - Every decision logs factor contributions and legacy-vs-adaptive comparison.
 Acceptance: production/default signal remains legacy unless explicit config selects shadow output for research.
 
-## M7 — Backtest/evaluation upgrade
+Evidence: `adaptive_fusion.py`, ADR 0005, and twenty-eight passing focused tests.
+Every engine decision logs a shadow comparison while returning the legacy action.
+
+## M7 — Backtest/evaluation upgrade [ACTIVE]
 - Multi-horizon walk-forward.
 - Costs, slippage/spread assumptions, turnover, drawdown, MFE/MAE where data allows.
 - Segment results by bull/bear/range, volatility, sector and instrument profile.

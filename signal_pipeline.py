@@ -9,6 +9,8 @@ from typing import Dict, List, Optional
 from data_pipeline import MarketData, UnifiedDataPipeline
 from jse_adapter import JSEDataAdapter, DataSourceType
 from market_profiles import DEFAULT_PROFILE_REGISTRY, ProfileRegistry
+from adaptive_fusion import AdaptiveFactor, AdaptiveFusionEngine
+from regime_engine import classify_regime
 
 try:
     from sentiment_analyzer import MacroSentimentScanner
@@ -39,6 +41,7 @@ class JSESignalEngine:
         news_source: str = "mock",
         use_macro: bool = True,
         profile_registry: ProfileRegistry = DEFAULT_PROFILE_REGISTRY,
+        adaptive_fusion: Optional[AdaptiveFusionEngine] = None,
     ):
         self.tickers = tickers or ["NPN", "SASOL", "BHP", "IMPJ", "SHPJ", "ABSPJ"]
         self.pipeline = UnifiedDataPipeline(jse_tickers=self.tickers)
@@ -47,6 +50,7 @@ class JSESignalEngine:
             news_source=news_source,
         )
         self.profile_registry = profile_registry
+        self.adaptive_fusion = adaptive_fusion or AdaptiveFusionEngine()
         self.macro_report = None
         if use_macro and MACRO_AVAILABLE:
             try:
@@ -170,6 +174,28 @@ class JSESignalEngine:
 
         confidence = min(0.95, max(0.2, abs(combined) + 0.45))
 
+        recent_prices = [float(value) for value in obs.recent_prices]
+        try:
+            regime = classify_regime(recent_prices) if len(recent_prices) >= 2 else None
+        except ValueError:
+            # Shadow context must never make the characterized legacy path fail.
+            regime = None
+        adaptive = self.adaptive_fusion.fuse(
+            (
+                AdaptiveFactor("legacy_technical", "technical", technical_score, 0.50),
+                AdaptiveFactor("aggregate_sentiment", "sentiment", sentiment_score, 0.25),
+                AdaptiveFactor(
+                    "profile_macro", "macro",
+                    macro_adjustment / 0.15 if macro_adjustment else 0.0,
+                    0.25,
+                ),
+            ),
+            legacy_score=round(combined, 2),
+            legacy_action=action,
+            profile=profile,
+            regime=regime,
+        )
+
         reason_parts = [
             f"price={obs.price:.2f}",
             f"sentiment={obs.news_sentiment.value}",
@@ -197,6 +223,7 @@ class JSESignalEngine:
                     "version": profile.version,
                     "shadow_only": profile.shadow_only,
                 },
+                "adaptive_shadow": adaptive.to_dict(),
             },
         )
 

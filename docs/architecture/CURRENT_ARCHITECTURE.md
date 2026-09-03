@@ -91,6 +91,13 @@ Research-only expanded feature layer introduced in M5:
 - intraday OHLCV-gated session VWAP and opening range;
 - explicit unavailable reasons and an `as_of_index` no-lookahead boundary.
 
+### `adaptive_fusion.py`
+Explainable `adaptive-fusion-v1` introduced in M6:
+- normalized factor contributions with regime/profile multipliers;
+- minimum-sample-gated, bounded reliability multipliers;
+- full legacy/adaptive comparison in signal metadata;
+- shadow-only output; public signal score and action remain legacy-controlled.
+
 ## Existing strengths
 - Good separation between ingestion, observations, signal fusion and governance.
 - Real SA/JSE adaptation already underway.
@@ -98,8 +105,8 @@ Research-only expanded feature layer introduced in M5:
 - Existing broker work can remain isolated/read-only.
 
 ## Existing gaps
-- Fixed signal/source weights rather than learned/contextual reliability.
-- Regime classifier exists in research/shadow mode but is not yet used by production fusion.
+- Adaptive contextual weights exist only in shadow mode and require evaluation.
+- Regime classifier informs shadow fusion but does not affect production output.
 - Profiles exist, but sector/regime-specific expanded indicator weighting is not yet implemented.
 - No normalized source-provenance/evidence store.
 - No source reliability history by sector/ticker/regime/time horizon.
