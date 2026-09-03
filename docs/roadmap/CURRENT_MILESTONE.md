@@ -1,6 +1,15 @@
 # Current Milestone
 
-**HR6 COMPLETE — HR7 not yet active**
+**HR7 COMPLETE — HR8 not yet active**
+
+## HR7 acceptance record — 2026-09-03
+
+- [x] Built common point-in-time technical contexts for six JSE equities.
+- [x] Added separate USD/ZAR, gold, Brent and JSE-index research contexts.
+- [x] Joined Rand, commodity, global-risk and nominal-yield context by exact date.
+- [x] Preserved distinct instrument/profile/regime/horizon evaluation dimensions.
+- [x] Marked intraday and futures basis/OI/term-structure capabilities unavailable.
+- [x] Added future-mutation and missing-benchmark tests; changed no strategy weights.
 
 ## HR6 acceptance record — 2026-09-03
 
