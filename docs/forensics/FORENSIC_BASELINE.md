@@ -30,11 +30,43 @@ evaluation therefore has only its technical factor available.
 
 With exactly one available factor, adaptive weight normalization makes all
 regime and profile multipliers cancel. Thus the M10 adaptive score equals the
-raw legacy technical score. The legacy comparator equals 60% of that score and
-generated no trades in the stored experiment. Adaptive-minus-legacy is
-therefore threshold de-dilution versus an inactive comparator—not measured
-incremental value from regime, profile, macro, Rand, commodity, sentiment or
-source reliability.
+raw technical score. The price-only legacy ablation equals 60% of that score and
+generated no trades in the stored experiment. This is not a full legacy comparator
+and measures no incremental value from regime, profile, macro, Rand, commodity,
+sentiment or source reliability.
+
+That zero is expected for this frozen **price-only reconstruction**: across the
+4,326 fully warmed common timestamps, raw technical scores ranged from -0.50 to
++0.50. Legacy would need a raw magnitude strictly greater than `0.35 / 0.60 =
+0.5833` when sentiment and macro are zero. Signal alignment and the 20-session
+warm-up do not explain the zero; the observed score support and fixed threshold
+do.
+
+## Legacy methodological audit
+
+The zero-trade result is not a faithful replay of everything production legacy
+would actually have known. Production uses the timestamp's aggregated news
+sentiment and macro overlay in addition to technical indicators. The repository
+has no persisted, timestamp-aligned historical news/sentiment aggregation or
+macro inputs for these 760-observation series. Treating unavailable series as
+zero is a valid missing-factor ablation, but it is not evidence that production
+legacy would have held at every historical timestamp. Therefore the status of a
+full matched legacy comparison is **`INSUFFICIENT HISTORICAL INPUTS`**.
+
+The constrained matched-opportunity audit uses common timestamps after all four
+technical indicators have their 20-session warm-up and enough future prices
+exist for every requested horizon. Of 4,326 opportunities, both reconstructions
+held in 4,054, adaptive/raw-technical alone traded in 272, both traded in zero,
+legacy-only traded in zero, and there were no directional disagreements. Each
+machine-readable opportunity records both scores/actions and subsequent
+1/3/5/20-session returns.
+
+The appropriate comparator is consequently cash/no-position (zero gross/net
+return, zero turnover) and a simple non-adaptive raw-technical benchmark. The
+reconstructed adaptive score and action are exactly identical to that simple
+technical benchmark. All former delta values are relabelled **adaptive net versus
+cash/no-trade**, not adaptive outperformance versus full legacy. There is zero
+incremental return versus the simple technical benchmark.
 
 ## Reproduction result
 

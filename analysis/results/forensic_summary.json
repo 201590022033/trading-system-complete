@@ -1,170 +1,18 @@
 {
   "metadata": {
-    "version": "forensic-v1",
+    "version": "forensic-v2-methodology-audit",
     "cost_bps": 10.0,
-    "critical_design_fact": "With only technical data available, adaptive contextual multipliers normalize out."
+    "critical_design_fact": "With only technical data available, adaptive contextual multipliers normalize out.",
+    "legacy_comparison_status": "INSUFFICIENT HISTORICAL INPUTS",
+    "delta_interpretation": "Adaptive net return versus cash/no-position; not adaptive outperformance versus full legacy."
   },
   "ranking": [
-    {
-      "ticker": "SASOL",
-      "company": "Sasol",
-      "sector": "energy",
-      "profile": "energy_sasol",
-      "horizon": 5,
-      "legacy": {
-        "sample_count": 0,
-        "wins": 0,
-        "losses": 0,
-        "win_rate": 0.0,
-        "win_rate_ci": [
-          0.0,
-          1.0
-        ],
-        "mean_gross": 0.0,
-        "mean_net": 0.0,
-        "median": 0.0,
-        "dispersion": 0.0,
-        "average_winner": 0.0,
-        "average_loser": 0.0,
-        "win_loss_ratio": 0.0,
-        "mean_mfe": 0.0,
-        "mean_mae": 0.0,
-        "turnover": 0,
-        "signal_frequency": 0.0,
-        "cost_burden": 0.0
-      },
-      "adaptive": {
-        "sample_count": 46,
-        "wins": 28,
-        "losses": 18,
-        "win_rate": 0.6086956521739131,
-        "win_rate_ci": [
-          0.4645658371764493,
-          0.7360697764475116
-        ],
-        "mean_gross": 0.019870575481218605,
-        "mean_net": 0.011052551586182542,
-        "median": 0.01937443253906207,
-        "dispersion": 0.06435668736446146,
-        "average_winner": 0.061520593126673996,
-        "average_loser": -0.044918340856156445,
-        "win_loss_ratio": 1.369609650625421,
-        "mean_mfe": 0.04681030800842225,
-        "mean_mae": -0.028226053505706134,
-        "turnover": 63,
-        "signal_frequency": 0.060927152317880796,
-        "cost_burden": 0.063
-      },
-      "adaptive_minus_legacy": 0.011052551586182542,
-      "adjacent_positive_fraction": 0.75,
-      "half_net_returns": [
-        -0.00011113753826630339,
-        0.022510022003380044
-      ],
-      "cost_stress_bps": {
-        "0": 0.011870733404364361,
-        "10": 0.011052551586182542,
-        "20": 0.010234369768000724,
-        "30": 0.009416187949818907
-      },
-      "diamond_score": 70.94,
-      "diamond_tier": "B",
-      "mechanism": "threshold de-dilution of the legacy technical score; no macro/source/profile contribution"
-    },
-    {
-      "ticker": "SASOL",
-      "company": "Sasol",
-      "sector": "energy",
-      "profile": "energy_sasol",
-      "horizon": 20,
-      "legacy": {
-        "sample_count": 0,
-        "wins": 0,
-        "losses": 0,
-        "win_rate": 0.0,
-        "win_rate_ci": [
-          0.0,
-          1.0
-        ],
-        "mean_gross": 0.0,
-        "mean_net": 0.0,
-        "median": 0.0,
-        "dispersion": 0.0,
-        "average_winner": 0.0,
-        "average_loser": 0.0,
-        "win_loss_ratio": 0.0,
-        "mean_mfe": 0.0,
-        "mean_mae": 0.0,
-        "turnover": 0,
-        "signal_frequency": 0.0,
-        "cost_burden": 0.0
-      },
-      "adaptive": {
-        "sample_count": 43,
-        "wins": 24,
-        "losses": 19,
-        "win_rate": 0.5581395348837209,
-        "win_rate_ci": [
-          0.4110735806551171,
-          0.6956691437607867
-        ],
-        "mean_gross": 0.033462825324805164,
-        "mean_net": 0.01916529845786975,
-        "median": 0.060652473579414945,
-        "dispersion": 0.15527594707435885,
-        "average_winner": 0.1461160201029958,
-        "average_loser": -0.10883594702659352,
-        "win_loss_ratio": 1.3425345586168609,
-        "mean_mfe": 0.12362170744589321,
-        "mean_mae": -0.07972924796227013,
-        "turnover": 59,
-        "signal_frequency": 0.05810810810810811,
-        "cost_burden": 0.059
-      },
-      "adaptive_minus_legacy": 0.01916529845786975,
-      "adjacent_positive_fraction": 0.75,
-      "half_net_returns": [
-        0.022508192441250616,
-        0.015214605568419632
-      ],
-      "cost_stress_bps": {
-        "0": 0.019984742902314195,
-        "10": 0.01916529845786975,
-        "20": 0.018345854013425304,
-        "30": 0.01752640956898086
-      },
-      "diamond_score": 67.83,
-      "diamond_tier": "B",
-      "mechanism": "threshold de-dilution of the legacy technical score; no macro/source/profile contribution"
-    },
     {
       "ticker": "ABSPJ",
       "company": "Absa Group",
       "sector": "financials",
       "profile": "banks_financials",
       "horizon": 3,
-      "legacy": {
-        "sample_count": 0,
-        "wins": 0,
-        "losses": 0,
-        "win_rate": 0.0,
-        "win_rate_ci": [
-          0.0,
-          1.0
-        ],
-        "mean_gross": 0.0,
-        "mean_net": 0.0,
-        "median": 0.0,
-        "dispersion": 0.0,
-        "average_winner": 0.0,
-        "average_loser": 0.0,
-        "win_loss_ratio": 0.0,
-        "mean_mfe": 0.0,
-        "mean_mae": 0.0,
-        "turnover": 0,
-        "signal_frequency": 0.0,
-        "cost_burden": 0.0
-      },
       "adaptive": {
         "sample_count": 55,
         "wins": 34,
@@ -187,7 +35,30 @@
         "signal_frequency": 0.0726552179656539,
         "cost_burden": 0.08
       },
-      "adaptive_minus_legacy": 0.0014189417897300788,
+      "legacy_price_only_reconstruction": {
+        "sample_count": 0,
+        "wins": 0,
+        "losses": 0,
+        "win_rate": 0.0,
+        "win_rate_ci": [
+          0.0,
+          1.0
+        ],
+        "mean_gross": 0.0,
+        "mean_net": 0.0,
+        "median": 0.0,
+        "dispersion": 0.0,
+        "average_winner": 0.0,
+        "average_loser": 0.0,
+        "win_loss_ratio": 0.0,
+        "mean_mfe": 0.0,
+        "mean_mae": 0.0,
+        "turnover": 0,
+        "signal_frequency": 0.0,
+        "cost_burden": 0.0
+      },
+      "adaptive_net_vs_cash_no_trade": 0.0014189417897300788,
+      "adaptive_increment_vs_simple_technical": 0.0,
       "adjacent_positive_fraction": 0.75,
       "half_net_returns": [
         0.00215579598903401,
@@ -199,8 +70,9 @@
         "20": 0.0005768365265721838,
         "30": -0.00026526873658571043
       },
-      "diamond_score": 62.84,
-      "diamond_tier": "B",
+      "technical_candidate_score": 64.76,
+      "diamond_tier": "C",
+      "diamond_gate": "failed: zero incremental value versus simple non-adaptive technical benchmark",
       "mechanism": "threshold de-dilution of the legacy technical score; no macro/source/profile contribution"
     },
     {
@@ -208,8 +80,30 @@
       "company": "Sasol",
       "sector": "energy",
       "profile": "energy_sasol",
-      "horizon": 3,
-      "legacy": {
+      "horizon": 5,
+      "adaptive": {
+        "sample_count": 46,
+        "wins": 28,
+        "losses": 18,
+        "win_rate": 0.6086956521739131,
+        "win_rate_ci": [
+          0.4645658371764493,
+          0.7360697764475116
+        ],
+        "mean_gross": 0.019870575481218605,
+        "mean_net": 0.011052551586182542,
+        "median": 0.01937443253906207,
+        "dispersion": 0.06435668736446146,
+        "average_winner": 0.061520593126673996,
+        "average_loser": -0.044918340856156445,
+        "win_loss_ratio": 1.369609650625421,
+        "mean_mfe": 0.04681030800842225,
+        "mean_mae": -0.028226053505706134,
+        "turnover": 63,
+        "signal_frequency": 0.060927152317880796,
+        "cost_burden": 0.063
+      },
+      "legacy_price_only_reconstruction": {
         "sample_count": 0,
         "wins": 0,
         "losses": 0,
@@ -231,42 +125,22 @@
         "signal_frequency": 0.0,
         "cost_burden": 0.0
       },
-      "adaptive": {
-        "sample_count": 46,
-        "wins": 26,
-        "losses": 20,
-        "win_rate": 0.5652173913043478,
-        "win_rate_ci": [
-          0.4224718277662822,
-          0.6979095404080942
-        ],
-        "mean_gross": 0.010535756538365925,
-        "mean_net": 0.005392882061087596,
-        "median": 0.014119203383546053,
-        "dispersion": 0.058477160705661106,
-        "average_winner": 0.05075053366469585,
-        "average_loser": -0.041743453725862974,
-        "win_loss_ratio": 1.2157722740907841,
-        "mean_mfe": 0.031579931770650146,
-        "mean_mae": -0.022954826917472665,
-        "turnover": 64,
-        "signal_frequency": 0.0607661822985469,
-        "cost_burden": 0.064
-      },
-      "adaptive_minus_legacy": 0.005392882061087596,
+      "adaptive_net_vs_cash_no_trade": 0.011052551586182542,
+      "adaptive_increment_vs_simple_technical": 0.0,
       "adjacent_positive_fraction": 0.75,
       "half_net_returns": [
-        -0.0035357951609729923,
-        0.014321559283148185
+        -0.00011113753826630339,
+        0.022510022003380044
       ],
       "cost_stress_bps": {
-        "0": 0.0062133948816004165,
-        "10": 0.005392882061087596,
-        "20": 0.004572369240574775,
-        "30": 0.003751856420061955
+        "0": 0.011870733404364361,
+        "10": 0.011052551586182542,
+        "20": 0.010234369768000724,
+        "30": 0.009416187949818907
       },
-      "diamond_score": 61.0,
-      "diamond_tier": "B",
+      "technical_candidate_score": 61.26,
+      "diamond_tier": "C",
+      "diamond_gate": "failed: zero incremental value versus simple non-adaptive technical benchmark",
       "mechanism": "threshold de-dilution of the legacy technical score; no macro/source/profile contribution"
     },
     {
@@ -275,28 +149,6 @@
       "sector": "financials",
       "profile": "banks_financials",
       "horizon": 5,
-      "legacy": {
-        "sample_count": 0,
-        "wins": 0,
-        "losses": 0,
-        "win_rate": 0.0,
-        "win_rate_ci": [
-          0.0,
-          1.0
-        ],
-        "mean_gross": 0.0,
-        "mean_net": 0.0,
-        "median": 0.0,
-        "dispersion": 0.0,
-        "average_winner": 0.0,
-        "average_loser": 0.0,
-        "win_loss_ratio": 0.0,
-        "mean_mfe": 0.0,
-        "mean_mae": 0.0,
-        "turnover": 0,
-        "signal_frequency": 0.0,
-        "cost_burden": 0.0
-      },
       "adaptive": {
         "sample_count": 55,
         "wins": 37,
@@ -319,29 +171,7 @@
         "signal_frequency": 0.0728476821192053,
         "cost_burden": 0.08
       },
-      "adaptive_minus_legacy": 0.002297528100203358,
-      "adjacent_positive_fraction": 0.75,
-      "half_net_returns": [
-        0.005107151582058265,
-        -0.002518969297262198
-      ],
-      "cost_stress_bps": {
-        "0": 0.0031396333633612527,
-        "10": 0.002297528100203358,
-        "20": 0.001455422837045463,
-        "30": 0.0006133175738875686
-      },
-      "diamond_score": 60.67,
-      "diamond_tier": "B",
-      "mechanism": "threshold de-dilution of the legacy technical score; no macro/source/profile contribution"
-    },
-    {
-      "ticker": "BHP",
-      "company": "BHP Group",
-      "sector": "diversified_mining",
-      "profile": "diversified_mining",
-      "horizon": 1,
-      "legacy": {
+      "legacy_price_only_reconstruction": {
         "sample_count": 0,
         "wins": 0,
         "losses": 0,
@@ -363,6 +193,30 @@
         "signal_frequency": 0.0,
         "cost_burden": 0.0
       },
+      "adaptive_net_vs_cash_no_trade": 0.002297528100203358,
+      "adaptive_increment_vs_simple_technical": 0.0,
+      "adjacent_positive_fraction": 0.75,
+      "half_net_returns": [
+        0.005107151582058265,
+        -0.002518969297262198
+      ],
+      "cost_stress_bps": {
+        "0": 0.0031396333633612527,
+        "10": 0.002297528100203358,
+        "20": 0.001455422837045463,
+        "30": 0.0006133175738875686
+      },
+      "technical_candidate_score": 60.4,
+      "diamond_tier": "C",
+      "diamond_gate": "failed: zero incremental value versus simple non-adaptive technical benchmark",
+      "mechanism": "threshold de-dilution of the legacy technical score; no macro/source/profile contribution"
+    },
+    {
+      "ticker": "BHP",
+      "company": "BHP Group",
+      "sector": "diversified_mining",
+      "profile": "diversified_mining",
+      "horizon": 1,
       "adaptive": {
         "sample_count": 40,
         "wins": 22,
@@ -385,29 +239,7 @@
         "signal_frequency": 0.052700922266139656,
         "cost_burden": 0.06
       },
-      "adaptive_minus_legacy": 0.0017008892655928092,
-      "adjacent_positive_fraction": 0.5,
-      "half_net_returns": [
-        0.001788368531099591,
-        0.0015842502449171002
-      ],
-      "cost_stress_bps": {
-        "0": 0.0025580321227356667,
-        "10": 0.0017008892655928092,
-        "20": 0.0008437464084499521,
-        "30": -1.3396448692904761e-05
-      },
-      "diamond_score": 58.76,
-      "diamond_tier": "B",
-      "mechanism": "threshold de-dilution of the legacy technical score; no macro/source/profile contribution"
-    },
-    {
-      "ticker": "BHP",
-      "company": "BHP Group",
-      "sector": "diversified_mining",
-      "profile": "diversified_mining",
-      "horizon": 3,
-      "legacy": {
+      "legacy_price_only_reconstruction": {
         "sample_count": 0,
         "wins": 0,
         "losses": 0,
@@ -429,6 +261,166 @@
         "signal_frequency": 0.0,
         "cost_burden": 0.0
       },
+      "adaptive_net_vs_cash_no_trade": 0.0017008892655928092,
+      "adaptive_increment_vs_simple_technical": 0.0,
+      "adjacent_positive_fraction": 0.5,
+      "half_net_returns": [
+        0.001788368531099591,
+        0.0015842502449171002
+      ],
+      "cost_stress_bps": {
+        "0": 0.0025580321227356667,
+        "10": 0.0017008892655928092,
+        "20": 0.0008437464084499521,
+        "30": -1.3396448692904761e-05
+      },
+      "technical_candidate_score": 58.84,
+      "diamond_tier": "C",
+      "diamond_gate": "failed: zero incremental value versus simple non-adaptive technical benchmark",
+      "mechanism": "threshold de-dilution of the legacy technical score; no macro/source/profile contribution"
+    },
+    {
+      "ticker": "SASOL",
+      "company": "Sasol",
+      "sector": "energy",
+      "profile": "energy_sasol",
+      "horizon": 20,
+      "adaptive": {
+        "sample_count": 43,
+        "wins": 24,
+        "losses": 19,
+        "win_rate": 0.5581395348837209,
+        "win_rate_ci": [
+          0.4110735806551171,
+          0.6956691437607867
+        ],
+        "mean_gross": 0.033462825324805164,
+        "mean_net": 0.01916529845786975,
+        "median": 0.060652473579414945,
+        "dispersion": 0.15527594707435885,
+        "average_winner": 0.1461160201029958,
+        "average_loser": -0.10883594702659352,
+        "win_loss_ratio": 1.3425345586168609,
+        "mean_mfe": 0.12362170744589321,
+        "mean_mae": -0.07972924796227013,
+        "turnover": 59,
+        "signal_frequency": 0.05810810810810811,
+        "cost_burden": 0.059
+      },
+      "legacy_price_only_reconstruction": {
+        "sample_count": 0,
+        "wins": 0,
+        "losses": 0,
+        "win_rate": 0.0,
+        "win_rate_ci": [
+          0.0,
+          1.0
+        ],
+        "mean_gross": 0.0,
+        "mean_net": 0.0,
+        "median": 0.0,
+        "dispersion": 0.0,
+        "average_winner": 0.0,
+        "average_loser": 0.0,
+        "win_loss_ratio": 0.0,
+        "mean_mfe": 0.0,
+        "mean_mae": 0.0,
+        "turnover": 0,
+        "signal_frequency": 0.0,
+        "cost_burden": 0.0
+      },
+      "adaptive_net_vs_cash_no_trade": 0.01916529845786975,
+      "adaptive_increment_vs_simple_technical": 0.0,
+      "adjacent_positive_fraction": 0.75,
+      "half_net_returns": [
+        0.022508192441250616,
+        0.015214605568419632
+      ],
+      "cost_stress_bps": {
+        "0": 0.019984742902314195,
+        "10": 0.01916529845786975,
+        "20": 0.018345854013425304,
+        "30": 0.01752640956898086
+      },
+      "technical_candidate_score": 57.1,
+      "diamond_tier": "C",
+      "diamond_gate": "failed: zero incremental value versus simple non-adaptive technical benchmark",
+      "mechanism": "threshold de-dilution of the legacy technical score; no macro/source/profile contribution"
+    },
+    {
+      "ticker": "SASOL",
+      "company": "Sasol",
+      "sector": "energy",
+      "profile": "energy_sasol",
+      "horizon": 3,
+      "adaptive": {
+        "sample_count": 46,
+        "wins": 26,
+        "losses": 20,
+        "win_rate": 0.5652173913043478,
+        "win_rate_ci": [
+          0.4224718277662822,
+          0.6979095404080942
+        ],
+        "mean_gross": 0.010535756538365925,
+        "mean_net": 0.005392882061087596,
+        "median": 0.014119203383546053,
+        "dispersion": 0.058477160705661106,
+        "average_winner": 0.05075053366469585,
+        "average_loser": -0.041743453725862974,
+        "win_loss_ratio": 1.2157722740907841,
+        "mean_mfe": 0.031579931770650146,
+        "mean_mae": -0.022954826917472665,
+        "turnover": 64,
+        "signal_frequency": 0.0607661822985469,
+        "cost_burden": 0.064
+      },
+      "legacy_price_only_reconstruction": {
+        "sample_count": 0,
+        "wins": 0,
+        "losses": 0,
+        "win_rate": 0.0,
+        "win_rate_ci": [
+          0.0,
+          1.0
+        ],
+        "mean_gross": 0.0,
+        "mean_net": 0.0,
+        "median": 0.0,
+        "dispersion": 0.0,
+        "average_winner": 0.0,
+        "average_loser": 0.0,
+        "win_loss_ratio": 0.0,
+        "mean_mfe": 0.0,
+        "mean_mae": 0.0,
+        "turnover": 0,
+        "signal_frequency": 0.0,
+        "cost_burden": 0.0
+      },
+      "adaptive_net_vs_cash_no_trade": 0.005392882061087596,
+      "adaptive_increment_vs_simple_technical": 0.0,
+      "adjacent_positive_fraction": 0.75,
+      "half_net_returns": [
+        -0.0035357951609729923,
+        0.014321559283148185
+      ],
+      "cost_stress_bps": {
+        "0": 0.0062133948816004165,
+        "10": 0.005392882061087596,
+        "20": 0.004572369240574775,
+        "30": 0.003751856420061955
+      },
+      "technical_candidate_score": 55.68,
+      "diamond_tier": "C",
+      "diamond_gate": "failed: zero incremental value versus simple non-adaptive technical benchmark",
+      "mechanism": "threshold de-dilution of the legacy technical score; no macro/source/profile contribution"
+    },
+    {
+      "ticker": "BHP",
+      "company": "BHP Group",
+      "sector": "diversified_mining",
+      "profile": "diversified_mining",
+      "horizon": 3,
       "adaptive": {
         "sample_count": 40,
         "wins": 24,
@@ -451,29 +443,7 @@
         "signal_frequency": 0.052840158520475564,
         "cost_burden": 0.06
       },
-      "adaptive_minus_legacy": 0.0021940838468037997,
-      "adjacent_positive_fraction": 0.5,
-      "half_net_returns": [
-        -0.0009607414361568141,
-        0.006400517557417951
-      ],
-      "cost_stress_bps": {
-        "0": 0.0030512267039466572,
-        "10": 0.0021940838468037997,
-        "20": 0.0013369409896609424,
-        "30": 0.00047979813251808546
-      },
-      "diamond_score": 54.18,
-      "diamond_tier": "C",
-      "mechanism": "threshold de-dilution of the legacy technical score; no macro/source/profile contribution"
-    },
-    {
-      "ticker": "ABSPJ",
-      "company": "Absa Group",
-      "sector": "financials",
-      "profile": "banks_financials",
-      "horizon": 20,
-      "legacy": {
+      "legacy_price_only_reconstruction": {
         "sample_count": 0,
         "wins": 0,
         "losses": 0,
@@ -495,6 +465,30 @@
         "signal_frequency": 0.0,
         "cost_burden": 0.0
       },
+      "adaptive_net_vs_cash_no_trade": 0.0021940838468037997,
+      "adaptive_increment_vs_simple_technical": 0.0,
+      "adjacent_positive_fraction": 0.5,
+      "half_net_returns": [
+        -0.0009607414361568141,
+        0.006400517557417951
+      ],
+      "cost_stress_bps": {
+        "0": 0.0030512267039466572,
+        "10": 0.0021940838468037997,
+        "20": 0.0013369409896609424,
+        "30": 0.00047979813251808546
+      },
+      "technical_candidate_score": 51.92,
+      "diamond_tier": "C",
+      "diamond_gate": "failed: zero incremental value versus simple non-adaptive technical benchmark",
+      "mechanism": "threshold de-dilution of the legacy technical score; no macro/source/profile contribution"
+    },
+    {
+      "ticker": "ABSPJ",
+      "company": "Absa Group",
+      "sector": "financials",
+      "profile": "banks_financials",
+      "horizon": 20,
       "adaptive": {
         "sample_count": 52,
         "wins": 33,
@@ -517,7 +511,30 @@
         "signal_frequency": 0.07027027027027027,
         "cost_burden": 0.076
       },
-      "adaptive_minus_legacy": 0.0019084115845584627,
+      "legacy_price_only_reconstruction": {
+        "sample_count": 0,
+        "wins": 0,
+        "losses": 0,
+        "win_rate": 0.0,
+        "win_rate_ci": [
+          0.0,
+          1.0
+        ],
+        "mean_gross": 0.0,
+        "mean_net": 0.0,
+        "median": 0.0,
+        "dispersion": 0.0,
+        "average_winner": 0.0,
+        "average_loser": 0.0,
+        "win_loss_ratio": 0.0,
+        "mean_mfe": 0.0,
+        "mean_mae": 0.0,
+        "turnover": 0,
+        "signal_frequency": 0.0,
+        "cost_burden": 0.0
+      },
+      "adaptive_net_vs_cash_no_trade": 0.0019084115845584627,
+      "adaptive_increment_vs_simple_technical": 0.0,
       "adjacent_positive_fraction": 0.75,
       "half_net_returns": [
         0.00526465846427006,
@@ -529,140 +546,9 @@
         "20": 0.001063967140114018,
         "30": 0.00021952269566957367
       },
-      "diamond_score": 51.59,
+      "technical_candidate_score": 48.94,
       "diamond_tier": "C",
-      "mechanism": "threshold de-dilution of the legacy technical score; no macro/source/profile contribution"
-    },
-    {
-      "ticker": "SHPJ",
-      "company": "Shoprite",
-      "sector": "retail_consumer",
-      "profile": "retail_consumer",
-      "horizon": 20,
-      "legacy": {
-        "sample_count": 0,
-        "wins": 0,
-        "losses": 0,
-        "win_rate": 0.0,
-        "win_rate_ci": [
-          0.0,
-          1.0
-        ],
-        "mean_gross": 0.0,
-        "mean_net": 0.0,
-        "median": 0.0,
-        "dispersion": 0.0,
-        "average_winner": 0.0,
-        "average_loser": 0.0,
-        "win_loss_ratio": 0.0,
-        "mean_mfe": 0.0,
-        "mean_mae": 0.0,
-        "turnover": 0,
-        "signal_frequency": 0.0,
-        "cost_burden": 0.0
-      },
-      "adaptive": {
-        "sample_count": 50,
-        "wins": 27,
-        "losses": 23,
-        "win_rate": 0.54,
-        "win_rate_ci": [
-          0.40398634328388083,
-          0.6703056539821737
-        ],
-        "mean_gross": 0.004423368578104214,
-        "mean_net": 0.0015685380989467854,
-        "median": 0.012321569250688391,
-        "dispersion": 0.052337889653649654,
-        "average_winner": 0.04394158227871212,
-        "average_loser": -0.04196757794000072,
-        "win_loss_ratio": 1.0470364132410392,
-        "mean_mfe": 0.04020385952983181,
-        "mean_mae": -0.03240158966410732,
-        "turnover": 80,
-        "signal_frequency": 0.06756756756756757,
-        "cost_burden": 0.08
-      },
-      "adaptive_minus_legacy": 0.0015685380989467854,
-      "adjacent_positive_fraction": 0.25,
-      "half_net_returns": [
-        0.001202718848977525,
-        0.0019032237957271726
-      ],
-      "cost_stress_bps": {
-        "0": 0.0024574269878356748,
-        "10": 0.0015685380989467854,
-        "20": 0.0006796492100578962,
-        "30": -0.00020923967883099275
-      },
-      "diamond_score": 46.68,
-      "diamond_tier": "C",
-      "mechanism": "threshold de-dilution of the legacy technical score; no macro/source/profile contribution"
-    },
-    {
-      "ticker": "SHPJ",
-      "company": "Shoprite",
-      "sector": "retail_consumer",
-      "profile": "retail_consumer",
-      "horizon": 1,
-      "legacy": {
-        "sample_count": 0,
-        "wins": 0,
-        "losses": 0,
-        "win_rate": 0.0,
-        "win_rate_ci": [
-          0.0,
-          1.0
-        ],
-        "mean_gross": 0.0,
-        "mean_net": 0.0,
-        "median": 0.0,
-        "dispersion": 0.0,
-        "average_winner": 0.0,
-        "average_loser": 0.0,
-        "win_loss_ratio": 0.0,
-        "mean_mfe": 0.0,
-        "mean_mae": 0.0,
-        "turnover": 0,
-        "signal_frequency": 0.0,
-        "cost_burden": 0.0
-      },
-      "adaptive": {
-        "sample_count": 50,
-        "wins": 31,
-        "losses": 19,
-        "win_rate": 0.62,
-        "win_rate_ci": [
-          0.4815019502239357,
-          0.7413740415742278
-        ],
-        "mean_gross": 0.0001358891840036902,
-        "mean_net": -0.0008133948977757278,
-        "median": 0.00226297991514246,
-        "dispersion": 0.018120765662460365,
-        "average_winner": 0.0097176863006711,
-        "average_loser": -0.015497569269506295,
-        "win_loss_ratio": 0.6270458374263925,
-        "mean_mfe": 0.006024965506416082,
-        "mean_mae": -0.005889076322412392,
-        "turnover": 80,
-        "signal_frequency": 0.06587615283267458,
-        "cost_burden": 0.08
-      },
-      "adaptive_minus_legacy": -0.0008133948977757278,
-      "adjacent_positive_fraction": 0.25,
-      "half_net_returns": [
-        -0.003992110008364581,
-        0.002094791267231095
-      ],
-      "cost_stress_bps": {
-        "0": 7.549399111316123e-05,
-        "10": -0.0008133948977757278,
-        "20": -0.0017022837866646167,
-        "30": -0.0025911726755535056
-      },
-      "diamond_score": 46.6,
-      "diamond_tier": "C",
+      "diamond_gate": "failed: zero incremental value versus simple non-adaptive technical benchmark",
       "mechanism": "threshold de-dilution of the legacy technical score; no macro/source/profile contribution"
     },
     {
@@ -671,28 +557,6 @@
       "sector": "energy",
       "profile": "energy_sasol",
       "horizon": 1,
-      "legacy": {
-        "sample_count": 0,
-        "wins": 0,
-        "losses": 0,
-        "win_rate": 0.0,
-        "win_rate_ci": [
-          0.0,
-          1.0
-        ],
-        "mean_gross": 0.0,
-        "mean_net": 0.0,
-        "median": 0.0,
-        "dispersion": 0.0,
-        "average_winner": 0.0,
-        "average_loser": 0.0,
-        "win_loss_ratio": 0.0,
-        "mean_mfe": 0.0,
-        "mean_mae": 0.0,
-        "turnover": 0,
-        "signal_frequency": 0.0,
-        "cost_burden": 0.0
-      },
       "adaptive": {
         "sample_count": 46,
         "wins": 19,
@@ -715,7 +579,30 @@
         "signal_frequency": 0.06060606060606061,
         "cost_burden": 0.064
       },
-      "adaptive_minus_legacy": -0.0018323641224141391,
+      "legacy_price_only_reconstruction": {
+        "sample_count": 0,
+        "wins": 0,
+        "losses": 0,
+        "win_rate": 0.0,
+        "win_rate_ci": [
+          0.0,
+          1.0
+        ],
+        "mean_gross": 0.0,
+        "mean_net": 0.0,
+        "median": 0.0,
+        "dispersion": 0.0,
+        "average_winner": 0.0,
+        "average_loser": 0.0,
+        "win_loss_ratio": 0.0,
+        "mean_mfe": 0.0,
+        "mean_mae": 0.0,
+        "turnover": 0,
+        "signal_frequency": 0.0,
+        "cost_burden": 0.0
+      },
+      "adaptive_net_vs_cash_no_trade": -0.0018323641224141391,
+      "adaptive_increment_vs_simple_technical": 0.0,
       "adjacent_positive_fraction": 0.75,
       "half_net_returns": [
         -0.0074631160338166315,
@@ -727,74 +614,9 @@
         "20": -0.00265287694292696,
         "30": -0.00347338976343978
       },
-      "diamond_score": 46.1,
+      "technical_candidate_score": 47.86,
       "diamond_tier": "C",
-      "mechanism": "threshold de-dilution of the legacy technical score; no macro/source/profile contribution"
-    },
-    {
-      "ticker": "BHP",
-      "company": "BHP Group",
-      "sector": "diversified_mining",
-      "profile": "diversified_mining",
-      "horizon": 5,
-      "legacy": {
-        "sample_count": 0,
-        "wins": 0,
-        "losses": 0,
-        "win_rate": 0.0,
-        "win_rate_ci": [
-          0.0,
-          1.0
-        ],
-        "mean_gross": 0.0,
-        "mean_net": 0.0,
-        "median": 0.0,
-        "dispersion": 0.0,
-        "average_winner": 0.0,
-        "average_loser": 0.0,
-        "win_loss_ratio": 0.0,
-        "mean_mfe": 0.0,
-        "mean_mae": 0.0,
-        "turnover": 0,
-        "signal_frequency": 0.0,
-        "cost_burden": 0.0
-      },
-      "adaptive": {
-        "sample_count": 40,
-        "wins": 23,
-        "losses": 17,
-        "win_rate": 0.575,
-        "win_rate_ci": [
-          0.42194800436059987,
-          0.7149083147518411
-        ],
-        "mean_gross": 0.0005602393242880033,
-        "mean_net": -0.0005370061004068556,
-        "median": 0.004510259742739331,
-        "dispersion": 0.030242347500707617,
-        "average_winner": 0.021581764259314306,
-        "average_loser": -0.02788064735251229,
-        "win_loss_ratio": 0.7740768708288116,
-        "mean_mfe": 0.021489645644093926,
-        "mean_mae": -0.016039947079727723,
-        "turnover": 60,
-        "signal_frequency": 0.052980132450331126,
-        "cost_burden": 0.06
-      },
-      "adaptive_minus_legacy": -0.0005370061004068556,
-      "adjacent_positive_fraction": 0.5,
-      "half_net_returns": [
-        -0.00622818020421976,
-        0.00705122603801035
-      ],
-      "cost_stress_bps": {
-        "0": 0.0003201367567360019,
-        "10": -0.0005370061004068556,
-        "20": -0.001394148957549713,
-        "30": -0.00225129181469257
-      },
-      "diamond_score": 45.71,
-      "diamond_tier": "C",
+      "diamond_gate": "failed: zero incremental value versus simple non-adaptive technical benchmark",
       "mechanism": "threshold de-dilution of the legacy technical score; no macro/source/profile contribution"
     },
     {
@@ -802,8 +624,30 @@
       "company": "Shoprite",
       "sector": "retail_consumer",
       "profile": "retail_consumer",
-      "horizon": 3,
-      "legacy": {
+      "horizon": 1,
+      "adaptive": {
+        "sample_count": 50,
+        "wins": 31,
+        "losses": 19,
+        "win_rate": 0.62,
+        "win_rate_ci": [
+          0.4815019502239357,
+          0.7413740415742278
+        ],
+        "mean_gross": 0.0001358891840036902,
+        "mean_net": -0.0008133948977757278,
+        "median": 0.00226297991514246,
+        "dispersion": 0.018120765662460365,
+        "average_winner": 0.0097176863006711,
+        "average_loser": -0.015497569269506295,
+        "win_loss_ratio": 0.6270458374263925,
+        "mean_mfe": 0.006024965506416082,
+        "mean_mae": -0.005889076322412392,
+        "turnover": 80,
+        "signal_frequency": 0.06587615283267458,
+        "cost_burden": 0.08
+      },
+      "legacy_price_only_reconstruction": {
         "sample_count": 0,
         "wins": 0,
         "losses": 0,
@@ -825,42 +669,22 @@
         "signal_frequency": 0.0,
         "cost_burden": 0.0
       },
-      "adaptive": {
-        "sample_count": 50,
-        "wins": 30,
-        "losses": 20,
-        "win_rate": 0.6,
-        "win_rate_ci": [
-          0.4618118910275937,
-          0.7239181021375425
-        ],
-        "mean_gross": 0.0005431630371982621,
-        "mean_net": -0.0005871316460009658,
-        "median": 0.004936167464867469,
-        "dispersion": 0.022642187403993614,
-        "average_winner": 0.013961298583180832,
-        "average_loser": -0.019584040281775593,
-        "win_loss_ratio": 0.7128916394321788,
-        "mean_mfe": 0.012576312114036415,
-        "mean_mae": -0.011136167787753316,
-        "turnover": 80,
-        "signal_frequency": 0.06605019815059446,
-        "cost_burden": 0.08
-      },
-      "adaptive_minus_legacy": -0.0005871316460009658,
+      "adaptive_net_vs_cash_no_trade": -0.0008133948977757278,
+      "adaptive_increment_vs_simple_technical": 0.0,
       "adjacent_positive_fraction": 0.25,
       "half_net_returns": [
-        -0.002375924623845584,
-        0.0010494236316015574
+        -0.003992110008364581,
+        0.002094791267231095
       ],
       "cost_stress_bps": {
-        "0": 0.00030175724288792336,
-        "10": -0.0005871316460009658,
-        "20": -0.0014760205348898548,
-        "30": -0.002364909423778743
+        "0": 7.549399111316123e-05,
+        "10": -0.0008133948977757278,
+        "20": -0.0017022837866646167,
+        "30": -0.0025911726755535056
       },
-      "diamond_score": 44.94,
+      "technical_candidate_score": 46.82,
       "diamond_tier": "C",
+      "diamond_gate": "failed: zero incremental value versus simple non-adaptive technical benchmark",
       "mechanism": "threshold de-dilution of the legacy technical score; no macro/source/profile contribution"
     },
     {
@@ -869,28 +693,6 @@
       "sector": "financials",
       "profile": "banks_financials",
       "horizon": 1,
-      "legacy": {
-        "sample_count": 0,
-        "wins": 0,
-        "losses": 0,
-        "win_rate": 0.0,
-        "win_rate_ci": [
-          0.0,
-          1.0
-        ],
-        "mean_gross": 0.0,
-        "mean_net": 0.0,
-        "median": 0.0,
-        "dispersion": 0.0,
-        "average_winner": 0.0,
-        "average_loser": 0.0,
-        "win_loss_ratio": 0.0,
-        "mean_mfe": 0.0,
-        "mean_mae": 0.0,
-        "turnover": 0,
-        "signal_frequency": 0.0,
-        "cost_burden": 0.0
-      },
       "adaptive": {
         "sample_count": 55,
         "wins": 28,
@@ -913,7 +715,30 @@
         "signal_frequency": 0.07246376811594203,
         "cost_burden": 0.08
       },
-      "adaptive_minus_legacy": -0.0013980497277313823,
+      "legacy_price_only_reconstruction": {
+        "sample_count": 0,
+        "wins": 0,
+        "losses": 0,
+        "win_rate": 0.0,
+        "win_rate_ci": [
+          0.0,
+          1.0
+        ],
+        "mean_gross": 0.0,
+        "mean_net": 0.0,
+        "median": 0.0,
+        "dispersion": 0.0,
+        "average_winner": 0.0,
+        "average_loser": 0.0,
+        "win_loss_ratio": 0.0,
+        "mean_mfe": 0.0,
+        "mean_mae": 0.0,
+        "turnover": 0,
+        "signal_frequency": 0.0,
+        "cost_burden": 0.0
+      },
+      "adaptive_net_vs_cash_no_trade": -0.0013980497277313823,
+      "adaptive_increment_vs_simple_technical": 0.0,
       "adjacent_positive_fraction": 0.75,
       "half_net_returns": [
         -0.0007118417991073892,
@@ -925,17 +750,40 @@
         "20": -0.002240154990889277,
         "30": -0.0030822602540471716
       },
-      "diamond_score": 44.68,
+      "technical_candidate_score": 45.23,
       "diamond_tier": "C",
+      "diamond_gate": "failed: zero incremental value versus simple non-adaptive technical benchmark",
       "mechanism": "threshold de-dilution of the legacy technical score; no macro/source/profile contribution"
     },
     {
-      "ticker": "NPN",
-      "company": "Naspers",
-      "sector": "technology",
-      "profile": "offshore_earner",
-      "horizon": 1,
-      "legacy": {
+      "ticker": "BHP",
+      "company": "BHP Group",
+      "sector": "diversified_mining",
+      "profile": "diversified_mining",
+      "horizon": 5,
+      "adaptive": {
+        "sample_count": 40,
+        "wins": 23,
+        "losses": 17,
+        "win_rate": 0.575,
+        "win_rate_ci": [
+          0.42194800436059987,
+          0.7149083147518411
+        ],
+        "mean_gross": 0.0005602393242880033,
+        "mean_net": -0.0005370061004068556,
+        "median": 0.004510259742739331,
+        "dispersion": 0.030242347500707617,
+        "average_winner": 0.021581764259314306,
+        "average_loser": -0.02788064735251229,
+        "win_loss_ratio": 0.7740768708288116,
+        "mean_mfe": 0.021489645644093926,
+        "mean_mae": -0.016039947079727723,
+        "turnover": 60,
+        "signal_frequency": 0.052980132450331126,
+        "cost_burden": 0.06
+      },
+      "legacy_price_only_reconstruction": {
         "sample_count": 0,
         "wins": 0,
         "losses": 0,
@@ -957,42 +805,158 @@
         "signal_frequency": 0.0,
         "cost_burden": 0.0
       },
-      "adaptive": {
-        "sample_count": 46,
-        "wins": 23,
-        "losses": 23,
-        "win_rate": 0.5,
-        "win_rate_ci": [
-          0.3611870167007236,
-          0.6388129832992764
-        ],
-        "mean_gross": -0.0012557012063482505,
-        "mean_net": -0.001577311796197772,
-        "median": 6.96636986216026e-05,
-        "dispersion": 0.017422469822531515,
-        "average_winner": 0.013172621211732398,
-        "average_loser": -0.0156840236244289,
-        "win_loss_ratio": 0.8398751192401402,
-        "mean_mfe": 0.006586310605866199,
-        "mean_mae": -0.00784201181221445,
-        "turnover": 70,
-        "signal_frequency": 0.06060606060606061,
-        "cost_burden": 0.07
-      },
-      "adaptive_minus_legacy": -0.001577311796197772,
-      "adjacent_positive_fraction": 0.0,
+      "adaptive_net_vs_cash_no_trade": -0.0005370061004068556,
+      "adaptive_increment_vs_simple_technical": 0.0,
+      "adjacent_positive_fraction": 0.5,
       "half_net_returns": [
-        -0.0020731380208992103,
-        -0.0009256544723044533
+        -0.00622818020421976,
+        0.00705122603801035
       ],
       "cost_stress_bps": {
-        "0": -0.0007131142653335744,
-        "10": -0.001577311796197772,
-        "20": -0.0024415093270619696,
-        "30": -0.003305706857926167
+        "0": 0.0003201367567360019,
+        "10": -0.0005370061004068556,
+        "20": -0.001394148957549713,
+        "30": -0.00225129181469257
       },
-      "diamond_score": 31.91,
+      "technical_candidate_score": 45.17,
       "diamond_tier": "C",
+      "diamond_gate": "failed: zero incremental value versus simple non-adaptive technical benchmark",
+      "mechanism": "threshold de-dilution of the legacy technical score; no macro/source/profile contribution"
+    },
+    {
+      "ticker": "SHPJ",
+      "company": "Shoprite",
+      "sector": "retail_consumer",
+      "profile": "retail_consumer",
+      "horizon": 3,
+      "adaptive": {
+        "sample_count": 50,
+        "wins": 30,
+        "losses": 20,
+        "win_rate": 0.6,
+        "win_rate_ci": [
+          0.4618118910275937,
+          0.7239181021375425
+        ],
+        "mean_gross": 0.0005431630371982621,
+        "mean_net": -0.0005871316460009658,
+        "median": 0.004936167464867469,
+        "dispersion": 0.022642187403993614,
+        "average_winner": 0.013961298583180832,
+        "average_loser": -0.019584040281775593,
+        "win_loss_ratio": 0.7128916394321788,
+        "mean_mfe": 0.012576312114036415,
+        "mean_mae": -0.011136167787753316,
+        "turnover": 80,
+        "signal_frequency": 0.06605019815059446,
+        "cost_burden": 0.08
+      },
+      "legacy_price_only_reconstruction": {
+        "sample_count": 0,
+        "wins": 0,
+        "losses": 0,
+        "win_rate": 0.0,
+        "win_rate_ci": [
+          0.0,
+          1.0
+        ],
+        "mean_gross": 0.0,
+        "mean_net": 0.0,
+        "median": 0.0,
+        "dispersion": 0.0,
+        "average_winner": 0.0,
+        "average_loser": 0.0,
+        "win_loss_ratio": 0.0,
+        "mean_mfe": 0.0,
+        "mean_mae": 0.0,
+        "turnover": 0,
+        "signal_frequency": 0.0,
+        "cost_burden": 0.0
+      },
+      "adaptive_net_vs_cash_no_trade": -0.0005871316460009658,
+      "adaptive_increment_vs_simple_technical": 0.0,
+      "adjacent_positive_fraction": 0.25,
+      "half_net_returns": [
+        -0.002375924623845584,
+        0.0010494236316015574
+      ],
+      "cost_stress_bps": {
+        "0": 0.00030175724288792336,
+        "10": -0.0005871316460009658,
+        "20": -0.0014760205348898548,
+        "30": -0.002364909423778743
+      },
+      "technical_candidate_score": 44.24,
+      "diamond_tier": "C",
+      "diamond_gate": "failed: zero incremental value versus simple non-adaptive technical benchmark",
+      "mechanism": "threshold de-dilution of the legacy technical score; no macro/source/profile contribution"
+    },
+    {
+      "ticker": "SHPJ",
+      "company": "Shoprite",
+      "sector": "retail_consumer",
+      "profile": "retail_consumer",
+      "horizon": 20,
+      "adaptive": {
+        "sample_count": 50,
+        "wins": 27,
+        "losses": 23,
+        "win_rate": 0.54,
+        "win_rate_ci": [
+          0.40398634328388083,
+          0.6703056539821737
+        ],
+        "mean_gross": 0.004423368578104214,
+        "mean_net": 0.0015685380989467854,
+        "median": 0.012321569250688391,
+        "dispersion": 0.052337889653649654,
+        "average_winner": 0.04394158227871212,
+        "average_loser": -0.04196757794000072,
+        "win_loss_ratio": 1.0470364132410392,
+        "mean_mfe": 0.04020385952983181,
+        "mean_mae": -0.03240158966410732,
+        "turnover": 80,
+        "signal_frequency": 0.06756756756756757,
+        "cost_burden": 0.08
+      },
+      "legacy_price_only_reconstruction": {
+        "sample_count": 0,
+        "wins": 0,
+        "losses": 0,
+        "win_rate": 0.0,
+        "win_rate_ci": [
+          0.0,
+          1.0
+        ],
+        "mean_gross": 0.0,
+        "mean_net": 0.0,
+        "median": 0.0,
+        "dispersion": 0.0,
+        "average_winner": 0.0,
+        "average_loser": 0.0,
+        "win_loss_ratio": 0.0,
+        "mean_mfe": 0.0,
+        "mean_mae": 0.0,
+        "turnover": 0,
+        "signal_frequency": 0.0,
+        "cost_burden": 0.0
+      },
+      "adaptive_net_vs_cash_no_trade": 0.0015685380989467854,
+      "adaptive_increment_vs_simple_technical": 0.0,
+      "adjacent_positive_fraction": 0.25,
+      "half_net_returns": [
+        0.001202718848977525,
+        0.0019032237957271726
+      ],
+      "cost_stress_bps": {
+        "0": 0.0024574269878356748,
+        "10": 0.0015685380989467854,
+        "20": 0.0006796492100578962,
+        "30": -0.00020923967883099275
+      },
+      "technical_candidate_score": 42.96,
+      "diamond_tier": "C",
+      "diamond_gate": "failed: zero incremental value versus simple non-adaptive technical benchmark",
       "mechanism": "threshold de-dilution of the legacy technical score; no macro/source/profile contribution"
     },
     {
@@ -1001,28 +965,6 @@
       "sector": "retail_consumer",
       "profile": "retail_consumer",
       "horizon": 5,
-      "legacy": {
-        "sample_count": 0,
-        "wins": 0,
-        "losses": 0,
-        "win_rate": 0.0,
-        "win_rate_ci": [
-          0.0,
-          1.0
-        ],
-        "mean_gross": 0.0,
-        "mean_net": 0.0,
-        "median": 0.0,
-        "dispersion": 0.0,
-        "average_winner": 0.0,
-        "average_loser": 0.0,
-        "win_loss_ratio": 0.0,
-        "mean_mfe": 0.0,
-        "mean_mae": 0.0,
-        "turnover": 0,
-        "signal_frequency": 0.0,
-        "cost_burden": 0.0
-      },
       "adaptive": {
         "sample_count": 50,
         "wins": 22,
@@ -1045,29 +987,7 @@
         "signal_frequency": 0.06622516556291391,
         "cost_burden": 0.08
       },
-      "adaptive_minus_legacy": -0.0023502151947147523,
-      "adjacent_positive_fraction": 0.25,
-      "half_net_returns": [
-        -0.0010036573307523426,
-        -0.0035821723894037655
-      ],
-      "cost_stress_bps": {
-        "0": -0.0014613263058258633,
-        "10": -0.0023502151947147523,
-        "20": -0.0032391040836036414,
-        "30": -0.00412799297249253
-      },
-      "diamond_score": 31.38,
-      "diamond_tier": "C",
-      "mechanism": "threshold de-dilution of the legacy technical score; no macro/source/profile contribution"
-    },
-    {
-      "ticker": "NPN",
-      "company": "Naspers",
-      "sector": "technology",
-      "profile": "offshore_earner",
-      "horizon": 3,
-      "legacy": {
+      "legacy_price_only_reconstruction": {
         "sample_count": 0,
         "wins": 0,
         "losses": 0,
@@ -1089,6 +1009,98 @@
         "signal_frequency": 0.0,
         "cost_burden": 0.0
       },
+      "adaptive_net_vs_cash_no_trade": -0.0023502151947147523,
+      "adaptive_increment_vs_simple_technical": 0.0,
+      "adjacent_positive_fraction": 0.25,
+      "half_net_returns": [
+        -0.0010036573307523426,
+        -0.0035821723894037655
+      ],
+      "cost_stress_bps": {
+        "0": -0.0014613263058258633,
+        "10": -0.0023502151947147523,
+        "20": -0.0032391040836036414,
+        "30": -0.00412799297249253
+      },
+      "technical_candidate_score": 29.09,
+      "diamond_tier": "C",
+      "diamond_gate": "failed: zero incremental value versus simple non-adaptive technical benchmark",
+      "mechanism": "threshold de-dilution of the legacy technical score; no macro/source/profile contribution"
+    },
+    {
+      "ticker": "NPN",
+      "company": "Naspers",
+      "sector": "technology",
+      "profile": "offshore_earner",
+      "horizon": 1,
+      "adaptive": {
+        "sample_count": 46,
+        "wins": 23,
+        "losses": 23,
+        "win_rate": 0.5,
+        "win_rate_ci": [
+          0.3611870167007236,
+          0.6388129832992764
+        ],
+        "mean_gross": -0.0012557012063482505,
+        "mean_net": -0.001577311796197772,
+        "median": 6.96636986216026e-05,
+        "dispersion": 0.017422469822531515,
+        "average_winner": 0.013172621211732398,
+        "average_loser": -0.0156840236244289,
+        "win_loss_ratio": 0.8398751192401402,
+        "mean_mfe": 0.006586310605866199,
+        "mean_mae": -0.00784201181221445,
+        "turnover": 70,
+        "signal_frequency": 0.06060606060606061,
+        "cost_burden": 0.07
+      },
+      "legacy_price_only_reconstruction": {
+        "sample_count": 0,
+        "wins": 0,
+        "losses": 0,
+        "win_rate": 0.0,
+        "win_rate_ci": [
+          0.0,
+          1.0
+        ],
+        "mean_gross": 0.0,
+        "mean_net": 0.0,
+        "median": 0.0,
+        "dispersion": 0.0,
+        "average_winner": 0.0,
+        "average_loser": 0.0,
+        "win_loss_ratio": 0.0,
+        "mean_mfe": 0.0,
+        "mean_mae": 0.0,
+        "turnover": 0,
+        "signal_frequency": 0.0,
+        "cost_burden": 0.0
+      },
+      "adaptive_net_vs_cash_no_trade": -0.001577311796197772,
+      "adaptive_increment_vs_simple_technical": 0.0,
+      "adjacent_positive_fraction": 0.0,
+      "half_net_returns": [
+        -0.0020731380208992103,
+        -0.0009256544723044533
+      ],
+      "cost_stress_bps": {
+        "0": -0.0007131142653335744,
+        "10": -0.001577311796197772,
+        "20": -0.0024415093270619696,
+        "30": -0.003305706857926167
+      },
+      "technical_candidate_score": 28.51,
+      "diamond_tier": "C",
+      "diamond_gate": "failed: zero incremental value versus simple non-adaptive technical benchmark",
+      "mechanism": "threshold de-dilution of the legacy technical score; no macro/source/profile contribution"
+    },
+    {
+      "ticker": "NPN",
+      "company": "Naspers",
+      "sector": "technology",
+      "profile": "offshore_earner",
+      "horizon": 3,
       "adaptive": {
         "sample_count": 46,
         "wins": 22,
@@ -1111,7 +1123,30 @@
         "signal_frequency": 0.0607661822985469,
         "cost_burden": 0.07
       },
-      "adaptive_minus_legacy": -0.0035588079800576242,
+      "legacy_price_only_reconstruction": {
+        "sample_count": 0,
+        "wins": 0,
+        "losses": 0,
+        "win_rate": 0.0,
+        "win_rate_ci": [
+          0.0,
+          1.0
+        ],
+        "mean_gross": 0.0,
+        "mean_net": 0.0,
+        "median": 0.0,
+        "dispersion": 0.0,
+        "average_winner": 0.0,
+        "average_loser": 0.0,
+        "win_loss_ratio": 0.0,
+        "mean_mfe": 0.0,
+        "mean_mae": 0.0,
+        "turnover": 0,
+        "signal_frequency": 0.0,
+        "cost_burden": 0.0
+      },
+      "adaptive_net_vs_cash_no_trade": -0.0035588079800576242,
+      "adaptive_increment_vs_simple_technical": 0.0,
       "adjacent_positive_fraction": 0.0,
       "half_net_returns": [
         -0.002546162837511245,
@@ -1123,140 +1158,9 @@
         "20": -0.004423005510921822,
         "30": -0.005287203041786019
       },
-      "diamond_score": 23.86,
+      "technical_candidate_score": 21.08,
       "diamond_tier": "C",
-      "mechanism": "threshold de-dilution of the legacy technical score; no macro/source/profile contribution"
-    },
-    {
-      "ticker": "NPN",
-      "company": "Naspers",
-      "sector": "technology",
-      "profile": "offshore_earner",
-      "horizon": 5,
-      "legacy": {
-        "sample_count": 0,
-        "wins": 0,
-        "losses": 0,
-        "win_rate": 0.0,
-        "win_rate_ci": [
-          0.0,
-          1.0
-        ],
-        "mean_gross": 0.0,
-        "mean_net": 0.0,
-        "median": 0.0,
-        "dispersion": 0.0,
-        "average_winner": 0.0,
-        "average_loser": 0.0,
-        "win_loss_ratio": 0.0,
-        "mean_mfe": 0.0,
-        "mean_mae": 0.0,
-        "turnover": 0,
-        "signal_frequency": 0.0,
-        "cost_burden": 0.0
-      },
-      "adaptive": {
-        "sample_count": 46,
-        "wins": 21,
-        "losses": 25,
-        "win_rate": 0.45652173913043476,
-        "win_rate_ci": [
-          0.32154510421121985,
-          0.5982006503391957
-        ],
-        "mean_gross": -0.00342228281482495,
-        "mean_net": -0.0028077161664437993,
-        "median": -0.001275895109984826,
-        "dispersion": 0.04909351252151356,
-        "average_winner": 0.0341491710837666,
-        "average_loser": -0.03498230408964185,
-        "win_loss_ratio": 0.9761841586037228,
-        "mean_mfe": 0.022339398946828588,
-        "mean_mae": -0.02548590264400191,
-        "turnover": 70,
-        "signal_frequency": 0.060927152317880796,
-        "cost_burden": 0.07
-      },
-      "adaptive_minus_legacy": -0.0028077161664437993,
-      "adjacent_positive_fraction": 0.0,
-      "half_net_returns": [
-        -0.0017600467256269742,
-        -0.0041846531458030545
-      ],
-      "cost_stress_bps": {
-        "0": -0.0019435186355796013,
-        "10": -0.0028077161664437993,
-        "20": -0.003671913697307997,
-        "30": -0.0045361112281721945
-      },
-      "diamond_score": 23.54,
-      "diamond_tier": "C",
-      "mechanism": "threshold de-dilution of the legacy technical score; no macro/source/profile contribution"
-    },
-    {
-      "ticker": "IMPJ",
-      "company": "Impala Platinum",
-      "sector": "pgm_mining",
-      "profile": "pgm_mining",
-      "horizon": 20,
-      "legacy": {
-        "sample_count": 0,
-        "wins": 0,
-        "losses": 0,
-        "win_rate": 0.0,
-        "win_rate_ci": [
-          0.0,
-          1.0
-        ],
-        "mean_gross": 0.0,
-        "mean_net": 0.0,
-        "median": 0.0,
-        "dispersion": 0.0,
-        "average_winner": 0.0,
-        "average_loser": 0.0,
-        "win_loss_ratio": 0.0,
-        "mean_mfe": 0.0,
-        "mean_mae": 0.0,
-        "turnover": 0,
-        "signal_frequency": 0.0,
-        "cost_burden": 0.0
-      },
-      "adaptive": {
-        "sample_count": 44,
-        "wins": 20,
-        "losses": 24,
-        "win_rate": 0.45454545454545453,
-        "win_rate_ci": [
-          0.3170500778685361,
-          0.599340678293465
-        ],
-        "mean_gross": -0.0027493233248687813,
-        "mean_net": -0.002433818767029295,
-        "median": -0.03686057887093108,
-        "dispersion": 0.17882700232967735,
-        "average_winner": 0.16261746355107357,
-        "average_loser": -0.14055497905482076,
-        "win_loss_ratio": 1.1569669366721456,
-        "mean_mfe": 0.12001279406410814,
-        "mean_mae": -0.12719633549132892,
-        "turnover": 64,
-        "signal_frequency": 0.05945945945945946,
-        "cost_burden": 0.064
-      },
-      "adaptive_minus_legacy": -0.002433818767029295,
-      "adjacent_positive_fraction": 0.0,
-      "half_net_returns": [
-        3.786764206924678e-05,
-        -0.006439655361085552
-      ],
-      "cost_stress_bps": {
-        "0": -0.0015917135038713997,
-        "10": -0.002433818767029295,
-        "20": -0.00327592403018719,
-        "30": -0.004118029293345085
-      },
-      "diamond_score": 22.02,
-      "diamond_tier": "C",
+      "diamond_gate": "failed: zero incremental value versus simple non-adaptive technical benchmark",
       "mechanism": "threshold de-dilution of the legacy technical score; no macro/source/profile contribution"
     },
     {
@@ -1265,28 +1169,6 @@
       "sector": "diversified_mining",
       "profile": "diversified_mining",
       "horizon": 20,
-      "legacy": {
-        "sample_count": 0,
-        "wins": 0,
-        "losses": 0,
-        "win_rate": 0.0,
-        "win_rate_ci": [
-          0.0,
-          1.0
-        ],
-        "mean_gross": 0.0,
-        "mean_net": 0.0,
-        "median": 0.0,
-        "dispersion": 0.0,
-        "average_winner": 0.0,
-        "average_loser": 0.0,
-        "win_loss_ratio": 0.0,
-        "mean_mfe": 0.0,
-        "mean_mae": 0.0,
-        "turnover": 0,
-        "signal_frequency": 0.0,
-        "cost_burden": 0.0
-      },
       "adaptive": {
         "sample_count": 40,
         "wins": 18,
@@ -1309,7 +1191,30 @@
         "signal_frequency": 0.05405405405405406,
         "cost_burden": 0.06
       },
-      "adaptive_minus_legacy": -0.005715879976783875,
+      "legacy_price_only_reconstruction": {
+        "sample_count": 0,
+        "wins": 0,
+        "losses": 0,
+        "win_rate": 0.0,
+        "win_rate_ci": [
+          0.0,
+          1.0
+        ],
+        "mean_gross": 0.0,
+        "mean_net": 0.0,
+        "median": 0.0,
+        "dispersion": 0.0,
+        "average_winner": 0.0,
+        "average_loser": 0.0,
+        "win_loss_ratio": 0.0,
+        "mean_mfe": 0.0,
+        "mean_mae": 0.0,
+        "turnover": 0,
+        "signal_frequency": 0.0,
+        "cost_burden": 0.0
+      },
+      "adaptive_net_vs_cash_no_trade": -0.005715879976783875,
+      "adaptive_increment_vs_simple_technical": 0.0,
       "adjacent_positive_fraction": 0.5,
       "half_net_returns": [
         -0.00389551018094931,
@@ -1321,8 +1226,9 @@
         "20": -0.006573022833926733,
         "30": -0.00743016569106959
       },
-      "diamond_score": 20.01,
+      "technical_candidate_score": 19.53,
       "diamond_tier": "C",
+      "diamond_gate": "failed: zero incremental value versus simple non-adaptive technical benchmark",
       "mechanism": "threshold de-dilution of the legacy technical score; no macro/source/profile contribution"
     },
     {
@@ -1330,8 +1236,30 @@
       "company": "Naspers",
       "sector": "technology",
       "profile": "offshore_earner",
-      "horizon": 20,
-      "legacy": {
+      "horizon": 5,
+      "adaptive": {
+        "sample_count": 46,
+        "wins": 21,
+        "losses": 25,
+        "win_rate": 0.45652173913043476,
+        "win_rate_ci": [
+          0.32154510421121985,
+          0.5982006503391957
+        ],
+        "mean_gross": -0.00342228281482495,
+        "mean_net": -0.0028077161664437993,
+        "median": -0.001275895109984826,
+        "dispersion": 0.04909351252151356,
+        "average_winner": 0.0341491710837666,
+        "average_loser": -0.03498230408964185,
+        "win_loss_ratio": 0.9761841586037228,
+        "mean_mfe": 0.022339398946828588,
+        "mean_mae": -0.02548590264400191,
+        "turnover": 70,
+        "signal_frequency": 0.060927152317880796,
+        "cost_burden": 0.07
+      },
+      "legacy_price_only_reconstruction": {
         "sample_count": 0,
         "wins": 0,
         "losses": 0,
@@ -1353,42 +1281,90 @@
         "signal_frequency": 0.0,
         "cost_burden": 0.0
       },
-      "adaptive": {
-        "sample_count": 44,
-        "wins": 23,
-        "losses": 21,
-        "win_rate": 0.5227272727272727,
-        "win_rate_ci": [
-          0.379352201361717,
-          0.6624524205572824
-        ],
-        "mean_gross": -0.008888979419928424,
-        "mean_net": -0.005886090954831419,
-        "median": 0.003789792792254776,
-        "dispersion": 0.12091171877939905,
-        "average_winner": 0.08042567923636548,
-        "average_loser": -0.10670979604348842,
-        "win_loss_ratio": 0.7536859990210165,
-        "mean_mfe": 0.05981513756594451,
-        "mean_mae": -0.0742755517305556,
-        "turnover": 68,
-        "signal_frequency": 0.05945945945945946,
-        "cost_burden": 0.068
-      },
-      "adaptive_minus_legacy": -0.005886090954831419,
+      "adaptive_net_vs_cash_no_trade": -0.0028077161664437993,
+      "adaptive_increment_vs_simple_technical": 0.0,
       "adjacent_positive_fraction": 0.0,
       "half_net_returns": [
-        -0.0010250936131268422,
-        -0.012873774633531749
+        -0.0017600467256269742,
+        -0.0041846531458030545
       ],
       "cost_stress_bps": {
-        "0": -0.005014296083036547,
-        "10": -0.005886090954831419,
-        "20": -0.006757885826626292,
-        "30": -0.007629680698421164
+        "0": -0.0019435186355796013,
+        "10": -0.0028077161664437993,
+        "20": -0.003671913697307997,
+        "30": -0.0045361112281721945
       },
-      "diamond_score": 10.03,
+      "technical_candidate_score": 19.4,
       "diamond_tier": "C",
+      "diamond_gate": "failed: zero incremental value versus simple non-adaptive technical benchmark",
+      "mechanism": "threshold de-dilution of the legacy technical score; no macro/source/profile contribution"
+    },
+    {
+      "ticker": "IMPJ",
+      "company": "Impala Platinum",
+      "sector": "pgm_mining",
+      "profile": "pgm_mining",
+      "horizon": 20,
+      "adaptive": {
+        "sample_count": 44,
+        "wins": 20,
+        "losses": 24,
+        "win_rate": 0.45454545454545453,
+        "win_rate_ci": [
+          0.3170500778685361,
+          0.599340678293465
+        ],
+        "mean_gross": -0.0027493233248687813,
+        "mean_net": -0.002433818767029295,
+        "median": -0.03686057887093108,
+        "dispersion": 0.17882700232967735,
+        "average_winner": 0.16261746355107357,
+        "average_loser": -0.14055497905482076,
+        "win_loss_ratio": 1.1569669366721456,
+        "mean_mfe": 0.12001279406410814,
+        "mean_mae": -0.12719633549132892,
+        "turnover": 64,
+        "signal_frequency": 0.05945945945945946,
+        "cost_burden": 0.064
+      },
+      "legacy_price_only_reconstruction": {
+        "sample_count": 0,
+        "wins": 0,
+        "losses": 0,
+        "win_rate": 0.0,
+        "win_rate_ci": [
+          0.0,
+          1.0
+        ],
+        "mean_gross": 0.0,
+        "mean_net": 0.0,
+        "median": 0.0,
+        "dispersion": 0.0,
+        "average_winner": 0.0,
+        "average_loser": 0.0,
+        "win_loss_ratio": 0.0,
+        "mean_mfe": 0.0,
+        "mean_mae": 0.0,
+        "turnover": 0,
+        "signal_frequency": 0.0,
+        "cost_burden": 0.0
+      },
+      "adaptive_net_vs_cash_no_trade": -0.002433818767029295,
+      "adaptive_increment_vs_simple_technical": 0.0,
+      "adjacent_positive_fraction": 0.0,
+      "half_net_returns": [
+        3.786764206924678e-05,
+        -0.006439655361085552
+      ],
+      "cost_stress_bps": {
+        "0": -0.0015917135038713997,
+        "10": -0.002433818767029295,
+        "20": -0.00327592403018719,
+        "30": -0.004118029293345085
+      },
+      "technical_candidate_score": 16.75,
+      "diamond_tier": "C",
+      "diamond_gate": "failed: zero incremental value versus simple non-adaptive technical benchmark",
       "mechanism": "threshold de-dilution of the legacy technical score; no macro/source/profile contribution"
     },
     {
@@ -1397,28 +1373,6 @@
       "sector": "pgm_mining",
       "profile": "pgm_mining",
       "horizon": 1,
-      "legacy": {
-        "sample_count": 0,
-        "wins": 0,
-        "losses": 0,
-        "win_rate": 0.0,
-        "win_rate_ci": [
-          0.0,
-          1.0
-        ],
-        "mean_gross": 0.0,
-        "mean_net": 0.0,
-        "median": 0.0,
-        "dispersion": 0.0,
-        "average_winner": 0.0,
-        "average_loser": 0.0,
-        "win_loss_ratio": 0.0,
-        "mean_mfe": 0.0,
-        "mean_mae": 0.0,
-        "turnover": 0,
-        "signal_frequency": 0.0,
-        "cost_burden": 0.0
-      },
       "adaptive": {
         "sample_count": 44,
         "wins": 14,
@@ -1441,29 +1395,7 @@
         "signal_frequency": 0.057971014492753624,
         "cost_burden": 0.064
       },
-      "adaptive_minus_legacy": -0.009049308291761095,
-      "adjacent_positive_fraction": 0.0,
-      "half_net_returns": [
-        -0.008708487364917946,
-        -0.009601673242162063
-      ],
-      "cost_stress_bps": {
-        "0": -0.008207203028603201,
-        "10": -0.009049308291761095,
-        "20": -0.009891413554918991,
-        "30": -0.010733518818076885
-      },
-      "diamond_score": 9.7,
-      "diamond_tier": "C",
-      "mechanism": "threshold de-dilution of the legacy technical score; no macro/source/profile contribution"
-    },
-    {
-      "ticker": "IMPJ",
-      "company": "Impala Platinum",
-      "sector": "pgm_mining",
-      "profile": "pgm_mining",
-      "horizon": 3,
-      "legacy": {
+      "legacy_price_only_reconstruction": {
         "sample_count": 0,
         "wins": 0,
         "losses": 0,
@@ -1485,6 +1417,98 @@
         "signal_frequency": 0.0,
         "cost_burden": 0.0
       },
+      "adaptive_net_vs_cash_no_trade": -0.009049308291761095,
+      "adaptive_increment_vs_simple_technical": 0.0,
+      "adjacent_positive_fraction": 0.0,
+      "half_net_returns": [
+        -0.008708487364917946,
+        -0.009601673242162063
+      ],
+      "cost_stress_bps": {
+        "0": -0.008207203028603201,
+        "10": -0.009049308291761095,
+        "20": -0.009891413554918991,
+        "30": -0.010733518818076885
+      },
+      "technical_candidate_score": 11.34,
+      "diamond_tier": "C",
+      "diamond_gate": "failed: zero incremental value versus simple non-adaptive technical benchmark",
+      "mechanism": "threshold de-dilution of the legacy technical score; no macro/source/profile contribution"
+    },
+    {
+      "ticker": "NPN",
+      "company": "Naspers",
+      "sector": "technology",
+      "profile": "offshore_earner",
+      "horizon": 20,
+      "adaptive": {
+        "sample_count": 44,
+        "wins": 23,
+        "losses": 21,
+        "win_rate": 0.5227272727272727,
+        "win_rate_ci": [
+          0.379352201361717,
+          0.6624524205572824
+        ],
+        "mean_gross": -0.008888979419928424,
+        "mean_net": -0.005886090954831419,
+        "median": 0.003789792792254776,
+        "dispersion": 0.12091171877939905,
+        "average_winner": 0.08042567923636548,
+        "average_loser": -0.10670979604348842,
+        "win_loss_ratio": 0.7536859990210165,
+        "mean_mfe": 0.05981513756594451,
+        "mean_mae": -0.0742755517305556,
+        "turnover": 68,
+        "signal_frequency": 0.05945945945945946,
+        "cost_burden": 0.068
+      },
+      "legacy_price_only_reconstruction": {
+        "sample_count": 0,
+        "wins": 0,
+        "losses": 0,
+        "win_rate": 0.0,
+        "win_rate_ci": [
+          0.0,
+          1.0
+        ],
+        "mean_gross": 0.0,
+        "mean_net": 0.0,
+        "median": 0.0,
+        "dispersion": 0.0,
+        "average_winner": 0.0,
+        "average_loser": 0.0,
+        "win_loss_ratio": 0.0,
+        "mean_mfe": 0.0,
+        "mean_mae": 0.0,
+        "turnover": 0,
+        "signal_frequency": 0.0,
+        "cost_burden": 0.0
+      },
+      "adaptive_net_vs_cash_no_trade": -0.005886090954831419,
+      "adaptive_increment_vs_simple_technical": 0.0,
+      "adjacent_positive_fraction": 0.0,
+      "half_net_returns": [
+        -0.0010250936131268422,
+        -0.012873774633531749
+      ],
+      "cost_stress_bps": {
+        "0": -0.005014296083036547,
+        "10": -0.005886090954831419,
+        "20": -0.006757885826626292,
+        "30": -0.007629680698421164
+      },
+      "technical_candidate_score": 6.52,
+      "diamond_tier": "C",
+      "diamond_gate": "failed: zero incremental value versus simple non-adaptive technical benchmark",
+      "mechanism": "threshold de-dilution of the legacy technical score; no macro/source/profile contribution"
+    },
+    {
+      "ticker": "IMPJ",
+      "company": "Impala Platinum",
+      "sector": "pgm_mining",
+      "profile": "pgm_mining",
+      "horizon": 3,
       "adaptive": {
         "sample_count": 44,
         "wins": 14,
@@ -1507,29 +1531,7 @@
         "signal_frequency": 0.05812417437252312,
         "cost_burden": 0.064
       },
-      "adaptive_minus_legacy": -0.014597815936721879,
-      "adjacent_positive_fraction": 0.0,
-      "half_net_returns": [
-        -0.010600022664692343,
-        -0.021076998136218023
-      ],
-      "cost_stress_bps": {
-        "0": -0.013755710673563983,
-        "10": -0.014597815936721879,
-        "20": -0.015439921199879775,
-        "30": -0.01628202646303767
-      },
-      "diamond_score": 0.0,
-      "diamond_tier": "C",
-      "mechanism": "threshold de-dilution of the legacy technical score; no macro/source/profile contribution"
-    },
-    {
-      "ticker": "IMPJ",
-      "company": "Impala Platinum",
-      "sector": "pgm_mining",
-      "profile": "pgm_mining",
-      "horizon": 5,
-      "legacy": {
+      "legacy_price_only_reconstruction": {
         "sample_count": 0,
         "wins": 0,
         "losses": 0,
@@ -1551,6 +1553,30 @@
         "signal_frequency": 0.0,
         "cost_burden": 0.0
       },
+      "adaptive_net_vs_cash_no_trade": -0.014597815936721879,
+      "adaptive_increment_vs_simple_technical": 0.0,
+      "adjacent_positive_fraction": 0.0,
+      "half_net_returns": [
+        -0.010600022664692343,
+        -0.021076998136218023
+      ],
+      "cost_stress_bps": {
+        "0": -0.013755710673563983,
+        "10": -0.014597815936721879,
+        "20": -0.015439921199879775,
+        "30": -0.01628202646303767
+      },
+      "technical_candidate_score": 0.0,
+      "diamond_tier": "C",
+      "diamond_gate": "failed: zero incremental value versus simple non-adaptive technical benchmark",
+      "mechanism": "threshold de-dilution of the legacy technical score; no macro/source/profile contribution"
+    },
+    {
+      "ticker": "IMPJ",
+      "company": "Impala Platinum",
+      "sector": "pgm_mining",
+      "profile": "pgm_mining",
+      "horizon": 5,
       "adaptive": {
         "sample_count": 44,
         "wins": 18,
@@ -1573,7 +1599,30 @@
         "signal_frequency": 0.05827814569536424,
         "cost_burden": 0.064
       },
-      "adaptive_minus_legacy": -0.010614859355046786,
+      "legacy_price_only_reconstruction": {
+        "sample_count": 0,
+        "wins": 0,
+        "losses": 0,
+        "win_rate": 0.0,
+        "win_rate_ci": [
+          0.0,
+          1.0
+        ],
+        "mean_gross": 0.0,
+        "mean_net": 0.0,
+        "median": 0.0,
+        "dispersion": 0.0,
+        "average_winner": 0.0,
+        "average_loser": 0.0,
+        "win_loss_ratio": 0.0,
+        "mean_mfe": 0.0,
+        "mean_mae": 0.0,
+        "turnover": 0,
+        "signal_frequency": 0.0,
+        "cost_burden": 0.0
+      },
+      "adaptive_net_vs_cash_no_trade": -0.010614859355046786,
+      "adaptive_increment_vs_simple_technical": 0.0,
       "adjacent_positive_fraction": 0.0,
       "half_net_returns": [
         -0.008734327073363414,
@@ -1585,8 +1634,9 @@
         "20": -0.011456964618204682,
         "30": -0.012299069881362576
       },
-      "diamond_score": 0.0,
+      "technical_candidate_score": 0.0,
       "diamond_tier": "C",
+      "diamond_gate": "failed: zero incremental value versus simple non-adaptive technical benchmark",
       "mechanism": "threshold de-dilution of the legacy technical score; no macro/source/profile contribution"
     }
   ],
@@ -2793,10 +2843,103 @@
     }
   ],
   "failure_taxonomy": {
-    "transaction_cost_burden": 3,
     "horizon_mismatch_or_instability": 4,
+    "transaction_cost_burden": 3,
     "technical_signal_noise_or_lag": 4,
     "downside_or_volatility_exposure": 4
+  },
+  "matched_opportunity_analysis": {
+    "status": "INSUFFICIENT HISTORICAL INPUTS",
+    "status_explanation": "A faithful full-production legacy replay is impossible because point-in-time sentiment/news aggregation and macro inputs were not persisted. The matched comparison below is valid only for the shared frozen close-derived technical input.",
+    "technical_warmup_sessions": 20,
+    "cash_no_trade_benchmark": {
+      "action": "hold",
+      "gross_return": 0.0,
+      "net_return": 0.0,
+      "turnover": 0.0,
+      "cost_bps": 0.0
+    },
+    "simple_non_adaptive_technical_benchmark": "Exactly identical to the reconstructed adaptive score/action because technical is the only available factor and adaptive normalization gives it 100% effective weight.",
+    "overall": {
+      "opportunities": 4326,
+      "both_agree_hold": 4054,
+      "both_agree_trade": 0,
+      "adaptive_only_trades": 272,
+      "legacy_only_trades": 0,
+      "directional_disagreements": 0,
+      "minimum_raw_technical_score": -0.5,
+      "maximum_raw_technical_score": 0.5,
+      "legacy_required_raw_score_magnitude": 0.5833333333333334
+    },
+    "by_ticker": {
+      "NPN": {
+        "opportunities": 721,
+        "both_agree_hold": 677,
+        "both_agree_trade": 0,
+        "adaptive_only_trades": 44,
+        "legacy_only_trades": 0,
+        "directional_disagreements": 0,
+        "minimum_raw_technical_score": -0.44999999999999996,
+        "maximum_raw_technical_score": 0.44999999999999996,
+        "legacy_required_raw_score_magnitude": 0.5833333333333334
+      },
+      "SASOL": {
+        "opportunities": 721,
+        "both_agree_hold": 678,
+        "both_agree_trade": 0,
+        "adaptive_only_trades": 43,
+        "legacy_only_trades": 0,
+        "directional_disagreements": 0,
+        "minimum_raw_technical_score": -0.44999999999999996,
+        "maximum_raw_technical_score": 0.44999999999999996,
+        "legacy_required_raw_score_magnitude": 0.5833333333333334
+      },
+      "BHP": {
+        "opportunities": 721,
+        "both_agree_hold": 681,
+        "both_agree_trade": 0,
+        "adaptive_only_trades": 40,
+        "legacy_only_trades": 0,
+        "directional_disagreements": 0,
+        "minimum_raw_technical_score": -0.5,
+        "maximum_raw_technical_score": 0.44999999999999996,
+        "legacy_required_raw_score_magnitude": 0.5833333333333334
+      },
+      "IMPJ": {
+        "opportunities": 721,
+        "both_agree_hold": 677,
+        "both_agree_trade": 0,
+        "adaptive_only_trades": 44,
+        "legacy_only_trades": 0,
+        "directional_disagreements": 0,
+        "minimum_raw_technical_score": -0.44999999999999996,
+        "maximum_raw_technical_score": 0.44999999999999996,
+        "legacy_required_raw_score_magnitude": 0.5833333333333334
+      },
+      "SHPJ": {
+        "opportunities": 721,
+        "both_agree_hold": 671,
+        "both_agree_trade": 0,
+        "adaptive_only_trades": 50,
+        "legacy_only_trades": 0,
+        "directional_disagreements": 0,
+        "minimum_raw_technical_score": -0.44999999999999996,
+        "maximum_raw_technical_score": 0.44999999999999996,
+        "legacy_required_raw_score_magnitude": 0.5833333333333334
+      },
+      "ABSPJ": {
+        "opportunities": 721,
+        "both_agree_hold": 670,
+        "both_agree_trade": 0,
+        "adaptive_only_trades": 51,
+        "legacy_only_trades": 0,
+        "directional_disagreements": 0,
+        "minimum_raw_technical_score": -0.44999999999999996,
+        "maximum_raw_technical_score": 0.5,
+        "legacy_required_raw_score_magnitude": 0.5833333333333334
+      }
+    },
+    "opportunities": []
   },
   "records": []
 }

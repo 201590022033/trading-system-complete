@@ -4,9 +4,10 @@ Each represented profile has only one ticker, so ticker and sector effects are
 confounded. No sector-level conclusion qualifies as strong evidence.
 
 - **Energy/Sasol:** 3/5/20-session adaptive net means were positive; 5 sessions
-  ranked first, but its first half was slightly negative and no Brent/Rand data
-  entered the model. This is a technical-horizon Tier B candidate, not evidence
-  for the Sasol macro profile.
+  ranked highly, but its first half was slightly negative and no Brent/Rand data
+  entered the model. This is a technical-horizon Tier C watch item, not evidence
+  for the Sasol macro profile. After the comparator audit it remains Tier C because
+  reconstructed adaptive is identical to the raw-technical benchmark.
 - **Banks/Absa:** 3/5/20 sessions were positive, but 5/20 reversed sign between
   temporal halves. No rate, bond-yield, growth or Rand observations exist.
   Promising but unproven.

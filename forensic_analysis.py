@@ -43,6 +43,95 @@ def _position(score):
     return 1 if score > 0.35 else -1 if score < -0.35 else 0
 
 
+def _action(score):
+    return "buy" if score > 0.35 else "sell" if score < -0.35 else "hold"
+
+
+def matched_opportunity_analysis(snapshot):
+    """Compare frozen price-only scores at fully warmed, common timestamps.
+
+    This is deliberately labelled constrained: the repository has no aligned
+    historical sentiment or macro series with which to replay production legacy.
+    """
+    opportunities = []
+    for ticker, prices in snapshot["prices"].items():
+        generator = SignalGenerator(buffer_size=max(100, len(prices)))
+        for index, price in enumerate(prices):
+            generator.add_vwap(ticker, price)
+            if index < 19 or index + max(HORIZONS) >= len(prices):
+                continue
+            indicators = generator.generate_indicators(ticker)
+            technical_score = legacy_technical_score(SimpleNamespace(indicators=indicators))
+            legacy_score = 0.60 * technical_score
+            adaptive_score = technical_score
+            legacy_action = _action(legacy_score)
+            adaptive_action = _action(adaptive_score)
+            if legacy_action == adaptive_action:
+                category = "both_agree_hold" if legacy_action == "hold" else "both_agree_trade"
+            elif legacy_action == "hold":
+                category = "adaptive_only_trade"
+            elif adaptive_action == "hold":
+                category = "legacy_only_trade"
+            else:
+                category = "directional_disagreement"
+            opportunities.append({
+                "ticker": ticker,
+                "index": index,
+                "technical_warmup_complete": True,
+                "full_legacy_inputs_available": False,
+                "legacy_score_price_only_reconstruction": legacy_score,
+                "adaptive_score_price_only_reconstruction": adaptive_score,
+                "simple_non_adaptive_technical_score": technical_score,
+                "legacy_action_price_only_reconstruction": legacy_action,
+                "adaptive_action_price_only_reconstruction": adaptive_action,
+                "simple_non_adaptive_technical_action": _action(technical_score),
+                "comparison_category": category,
+                "subsequent_returns": {
+                    str(horizon): prices[index + horizon] / price - 1.0
+                    for horizon in HORIZONS
+                },
+            })
+
+    def counts(rows):
+        categories = Counter(row["comparison_category"] for row in rows)
+        raw_scores = [row["adaptive_score_price_only_reconstruction"] for row in rows]
+        return {
+            "opportunities": len(rows),
+            "both_agree_hold": categories["both_agree_hold"],
+            "both_agree_trade": categories["both_agree_trade"],
+            "adaptive_only_trades": categories["adaptive_only_trade"],
+            "legacy_only_trades": categories["legacy_only_trade"],
+            "directional_disagreements": categories["directional_disagreement"],
+            "minimum_raw_technical_score": min(raw_scores) if raw_scores else 0.0,
+            "maximum_raw_technical_score": max(raw_scores) if raw_scores else 0.0,
+            "legacy_required_raw_score_magnitude": 0.35 / 0.60,
+        }
+
+    return {
+        "status": "INSUFFICIENT HISTORICAL INPUTS",
+        "status_explanation": (
+            "A faithful full-production legacy replay is impossible because point-in-time "
+            "sentiment/news aggregation and macro inputs were not persisted. The matched "
+            "comparison below is valid only for the shared frozen close-derived technical input."
+        ),
+        "technical_warmup_sessions": 20,
+        "cash_no_trade_benchmark": {
+            "action": "hold", "gross_return": 0.0, "net_return": 0.0,
+            "turnover": 0.0, "cost_bps": 0.0,
+        },
+        "simple_non_adaptive_technical_benchmark": (
+            "Exactly identical to the reconstructed adaptive score/action because technical is "
+            "the only available factor and adaptive normalization gives it 100% effective weight."
+        ),
+        "overall": counts(opportunities),
+        "by_ticker": {
+            ticker: counts([row for row in opportunities if row["ticker"] == ticker])
+            for ticker in TICKERS
+        },
+        "opportunities": opportunities,
+    }
+
+
 def decision_records(ticker, prices, horizon):
     generator = SignalGenerator(buffer_size=max(100, len(prices)))
     profile = DEFAULT_PROFILE_REGISTRY.select(ticker)
@@ -133,7 +222,9 @@ def analyse(snapshot):
             halves = []
             for period in ("first_half", "second_half"):
                 halves.append(summarize([r for r in subset if r["model"] == "adaptive" and r["period"] == period])["mean_net"])
-            delta = adaptive["mean_net"] - legacy["mean_net"]
+            cash_benchmark = 0.0
+            adaptive_net_vs_cash = adaptive["mean_net"] - cash_benchmark
+            adaptive_increment_vs_technical = 0.0
             adaptive_records = [r for r in subset if r["model"] == "adaptive"]
             cost_stress = {}
             for bps in (0, 10, 20, 30):
@@ -144,21 +235,26 @@ def analyse(snapshot):
             downside = max(0.0, 1.0 + adaptive["mean_mae"] * 20.0)
             confidence = min(1.0, adaptive["sample_count"] / 100.0) * max(0.0, adaptive["win_rate_ci"][0] - 0.35) / 0.25
             temporal = sum(x > 0 for x in halves) / 2.0
-            score = 100 * (0.25 * max(0, min(1, delta / 0.02 + 0.5)) +
-                           0.20 * max(0, min(1, adaptive["mean_net"] / 0.02 + 0.5)) +
+            score = 100 / 0.75 * (0.20 * max(0, min(1, adaptive["mean_net"] / 0.02 + 0.5)) +
                            0.15 * confidence + 0.15 * robustness + 0.10 * temporal + 0.15 * downside)
-            tier = "A" if score >= 70 and temporal == 1 and robustness >= .75 else "B" if score >= 55 else "C"
+            # No adaptive diamond can pass an incremental-value gate when the
+            # adaptive result is exactly the simple non-adaptive technical benchmark.
+            tier = "C"
             profile = DEFAULT_PROFILE_REGISTRY.select(ticker)
             ranking.append({
                 "ticker": ticker, "company": JSE_TICKERS[ticker]["name"], "sector": profile.sector,
-                "profile": profile.profile_id, "horizon": horizon, "legacy": legacy,
-                "adaptive": adaptive, "adaptive_minus_legacy": delta,
+                "profile": profile.profile_id, "horizon": horizon, "adaptive": adaptive,
+                "legacy_price_only_reconstruction": legacy,
+                "adaptive_net_vs_cash_no_trade": adaptive_net_vs_cash,
+                "adaptive_increment_vs_simple_technical": adaptive_increment_vs_technical,
                 "adjacent_positive_fraction": robustness, "half_net_returns": halves,
                 "cost_stress_bps": cost_stress,
-                "diamond_score": round(score, 2), "diamond_tier": tier,
+                "technical_candidate_score": round(score, 2),
+                "diamond_tier": tier,
+                "diamond_gate": "failed: zero incremental value versus simple non-adaptive technical benchmark",
                 "mechanism": "threshold de-dilution of the legacy technical score; no macro/source/profile contribution",
             })
-    ranking.sort(key=lambda x: x["diamond_score"], reverse=True)
+    ranking.sort(key=lambda x: x["technical_candidate_score"], reverse=True)
 
     indicator = []
     for name in ("rsi", "sma", "breakout", "stochastic"):
@@ -184,10 +280,14 @@ def analyse(snapshot):
         elif row["adjacent_positive_fraction"] > 0: failures["horizon_mismatch_or_instability"] += 1
         elif row["adaptive"]["mean_mae"] < -0.03: failures["downside_or_volatility_exposure"] += 1
         else: failures["technical_signal_noise_or_lag"] += 1
-    return {"metadata": {"version": "forensic-v1", "cost_bps": COST_BPS,
-            "critical_design_fact": "With only technical data available, adaptive contextual multipliers normalize out."},
+    matched = matched_opportunity_analysis(snapshot)
+    return {"metadata": {"version": "forensic-v2-methodology-audit", "cost_bps": COST_BPS,
+            "critical_design_fact": "With only technical data available, adaptive contextual multipliers normalize out.",
+            "legacy_comparison_status": "INSUFFICIENT HISTORICAL INPUTS",
+            "delta_interpretation": "Adaptive net return versus cash/no-position; not adaptive outperformance versus full legacy."},
             "ranking": ranking, "indicator_by_regime": indicator,
-            "failure_taxonomy": dict(failures), "records": all_records}
+            "failure_taxonomy": dict(failures), "matched_opportunity_analysis": matched,
+            "records": all_records}
 
 
 def main():
@@ -200,10 +300,11 @@ def main():
         snapshot_path.write_text(json.dumps(snapshot, indent=2), encoding="utf-8")
     result = analyse(snapshot)
     (RESULTS / "forensic_analysis.json").write_text(json.dumps(result, indent=2), encoding="utf-8")
-    compact = {**result, "records": []}
+    compact = {**result, "records": [], "matched_opportunity_analysis": {
+        **result["matched_opportunity_analysis"], "opportunities": []}}
     (RESULTS / "forensic_summary.json").write_text(json.dumps(compact, indent=2), encoding="utf-8")
     print("captured", {k: len(v) for k, v in snapshot["prices"].items()})
-    print("ranking", [(x["ticker"], x["horizon"], x["diamond_score"], x["diamond_tier"]) for x in result["ranking"][:5]])
+    print("ranking", [(x["ticker"], x["horizon"], x["technical_candidate_score"], x["diamond_tier"]) for x in result["ranking"][:5]])
 
 
 if __name__ == "__main__": main()

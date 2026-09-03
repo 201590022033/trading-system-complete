@@ -7,7 +7,9 @@
 - [x] Ranked all 24 ticker/horizon results with a non-return-only Diamond Score.
 - [x] Completed indicator, sector, macro/Rand, source and failure forensics.
 - [x] Applied temporal, adjacent-horizon, cost and provider-reproduction stress.
-- [x] Classified zero Tier A, six Tier B and eighteen Tier C combinations.
+- [x] Audited the inactive legacy reconstruction and relabelled returns versus cash.
+- [x] Added 4,326 constrained matched opportunities and cash/raw-technical benchmarks.
+- [x] Reclassified zero Tier A, zero Tier B and twenty-four Tier C combinations.
 - [x] Answered all 18 mandated questions and recorded recommendations separately.
 - [x] Left production/default scoring and paper/shadow execution unchanged.
 

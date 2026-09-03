@@ -1,19 +1,45 @@
-| Rank | Combination | Sector | Regime | Horizon | Adaptive Δ | Robustness | Diamond Tier |
+| Rank | Technical opportunity | Sector | Regime | Horizon | Net vs cash | Robustness | Diamond Tier |
 | ----: | ----------- | ------ | ------ | -------: | ---------: | ---------- | ------------ |
-| 1 | SASOL technical trigger | Energy | strongest in range/bear; mostly risk-off | 5 | +1.105% | 3/4 horizons; one half negative | B |
-| 2 | SASOL technical trigger | Energy | strongest in range/high-vol/risk-off | 20 | +1.917% | both halves positive; N=43 | B |
-| 3 | ABSPJ technical trigger | Banks | range/neutral strongest | 3 | +0.142% | both halves positive; small edge | B |
-| 4 | SASOL technical trigger | Energy | mixed | 3 | +0.539% | first half negative | B |
-| 5 | ABSPJ technical trigger | Banks | normal-volatility | 5 | +0.230% | second half negative | B |
-| 6 | BHP technical trigger | Diversified mining | bull/risk-on strongest | 1 | +0.170% | both halves positive; 2/4 horizons | B |
+| 1 | ABSPJ raw-technical trigger | Banks | range/neutral strongest | 3 | +0.142% | both halves positive; 3/4 horizons | C |
+| 2 | SASOL raw-technical trigger | Energy | strongest in range/bear; mostly risk-off | 5 | +1.105% | 3/4 horizons; one half negative | C |
+| 3 | ABSPJ raw-technical trigger | Banks | normal-volatility | 5 | +0.230% | second half negative | C |
+| 4 | BHP raw-technical trigger | Diversified mining | bull/risk-on strongest | 1 | +0.170% | both halves positive; 2/4 horizons | C |
+| 5 | SASOL raw-technical trigger | Energy | strongest in range/high-vol/risk-off | 20 | +1.917% | both halves positive; N=43 | C |
+| 6 | SASOL raw-technical trigger | Energy | mixed | 3 | +0.539% | first half negative | C |
+
+## Methodological Audit of Zero-Trade Legacy
+
+Zero trades are mechanically expected from the frozen price-only logic, not a
+warm-up or alignment bug. After the common 20-session warm-up, observed raw
+technical scores span -0.50 to +0.50. With missing sentiment and macro set to
+zero, legacy's `0.60 × technical` can span only -0.30 to +0.30 and cannot cross
+the unchanged strict ±0.35 action threshold.
+
+This does **not** prove historical production legacy made no trades. Production
+legacy also used contemporaneous news sentiment and macro overlays, but those
+point-in-time series were not persisted. A faithful full comparison is therefore
+**`INSUFFICIENT HISTORICAL INPUTS`**. The 24-row result is preserved, but its
+return field is now “adaptive/raw-technical net versus cash/no-trade,” never
+adaptive outperformance versus full legacy.
+
+The constrained matched audit contains 4,326 fully warmed timestamps: 4,054
+both-hold cases, 272 adaptive/raw-technical-only trades, zero both-trade cases,
+zero legacy-only trades and zero directional disagreements. Every timestamp has
+both scores/actions and aligned 1/3/5/20-session forward returns in
+`forensic_analysis.json`. Cash has zero return, turnover and cost. The simple
+non-adaptive raw-technical benchmark is exactly identical to reconstructed
+adaptive, so adaptive incremental performance versus that valid benchmark is
+zero.
 
 ## Strongest Diamonds
 
-There are no Tier A diamonds. The best Tier B observations are Sasol at 5/20
-sessions, Absa at 3 sessions and BHP at 1 session. Sasol’s 5-session result is
+There are no Tier A or Tier B adaptive diamonds. The leading descriptive
+raw-technical opportunities are Absa at 3/5 sessions, Sasol at 3/5/20 sessions
+and BHP at 1 session. Sasol’s 5-session result is
 concentrated in range/bear observations; its regime subsets have fewer than 30
 signals. At 30 bps cost stress, Sasol 3/5/20 and Absa 5 remain positive; Absa 3
-and BHP 1 do not. These deserve focused shadow validation only.
+and BHP 1 do not. They remain Tier C because none has incremental value over the
+identical simple technical benchmark.
 
 ## Promising but Unproven
 
@@ -138,13 +164,13 @@ overlap. No Tier A finding survives all objections.
 
 - A preregistered **Frozen Context Validation** milestone: freeze dated inputs,
   ensure at least two independently varying adaptive factors, verify that
-  context multipliers actually alter decisions, and test only the Tier B
+  context multipliers actually alter decisions, and test only the documented
   hypotheses with non-overlapping temporal holdouts. Do not tune production.
 
 ## Plain Answers to the Big Questions
 
-1. Adaptive beats inactive legacy in 9/24 rows, but only by technical threshold de-dilution.
-2. Legacy’s hold behavior avoids losses in the other 15 rows.
+1. Adaptive outperformance versus full legacy is not measurable: `INSUFFICIENT HISTORICAL INPUTS`.
+2. In the price-only ablation, cash avoids the 15 negative raw-technical rows.
 3. Sasol/energy and Absa/banks look best, without sector replication.
 4. All are proxy SSF/share-CFD profiles; actual derivatives were not tested.
 5. Sasol range/bear and BHP bull/risk-on subsets look best but are small.
@@ -157,7 +183,7 @@ overlap. No Tier A finding survives all objections.
 12. No source class has outcome evidence.
 13. Source duplication is unmeasurable without a corpus.
 14. The de-diluted technical trigger damages 15 rows; other components were inert.
-15. Six Tier B rows deserve deeper shadow testing; none deserves promotion.
+15. No adaptive Tier A/B row survives the simple-technical benchmark gate.
 16. The nine positives are candidates mixed with likely noise, not proven diamonds.
 17. Immutable dated contextual data would increase confidence most.
 18. Do not build new models/connectors or tune weights from these results.
