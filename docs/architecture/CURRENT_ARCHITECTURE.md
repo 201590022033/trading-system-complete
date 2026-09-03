@@ -114,6 +114,14 @@ M8 policy boundary for specialist/community sources:
 - only existing permitted Moneyweb/SENS routes enabled by default;
 - licensed, permission-dependent and prohibited automation disabled explicitly.
 
+### `agent_intelligence.py` + `merged_simulation.py`
+M9 integration preserves the existing governance chain:
+- profile/regime/adaptive shadow context is attached to `MarketObservation`;
+- Bull/Bear/General text includes the context without changing stance/confidence;
+- Trader, Risk and Manager interfaces and decisions remain unchanged;
+- pairwise disagreement telemetry is returned for research logging;
+- portfolio execution remains simulated and is explicitly labelled `paper`.
+
 ## Existing strengths
 - Good separation between ingestion, observations, signal fusion and governance.
 - Real SA/JSE adaptation already underway.

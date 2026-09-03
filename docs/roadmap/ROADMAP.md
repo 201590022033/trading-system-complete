@@ -94,13 +94,16 @@ Evidence: `source_catalog.py`, ADR 0007, current access verification in
 `DATA_SOURCES.md`, and thirty-eight passing focused tests. Only Moneyweb RSS and
 Moneyweb-hosted SENS are enabled; restricted/unverified routes remain disabled.
 
-## M9 — Multi-agent integration [ACTIVE]
+## M9 — Multi-agent integration [COMPLETE 2026-09-03]
 - Feed adaptive evidence/regime explanations into existing Bull/Bear/General researchers.
 - Preserve Risk/Manager governance.
 - Add disagreement telemetry: when legacy, adaptive, bull and bear strongly disagree.
 Acceptance: existing manager/executor interfaces remain stable or have a documented adapter.
 
-## M10 — Promotion gate
+Evidence: `agent_intelligence.py`, ADR 0008, and forty-one passing focused tests,
+including context-on/context-off governance equivalence and paper-mode checks.
+
+## M10 — Promotion gate [ACTIVE]
 Do NOT automatically promote adaptive trading.
 Produce a final evidence report recommending one of:
 1. reject adaptive changes;

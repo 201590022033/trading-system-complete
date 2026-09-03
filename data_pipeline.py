@@ -79,6 +79,7 @@ class MarketObservation:
     # Emerging market context (for SA)
     emerging_market_correlation: float = 0.0  # -1 to 1, e.g., Brazil → SA correlation
     macro_factor: str = ""  # e.g., "commodity rally", "rand weakness"
+    intelligence_context: Dict = field(default_factory=dict)  # research/shadow explanations
 
 
 @dataclass

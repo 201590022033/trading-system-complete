@@ -29,6 +29,23 @@ from data_pipeline import (
     SentimentLabel,
     PortfolioData
 )
+from agent_intelligence import build_agent_context, disagreement_telemetry
+
+
+def _context_note(obs: MarketObservation) -> str:
+    context = obs.intelligence_context
+    if not context:
+        return ""
+    regime = context.get("regime", {})
+    trend = regime.get("trend", "unavailable")
+    volatility = regime.get("volatility", "unavailable")
+    profile = context.get("profile", {}).get("id", "unknown")
+    adaptive = context.get("adaptive", {})
+    return (
+        f"\nShadow context: profile={profile}, regime={trend}/{volatility}, "
+        f"adaptive={adaptive.get('action', 'unavailable')} "
+        f"({adaptive.get('score', 0.0):+.2f})"
+    )
 
 
 class ConfidenceLevel(Enum):
@@ -128,7 +145,7 @@ class BullishResearcher:
             text = "Weak bullish signals - limited upside factors visible"
             confidence = 0.1
         
-        return Evidence("bullish", text, confidence)
+        return Evidence("bullish", text + _context_note(obs), confidence)
 
 
 class BearishResearcher:
@@ -169,7 +186,7 @@ class BearishResearcher:
             text = "Weak bearish signals - limited downside factors visible"
             confidence = 0.1
         
-        return Evidence("bearish", text, confidence)
+        return Evidence("bearish", text + _context_note(obs), confidence)
 
 
 class GeneralResearchAgent:
@@ -207,7 +224,7 @@ class GeneralResearchAgent:
             stance = "neutral"
             confidence = 0.3
         
-        return Evidence(stance, text, confidence)
+        return Evidence(stance, text + _context_note(obs), confidence)
 
 
 # =========================
@@ -406,7 +423,7 @@ class ManagerAgent:
 
 class ExecutionAgent:
     """
-    Executes the manager's decision on the portfolio
+    Executes the manager's decision on the simulated paper portfolio only.
     """
     
     def execute(
@@ -462,8 +479,9 @@ class MergedSimulation:
     - Executor (execution)
     """
     
-    def __init__(self, pipeline: UnifiedDataPipeline):
+    def __init__(self, pipeline: UnifiedDataPipeline, enable_intelligence_context: bool = True):
         self.pipeline = pipeline
+        self.enable_intelligence_context = enable_intelligence_context
         
         # Initialize agents
         self.bull_researcher = BullishResearcher()
@@ -489,11 +507,16 @@ class MergedSimulation:
         # 1. Get market observation (real data)
         obs = self.pipeline.get_observation(ticker)
         price = obs.price
+        if self.enable_intelligence_context:
+            obs.intelligence_context = build_agent_context(ticker, obs)
         
         # 2. Research phase
         bull_ev = self.bull_researcher.analyze(obs)
         bear_ev = self.bear_researcher.analyze(obs)
         general_ev = self.general_researcher.analyze(obs)
+        disagreements = disagreement_telemetry(
+            obs.intelligence_context, bull_ev, bear_ev, general_ev
+        ) if obs.intelligence_context else {"status": "unavailable"}
         
         # 3. LLM trader proposes
         proposal = self.llm_trader.propose_trade(obs, bull_ev, bear_ev, general_ev)
@@ -545,6 +568,8 @@ class MergedSimulation:
             "news_sentiment_score": round(obs.news_sentiment_score, 2),
             "macro_factor": obs.macro_factor,
             "em_correlation": round(obs.emerging_market_correlation, 2),
+            "intelligence_context": obs.intelligence_context,
+            "disagreement": disagreements,
             
             # Technical indicators
             "indicators": {
@@ -605,6 +630,7 @@ class MergedSimulation:
             
             # Execution
             "execution": {
+                "mode": "paper",
                 "success": execution_success,
                 "action_taken": decision.final_action if execution_success else "none"
             },
