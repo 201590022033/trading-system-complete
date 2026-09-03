@@ -1,0 +1,78 @@
+# Current Architecture — Observed Repository Baseline
+
+This document describes the uploaded repository, not an aspirational redesign.
+
+## Existing core modules
+
+### `jse_adapter.py`
+Current integration boundary for:
+- Yahoo Finance price/history data;
+- Finnhub price support;
+- NewsAPI news;
+- Moneyweb SENS republication parsing;
+- Moneyweb RSS;
+- Reddit public/API collection;
+- Standard Bank OST adapter/browser integration;
+- JSE ticker mappings.
+
+### `data_pipeline.py`
+Current unified observation layer:
+- sliding price/VWAP buffers;
+- SMA trend signal;
+- RSI;
+- breakout detection;
+- simplified stochastic oscillator;
+- news aggregation;
+- `MarketObservation` and portfolio data structures.
+
+### `sentiment_analyzer.py`
+Current macro/news analysis:
+- deterministic mention detection;
+- keyword sentiment fallback;
+- optional local/cloud Ollama-compatible LLM analysis;
+- macro concepts including ZAR, GOLD, OIL and other asset/ticker mappings;
+- `MacroSentimentScanner`.
+
+### `signal_pipeline.py`
+Current direct signal fusion:
+- technical score weights: RSI 0.35, SMA 0.30, breakout 0.20, stochastic 0.15;
+- combined score: 0.60 technical + 0.30 sentiment + bounded macro adjustment;
+- hard-coded ticker macro overlays for weaker/stronger rand, gold and oil exposure;
+- buy/sell thresholds around +/-0.35.
+
+This fixed weighting is the primary target for **evolution**, not deletion.
+
+### `merged_simulation.py`
+Existing multi-agent governance:
+- BullishResearcher;
+- BearishResearcher;
+- GeneralResearchAgent;
+- LLMTraderAgent;
+- aggressive/neutral/conservative RiskAgents;
+- ManagerAgent;
+- ExecutionAgent;
+- portfolio/decision logging and labels.
+
+### `backtest.py`
+Existing walk-forward technical indicator research:
+- close-only historical sequence;
+- signal at t evaluated at t+horizon;
+- RSI/SMA/breakout/stochastic observations;
+- win rate and average aligned/forward returns;
+- explicit rule that research does not automatically alter production weights.
+
+## Existing strengths
+- Good separation between ingestion, observations, signal fusion and governance.
+- Real SA/JSE adaptation already underway.
+- Existing backtest philosophy supports evidence-gated development.
+- Existing broker work can remain isolated/read-only.
+
+## Existing gaps
+- Fixed signal/source weights rather than learned/contextual reliability.
+- No explicit market-regime classifier.
+- No sector/instrument-specific indicator profile.
+- No normalized source-provenance/evidence store.
+- No source reliability history by sector/ticker/regime/time horizon.
+- Limited transaction-cost/liquidity modelling in backtest.
+- Current technical feature set is narrow for intraday/geared instruments.
+- Macro relationships are encoded as simple ticker rules rather than testable conditional features.
