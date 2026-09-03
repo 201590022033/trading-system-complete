@@ -304,18 +304,28 @@
       "output_fields": [
         "tenkan",
         "kijun",
-        "senkou_a",
-        "senkou_b",
-        "chikou_relation",
-        "cloud_state"
+        "current_senkou_a",
+        "current_senkou_b",
+        "future_senkou_a_known_at_t",
+        "future_senkou_b_known_at_t",
+        "price_cloud_state",
+        "cloud_thickness_ratio",
+        "future_cloud_direction",
+        "tenkan_kijun_spread_ratio",
+        "distance_from_kijun",
+        "chikou_vs_historical_price_26",
+        "cloud_breakout",
+        "tk_cross",
+        "tk_cross_strength",
+        "regime_consistency"
       ],
-      "interpretation_notes": "Full point-in-time Ichimoku model; HR5.",
+      "interpretation_notes": "Full displaced point-in-time cloud, TK and Chikou context; never uses future bars.",
       "capability_requirements": [
         "has_ohlc"
       ],
       "version": "v1",
-      "implementation_source": "scheduled for HR5/HR6 deterministic implementation",
-      "implementation_status": "planned"
+      "implementation_source": "ichimoku_features.py",
+      "implementation_status": "implemented"
     },
     {
       "name": "keltner",

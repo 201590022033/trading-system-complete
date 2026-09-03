@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import Callable, Iterable, Optional
 
 from research_indicators import DataCapabilities, MarketBar, calculate_expanded_indicators
+from ichimoku_features import calculate_ichimoku
 
 
 REGISTRY_VERSION = "technical-feature-registry-v1"
@@ -96,6 +97,11 @@ def _existing_adapter(name: str, output_fields: tuple[str, ...]) -> Calculator:
     return calculate
 
 
+def _ichimoku_adapter(bars, capabilities, as_of_index, benchmark_closes):
+    snapshot = calculate_ichimoku(bars, capabilities, as_of_index)
+    return RegistryComputation("ichimoku", snapshot.available, snapshot.values, snapshot.reason, snapshot.version)
+
+
 def _definition(
     name: str, family: str, inputs: tuple[str, ...], warmup: int,
     outputs: tuple[str, ...], notes: str, *, parameters: Optional[dict] = None,
@@ -125,7 +131,6 @@ def build_default_registry() -> TechnicalFeatureRegistry:
     planned = (
         _definition("sma_structure", "trend", ("close",), 20, ("sma_fast", "sma_slow", "sma_spread"), "Continuous moving-average structure; legacy state remains separate."),
         _definition("ema_structure", "trend", ("close",), 26, ("ema_fast", "ema_slow", "ema_spread"), "EMA levels and relative spread."),
-        _definition("ichimoku", "trend", ("high", "low", "close"), 78, ("tenkan", "kijun", "senkou_a", "senkou_b", "chikou_relation", "cloud_state"), "Full point-in-time Ichimoku model; HR5.", capabilities=("has_ohlc",)),
         _definition("aroon", "trend", ("high", "low"), 25, ("aroon_up", "aroon_down"), "Time since rolling high/low.", capabilities=("has_ohlc",)),
         _definition("supertrend", "trend", ("high", "low", "close"), 15, ("supertrend", "direction"), "ATR-derived trailing structure.", capabilities=("has_ohlc",)),
         _definition("parabolic_sar", "trend", ("high", "low"), 3, ("sar", "direction"), "Deterministic stop-and-reverse state.", capabilities=("has_ohlc",)),
@@ -149,6 +154,18 @@ def build_default_registry() -> TechnicalFeatureRegistry:
     )
     for item in planned:
         registry.register(item)
+    ichimoku = _definition(
+        "ichimoku", "trend", ("high", "low", "close"), 78,
+        ("tenkan", "kijun", "current_senkou_a", "current_senkou_b",
+         "future_senkou_a_known_at_t", "future_senkou_b_known_at_t",
+         "price_cloud_state", "cloud_thickness_ratio", "future_cloud_direction",
+         "tenkan_kijun_spread_ratio", "distance_from_kijun",
+         "chikou_vs_historical_price_26", "cloud_breakout", "tk_cross",
+         "tk_cross_strength", "regime_consistency"),
+        "Full displaced point-in-time cloud, TK and Chikou context; never uses future bars.",
+        capabilities=("has_ohlc",), status="implemented", source="ichimoku_features.py",
+    )
+    registry.register(ichimoku, _ichimoku_adapter)
     return registry
 
 

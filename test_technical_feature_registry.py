@@ -23,7 +23,7 @@ class TechnicalFeatureRegistryTests(unittest.TestCase):
 
     def test_planned_feature_does_not_masquerade_as_implemented(self):
         bars = [MarketBar(close=100 + index) for index in range(30)]
-        result = DEFAULT_TECHNICAL_REGISTRY.compute("ichimoku", bars, DataCapabilities(), 29)
+        result = DEFAULT_TECHNICAL_REGISTRY.compute("fibonacci_context", bars, DataCapabilities(), 29)
         self.assertFalse(result.available)
         self.assertIn("planned", result.reason)
 

@@ -1,6 +1,15 @@
 # Current Milestone
 
-**HR4 COMPLETE — HR5 not yet active**
+**HR5 COMPLETE — HR6 not yet active**
+
+## HR5 acceptance record — 2026-09-03
+
+- [x] Implemented full Tenkan, Kijun, current/projected cloud and Chikou context.
+- [x] Used the displaced source window for the cloud visible at decision time.
+- [x] Exposed cloud thickness/direction, Kijun distance, breakouts and TK cross strength.
+- [x] Added 78-bar OHLC capability gate and future-mutation tests.
+- [x] Registered Ichimoku as executable, deterministic and shadow-only.
+- [x] Deferred all asset/regime/horizon value claims to historical evaluation.
 
 ## HR4 acceptance record — 2026-09-03
 
