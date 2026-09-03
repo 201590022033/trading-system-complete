@@ -30,13 +30,15 @@ Acceptance: synthetic/historical tests demonstrate score updates without leakage
 
 Evidence: `reliability_store.py`, ADR 0002, and ten passing focused tests.
 
-## M3 — Regime engine [ACTIVE]
+## M3 — Regime engine [COMPLETE 2026-09-03]
 - Implement transparent regime feature calculation and labels.
 - Add versioned `MarketRegime` output.
 - Backtest regime classification stability.
 Acceptance: no future leakage; deterministic tests; docs updated.
 
-## M4 — Sector/instrument profiles
+Evidence: `regime_engine.py`, `regime_backtest.py`, `regime_stability_report.json`, and fourteen passing focused tests.
+
+## M4 — Sector/instrument profiles [ACTIVE]
 - Replace scattered ticker-specific macro logic with configurable profiles, while preserving legacy behaviour as benchmark.
 - Profiles: index futures/CFDs, SSF/share CFD, banks, gold miners, PGM/diversified mining, energy/Sasol, retail/consumer, agri-linked, USD/ZAR.
 Acceptance: profile selection tested; legacy mode unchanged.

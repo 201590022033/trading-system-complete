@@ -1,6 +1,20 @@
 # Current Milestone
 
-**ACTIVE: M3 — Regime engine**
+**ACTIVE: M4 — Sector/instrument profiles**
+
+## M3 acceptance record — 2026-09-03
+
+- [x] Added transparent `regime_engine.py` with versioned `MarketRegime` output.
+- [x] Added deterministic bull, bear, range, low/normal/high-volatility and risk-label tests.
+- [x] Added rolling stability report with 700 observations each for NPN, SASOL and BHP.
+- [x] Kept regime output research/shadow-only; production weights unchanged.
+
+## M4 immediate checklist
+
+- [ ] Define explicit sector and instrument profiles.
+- [ ] Move ticker-specific macro relationships behind configurable profiles.
+- [ ] Preserve legacy scoring as a benchmark and test profile selection.
+- [ ] Keep adaptive/profile output shadow-only.
 
 ## M2 acceptance record — 2026-09-03
 

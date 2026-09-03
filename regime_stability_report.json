@@ -1,0 +1,67 @@
+{
+  "generated_at": "2026-09-03T07:34:57.315859+00:00",
+  "window": 60,
+  "rows": [
+    {
+      "ticker": "NPN",
+      "observations": 700,
+      "trend_distribution": {
+        "bull": 309,
+        "range": 141,
+        "bear": 250
+      },
+      "volatility_distribution": {
+        "normal": 555,
+        "high": 145
+      },
+      "risk_distribution": {
+        "risk_on": 271,
+        "neutral": 112,
+        "risk_off": 317
+      },
+      "full_label_transitions": 155,
+      "transition_rate": 0.221745
+    },
+    {
+      "ticker": "SASOL",
+      "observations": 700,
+      "trend_distribution": {
+        "bear": 359,
+        "range": 77,
+        "bull": 264
+      },
+      "volatility_distribution": {
+        "normal": 178,
+        "high": 522
+      },
+      "risk_distribution": {
+        "risk_off": 660,
+        "neutral": 23,
+        "risk_on": 17
+      },
+      "full_label_transitions": 134,
+      "transition_rate": 0.191702
+    },
+    {
+      "ticker": "BHP",
+      "observations": 700,
+      "trend_distribution": {
+        "range": 153,
+        "bull": 288,
+        "bear": 259
+      },
+      "volatility_distribution": {
+        "normal": 681,
+        "low": 6,
+        "high": 13
+      },
+      "risk_distribution": {
+        "neutral": 146,
+        "risk_on": 287,
+        "risk_off": 267
+      },
+      "full_label_transitions": 137,
+      "transition_rate": 0.195994
+    }
+  ]
+}

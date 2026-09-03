@@ -67,6 +67,14 @@ Additive provenance boundary introduced in M1:
 - stable evidence IDs support deduplication;
 - source identity/class/tier, timestamps, mappings, sentiment, confidence and parser version are preserved for future reliability learning.
 
+### `regime_engine.py`
+Research-only regime-v1 classifies trailing close history into independent labels:
+- trend: bull, bear or range;
+- volatility: low, normal or high;
+- risk: risk_on, neutral or risk_off;
+- version, confidence and feature snapshot are included in `MarketRegime`.
+`regime_backtest.py` measures rolling-label stability without changing production weights.
+
 ## Existing strengths
 - Good separation between ingestion, observations, signal fusion and governance.
 - Real SA/JSE adaptation already underway.
@@ -75,7 +83,7 @@ Additive provenance boundary introduced in M1:
 
 ## Existing gaps
 - Fixed signal/source weights rather than learned/contextual reliability.
-- No explicit market-regime classifier.
+- Regime classifier exists in research/shadow mode but is not yet used by production fusion.
 - No sector/instrument-specific indicator profile.
 - No normalized source-provenance/evidence store.
 - No source reliability history by sector/ticker/regime/time horizon.
