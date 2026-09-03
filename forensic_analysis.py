@@ -134,6 +134,12 @@ def analyse(snapshot):
             for period in ("first_half", "second_half"):
                 halves.append(summarize([r for r in subset if r["model"] == "adaptive" and r["period"] == period])["mean_net"])
             delta = adaptive["mean_net"] - legacy["mean_net"]
+            adaptive_records = [r for r in subset if r["model"] == "adaptive"]
+            cost_stress = {}
+            for bps in (0, 10, 20, 30):
+                values = [r["aligned_return"] - r["turnover"] * bps / 10000.0
+                          for r in adaptive_records if r["position"] or r["turnover"]]
+                cost_stress[str(bps)] = mean(values) if values else 0.0
             robustness = sum(adjacent) / len(adjacent)
             downside = max(0.0, 1.0 + adaptive["mean_mae"] * 20.0)
             confidence = min(1.0, adaptive["sample_count"] / 100.0) * max(0.0, adaptive["win_rate_ci"][0] - 0.35) / 0.25
@@ -148,6 +154,7 @@ def analyse(snapshot):
                 "profile": profile.profile_id, "horizon": horizon, "legacy": legacy,
                 "adaptive": adaptive, "adaptive_minus_legacy": delta,
                 "adjacent_positive_fraction": robustness, "half_net_returns": halves,
+                "cost_stress_bps": cost_stress,
                 "diamond_score": round(score, 2), "diamond_tier": tier,
                 "mechanism": "threshold de-dilution of the legacy technical score; no macro/source/profile contribution",
             })

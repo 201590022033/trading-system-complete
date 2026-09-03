@@ -1,6 +1,15 @@
 # Current Forensic Phase
 
-**ACTIVE: F1–F12 — evidence dissection and reporting**
+**FORENSIC MANDATE COMPLETE — no active phase**
+
+## F1–F12 acceptance record — 2026-09-03
+
+- [x] Ranked all 24 ticker/horizon results with a non-return-only Diamond Score.
+- [x] Completed indicator, sector, macro/Rand, source and failure forensics.
+- [x] Applied temporal, adjacent-horizon, cost and provider-reproduction stress.
+- [x] Classified zero Tier A, six Tier B and eighteen Tier C combinations.
+- [x] Answered all 18 mandated questions and recorded recommendations separately.
+- [x] Left production/default scoring and paper/shadow execution unchanged.
 
 ## F0 acceptance record — 2026-09-03
 

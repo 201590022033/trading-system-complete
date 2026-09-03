@@ -61,6 +61,12 @@
         -0.00011113753826630339,
         0.022510022003380044
       ],
+      "cost_stress_bps": {
+        "0": 0.011870733404364361,
+        "10": 0.011052551586182542,
+        "20": 0.010234369768000724,
+        "30": 0.009416187949818907
+      },
       "diamond_score": 70.94,
       "diamond_tier": "B",
       "mechanism": "threshold de-dilution of the legacy technical score; no macro/source/profile contribution"
@@ -121,6 +127,12 @@
         0.022508192441250616,
         0.015214605568419632
       ],
+      "cost_stress_bps": {
+        "0": 0.019984742902314195,
+        "10": 0.01916529845786975,
+        "20": 0.018345854013425304,
+        "30": 0.01752640956898086
+      },
       "diamond_score": 67.83,
       "diamond_tier": "B",
       "mechanism": "threshold de-dilution of the legacy technical score; no macro/source/profile contribution"
@@ -181,6 +193,12 @@
         0.00215579598903401,
         0.00015576316235191097
       ],
+      "cost_stress_bps": {
+        "0": 0.002261047052887974,
+        "10": 0.0014189417897300788,
+        "20": 0.0005768365265721838,
+        "30": -0.00026526873658571043
+      },
       "diamond_score": 62.84,
       "diamond_tier": "B",
       "mechanism": "threshold de-dilution of the legacy technical score; no macro/source/profile contribution"
@@ -241,6 +259,12 @@
         -0.0035357951609729923,
         0.014321559283148185
       ],
+      "cost_stress_bps": {
+        "0": 0.0062133948816004165,
+        "10": 0.005392882061087596,
+        "20": 0.004572369240574775,
+        "30": 0.003751856420061955
+      },
       "diamond_score": 61.0,
       "diamond_tier": "B",
       "mechanism": "threshold de-dilution of the legacy technical score; no macro/source/profile contribution"
@@ -301,6 +325,12 @@
         0.005107151582058265,
         -0.002518969297262198
       ],
+      "cost_stress_bps": {
+        "0": 0.0031396333633612527,
+        "10": 0.002297528100203358,
+        "20": 0.001455422837045463,
+        "30": 0.0006133175738875686
+      },
       "diamond_score": 60.67,
       "diamond_tier": "B",
       "mechanism": "threshold de-dilution of the legacy technical score; no macro/source/profile contribution"
@@ -361,6 +391,12 @@
         0.001788368531099591,
         0.0015842502449171002
       ],
+      "cost_stress_bps": {
+        "0": 0.0025580321227356667,
+        "10": 0.0017008892655928092,
+        "20": 0.0008437464084499521,
+        "30": -1.3396448692904761e-05
+      },
       "diamond_score": 58.76,
       "diamond_tier": "B",
       "mechanism": "threshold de-dilution of the legacy technical score; no macro/source/profile contribution"
@@ -421,6 +457,12 @@
         -0.0009607414361568141,
         0.006400517557417951
       ],
+      "cost_stress_bps": {
+        "0": 0.0030512267039466572,
+        "10": 0.0021940838468037997,
+        "20": 0.0013369409896609424,
+        "30": 0.00047979813251808546
+      },
       "diamond_score": 54.18,
       "diamond_tier": "C",
       "mechanism": "threshold de-dilution of the legacy technical score; no macro/source/profile contribution"
@@ -481,6 +523,12 @@
         0.00526465846427006,
         -0.0048040821748647315
       ],
+      "cost_stress_bps": {
+        "0": 0.0027528560290029074,
+        "10": 0.0019084115845584627,
+        "20": 0.001063967140114018,
+        "30": 0.00021952269566957367
+      },
       "diamond_score": 51.59,
       "diamond_tier": "C",
       "mechanism": "threshold de-dilution of the legacy technical score; no macro/source/profile contribution"
@@ -541,6 +589,12 @@
         0.001202718848977525,
         0.0019032237957271726
       ],
+      "cost_stress_bps": {
+        "0": 0.0024574269878356748,
+        "10": 0.0015685380989467854,
+        "20": 0.0006796492100578962,
+        "30": -0.00020923967883099275
+      },
       "diamond_score": 46.68,
       "diamond_tier": "C",
       "mechanism": "threshold de-dilution of the legacy technical score; no macro/source/profile contribution"
@@ -601,6 +655,12 @@
         -0.003992110008364581,
         0.002094791267231095
       ],
+      "cost_stress_bps": {
+        "0": 7.549399111316123e-05,
+        "10": -0.0008133948977757278,
+        "20": -0.0017022837866646167,
+        "30": -0.0025911726755535056
+      },
       "diamond_score": 46.6,
       "diamond_tier": "C",
       "mechanism": "threshold de-dilution of the legacy technical score; no macro/source/profile contribution"
@@ -661,6 +721,12 @@
         -0.0074631160338166315,
         0.0037983877889883537
       ],
+      "cost_stress_bps": {
+        "0": -0.0010118513019013182,
+        "10": -0.0018323641224141391,
+        "20": -0.00265287694292696,
+        "30": -0.00347338976343978
+      },
       "diamond_score": 46.1,
       "diamond_tier": "C",
       "mechanism": "threshold de-dilution of the legacy technical score; no macro/source/profile contribution"
@@ -721,6 +787,12 @@
         -0.00622818020421976,
         0.00705122603801035
       ],
+      "cost_stress_bps": {
+        "0": 0.0003201367567360019,
+        "10": -0.0005370061004068556,
+        "20": -0.001394148957549713,
+        "30": -0.00225129181469257
+      },
       "diamond_score": 45.71,
       "diamond_tier": "C",
       "mechanism": "threshold de-dilution of the legacy technical score; no macro/source/profile contribution"
@@ -781,6 +853,12 @@
         -0.002375924623845584,
         0.0010494236316015574
       ],
+      "cost_stress_bps": {
+        "0": 0.00030175724288792336,
+        "10": -0.0005871316460009658,
+        "20": -0.0014760205348898548,
+        "30": -0.002364909423778743
+      },
       "diamond_score": 44.94,
       "diamond_tier": "C",
       "mechanism": "threshold de-dilution of the legacy technical score; no macro/source/profile contribution"
@@ -841,6 +919,12 @@
         -0.0007118417991073892,
         -0.002574406176801085
       ],
+      "cost_stress_bps": {
+        "0": -0.0005559444645734873,
+        "10": -0.0013980497277313823,
+        "20": -0.002240154990889277,
+        "30": -0.0030822602540471716
+      },
       "diamond_score": 44.68,
       "diamond_tier": "C",
       "mechanism": "threshold de-dilution of the legacy technical score; no macro/source/profile contribution"
@@ -901,6 +985,12 @@
         -0.0020731380208992103,
         -0.0009256544723044533
       ],
+      "cost_stress_bps": {
+        "0": -0.0007131142653335744,
+        "10": -0.001577311796197772,
+        "20": -0.0024415093270619696,
+        "30": -0.003305706857926167
+      },
       "diamond_score": 31.91,
       "diamond_tier": "C",
       "mechanism": "threshold de-dilution of the legacy technical score; no macro/source/profile contribution"
@@ -961,6 +1051,12 @@
         -0.0010036573307523426,
         -0.0035821723894037655
       ],
+      "cost_stress_bps": {
+        "0": -0.0014613263058258633,
+        "10": -0.0023502151947147523,
+        "20": -0.0032391040836036414,
+        "30": -0.00412799297249253
+      },
       "diamond_score": 31.38,
       "diamond_tier": "C",
       "mechanism": "threshold de-dilution of the legacy technical score; no macro/source/profile contribution"
@@ -1021,6 +1117,12 @@
         -0.002546162837511245,
         -0.004889713024547151
       ],
+      "cost_stress_bps": {
+        "0": -0.0026946104491934264,
+        "10": -0.0035588079800576242,
+        "20": -0.004423005510921822,
+        "30": -0.005287203041786019
+      },
       "diamond_score": 23.86,
       "diamond_tier": "C",
       "mechanism": "threshold de-dilution of the legacy technical score; no macro/source/profile contribution"
@@ -1081,6 +1183,12 @@
         -0.0017600467256269742,
         -0.0041846531458030545
       ],
+      "cost_stress_bps": {
+        "0": -0.0019435186355796013,
+        "10": -0.0028077161664437993,
+        "20": -0.003671913697307997,
+        "30": -0.0045361112281721945
+      },
       "diamond_score": 23.54,
       "diamond_tier": "C",
       "mechanism": "threshold de-dilution of the legacy technical score; no macro/source/profile contribution"
@@ -1141,6 +1249,12 @@
         3.786764206924678e-05,
         -0.006439655361085552
       ],
+      "cost_stress_bps": {
+        "0": -0.0015917135038713997,
+        "10": -0.002433818767029295,
+        "20": -0.00327592403018719,
+        "30": -0.004118029293345085
+      },
       "diamond_score": 22.02,
       "diamond_tier": "C",
       "mechanism": "threshold de-dilution of the legacy technical score; no macro/source/profile contribution"
@@ -1201,6 +1315,12 @@
         -0.00389551018094931,
         -0.008143039704563296
       ],
+      "cost_stress_bps": {
+        "0": -0.004858737119641018,
+        "10": -0.005715879976783875,
+        "20": -0.006573022833926733,
+        "30": -0.00743016569106959
+      },
       "diamond_score": 20.01,
       "diamond_tier": "C",
       "mechanism": "threshold de-dilution of the legacy technical score; no macro/source/profile contribution"
@@ -1261,6 +1381,12 @@
         -0.0010250936131268422,
         -0.012873774633531749
       ],
+      "cost_stress_bps": {
+        "0": -0.005014296083036547,
+        "10": -0.005886090954831419,
+        "20": -0.006757885826626292,
+        "30": -0.007629680698421164
+      },
       "diamond_score": 10.03,
       "diamond_tier": "C",
       "mechanism": "threshold de-dilution of the legacy technical score; no macro/source/profile contribution"
@@ -1321,6 +1447,12 @@
         -0.008708487364917946,
         -0.009601673242162063
       ],
+      "cost_stress_bps": {
+        "0": -0.008207203028603201,
+        "10": -0.009049308291761095,
+        "20": -0.009891413554918991,
+        "30": -0.010733518818076885
+      },
       "diamond_score": 9.7,
       "diamond_tier": "C",
       "mechanism": "threshold de-dilution of the legacy technical score; no macro/source/profile contribution"
@@ -1381,6 +1513,12 @@
         -0.010600022664692343,
         -0.021076998136218023
       ],
+      "cost_stress_bps": {
+        "0": -0.013755710673563983,
+        "10": -0.014597815936721879,
+        "20": -0.015439921199879775,
+        "30": -0.01628202646303767
+      },
       "diamond_score": 0.0,
       "diamond_tier": "C",
       "mechanism": "threshold de-dilution of the legacy technical score; no macro/source/profile contribution"
@@ -1441,6 +1579,12 @@
         -0.008734327073363414,
         -0.013662618570188804
       ],
+      "cost_stress_bps": {
+        "0": -0.009772754091888892,
+        "10": -0.010614859355046786,
+        "20": -0.011456964618204682,
+        "30": -0.012299069881362576
+      },
       "diamond_score": 0.0,
       "diamond_tier": "C",
       "mechanism": "threshold de-dilution of the legacy technical score; no macro/source/profile contribution"
