@@ -46,13 +46,16 @@ Acceptance: profile selection tested; legacy mode unchanged.
 Evidence: `market_profiles.py`, ADR 0003, and eighteen passing focused tests;
 legacy macro coefficients and clamp are characterized for equivalence.
 
-## M5 — Expanded indicator research layer [ACTIVE]
+## M5 — Expanded indicator research layer [COMPLETE 2026-09-03]
 - Add ADX/DMI, ATR, MACD, Bollinger/z-score, relative strength and volume/liquidity features where data supports them.
 - Add intraday VWAP/opening range only behind an intraday-data capability flag.
 - Do not pretend daily Yahoo data is intraday derivatives data.
 Acceptance: unit tests + no-lookahead calculations + feature availability metadata.
 
-## M6 — Adaptive fusion in SHADOW mode
+Evidence: `research_indicators.py`, ADR 0004, and twenty-three passing focused
+tests. Intraday and volume-dependent values are capability-gated.
+
+## M6 — Adaptive fusion in SHADOW mode [ACTIVE]
 - Create adaptive fusion beside legacy fixed score.
 - Weight by regime, sector/instrument profile, source reliability and feature evidence.
 - Every decision logs factor contributions and legacy-vs-adaptive comparison.

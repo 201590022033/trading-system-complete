@@ -83,6 +83,14 @@ Research/shadow sector and instrument context introduced in M4:
 - legacy macro coefficients centralized without changing signal defaults;
 - selected profile identity included in signal decision metadata.
 
+### `research_indicators.py`
+Research-only expanded feature layer introduced in M5:
+- close-based MACD and Bollinger/z-score;
+- OHLC-gated ATR and ADX/DMI;
+- benchmark-gated relative strength and volume-gated liquidity features;
+- intraday OHLCV-gated session VWAP and opening range;
+- explicit unavailable reasons and an `as_of_index` no-lookahead boundary.
+
 ## Existing strengths
 - Good separation between ingestion, observations, signal fusion and governance.
 - Real SA/JSE adaptation already underway.
@@ -96,5 +104,5 @@ Research/shadow sector and instrument context introduced in M4:
 - No normalized source-provenance/evidence store.
 - No source reliability history by sector/ticker/regime/time horizon.
 - Limited transaction-cost/liquidity modelling in backtest.
-- Current technical feature set is narrow for intraday/geared instruments.
+- Expanded features exist in research mode but are not yet fused or historically evaluated.
 - Legacy macro coefficients are explicit profile configuration; richer conditional macro features remain unimplemented.

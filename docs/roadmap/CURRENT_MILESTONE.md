@@ -1,6 +1,21 @@
 # Current Milestone
 
-**ACTIVE: M5 — Expanded indicator research layer**
+**ACTIVE: M6 — Adaptive fusion in SHADOW mode**
+
+## M5 acceptance record — 2026-09-03
+
+- [x] Added versioned ADX/DMI, ATR, MACD, Bollinger/z-score and relative-strength research features.
+- [x] Added relative-volume and median-dollar-volume features behind volume capability.
+- [x] Gated session VWAP/opening range behind explicit intraday OHLCV capability.
+- [x] Added per-feature availability/reason metadata and an explicit as-of boundary.
+- [x] Focused suite passes: 23 tests, including future-mutation no-lookahead coverage.
+
+## M6 immediate checklist
+
+- [ ] Add adaptive fusion beside the unchanged legacy score.
+- [ ] Weight explainably by regime, market profile, reliability and feature evidence.
+- [ ] Log factor contributions and legacy-vs-adaptive comparison.
+- [ ] Keep default/production action on the legacy score.
 
 ## M4 acceptance record — 2026-09-03
 
@@ -9,13 +24,6 @@
 - [x] Preserved legacy scoring coefficients, thresholds and clamp with characterization tests.
 - [x] Added selected profile context to decision metadata as shadow-only output.
 - [x] Focused suite passes: 18 tests (the previous 14 plus 4 profile tests).
-
-## M5 immediate checklist
-
-- [ ] Add transparent ADX/DMI, ATR, MACD, Bollinger/z-score and relative-strength research features.
-- [ ] Add volume/liquidity features only when supported by input data.
-- [ ] Gate VWAP/opening-range features behind explicit intraday capability metadata.
-- [ ] Add deterministic no-lookahead and feature-availability tests.
 
 ## M3 acceptance record — 2026-09-03
 
