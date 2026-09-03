@@ -38,6 +38,39 @@ class ReliabilityEstimate:
     sample_gate_passed: bool
 
 
+class ReliabilityAccumulator:
+    """O(1)-update prior-only reliability state for shadow decisions."""
+
+    def __init__(self, recency_half_life: float = 252.0):
+        self.wins = 0
+        self.net_prefix = [0.0]
+        self.recency_numerator = 0.0
+        self.recency_denominator = 0.0
+        self.decay = .5 ** (1/recency_half_life)
+
+    def update(self, net: float, gross: float) -> None:
+        self.wins += gross > 0
+        self.net_prefix.append(self.net_prefix[-1]+net)
+        self.recency_numerator = self.recency_numerator*self.decay+net
+        self.recency_denominator = self.recency_denominator*self.decay+1
+
+    @property
+    def count(self) -> int:
+        return len(self.net_prefix)-1
+
+    def weight(self) -> float:
+        if self.count < MINIMUM_SAMPLE:
+            return 1.0
+        split = self.count//2
+        first = self.net_prefix[split]/split
+        second = (self.net_prefix[-1]-self.net_prefix[split])/(self.count-split)
+        stability = 1.0 if first*second > 0 else 0.5 if first == 0 or second == 0 else 0.0
+        shrunk = (self.wins+PRIOR_STRENGTH*.5)/(self.count+PRIOR_STRENGTH)
+        recency = self.recency_numerator/self.recency_denominator
+        evidence = 2*(shrunk-.5)+max(-.5, min(.5, recency/.02))
+        return max(.5, min(1.5, 1+stability*evidence))
+
+
 def _wilson(wins: int, count: int) -> tuple[float, float]:
     if not count:
         return 0.0, 1.0

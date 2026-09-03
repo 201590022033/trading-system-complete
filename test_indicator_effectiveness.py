@@ -1,6 +1,6 @@
 import unittest
 
-from indicator_effectiveness import estimate_reliability, walk_forward_weights
+from indicator_effectiveness import ReliabilityAccumulator, estimate_reliability, walk_forward_weights
 
 
 class IndicatorEffectivenessTests(unittest.TestCase):
@@ -30,6 +30,14 @@ class IndicatorEffectivenessTests(unittest.TestCase):
         second_returns[60:] = [-.5]*20
         second = walk_forward_weights(signals, second_returns, horizon=5)
         self.assertEqual(first[:65], second[:65])
+
+    def test_incremental_accumulator_matches_bounded_gate(self):
+        state = ReliabilityAccumulator()
+        for _ in range(40):
+            state.update(.01, .011)
+        self.assertEqual(state.count, 40)
+        self.assertGreater(state.weight(), 1.0)
+        self.assertLessEqual(state.weight(), 1.5)
 
 
 if __name__ == "__main__":

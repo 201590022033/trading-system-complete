@@ -1,0 +1,40 @@
+{
+  "version": "adaptive-technical-ensemble-v1",
+  "path": "analysis/data/hr9/adaptive_technical_decisions.csv",
+  "sha256": "82a4e535ea1d12b122bd2c8657b7d32735c84803e4a019c375c14a7b3eec5121",
+  "rows": 101536,
+  "actions": {
+    "hold": 69698,
+    "buy": 19315,
+    "sell": 12523
+  },
+  "non_neutral_weight_cells": 376963,
+  "threshold": 0.35,
+  "shadow_only": true,
+  "explainability_columns": [
+    "rsi_signal",
+    "rsi_weight",
+    "rsi_contribution",
+    "sma_signal",
+    "sma_weight",
+    "sma_contribution",
+    "breakout_signal",
+    "breakout_weight",
+    "breakout_contribution",
+    "stochastic_signal",
+    "stochastic_weight",
+    "stochastic_contribution",
+    "macd_signal",
+    "macd_weight",
+    "macd_contribution",
+    "bollinger_signal",
+    "bollinger_weight",
+    "bollinger_contribution",
+    "adx_dmi_signal",
+    "adx_dmi_weight",
+    "adx_dmi_contribution",
+    "ichimoku_signal",
+    "ichimoku_weight",
+    "ichimoku_contribution"
+  ]
+}
