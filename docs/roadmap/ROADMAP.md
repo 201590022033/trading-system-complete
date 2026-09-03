@@ -21,14 +21,16 @@ Acceptance: existing collectors can emit/convert to evidence records; tests pass
 
 Evidence: `evidence.py`, ADR 0001, and six passing focused tests.
 
-## M2 — Source registry + reliability store [ACTIVE]
+## M2 — Source registry + reliability store [COMPLETE 2026-09-03]
 - Configurable registry for existing and planned sources.
 - Persistent local research store (SQLite is acceptable unless repo already has a preferred DB).
 - Outcome evaluation by horizon; sample-size-aware score.
 - No production weight changes.
 Acceptance: synthetic/historical tests demonstrate score updates without leakage.
 
-## M3 — Regime engine
+Evidence: `reliability_store.py`, ADR 0002, and ten passing focused tests.
+
+## M3 — Regime engine [ACTIVE]
 - Implement transparent regime feature calculation and labels.
 - Add versioned `MarketRegime` output.
 - Backtest regime classification stability.

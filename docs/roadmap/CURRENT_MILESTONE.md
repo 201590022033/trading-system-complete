@@ -1,6 +1,15 @@
 # Current Milestone
 
-**ACTIVE: M2 — Source registry + reliability store**
+**ACTIVE: M3 — Regime engine**
+
+## M2 acceptance record — 2026-09-03
+
+- [x] Added configurable in-memory `SourceRegistry` with source class and authority tier.
+- [x] Added SQLite `ReliabilityStore` for source outcomes by scope and horizon.
+- [x] Added conservative sample-size shrinkage toward a 50% prior.
+- [x] Added duplicate outcome protection and no-lookahead timestamp validation.
+- [x] Added ADR 0002 documenting the research-only boundary.
+- [x] Focused suite passes: 10 tests (`test_evidence.py`, `test_legacy_scoring.py`, `test_reliability_store.py`).
 
 ## M1 acceptance record — 2026-09-03
 
@@ -24,9 +33,9 @@
 - [x] Recorded baseline findings in `backtest_report.md` and the indicator bible.
 - [x] Committed M0 baseline artifacts.
 
-## M2 immediate checklist
+## M3 immediate checklist
 
-- [ ] Define a configurable source registry for current collectors.
-- [ ] Add a local SQLite research store for evidence and outcomes.
-- [ ] Add sample-size-aware reliability updates without production weight changes.
-- [ ] Add synthetic tests demonstrating no-lookahead outcome evaluation.
+- [ ] Define transparent regime features from price history.
+- [ ] Implement versioned `MarketRegime` output.
+- [ ] Add deterministic tests with synthetic trending, ranging and high-volatility data.
+- [ ] Keep regime output research/shadow-only until validated.
