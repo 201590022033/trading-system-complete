@@ -140,11 +140,17 @@ HR10 offline admission boundary:
 ### `provider_interfaces.py`
 Vendor-neutral market-data/execution contracts. The sole concrete execution
 provider is paper preview-only; live submit/cancel operations hard-fail.
+OI1 adds explicit `ResearchDataProvider`, `SignalEngine`, `TradeSuggestion` and
+`BrokerAccount` boundaries. Trade suggestions validate provenance and clocks;
+rejected or stale suggestions cannot reach even paper preview.
 
 ### `app.py`
 Standalone Flask-SocketIO human-review surface over an in-memory random walk.
 UI and JSON endpoints explicitly identify the feed as simulated/research/not
 live. It is not connected to HR9, HR10, providers or broker accounts.
+OI1 adds a responsive fabricated decision card, collapsed diagnostics, safe
+public-link/copy affordances and browser-local feedback. The demo suggestion is
+explicitly rejected and has no server-side execution route.
 
 ## Existing strengths
 - Good separation between ingestion, observations, signal fusion and governance.

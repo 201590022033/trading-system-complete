@@ -35,6 +35,23 @@ writes hard-fail, and ViewPoint/Shyft API and licensing unknowns are documented.
 Recommended next milestone: human UI review plus vendor clarification. Do not
 implement live integration until official API, sandbox and licensing answers exist.
 
+## OI1 — Operational UI, integration discovery and research reset [COMPLETE 2026-09-04]
+- Evolve the simulated Flask page into a responsive human decision prototype.
+- Define a stale/rejected-safe canonical trade-suggestion boundary.
+- Research official ViewPoint/Shyft and viable alternative-provider capabilities.
+- Prepare a Standard Bank contact pack and rank new non-HR9 research inputs.
+
+Acceptance: mock UI and serialization tests, no executable rejected/stale
+suggestion, paper-only providers, documented official-source evidence and a
+single recommended next research milestone.
+
+Evidence: responsive rejected-demo decision card and API; canonical stale/state
+safety contract; Saxo/Shyft relationship and alternative APIs researched; 16
+focused OI1/HR10 tests and 98 safe offline regression tests pass.
+
+Recommended next milestone: build a licensed, point-in-time JSE SENS event
+dataset and classifier; separately procure a small intraday Level 1/2 sample.
+
 ## M0 — Protect and characterize baseline [COMPLETE 2026-09-03]
 - Inspect Git state and secrets.
 - Confirm `.env` is ignored/untracked; do not print secret values.

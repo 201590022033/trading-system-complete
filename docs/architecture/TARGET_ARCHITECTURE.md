@@ -48,3 +48,12 @@ an `ExecutionProvider` may initially preview only. The target workflow is:
 `data → analysis → suggested ticket → human review → supported broker handoff → user confirmation`
 
 No authenticated broker adapter or automatic live order path exists in HR10.
+
+OI1 formalizes the handoff objects:
+
+`MarketDataProvider → ResearchDataProvider → SignalEngine → TradeSuggestion → human review → ExecutionProvider → BrokerAccount`
+
+Market and research data retain separate provenance. The canonical suggestion
+is non-actionable unless it is admitted, unexpired and directional. Provider
+preview remains paper-only; a later live adapter cannot be inferred from these
+interfaces and requires its own safety milestone.

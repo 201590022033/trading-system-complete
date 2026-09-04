@@ -1,6 +1,31 @@
 # Current Milestone
 
-**HR10 COMPLETE — no cells admitted**
+**OI1 COMPLETE — operational UI, integration discovery and research reset**
+
+## OI1 scope — activated 2026-09-04
+
+- [x] Build a responsive, unmistakably simulated decision-support card.
+- [x] Add a canonical provenance-rich `TradeSuggestion` safety contract.
+- [x] Keep all execution actions mock/manual and all provider writes disabled.
+- [x] Deepen ViewPoint/Shyft and alternative-provider research using official sources.
+- [x] Produce a concise Standard Bank API enquiry and execution-path comparison.
+- [x] Rank genuinely new predictive data families without tuning HR9.
+- [x] Run focused UI/safety tests and the full safe offline suite.
+
+OI1 cannot change the HR10 outcome, promote HR9, authenticate to a broker, or
+submit an order.
+
+## OI1 acceptance record — 2026-09-04
+
+- [x] Existing `/` route retained with desktop/tablet/phone decision hierarchy.
+- [x] Demo is fabricated, rejected and unmistakably simulated/not live.
+- [x] Stale, rejected, shadow, research and no-trade suggestions are non-actionable.
+- [x] Paper provider is the only implementation; live account modes and writes fail.
+- [x] Shyft's Saxo technology relationship confirmed; retail OpenAPI remains unknown.
+- [x] IG, Saxo and IBKR APIs documented without claiming unverified JSE coverage.
+- [x] JSE SENS/event data ranked first for the next predictive dataset milestone.
+- [x] 16 focused OI1/HR10 tests and 98 safe offline regression tests pass.
+- [x] Credential/network/browser probes and environment-dependent LLM script excluded.
 
 ## HR10 scope — activated 2026-09-04
 
