@@ -145,6 +145,8 @@ INDEX_HTML = """
            border-bottom:1px solid #21262d; padding-bottom:12px; }
   h1 { font-size:20px; margin:0; }
   h1 span { color:#8b949e; font-weight:400; font-size:13px; margin-left:8px; }
+  .data-state { background:#9e6a03; color:#fff; border-radius:4px; padding:5px 8px;
+                font-size:11px; font-weight:700; letter-spacing:.08em; }
   #status { font-size:13px; font-weight:600; }
   #status.connected { color:#3fb950; }
   #status.disconnected { color:#f85149; }
@@ -166,7 +168,8 @@ INDEX_HTML = """
 </head>
 <body>
 <header>
-  <h1>JSE Live Ticker <span>SIMULATED PROTOTYPE FEED</span></h1>
+  <h1>JSE Ticker <span>HUMAN REVIEW MODE</span></h1>
+  <div class="data-state">SIMULATED · RESEARCH · NOT LIVE</div>
   <div id="status" class="disconnected">Connecting&hellip;</div>
 </header>
 <table>
@@ -236,12 +239,14 @@ def index():
 @app.route("/api/snapshot")
 def snapshot():
     """REST fallback: current market state as JSON."""
-    return jsonify(current_state())
+    return jsonify({"data_state": "SIMULATED", "purpose": "RESEARCH",
+                    "live": False, "quotes": current_state()})
 
 
 @app.route("/health")
 def health():
-    return jsonify({"status": "ok", "instruments": len(INSTRUMENTS)})
+    return jsonify({"status": "ok", "instruments": len(INSTRUMENTS),
+                    "data_state": "SIMULATED", "live": False})
 
 
 # --------------------------------------------------------------------------

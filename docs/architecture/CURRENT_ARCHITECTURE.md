@@ -130,6 +130,22 @@ HR9 research boundary:
 - immutable pre-HR9 baseline and separately versioned v2 artifact;
 - shadow-only output with no Flask, governance or broker integration.
 
+### `hr10_robustness.py`
+HR10 offline admission boundary:
+- horizon-aware purged/embargoed expanding folds;
+- realizable non-overlapping trades alongside preserved HR9 diagnostics;
+- cost/threshold sensitivity, moving-block uncertainty and BH-FDR correction;
+- deterministic per-instrument/per-horizon shadow admission states.
+
+### `provider_interfaces.py`
+Vendor-neutral market-data/execution contracts. The sole concrete execution
+provider is paper preview-only; live submit/cancel operations hard-fail.
+
+### `app.py`
+Standalone Flask-SocketIO human-review surface over an in-memory random walk.
+UI and JSON endpoints explicitly identify the feed as simulated/research/not
+live. It is not connected to HR9, HR10, providers or broker accounts.
+
 ## Existing strengths
 - Good separation between ingestion, observations, signal fusion and governance.
 - Real SA/JSE adaptation already underway.

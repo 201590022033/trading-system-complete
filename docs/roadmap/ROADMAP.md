@@ -17,6 +17,24 @@ artifact—not adaptive promotion. See `docs/research/HR9_ADAPTIVE_ENSEMBLE_REPO
 
 Recommended next milestone: HR10 robustness and admission gates; not active.
 
+## HR10 — Robustness and admission gates [COMPLETE 2026-09-04]
+- Add horizon-aware purged/embargoed validation and leakage tests.
+- Separate overlapping research outcomes from non-overlapping trade simulation.
+- Predeclare cost, parameter-sensitivity, uncertainty and multiple-testing rules.
+- Assign deterministic per-instrument/per-horizon shadow admission states.
+- Reopen the existing simulated Flask UI for clearly labelled human review.
+- Research ViewPoint/Shyft integration and define mock/paper-only provider boundaries.
+
+Acceptance: reproducible offline artifacts, focused and regression tests, no live
+broker writes, no adaptive production promotion, and explicit admission outcomes.
+
+Evidence: 0/40 cells admitted and 40 rejected; 34 focused HR7–HR10 tests and 91
+safe offline regression tests pass. The UI is unmistakably simulated, provider
+writes hard-fail, and ViewPoint/Shyft API and licensing unknowns are documented.
+
+Recommended next milestone: human UI review plus vendor clarification. Do not
+implement live integration until official API, sandbox and licensing answers exist.
+
 ## M0 — Protect and characterize baseline [COMPLETE 2026-09-03]
 - Inspect Git state and secrets.
 - Confirm `.env` is ignored/untracked; do not print secret values.

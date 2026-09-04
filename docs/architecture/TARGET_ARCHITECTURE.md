@@ -38,3 +38,13 @@ Existing Trader -> Risk Agents -> Manager -> Executor
 - Reliability is learned by **source x sector/ticker x regime x horizon**, with shrinkage/fallback when samples are small.
 - Backtests can reproduce historical decisions without future leakage.
 - Live broker writes are outside this target roadmap.
+
+## Market-data and execution boundary
+
+Future provider adapters sit beside, not inside, research evaluation. A trade
+ticket may consume a timestamped, state-labelled `MarketDataProvider` snapshot;
+an `ExecutionProvider` may initially preview only. The target workflow is:
+
+`data → analysis → suggested ticket → human review → supported broker handoff → user confirmation`
+
+No authenticated broker adapter or automatic live order path exists in HR10.

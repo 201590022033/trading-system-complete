@@ -1,6 +1,34 @@
 # Current Milestone
 
-**HR9 COMPLETE — HR10 not yet active**
+**HR10 COMPLETE — no cells admitted**
+
+## HR10 scope — activated 2026-09-04
+
+- [x] Add horizon-aware purged and embargoed temporal folds.
+- [x] Evaluate realizable non-overlapping trades separately from overlapping
+  research observations.
+- [x] Stress costs and a predeclared, modest parameter grid.
+- [x] Apply transparent multiple-testing control and time-aware uncertainty.
+- [x] Assign every instrument × horizon cell exactly one deterministic admission
+  state without promoting any production signal.
+- [x] Preserve the four HR9 baselines and all immutable HR7–HR9 artifacts.
+- [x] Add a safe local UI review mode with unmistakable simulated-data labels.
+- [x] Document ViewPoint/Shyft capabilities, unknowns and vendor-neutral
+  read-only/paper integration boundaries.
+
+HR10 may complete with zero admitted cells. Live execution, authenticated
+scraping and production promotion remain outside this milestone.
+
+## HR10 acceptance record — 2026-09-04
+
+- [x] Evaluated 40 instrument × horizon cells; 0 admitted, 40 rejected, 0 insufficient.
+- [x] All cells fail uncertainty and BH-FDR gates; results do not justify promotion.
+- [x] Added predeclared 0/10/25-bps and 0.30/0.35/0.40 threshold grids.
+- [x] Added block-bootstrap confidence intervals and exact gate diagnostics.
+- [x] Focused HR7–HR10 suite passes 34 tests; safe offline suite passes 91 tests.
+- [x] Excluded credential/network/browser probes and the environment-dependent
+  LLM availability script from the safe suite.
+- [x] Confirmed simulated UI health/snapshot labels and no provider live writes.
 
 ## HR9 acceptance record — 2026-09-04
 
