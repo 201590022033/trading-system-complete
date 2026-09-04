@@ -1,42 +1,51 @@
 import os
-import json
 from openai import OpenAI
 
-# 1. Put your raw Kimi developer API key inside the quotes
+# 1. Put your real Kimi developer token inside the quotes
 API_KEY = "sk-bqKmPtr5lS9KWaOptg8DMIHLquev4rDCFrahSf6Yd3UcDDb1"
-BASE_URL = "https://api.moonshot.ai/v1"
+BASE_URL = "https://moonshot.ai"
 
-print("🔄 Initializing secure SDK connection...")
-client = OpenAI(
-    api_key=API_KEY,
-    base_url=BASE_URL,
-)
+client = OpenAI(api_key=API_KEY, base_url=BASE_URL)
 
-prompt = """
-Write a complete, clean, operational app.py file for a JSE trading prototype system. 
-It must initialize a standard Flask app integrated with Flask-SocketIO. 
-Include a background worker thread that simulates streaming asset price ticker data, 
-and uses socketio.emit to push JSON updates to a local UI. 
-Make sure the server executes using socketio.run(app, host='0.0.0.0', port=5000). 
-Give me ONLY raw python code, no markdown code block text fences.
+# 2. Automatically locate your HTML dashboard wherever it is hiding
+ui_file_path = None
+possible_paths = ["index.html", "templates/index.html", "web/index.html", "src/index.html"]
+
+for path in possible_paths:
+    if os.path.exists(path):
+        ui_file_path = path
+        break
+
+if not ui_file_path:
+    print("❌ Error: Could not find your dashboard index.html file anywhere in the workspace!")
+    exit()
+
+try:
+    with open(ui_file_path, "r") as f:
+        html_code = f.read()
+    print(f"📦 Successfully found and loaded your UI file from: '{ui_file_path}'")
+except Exception as e:
+    print(f"❌ Error reading file: {e}")
+    exit()
+
+prompt = f"""
+I am streaming live JSE trading ticks every single second via Flask-SocketIO. 
+Look at my user interface script code below. Does my JavaScript socket message handler 
+have a mechanism or sliding window to cap the incoming data array length? 
+If it doesn't, tell me why it will cause a browser cache memory crash over time, 
+and write out the exact, corrected block of JavaScript code to limit it to the last 100 ticks.
+
+Here is my UI Code:
+{html_code}
 """
 
 try:
-    print("🤖 Directly querying Kimi via SDK to build app.py...")
+    print("🤖 Querying Kimi K3 deep-thinking model to audit your memory leak...")
     completion = client.chat.completions.create(
         model="kimi-k3",
         messages=[{"role": "user", "content": prompt}]
     )
-    
-    code = completion.choices[0].message.content
-    
-    # Strip any accidental formatting markdown blocks if the AI includes them
-    code = code.replace("```python", "").replace("```", "")
-    
-    with open("app.py", "w") as f:
-        f.write(code.strip())
-    print("\n✅ Success! Your app.py file has been built successfully.")
-
+    print("\n--- 📊 KIMI K3 AUDIT RESULTS ---")
+    print(completion.choices.message.content)
 except Exception as e:
-    print("\n❌ SDK Request Failed!")
-    print(f"Error Details: {e}")
+    print(f"\n❌ Network Transaction Failed: {e}")
