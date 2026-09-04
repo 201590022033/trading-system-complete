@@ -66,6 +66,19 @@ archives and protected `generate_app.py` history were inspected. No complete
 historical dashboard was found; reconstruction stopped pending original source
 or screenshots. Surviving backend capabilities are mapped in the recovery report.
 
+## OI2 — Operational intelligence dashboard and orchestration [COMPLETE 2026-09-04]
+- Compose existing market, news, technical, legacy decision and research boundaries.
+- Add a first-class data-state/provenance contract and exact 30-gate evidence system.
+- Provide separate operational controls and responsive Flask templates/static assets.
+- Keep broker handoff manual/paper-only and HR9/HR10 diagnostic-only.
+
+Acceptance: complete traceability/inventory, graceful partial results, focused
+and safe regression suites, truthful data states and no live-order route.
+
+Evidence: HR7-backed legacy analysis, explicit component provenance, six-symbol
+identity registry, exact 30-gate output, responsive dashboard, 104 passing safe
+offline tests and successful local HTTP smoke checks.
+
 ## M0 — Protect and characterize baseline [COMPLETE 2026-09-03]
 - Inspect Git state and secrets.
 - Confirm `.env` is ignored/untracked; do not print secret values.

@@ -1,6 +1,31 @@
 # Current Milestone
 
-**UIR1 COMPLETE — historical UI source not present**
+**OI2 COMPLETE — operational intelligence dashboard and end-to-end orchestration**
+
+## OI2 scope — activated 2026-09-04
+
+- [x] Inventory every substantive backend capability and its UI disposition.
+- [x] Add canonical instruments, data states, analysis runs and orchestration.
+- [x] Implement exactly 30 auditable evidence gates over real/available inputs.
+- [x] Wire separate market, news, technical, combined-analysis and scanner APIs.
+- [x] Build maintainable Flask templates/static dashboard navigation.
+- [x] Expose legacy BUY/SELL/HOLD while isolating rejected HR9/HR10 research.
+- [x] Keep broker handoff visibly locked; omit journaling while no suggestion is actionable.
+- [x] Validate offline, partial-failure and execution-safety behavior.
+
+OI2 must not tune HR9, alter HR10, read `.env`, automate broker login or expose
+any live-order endpoint.
+
+## OI2 acceptance record — 2026-09-04
+
+- [x] Six canonical JSE instruments map UI, research, Yahoo and Finnhub aliases.
+- [x] HR7 historical evidence drives the unchanged fixed-weight legacy scorer.
+- [x] All component responses disclose source, source time, retrieval time and state.
+- [x] Exactly 30 gates return, including explicit unavailable evidence.
+- [x] Current-public providers are opt-in and failures preserve partial output.
+- [x] No admitted strategy, executable suggestion or live-order endpoint exists.
+- [x] 104 safe offline tests pass; two environment tests remain excluded.
+- [x] Live local HTTP health and SOL analysis smoke requests returned 200.
 
 ## UIR1 scope — activated 2026-09-04
 
