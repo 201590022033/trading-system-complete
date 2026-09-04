@@ -1,6 +1,20 @@
 # Current Milestone
 
-**HR8 COMPLETE — HR9 not yet active**
+**HR9 COMPLETE — HR10 not yet active**
+
+## HR9 acceptance record — 2026-09-04
+
+- [x] Preserved and hash-identified the 101,536-row pre-HR9 baseline.
+- [x] Extracted one authoritative versioned technical-signal definition.
+- [x] Unified HR8/HR9 on signal-state turnover cost semantics.
+- [x] Defined independent 1/3/5/20-session research targets.
+- [x] Logged evidence counts, versions, hashes, contributions and shadow status.
+- [x] Verified zero causal clock, duplicate-key, sample-gate and shadow violations.
+- [x] Compared legacy, static expanded, pre-HR9 and HR9 across three cost scenarios.
+- [x] Kept Flask, production signals, governance and brokers unchanged.
+- [x] Rejected adaptive promotion because net performance is not consistently
+  superior to the legacy benchmark.
+- [x] Focused HR8/HR9 suite passes 14 tests.
 
 ## HR8 acceptance record — 2026-09-03
 

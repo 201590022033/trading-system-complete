@@ -2,7 +2,7 @@ import unittest
 
 import pandas as pd
 
-from adaptive_technical_ensemble import INDICATORS, build_ensemble
+from adaptive_technical_ensemble import HORIZON_ROLES, INDICATORS, VERSION, build_ensemble
 
 
 class AdaptiveTechnicalEnsembleTests(unittest.TestCase):
@@ -28,6 +28,11 @@ class AdaptiveTechnicalEnsembleTests(unittest.TestCase):
             self.assertIn(f"{indicator}_weight", result)
             self.assertIn(f"{indicator}_contribution", result)
         self.assertTrue(row["shadow_only"])
+        self.assertEqual(row["ensemble_version"], VERSION)
+        self.assertEqual(row["horizon_role"], HORIZON_ROLES[row["horizon"]])
+        self.assertEqual(row["cost_model"], "originating_signal_state_turnover")
+        for indicator in INDICATORS:
+            self.assertIn(f"{indicator}_evidence_observations", result)
 
     def test_future_mutation_does_not_change_earlier_decisions(self):
         frame = self.frame()
@@ -40,6 +45,12 @@ class AdaptiveTechnicalEnsembleTests(unittest.TestCase):
     def test_small_samples_keep_neutral_weights(self):
         result = build_ensemble(self.frame(20))
         self.assertTrue((result[[f"{name}_weight" for name in INDICATORS]].fillna(1.0) == 1.0).all().all())
+
+    def test_horizons_are_distinct_research_targets(self):
+        result = build_ensemble(self.frame(8))
+        self.assertEqual(set(result["target_horizon_sessions"]), set(HORIZON_ROLES))
+        self.assertEqual(len(result), 8 * len(HORIZON_ROLES))
+        self.assertFalse(result.duplicated(["instrument", "event_time", "target_horizon_sessions"]).any())
 
 
 if __name__ == "__main__":

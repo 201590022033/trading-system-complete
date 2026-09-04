@@ -11,6 +11,8 @@ from statistics import mean, median
 import numpy as np
 import pandas as pd
 
+from technical_signals import INDICATORS, technical_signal_frame
+
 
 VERSION = "indicator-effectiveness-v1"
 ROOT = Path(__file__).parent
@@ -71,6 +73,13 @@ class ReliabilityAccumulator:
         return max(.5, min(1.5, 1+stability*evidence))
 
 
+def signal_outcome(signal: float, previous_signal: float, forward_return: float, cost_bps: float = COST_BPS) -> tuple[float, float, float]:
+    """Return gross aligned return, signal-state turnover and net return."""
+    aligned = float(signal) * float(forward_return)
+    turnover = abs(float(signal) - float(previous_signal))
+    return aligned, turnover, aligned - turnover * float(cost_bps) / 10000.0
+
+
 def _wilson(wins: int, count: int) -> tuple[float, float]:
     if not count:
         return 0.0, 1.0
@@ -122,8 +131,10 @@ def walk_forward_weights(signals: list[int], forward_returns: list[float], horiz
     for index in range(len(signals)):
         newly_known = index - horizon
         if newly_known >= 0 and signals[newly_known] and math.isfinite(forward_returns[newly_known]):
-            gross = signals[newly_known]*forward_returns[newly_known]
-            net = gross-COST_BPS/10000.0
+            previous_signal = signals[newly_known-1] if newly_known else 0
+            gross, _, net = signal_outcome(
+                signals[newly_known], previous_signal, forward_returns[newly_known]
+            )
             realized_net.append(net)
             prefix_sum.append(prefix_sum[-1] + net)
             wins += gross > 0
@@ -146,14 +157,8 @@ def walk_forward_weights(signals: list[int], forward_returns: list[float], horiz
 
 def _signals(frame: pd.DataFrame) -> dict[str, pd.Series]:
     return {
-        "rsi": frame["rsi_signal"].fillna(0).astype(int),
-        "sma": frame["sma_signal"].fillna(0).astype(int),
-        "breakout": frame["breakout_signal"].fillna(0).astype(int),
-        "stochastic": frame["stochastic_signal"].fillna(0).astype(int),
-        "macd": np.sign(frame["macd"]).fillna(0).astype(int),
-        "bollinger_mean_reversion": pd.Series(np.select([frame["bollinger_zscore"] <= -1.5, frame["bollinger_zscore"] >= 1.5], [1, -1], default=0), index=frame.index),
-        "adx_dmi": pd.Series(np.where(frame["adx"] >= 25, frame["dmi_direction"], 0), index=frame.index).fillna(0).astype(int),
-        "ichimoku": frame["ichimoku_direction"].fillna(0).astype(int),
+        name: values.fillna(0).astype(int)
+        for name, values in technical_signal_frame(frame).items()
     }
 
 
@@ -177,9 +182,10 @@ def evaluate(frame: pd.DataFrame) -> dict:
                 })
                 previous = signal.shift(1).fillna(0)
                 turnover = (signal-previous).abs()
+                aligned = signal*forward
                 base = pd.DataFrame({
-                    "signal": signal, "gross": signal*forward,
-                    "net": signal*forward-turnover*COST_BPS/10000.0,
+                    "signal": signal, "gross": aligned,
+                    "net": aligned-turnover*COST_BPS/10000.0,
                     "trend_regime": asset["trend_regime"],
                     "volatility_regime": asset["volatility_regime"],
                 })

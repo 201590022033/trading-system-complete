@@ -22,6 +22,13 @@ only when its full horizon has elapsed. Tests mutate future outcomes and verify
 that earlier weights remain unchanged. These are research weights only;
 production/default weights remain frozen.
 
+HR9 recovery identified and corrected an inconsistency between HR8's batch
+turnover cost and its walk-forward accumulator. Both now use 10 bps per unit of
+originating signal-state turnover. HR8 and HR9 also share the authoritative
+versioned definitions in `technical_signals.py`; the evidence contract version
+remains `indicator-effectiveness-v1` because its documented intended semantics
+did not change.
+
 ## Indicators evaluated
 
 The first learning pass covers legacy RSI, SMA, breakout and stochastic;

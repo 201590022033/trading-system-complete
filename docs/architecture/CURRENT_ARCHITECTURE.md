@@ -122,6 +122,14 @@ M9 integration preserves the existing governance chain:
 - pairwise disagreement telemetry is returned for research logging;
 - portfolio execution remains simulated and is explicitly labelled `paper`.
 
+### `technical_signals.py` + `adaptive_technical_ensemble.py`
+HR9 research boundary:
+- one versioned authoritative technical-signal definition shared with HR8;
+- causal, bounded reliability weights using the HR8 evidence contract;
+- independent 1/3/5/20-session targets with evidence counts and contributions;
+- immutable pre-HR9 baseline and separately versioned v2 artifact;
+- shadow-only output with no Flask, governance or broker integration.
+
 ## Existing strengths
 - Good separation between ingestion, observations, signal fusion and governance.
 - Real SA/JSE adaptation already underway.

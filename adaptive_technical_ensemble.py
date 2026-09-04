@@ -11,30 +11,30 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from indicator_effectiveness import COST_BPS, HORIZONS, ReliabilityAccumulator
+from indicator_effectiveness import (
+    COST_BPS,
+    HORIZONS,
+    MINIMUM_SAMPLE,
+    PRIOR_STRENGTH,
+    VERSION as EVIDENCE_VERSION,
+    ReliabilityAccumulator,
+    signal_outcome,
+)
+from technical_signals import INDICATORS, SIGNAL_DEFINITION_VERSION, technical_signal_frame
 
 
-VERSION = "adaptive-technical-ensemble-v1"
+VERSION = "adaptive-technical-ensemble-v2"
 ROOT = Path(__file__).parent
 FEATURES = ROOT / "analysis" / "data" / "hr7" / "asset_technical_features.csv"
-OUTPUT = ROOT / "analysis" / "data" / "hr9" / "adaptive_technical_decisions.csv"
-SUMMARY = ROOT / "analysis" / "results" / "adaptive_technical_ensemble_summary.json"
-INDICATORS = ("rsi", "sma", "breakout", "stochastic", "macd", "bollinger", "adx_dmi", "ichimoku")
-
-
-def _signal_frame(asset: pd.DataFrame) -> pd.DataFrame:
-    result = pd.DataFrame(index=asset.index, columns=INDICATORS, dtype=float)
-    result["rsi"] = asset["rsi_signal"].where(asset["rsi"].notna())
-    result["sma"] = asset["sma_signal"].where(asset["sma_slow"].notna())
-    result["breakout"] = asset["breakout_signal"].where(asset["technical_warmup_complete"])
-    result["stochastic"] = asset["stochastic_signal"].where(asset["stochastic"].notna())
-    result["macd"] = np.sign(asset["macd"]).where(asset.index >= 25)
-    result["bollinger"] = pd.Series(np.select(
-        [asset["bollinger_zscore"] <= -1.5, asset["bollinger_zscore"] >= 1.5],
-        [1, -1], default=0), index=asset.index).where(asset["bollinger_zscore"].notna())
-    result["adx_dmi"] = pd.Series(np.where(asset["adx"] >= 25, asset["dmi_direction"], 0), index=asset.index).where(asset["adx"].notna())
-    result["ichimoku"] = asset["ichimoku_direction"]
-    return result
+PRE_HR9_BASELINE = ROOT / "analysis" / "data" / "hr9" / "adaptive_technical_decisions.csv"
+OUTPUT = ROOT / "analysis" / "data" / "hr9" / "adaptive_technical_decisions_v2.csv"
+SUMMARY = ROOT / "analysis" / "results" / "adaptive_technical_ensemble_v2_summary.json"
+HORIZON_ROLES = {
+    1: "next_session_tactical",
+    3: "three_session_short_term",
+    5: "five_session_swing",
+    20: "twenty_session_position",
+}
 
 
 def _action(score: float) -> str:
@@ -45,7 +45,7 @@ def build_ensemble(frame: pd.DataFrame) -> pd.DataFrame:
     outputs = []
     for instrument, asset in frame.groupby("instrument", sort=True):
         asset = asset.sort_values("event_time").reset_index(drop=True)
-        signals = _signal_frame(asset)
+        signals = technical_signal_frame(asset)
         for horizon in HORIZONS:
             histories = defaultdict(ReliabilityAccumulator)
             for index, row in asset.iterrows():
@@ -56,9 +56,11 @@ def build_ensemble(frame: pd.DataFrame) -> pd.DataFrame:
                     for indicator in INDICATORS:
                         signal = signals.loc[known, indicator]
                         if pd.notna(signal) and signal != 0 and math.isfinite(realized):
-                            aligned = float(signal)*realized
+                            previous = signals.loc[known-1, indicator] if known else 0.0
+                            previous = 0.0 if pd.isna(previous) else float(previous)
+                            aligned, _, net = signal_outcome(signal, previous, realized)
                             histories[(indicator, *prior_context)].update(
-                                aligned-COST_BPS/10000.0, aligned
+                                net, aligned
                             )
                 weights, contributions, unavailable = {}, {}, []
                 available = [name for name in INDICATORS if pd.notna(signals.loc[index, name])]
@@ -77,18 +79,28 @@ def build_ensemble(frame: pd.DataFrame) -> pd.DataFrame:
                     "decision_time": row["decision_time"], "instrument": instrument,
                     "asset_class": row["asset_class"], "profile": row["profile"],
                     "trend_regime": row["trend_regime"], "volatility_regime": row["volatility_regime"],
-                    "horizon": horizon, "close": row["close"],
+                    "horizon": horizon, "target_horizon_sessions": horizon,
+                    "horizon_role": HORIZON_ROLES[horizon], "close": row["close"],
                     "raw_technical_score": row["raw_technical_score"],
                     "static_expanded_score": sum(float(signals.loc[index, name]) for name in available)/len(available) if available else 0.0,
                     "adaptive_score": score, "adaptive_action": _action(score),
                     "indicators_considered": ";".join(available),
                     "indicators_unavailable": ";".join(unavailable),
-                    "ensemble_version": VERSION, "shadow_only": True,
+                    "ensemble_version": VERSION,
+                    "signal_definition_version": SIGNAL_DEFINITION_VERSION,
+                    "evidence_contract_version": EVIDENCE_VERSION,
+                    "cost_model": "originating_signal_state_turnover",
+                    "cost_bps_per_turnover_unit": COST_BPS,
+                    "minimum_evidence_observations": MINIMUM_SAMPLE,
+                    "prior_strength": PRIOR_STRENGTH,
+                    "shadow_only": True,
                 }
                 for indicator in INDICATORS:
                     output[f"{indicator}_signal"] = signals.loc[index, indicator]
                     output[f"{indicator}_weight"] = weights.get(indicator, np.nan)
                     output[f"{indicator}_contribution"] = contributions.get(indicator, np.nan)
+                    key = (indicator, row["trend_regime"], row["volatility_regime"])
+                    output[f"{indicator}_evidence_observations"] = histories[key].count if indicator in weights else np.nan
                 outputs.append(output)
     return pd.DataFrame(outputs)
 
@@ -100,6 +112,12 @@ def generate() -> dict:
     weight_columns = [f"{name}_weight" for name in INDICATORS]
     summary = {
         "version": VERSION, "path": OUTPUT.relative_to(ROOT).as_posix(),
+        "pre_hr9_baseline": PRE_HR9_BASELINE.relative_to(ROOT).as_posix(),
+        "input_path": FEATURES.relative_to(ROOT).as_posix(),
+        "input_sha256": hashlib.sha256(FEATURES.read_bytes()).hexdigest(),
+        "signal_definition_version": SIGNAL_DEFINITION_VERSION,
+        "evidence_contract_version": EVIDENCE_VERSION,
+        "horizon_roles": HORIZON_ROLES,
         "sha256": hashlib.sha256(OUTPUT.read_bytes()).hexdigest(),
         "rows": len(output), "actions": output["adaptive_action"].value_counts().to_dict(),
         "non_neutral_weight_cells": int(sum((output[column]-1).abs().gt(1e-12).sum() for column in weight_columns)),

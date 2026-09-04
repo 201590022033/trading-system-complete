@@ -1,6 +1,6 @@
 import unittest
 
-from indicator_effectiveness import ReliabilityAccumulator, estimate_reliability, walk_forward_weights
+from indicator_effectiveness import ReliabilityAccumulator, estimate_reliability, signal_outcome, walk_forward_weights
 
 
 class IndicatorEffectivenessTests(unittest.TestCase):
@@ -38,6 +38,18 @@ class IndicatorEffectivenessTests(unittest.TestCase):
         self.assertEqual(state.count, 40)
         self.assertGreater(state.weight(), 1.0)
         self.assertLessEqual(state.weight(), 1.5)
+
+    def test_cost_is_charged_on_signal_state_turnover(self):
+        for actual, expected in zip(signal_outcome(1, 0, .01), (.01, 1.0, .009)):
+            self.assertAlmostEqual(actual, expected)
+        for actual, expected in zip(signal_outcome(1, 1, .01), (.01, 0.0, .01)):
+            self.assertAlmostEqual(actual, expected)
+        for actual, expected in zip(signal_outcome(-1, 1, .01), (-.01, 2.0, -.012)):
+            self.assertAlmostEqual(actual, expected)
+
+    def test_walk_forward_repeated_position_does_not_pay_daily_entry_cost(self):
+        weights = walk_forward_weights([1] * 40, [.001] * 40, horizon=1)
+        self.assertGreater(weights[-1], 1.0)
 
 
 if __name__ == "__main__":

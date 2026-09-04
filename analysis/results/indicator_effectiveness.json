@@ -3424,7 +3424,7 @@
       "ci_low": 0.43781113720043324,
       "ci_high": 0.5444290605727243,
       "stability": 0.0,
-      "recency_weighted_net_return": -0.000550456244746424,
+      "recency_weighted_net_return": -0.0005504562447464241,
       "current_reliability_weight": 1.0,
       "sample_gate_passed": true
     },
@@ -4663,7 +4663,7 @@
       "ci_low": 0.4316600251259428,
       "ci_high": 0.5385640328823564,
       "stability": 1.0,
-      "recency_weighted_net_return": -0.002603059407259948,
+      "recency_weighted_net_return": -0.0026030594072599476,
       "current_reliability_weight": 0.8414379387279116,
       "sample_gate_passed": true
     },
@@ -10984,7 +10984,7 @@
       "ci_low": 0.4171689011791058,
       "ci_high": 0.5298231635329816,
       "stability": 1.0,
-      "recency_weighted_net_return": -0.0008072578083745133,
+      "recency_weighted_net_return": -0.0008072578083745134,
       "current_reliability_weight": 0.9093226441724693,
       "sample_gate_passed": true
     },
@@ -11509,7 +11509,7 @@
       "ci_low": 0.4842240962260037,
       "ci_high": 0.5997384900455537,
       "stability": 0.0,
-      "recency_weighted_net_return": -0.00043174834731090153,
+      "recency_weighted_net_return": -0.0004317483473109018,
       "current_reliability_weight": 1.0,
       "sample_gate_passed": true
     },
@@ -12097,7 +12097,7 @@
       "ci_low": 0.4506575679859435,
       "ci_high": 0.5584102155092396,
       "stability": 0.0,
-      "recency_weighted_net_return": -0.0004403818307160496,
+      "recency_weighted_net_return": -0.00044038183071604955,
       "current_reliability_weight": 1.0,
       "sample_gate_passed": true
     },
@@ -17158,7 +17158,7 @@
       "ci_low": 0.4666559110717118,
       "ci_high": 0.5816463340166399,
       "stability": 0.0,
-      "recency_weighted_net_return": 6.457462623779072e-05,
+      "recency_weighted_net_return": 6.45746262377907e-05,
       "current_reliability_weight": 1.0,
       "sample_gate_passed": true
     },
@@ -22471,7 +22471,7 @@
       "ci_low": 0.4617283351523477,
       "ci_high": 0.5318683174850117,
       "stability": 0.0,
-      "recency_weighted_net_return": 0.0007170847457202308,
+      "recency_weighted_net_return": 0.0007170847457202309,
       "current_reliability_weight": 1.0,
       "sample_gate_passed": true
     },
@@ -23185,7 +23185,7 @@
       "ci_low": 0.4828799856560189,
       "ci_high": 0.549608583009035,
       "stability": 0.0,
-      "recency_weighted_net_return": -0.00879141062109435,
+      "recency_weighted_net_return": -0.008791410621094349,
       "current_reliability_weight": 1.0,
       "sample_gate_passed": true
     },
@@ -23227,7 +23227,7 @@
       "ci_low": 0.4688635915667643,
       "ci_high": 0.5283710277546187,
       "stability": 0.0,
-      "recency_weighted_net_return": 0.0013076478032064095,
+      "recency_weighted_net_return": 0.0013076478032064097,
       "current_reliability_weight": 1.0,
       "sample_gate_passed": true
     },
@@ -29359,7 +29359,7 @@
       "ci_low": 0.35441845079234213,
       "ci_high": 0.44462827989671116,
       "stability": 1.0,
-      "recency_weighted_net_return": -0.005027713437357709,
+      "recency_weighted_net_return": -0.00502771343735771,
       "current_reliability_weight": 0.5545844773858459,
       "sample_gate_passed": true
     },
@@ -29758,7 +29758,7 @@
       "ci_low": 0.4385545560625699,
       "ci_high": 0.5381801074276028,
       "stability": 0.0,
-      "recency_weighted_net_return": -7.899044048671991e-05,
+      "recency_weighted_net_return": -7.899044048671966e-05,
       "current_reliability_weight": 1.0,
       "sample_gate_passed": true
     },
@@ -31963,7 +31963,7 @@
       "ci_low": 0.4645972991972027,
       "ci_high": 0.5582420107267516,
       "stability": 0.0,
-      "recency_weighted_net_return": 0.0002703015106196625,
+      "recency_weighted_net_return": 0.0002703015106196624,
       "current_reliability_weight": 1.0,
       "sample_gate_passed": true
     },
@@ -32110,7 +32110,7 @@
       "ci_low": 0.44950631578669303,
       "ci_high": 0.5226323844502394,
       "stability": 1.0,
-      "recency_weighted_net_return": -0.0012537868580156505,
+      "recency_weighted_net_return": -0.0012537868580156503,
       "current_reliability_weight": 0.9100627006959477,
       "sample_gate_passed": true
     },
@@ -32173,7 +32173,7 @@
       "ci_low": 0.4887835879322249,
       "ci_high": 0.5524931721088233,
       "stability": 0.0,
-      "recency_weighted_net_return": -0.00040681493628982494,
+      "recency_weighted_net_return": -0.0004068149362898249,
       "current_reliability_weight": 1.0,
       "sample_gate_passed": true
     },
@@ -37633,7 +37633,7 @@
       "ci_low": 0.45599475218270685,
       "ci_high": 0.5540092093860745,
       "stability": 1.0,
-      "recency_weighted_net_return": -0.001823035104449805,
+      "recency_weighted_net_return": -0.0018230351044498051,
       "current_reliability_weight": 0.9184636293928943,
       "sample_gate_passed": true
     },
@@ -38116,7 +38116,7 @@
       "ci_low": 0.4444619080553446,
       "ci_high": 0.5304822752946413,
       "stability": 0.0,
-      "recency_weighted_net_return": -0.0007077375370954232,
+      "recency_weighted_net_return": -0.0007077375370954233,
       "current_reliability_weight": 1.0,
       "sample_gate_passed": true
     },
@@ -51903,199 +51903,199 @@
       "indicator": "rsi",
       "horizon": 1,
       "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 1366,
-      "final_prior_only_weight": 0.97872887394054
+      "non_neutral_learned_weights": 1445,
+      "final_prior_only_weight": 1.0168963653995826
     },
     {
       "instrument": "ABSPJ",
       "indicator": "sma",
       "horizon": 1,
       "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 2632,
-      "final_prior_only_weight": 0.8517689370172856
+      "non_neutral_learned_weights": 2630,
+      "final_prior_only_weight": 0.8962630711324043
     },
     {
       "instrument": "ABSPJ",
       "indicator": "breakout",
       "horizon": 1,
       "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 2019,
-      "final_prior_only_weight": 0.874900904142689
+      "non_neutral_learned_weights": 1424,
+      "final_prior_only_weight": 0.8982407388527169
     },
     {
       "instrument": "ABSPJ",
       "indicator": "stochastic",
       "horizon": 1,
       "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 1313,
-      "final_prior_only_weight": 1.0151294998497025
-    },
-    {
-      "instrument": "ABSPJ",
-      "indicator": "macd",
-      "horizon": 1,
-      "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 2612,
-      "final_prior_only_weight": 0.8670794743242926
-    },
-    {
-      "instrument": "ABSPJ",
-      "indicator": "bollinger_mean_reversion",
-      "horizon": 1,
-      "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 674,
-      "final_prior_only_weight": 1.0
-    },
-    {
-      "instrument": "ABSPJ",
-      "indicator": "adx_dmi",
-      "horizon": 1,
-      "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 2593,
-      "final_prior_only_weight": 0.8574238891567711
-    },
-    {
-      "instrument": "ABSPJ",
-      "indicator": "ichimoku",
-      "horizon": 1,
-      "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 2572,
-      "final_prior_only_weight": 0.8916029680406381
-    },
-    {
-      "instrument": "ABSPJ",
-      "indicator": "rsi",
-      "horizon": 3,
-      "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 1120,
-      "final_prior_only_weight": 1.1226006205027834
-    },
-    {
-      "instrument": "ABSPJ",
-      "indicator": "sma",
-      "horizon": 3,
-      "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 2613,
-      "final_prior_only_weight": 0.82005014283187
-    },
-    {
-      "instrument": "ABSPJ",
-      "indicator": "breakout",
-      "horizon": 3,
-      "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 2040,
-      "final_prior_only_weight": 0.7611103887934489
-    },
-    {
-      "instrument": "ABSPJ",
-      "indicator": "stochastic",
-      "horizon": 3,
-      "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 1446,
+      "non_neutral_learned_weights": 1319,
       "final_prior_only_weight": 1.0
     },
     {
       "instrument": "ABSPJ",
       "indicator": "macd",
-      "horizon": 3,
-      "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 2579,
-      "final_prior_only_weight": 0.8212502710321619
-    },
-    {
-      "instrument": "ABSPJ",
-      "indicator": "bollinger_mean_reversion",
-      "horizon": 3,
-      "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 1224,
-      "final_prior_only_weight": 1.0
-    },
-    {
-      "instrument": "ABSPJ",
-      "indicator": "adx_dmi",
-      "horizon": 3,
-      "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 2593,
-      "final_prior_only_weight": 0.7078494421008961
-    },
-    {
-      "instrument": "ABSPJ",
-      "indicator": "ichimoku",
-      "horizon": 3,
-      "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 2424,
-      "final_prior_only_weight": 0.8985987676045859
-    },
-    {
-      "instrument": "ABSPJ",
-      "indicator": "rsi",
-      "horizon": 5,
-      "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 1926,
-      "final_prior_only_weight": 1.241504851258641
-    },
-    {
-      "instrument": "ABSPJ",
-      "indicator": "sma",
-      "horizon": 5,
-      "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 2602,
-      "final_prior_only_weight": 0.7666883464982367
-    },
-    {
-      "instrument": "ABSPJ",
-      "indicator": "breakout",
-      "horizon": 5,
-      "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 1609,
-      "final_prior_only_weight": 0.8075455505058745
-    },
-    {
-      "instrument": "ABSPJ",
-      "indicator": "stochastic",
-      "horizon": 5,
+      "horizon": 1,
       "eligible_decisions": 2685,
       "non_neutral_learned_weights": 2393,
-      "final_prior_only_weight": 1.1351776181153572
+      "final_prior_only_weight": 0.9128463536432895
+    },
+    {
+      "instrument": "ABSPJ",
+      "indicator": "bollinger_mean_reversion",
+      "horizon": 1,
+      "eligible_decisions": 2685,
+      "non_neutral_learned_weights": 836,
+      "final_prior_only_weight": 1.0
+    },
+    {
+      "instrument": "ABSPJ",
+      "indicator": "adx_dmi",
+      "horizon": 1,
+      "eligible_decisions": 2685,
+      "non_neutral_learned_weights": 2560,
+      "final_prior_only_weight": 0.8981549601172844
+    },
+    {
+      "instrument": "ABSPJ",
+      "indicator": "ichimoku",
+      "horizon": 1,
+      "eligible_decisions": 2685,
+      "non_neutral_learned_weights": 2298,
+      "final_prior_only_weight": 0.9377554217707676
+    },
+    {
+      "instrument": "ABSPJ",
+      "indicator": "rsi",
+      "horizon": 3,
+      "eligible_decisions": 2685,
+      "non_neutral_learned_weights": 1571,
+      "final_prior_only_weight": 1.160768111961826
+    },
+    {
+      "instrument": "ABSPJ",
+      "indicator": "sma",
+      "horizon": 3,
+      "eligible_decisions": 2685,
+      "non_neutral_learned_weights": 2601,
+      "final_prior_only_weight": 0.8645138809024681
+    },
+    {
+      "instrument": "ABSPJ",
+      "indicator": "breakout",
+      "horizon": 3,
+      "eligible_decisions": 2685,
+      "non_neutral_learned_weights": 2010,
+      "final_prior_only_weight": 0.7844502235034767
+    },
+    {
+      "instrument": "ABSPJ",
+      "indicator": "stochastic",
+      "horizon": 3,
+      "eligible_decisions": 2685,
+      "non_neutral_learned_weights": 1964,
+      "final_prior_only_weight": 1.0957043401880564
+    },
+    {
+      "instrument": "ABSPJ",
+      "indicator": "macd",
+      "horizon": 3,
+      "eligible_decisions": 2685,
+      "non_neutral_learned_weights": 2350,
+      "final_prior_only_weight": 0.866993784417863
+    },
+    {
+      "instrument": "ABSPJ",
+      "indicator": "bollinger_mean_reversion",
+      "horizon": 3,
+      "eligible_decisions": 2685,
+      "non_neutral_learned_weights": 1248,
+      "final_prior_only_weight": 1.0
+    },
+    {
+      "instrument": "ABSPJ",
+      "indicator": "adx_dmi",
+      "horizon": 3,
+      "eligible_decisions": 2685,
+      "non_neutral_learned_weights": 2587,
+      "final_prior_only_weight": 0.7485288407813966
+    },
+    {
+      "instrument": "ABSPJ",
+      "indicator": "ichimoku",
+      "horizon": 3,
+      "eligible_decisions": 2685,
+      "non_neutral_learned_weights": 2279,
+      "final_prior_only_weight": 0.9448786456689092
+    },
+    {
+      "instrument": "ABSPJ",
+      "indicator": "rsi",
+      "horizon": 5,
+      "eligible_decisions": 2685,
+      "non_neutral_learned_weights": 2179,
+      "final_prior_only_weight": 1.279672342717684
+    },
+    {
+      "instrument": "ABSPJ",
+      "indicator": "sma",
+      "horizon": 5,
+      "eligible_decisions": 2685,
+      "non_neutral_learned_weights": 2581,
+      "final_prior_only_weight": 0.8112593480107904
+    },
+    {
+      "instrument": "ABSPJ",
+      "indicator": "breakout",
+      "horizon": 5,
+      "eligible_decisions": 2685,
+      "non_neutral_learned_weights": 1510,
+      "final_prior_only_weight": 0.8309666060207275
+    },
+    {
+      "instrument": "ABSPJ",
+      "indicator": "stochastic",
+      "horizon": 5,
+      "eligible_decisions": 2685,
+      "non_neutral_learned_weights": 2469,
+      "final_prior_only_weight": 1.1714389686501308
     },
     {
       "instrument": "ABSPJ",
       "indicator": "macd",
       "horizon": 5,
       "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 2422,
-      "final_prior_only_weight": 0.7198302929628463
+      "non_neutral_learned_weights": 2267,
+      "final_prior_only_weight": 0.7655503113588942
     },
     {
       "instrument": "ABSPJ",
       "indicator": "bollinger_mean_reversion",
       "horizon": 5,
       "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 1118,
-      "final_prior_only_weight": 1.0096826415420959
+      "non_neutral_learned_weights": 1224,
+      "final_prior_only_weight": 1.0430920720416743
     },
     {
       "instrument": "ABSPJ",
       "indicator": "adx_dmi",
       "horizon": 5,
       "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 2602,
-      "final_prior_only_weight": 0.6035319719900503
+      "non_neutral_learned_weights": 2599,
+      "final_prior_only_weight": 0.6441594072911009
     },
     {
       "instrument": "ABSPJ",
       "indicator": "ichimoku",
       "horizon": 5,
       "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 2456,
-      "final_prior_only_weight": 0.8539164830114419
+      "non_neutral_learned_weights": 2284,
+      "final_prior_only_weight": 0.900196361075765
     },
     {
       "instrument": "ABSPJ",
       "indicator": "rsi",
       "horizon": 20,
       "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 1014,
+      "non_neutral_learned_weights": 1053,
       "final_prior_only_weight": 1.0
     },
     {
@@ -52103,120 +52103,120 @@
       "indicator": "sma",
       "horizon": 20,
       "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 2058,
-      "final_prior_only_weight": 0.5462019744335876
+      "non_neutral_learned_weights": 2021,
+      "final_prior_only_weight": 0.59084145902024
     },
     {
       "instrument": "ABSPJ",
       "indicator": "breakout",
       "horizon": 20,
       "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 1637,
-      "final_prior_only_weight": 0.6241849435220004
+      "non_neutral_learned_weights": 1604,
+      "final_prior_only_weight": 0.6476059990368537
     },
     {
       "instrument": "ABSPJ",
       "indicator": "stochastic",
       "horizon": 20,
       "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 2151,
-      "final_prior_only_weight": 1.1829276263665736
+      "non_neutral_learned_weights": 2188,
+      "final_prior_only_weight": 1.2192666126744636
     },
     {
       "instrument": "ABSPJ",
       "indicator": "macd",
       "horizon": 20,
       "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 1808,
-      "final_prior_only_weight": 0.6335804685151759
+      "non_neutral_learned_weights": 1765,
+      "final_prior_only_weight": 0.6796890402541226
     },
     {
       "instrument": "ABSPJ",
       "indicator": "bollinger_mean_reversion",
       "horizon": 20,
       "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 889,
-      "final_prior_only_weight": 1.1824011111074495
+      "non_neutral_learned_weights": 991,
+      "final_prior_only_weight": 1.2157054446191857
     },
     {
       "instrument": "ABSPJ",
       "indicator": "adx_dmi",
       "horizon": 20,
       "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 2134,
-      "final_prior_only_weight": 0.8763216542268462
+      "non_neutral_learned_weights": 2050,
+      "final_prior_only_weight": 0.916835392232209
     },
     {
       "instrument": "ABSPJ",
       "indicator": "ichimoku",
       "horizon": 20,
       "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 1856,
-      "final_prior_only_weight": 0.9692333528131356
+      "non_neutral_learned_weights": 1606,
+      "final_prior_only_weight": 1.0153880838731228
     },
     {
       "instrument": "BHP",
       "indicator": "rsi",
       "horizon": 1,
       "eligible_decisions": 1147,
-      "non_neutral_learned_weights": 790,
-      "final_prior_only_weight": 1.1892399129573543
+      "non_neutral_learned_weights": 903,
+      "final_prior_only_weight": 1.2222758619817184
     },
     {
       "instrument": "BHP",
       "indicator": "sma",
       "horizon": 1,
       "eligible_decisions": 1147,
-      "non_neutral_learned_weights": 1088,
-      "final_prior_only_weight": 0.891685134896304
+      "non_neutral_learned_weights": 1082,
+      "final_prior_only_weight": 0.9368560612269226
     },
     {
       "instrument": "BHP",
       "indicator": "breakout",
       "horizon": 1,
       "eligible_decisions": 1147,
-      "non_neutral_learned_weights": 1003,
-      "final_prior_only_weight": 0.7235259582029776
+      "non_neutral_learned_weights": 1000,
+      "final_prior_only_weight": 0.7458342684154866
     },
     {
       "instrument": "BHP",
       "indicator": "stochastic",
       "horizon": 1,
       "eligible_decisions": 1147,
-      "non_neutral_learned_weights": 816,
-      "final_prior_only_weight": 1.0
+      "non_neutral_learned_weights": 1018,
+      "final_prior_only_weight": 1.1315110679998763
     },
     {
       "instrument": "BHP",
       "indicator": "macd",
       "horizon": 1,
       "eligible_decisions": 1147,
-      "non_neutral_learned_weights": 1096,
-      "final_prior_only_weight": 0.9015018797348494
+      "non_neutral_learned_weights": 1094,
+      "final_prior_only_weight": 0.947635035143753
     },
     {
       "instrument": "BHP",
       "indicator": "bollinger_mean_reversion",
       "horizon": 1,
       "eligible_decisions": 1147,
-      "non_neutral_learned_weights": 833,
-      "final_prior_only_weight": 1.0
+      "non_neutral_learned_weights": 928,
+      "final_prior_only_weight": 1.134521687232714
     },
     {
       "instrument": "BHP",
       "indicator": "adx_dmi",
       "horizon": 1,
       "eligible_decisions": 1147,
-      "non_neutral_learned_weights": 1007,
-      "final_prior_only_weight": 0.8430997335502926
+      "non_neutral_learned_weights": 966,
+      "final_prior_only_weight": 0.8838837979071285
     },
     {
       "instrument": "BHP",
       "indicator": "ichimoku",
       "horizon": 1,
       "eligible_decisions": 1147,
-      "non_neutral_learned_weights": 1005,
-      "final_prior_only_weight": 0.9489449655699673
+      "non_neutral_learned_weights": 878,
+      "final_prior_only_weight": 0.9949727366606071
     },
     {
       "instrument": "BHP",
@@ -52231,56 +52231,56 @@
       "indicator": "sma",
       "horizon": 3,
       "eligible_decisions": 1147,
-      "non_neutral_learned_weights": 1085,
-      "final_prior_only_weight": 0.8982175430370841
+      "non_neutral_learned_weights": 1083,
+      "final_prior_only_weight": 0.9433604522110605
     },
     {
       "instrument": "BHP",
       "indicator": "breakout",
       "horizon": 3,
       "eligible_decisions": 1147,
-      "non_neutral_learned_weights": 992,
-      "final_prior_only_weight": 0.6167630740450472
+      "non_neutral_learned_weights": 962,
+      "final_prior_only_weight": 0.6390713842575562
     },
     {
       "instrument": "BHP",
       "indicator": "stochastic",
       "horizon": 3,
       "eligible_decisions": 1147,
-      "non_neutral_learned_weights": 1046,
-      "final_prior_only_weight": 1.226332214378591
+      "non_neutral_learned_weights": 1068,
+      "final_prior_only_weight": 1.2622588500802494
     },
     {
       "instrument": "BHP",
       "indicator": "macd",
       "horizon": 3,
       "eligible_decisions": 1147,
-      "non_neutral_learned_weights": 1097,
-      "final_prior_only_weight": 0.8664880913842898
+      "non_neutral_learned_weights": 1087,
+      "final_prior_only_weight": 0.9125989549310982
     },
     {
       "instrument": "BHP",
       "indicator": "bollinger_mean_reversion",
       "horizon": 3,
       "eligible_decisions": 1147,
-      "non_neutral_learned_weights": 910,
-      "final_prior_only_weight": 1.2968544055881759
+      "non_neutral_learned_weights": 945,
+      "final_prior_only_weight": 1.329676572830053
     },
     {
       "instrument": "BHP",
       "indicator": "adx_dmi",
       "horizon": 3,
       "eligible_decisions": 1147,
-      "non_neutral_learned_weights": 1041,
-      "final_prior_only_weight": 0.7207306843157139
+      "non_neutral_learned_weights": 1016,
+      "final_prior_only_weight": 0.7614553705251211
     },
     {
       "instrument": "BHP",
       "indicator": "ichimoku",
       "horizon": 3,
       "eligible_decisions": 1147,
-      "non_neutral_learned_weights": 958,
-      "final_prior_only_weight": 0.8700977219396979
+      "non_neutral_learned_weights": 896,
+      "final_prior_only_weight": 0.9161014305425363
     },
     {
       "instrument": "BHP",
@@ -52295,15 +52295,15 @@
       "indicator": "sma",
       "horizon": 5,
       "eligible_decisions": 1147,
-      "non_neutral_learned_weights": 1093,
-      "final_prior_only_weight": 0.8986466913025426
+      "non_neutral_learned_weights": 1090,
+      "final_prior_only_weight": 0.9437614127250017
     },
     {
       "instrument": "BHP",
       "indicator": "breakout",
       "horizon": 5,
       "eligible_decisions": 1147,
-      "non_neutral_learned_weights": 1006,
+      "non_neutral_learned_weights": 1005,
       "final_prior_only_weight": 0.5
     },
     {
@@ -52311,23 +52311,23 @@
       "indicator": "stochastic",
       "horizon": 5,
       "eligible_decisions": 1147,
-      "non_neutral_learned_weights": 1060,
-      "final_prior_only_weight": 1.2916934332179835
+      "non_neutral_learned_weights": 1067,
+      "final_prior_only_weight": 1.327527587587748
     },
     {
       "instrument": "BHP",
       "indicator": "macd",
       "horizon": 5,
       "eligible_decisions": 1147,
-      "non_neutral_learned_weights": 1067,
-      "final_prior_only_weight": 0.848184035385374
+      "non_neutral_learned_weights": 1039,
+      "final_prior_only_weight": 0.8942724729865299
     },
     {
       "instrument": "BHP",
       "indicator": "bollinger_mean_reversion",
       "horizon": 5,
       "eligible_decisions": 1147,
-      "non_neutral_learned_weights": 997,
+      "non_neutral_learned_weights": 1017,
       "final_prior_only_weight": 1.5
     },
     {
@@ -52335,23 +52335,23 @@
       "indicator": "adx_dmi",
       "horizon": 5,
       "eligible_decisions": 1147,
-      "non_neutral_learned_weights": 1063,
-      "final_prior_only_weight": 0.6551911883513346
+      "non_neutral_learned_weights": 1055,
+      "final_prior_only_weight": 0.6958560584115469
     },
     {
       "instrument": "BHP",
       "indicator": "ichimoku",
       "horizon": 5,
       "eligible_decisions": 1147,
-      "non_neutral_learned_weights": 903,
-      "final_prior_only_weight": 0.8860527804309859
+      "non_neutral_learned_weights": 842,
+      "final_prior_only_weight": 0.9320322676709192
     },
     {
       "instrument": "BHP",
       "indicator": "rsi",
       "horizon": 20,
       "eligible_decisions": 1147,
-      "non_neutral_learned_weights": 762,
+      "non_neutral_learned_weights": 776,
       "final_prior_only_weight": 1.5
     },
     {
@@ -52359,8 +52359,8 @@
       "indicator": "sma",
       "horizon": 20,
       "eligible_decisions": 1147,
-      "non_neutral_learned_weights": 1042,
-      "final_prior_only_weight": 0.7729726532156418
+      "non_neutral_learned_weights": 1024,
+      "final_prior_only_weight": 0.8178704130575494
     },
     {
       "instrument": "BHP",
@@ -52376,86 +52376,86 @@
       "horizon": 20,
       "eligible_decisions": 1147,
       "non_neutral_learned_weights": 1052,
-      "final_prior_only_weight": 1.2837826884946635
+      "final_prior_only_weight": 1.3192622473606923
     },
     {
       "instrument": "BHP",
       "indicator": "macd",
       "horizon": 20,
       "eligible_decisions": 1147,
-      "non_neutral_learned_weights": 905,
-      "final_prior_only_weight": 0.6951949128880706
+      "non_neutral_learned_weights": 883,
+      "final_prior_only_weight": 0.7411107930069509
     },
     {
       "instrument": "BHP",
       "indicator": "bollinger_mean_reversion",
       "horizon": 20,
       "eligible_decisions": 1147,
+      "non_neutral_learned_weights": 856,
+      "final_prior_only_weight": 1.5
+    },
+    {
+      "instrument": "BHP",
+      "indicator": "adx_dmi",
+      "horizon": 20,
+      "eligible_decisions": 1147,
+      "non_neutral_learned_weights": 877,
+      "final_prior_only_weight": 0.7587400883284894
+    },
+    {
+      "instrument": "BHP",
+      "indicator": "ichimoku",
+      "horizon": 20,
+      "eligible_decisions": 1147,
+      "non_neutral_learned_weights": 699,
+      "final_prior_only_weight": 1.0
+    },
+    {
+      "instrument": "BRENT",
+      "indicator": "rsi",
+      "horizon": 1,
+      "eligible_decisions": 2684,
+      "non_neutral_learned_weights": 791,
+      "final_prior_only_weight": 0.9874248630330247
+    },
+    {
+      "instrument": "BRENT",
+      "indicator": "sma",
+      "horizon": 1,
+      "eligible_decisions": 2684,
+      "non_neutral_learned_weights": 629,
+      "final_prior_only_weight": 1.0
+    },
+    {
+      "instrument": "BRENT",
+      "indicator": "breakout",
+      "horizon": 1,
+      "eligible_decisions": 2684,
+      "non_neutral_learned_weights": 779,
+      "final_prior_only_weight": 1.0
+    },
+    {
+      "instrument": "BRENT",
+      "indicator": "stochastic",
+      "horizon": 1,
+      "eligible_decisions": 2684,
+      "non_neutral_learned_weights": 1158,
+      "final_prior_only_weight": 1.0
+    },
+    {
+      "instrument": "BRENT",
+      "indicator": "macd",
+      "horizon": 1,
+      "eligible_decisions": 2684,
+      "non_neutral_learned_weights": 1177,
+      "final_prior_only_weight": 1.0
+    },
+    {
+      "instrument": "BRENT",
+      "indicator": "bollinger_mean_reversion",
+      "horizon": 1,
+      "eligible_decisions": 2684,
       "non_neutral_learned_weights": 852,
-      "final_prior_only_weight": 1.5
-    },
-    {
-      "instrument": "BHP",
-      "indicator": "adx_dmi",
-      "horizon": 20,
-      "eligible_decisions": 1147,
-      "non_neutral_learned_weights": 899,
-      "final_prior_only_weight": 0.7183129771959393
-    },
-    {
-      "instrument": "BHP",
-      "indicator": "ichimoku",
-      "horizon": 20,
-      "eligible_decisions": 1147,
-      "non_neutral_learned_weights": 739,
-      "final_prior_only_weight": 1.0
-    },
-    {
-      "instrument": "BRENT",
-      "indicator": "rsi",
-      "horizon": 1,
-      "eligible_decisions": 2684,
-      "non_neutral_learned_weights": 1632,
-      "final_prior_only_weight": 0.9497665843649012
-    },
-    {
-      "instrument": "BRENT",
-      "indicator": "sma",
-      "horizon": 1,
-      "eligible_decisions": 2684,
-      "non_neutral_learned_weights": 1894,
-      "final_prior_only_weight": 0.9115877174090534
-    },
-    {
-      "instrument": "BRENT",
-      "indicator": "breakout",
-      "horizon": 1,
-      "eligible_decisions": 2684,
-      "non_neutral_learned_weights": 1836,
-      "final_prior_only_weight": 0.9405811768595866
-    },
-    {
-      "instrument": "BRENT",
-      "indicator": "stochastic",
-      "horizon": 1,
-      "eligible_decisions": 2684,
-      "non_neutral_learned_weights": 2245,
-      "final_prior_only_weight": 0.9720209494642842
-    },
-    {
-      "instrument": "BRENT",
-      "indicator": "macd",
-      "horizon": 1,
-      "eligible_decisions": 2684,
-      "non_neutral_learned_weights": 1915,
-      "final_prior_only_weight": 0.9687786728721443
-    },
-    {
-      "instrument": "BRENT",
-      "indicator": "bollinger_mean_reversion",
-      "horizon": 1,
-      "eligible_decisions": 2684,
-      "non_neutral_learned_weights": 1455,
       "final_prior_only_weight": 1.0
     },
     {
@@ -52463,23 +52463,23 @@
       "indicator": "adx_dmi",
       "horizon": 1,
       "eligible_decisions": 2684,
-      "non_neutral_learned_weights": 2472,
-      "final_prior_only_weight": 0.9652927174605784
+      "non_neutral_learned_weights": 1784,
+      "final_prior_only_weight": 1.0
     },
     {
       "instrument": "BRENT",
       "indicator": "ichimoku",
       "horizon": 1,
       "eligible_decisions": 2684,
-      "non_neutral_learned_weights": 2397,
-      "final_prior_only_weight": 0.95204038599697
+      "non_neutral_learned_weights": 1642,
+      "final_prior_only_weight": 0.9988098153688794
     },
     {
       "instrument": "BRENT",
       "indicator": "rsi",
       "horizon": 3,
       "eligible_decisions": 2684,
-      "non_neutral_learned_weights": 1146,
+      "non_neutral_learned_weights": 762,
       "final_prior_only_weight": 1.0
     },
     {
@@ -52487,7 +52487,7 @@
       "indicator": "sma",
       "horizon": 3,
       "eligible_decisions": 2684,
-      "non_neutral_learned_weights": 667,
+      "non_neutral_learned_weights": 1278,
       "final_prior_only_weight": 1.0
     },
     {
@@ -52495,15 +52495,15 @@
       "indicator": "breakout",
       "horizon": 3,
       "eligible_decisions": 2684,
-      "non_neutral_learned_weights": 1145,
-      "final_prior_only_weight": 0.7289886810363504
+      "non_neutral_learned_weights": 802,
+      "final_prior_only_weight": 1.0
     },
     {
       "instrument": "BRENT",
       "indicator": "stochastic",
       "horizon": 3,
       "eligible_decisions": 2684,
-      "non_neutral_learned_weights": 1531,
+      "non_neutral_learned_weights": 1121,
       "final_prior_only_weight": 1.0
     },
     {
@@ -52511,7 +52511,7 @@
       "indicator": "macd",
       "horizon": 3,
       "eligible_decisions": 2684,
-      "non_neutral_learned_weights": 481,
+      "non_neutral_learned_weights": 750,
       "final_prior_only_weight": 1.0
     },
     {
@@ -52519,7 +52519,7 @@
       "indicator": "bollinger_mean_reversion",
       "horizon": 3,
       "eligible_decisions": 2684,
-      "non_neutral_learned_weights": 1495,
+      "non_neutral_learned_weights": 1127,
       "final_prior_only_weight": 1.0
     },
     {
@@ -52527,511 +52527,511 @@
       "indicator": "adx_dmi",
       "horizon": 3,
       "eligible_decisions": 2684,
-      "non_neutral_learned_weights": 2285,
-      "final_prior_only_weight": 0.9962106526715068
+      "non_neutral_learned_weights": 2039,
+      "final_prior_only_weight": 1.0
     },
     {
       "instrument": "BRENT",
       "indicator": "ichimoku",
       "horizon": 3,
       "eligible_decisions": 2684,
-      "non_neutral_learned_weights": 1905,
-      "final_prior_only_weight": 0.9480225564804134
+      "non_neutral_learned_weights": 1368,
+      "final_prior_only_weight": 0.9949121226900426
     },
     {
       "instrument": "BRENT",
       "indicator": "rsi",
       "horizon": 5,
       "eligible_decisions": 2684,
-      "non_neutral_learned_weights": 1164,
-      "final_prior_only_weight": 1.0
-    },
-    {
-      "instrument": "BRENT",
-      "indicator": "sma",
-      "horizon": 5,
-      "eligible_decisions": 2684,
-      "non_neutral_learned_weights": 1302,
-      "final_prior_only_weight": 1.0
-    },
-    {
-      "instrument": "BRENT",
-      "indicator": "breakout",
-      "horizon": 5,
-      "eligible_decisions": 2684,
-      "non_neutral_learned_weights": 1065,
-      "final_prior_only_weight": 1.0
-    },
-    {
-      "instrument": "BRENT",
-      "indicator": "stochastic",
-      "horizon": 5,
-      "eligible_decisions": 2684,
-      "non_neutral_learned_weights": 1673,
-      "final_prior_only_weight": 1.0
-    },
-    {
-      "instrument": "BRENT",
-      "indicator": "macd",
-      "horizon": 5,
-      "eligible_decisions": 2684,
-      "non_neutral_learned_weights": 483,
-      "final_prior_only_weight": 1.0
-    },
-    {
-      "instrument": "BRENT",
-      "indicator": "bollinger_mean_reversion",
-      "horizon": 5,
-      "eligible_decisions": 2684,
-      "non_neutral_learned_weights": 1232,
-      "final_prior_only_weight": 1.0
-    },
-    {
-      "instrument": "BRENT",
-      "indicator": "adx_dmi",
-      "horizon": 5,
-      "eligible_decisions": 2684,
-      "non_neutral_learned_weights": 2227,
-      "final_prior_only_weight": 0.9497406741080181
-    },
-    {
-      "instrument": "BRENT",
-      "indicator": "ichimoku",
-      "horizon": 5,
-      "eligible_decisions": 2684,
-      "non_neutral_learned_weights": 1507,
-      "final_prior_only_weight": 1.0261846354506088
-    },
-    {
-      "instrument": "BRENT",
-      "indicator": "rsi",
-      "horizon": 20,
-      "eligible_decisions": 2684,
-      "non_neutral_learned_weights": 903,
-      "final_prior_only_weight": 1.0
-    },
-    {
-      "instrument": "BRENT",
-      "indicator": "sma",
-      "horizon": 20,
-      "eligible_decisions": 2684,
-      "non_neutral_learned_weights": 1157,
-      "final_prior_only_weight": 1.5
-    },
-    {
-      "instrument": "BRENT",
-      "indicator": "breakout",
-      "horizon": 20,
-      "eligible_decisions": 2684,
-      "non_neutral_learned_weights": 647,
-      "final_prior_only_weight": 1.2500026918333385
-    },
-    {
-      "instrument": "BRENT",
-      "indicator": "stochastic",
-      "horizon": 20,
-      "eligible_decisions": 2684,
-      "non_neutral_learned_weights": 1534,
-      "final_prior_only_weight": 0.7923102573491112
-    },
-    {
-      "instrument": "BRENT",
-      "indicator": "macd",
-      "horizon": 20,
-      "eligible_decisions": 2684,
-      "non_neutral_learned_weights": 729,
-      "final_prior_only_weight": 1.0
-    },
-    {
-      "instrument": "BRENT",
-      "indicator": "bollinger_mean_reversion",
-      "horizon": 20,
-      "eligible_decisions": 2684,
-      "non_neutral_learned_weights": 617,
-      "final_prior_only_weight": 1.0
-    },
-    {
-      "instrument": "BRENT",
-      "indicator": "adx_dmi",
-      "horizon": 20,
-      "eligible_decisions": 2684,
-      "non_neutral_learned_weights": 709,
-      "final_prior_only_weight": 1.0
-    },
-    {
-      "instrument": "BRENT",
-      "indicator": "ichimoku",
-      "horizon": 20,
-      "eligible_decisions": 2684,
-      "non_neutral_learned_weights": 1266,
-      "final_prior_only_weight": 0.9401014990272089
-    },
-    {
-      "instrument": "GOLD",
-      "indicator": "rsi",
-      "horizon": 1,
-      "eligible_decisions": 2682,
-      "non_neutral_learned_weights": 2458,
-      "final_prior_only_weight": 0.9149344215273861
-    },
-    {
-      "instrument": "GOLD",
-      "indicator": "sma",
-      "horizon": 1,
-      "eligible_decisions": 2682,
-      "non_neutral_learned_weights": 2474,
-      "final_prior_only_weight": 0.9889310712056724
-    },
-    {
-      "instrument": "GOLD",
-      "indicator": "breakout",
-      "horizon": 1,
-      "eligible_decisions": 2682,
-      "non_neutral_learned_weights": 2278,
-      "final_prior_only_weight": 0.9795913663986437
-    },
-    {
-      "instrument": "GOLD",
-      "indicator": "stochastic",
-      "horizon": 1,
-      "eligible_decisions": 2682,
-      "non_neutral_learned_weights": 2571,
-      "final_prior_only_weight": 0.9373950591302735
-    },
-    {
-      "instrument": "GOLD",
-      "indicator": "macd",
-      "horizon": 1,
-      "eligible_decisions": 2682,
-      "non_neutral_learned_weights": 2411,
-      "final_prior_only_weight": 1.0204283150719724
-    },
-    {
-      "instrument": "GOLD",
-      "indicator": "bollinger_mean_reversion",
-      "horizon": 1,
-      "eligible_decisions": 2682,
-      "non_neutral_learned_weights": 2518,
-      "final_prior_only_weight": 0.8937959206446182
-    },
-    {
-      "instrument": "GOLD",
-      "indicator": "adx_dmi",
-      "horizon": 1,
-      "eligible_decisions": 2682,
-      "non_neutral_learned_weights": 2524,
-      "final_prior_only_weight": 1.0022760473357983
-    },
-    {
-      "instrument": "GOLD",
-      "indicator": "ichimoku",
-      "horizon": 1,
-      "eligible_decisions": 2682,
-      "non_neutral_learned_weights": 2513,
-      "final_prior_only_weight": 1.036148502728491
-    },
-    {
-      "instrument": "GOLD",
-      "indicator": "rsi",
-      "horizon": 3,
-      "eligible_decisions": 2682,
-      "non_neutral_learned_weights": 2250,
-      "final_prior_only_weight": 0.8839324625257573
-    },
-    {
-      "instrument": "GOLD",
-      "indicator": "sma",
-      "horizon": 3,
-      "eligible_decisions": 2682,
-      "non_neutral_learned_weights": 2380,
-      "final_prior_only_weight": 1.0153948254745189
-    },
-    {
-      "instrument": "GOLD",
-      "indicator": "breakout",
-      "horizon": 3,
-      "eligible_decisions": 2682,
-      "non_neutral_learned_weights": 1203,
-      "final_prior_only_weight": 1.040940016648889
-    },
-    {
-      "instrument": "GOLD",
-      "indicator": "stochastic",
-      "horizon": 3,
-      "eligible_decisions": 2682,
-      "non_neutral_learned_weights": 1977,
-      "final_prior_only_weight": 0.915796073859751
-    },
-    {
-      "instrument": "GOLD",
-      "indicator": "macd",
-      "horizon": 3,
-      "eligible_decisions": 2682,
-      "non_neutral_learned_weights": 1993,
-      "final_prior_only_weight": 1.081514225392669
-    },
-    {
-      "instrument": "GOLD",
-      "indicator": "bollinger_mean_reversion",
-      "horizon": 3,
-      "eligible_decisions": 2682,
-      "non_neutral_learned_weights": 887,
-      "final_prior_only_weight": 1.0
-    },
-    {
-      "instrument": "GOLD",
-      "indicator": "adx_dmi",
-      "horizon": 3,
-      "eligible_decisions": 2682,
-      "non_neutral_learned_weights": 2337,
-      "final_prior_only_weight": 1.0220373172852926
-    },
-    {
-      "instrument": "GOLD",
-      "indicator": "ichimoku",
-      "horizon": 3,
-      "eligible_decisions": 2682,
-      "non_neutral_learned_weights": 1986,
-      "final_prior_only_weight": 1.0
-    },
-    {
-      "instrument": "GOLD",
-      "indicator": "rsi",
-      "horizon": 5,
-      "eligible_decisions": 2682,
-      "non_neutral_learned_weights": 1770,
-      "final_prior_only_weight": 0.8703520130431195
-    },
-    {
-      "instrument": "GOLD",
-      "indicator": "sma",
-      "horizon": 5,
-      "eligible_decisions": 2682,
-      "non_neutral_learned_weights": 2303,
-      "final_prior_only_weight": 1.0168460798053667
-    },
-    {
-      "instrument": "GOLD",
-      "indicator": "breakout",
-      "horizon": 5,
-      "eligible_decisions": 2682,
-      "non_neutral_learned_weights": 2059,
-      "final_prior_only_weight": 0.960785834922083
-    },
-    {
-      "instrument": "GOLD",
-      "indicator": "stochastic",
-      "horizon": 5,
-      "eligible_decisions": 2682,
-      "non_neutral_learned_weights": 1759,
-      "final_prior_only_weight": 0.9273746982818214
-    },
-    {
-      "instrument": "GOLD",
-      "indicator": "macd",
-      "horizon": 5,
-      "eligible_decisions": 2682,
-      "non_neutral_learned_weights": 1604,
-      "final_prior_only_weight": 1.0
-    },
-    {
-      "instrument": "GOLD",
-      "indicator": "bollinger_mean_reversion",
-      "horizon": 5,
-      "eligible_decisions": 2682,
-      "non_neutral_learned_weights": 1419,
-      "final_prior_only_weight": 1.0
-    },
-    {
-      "instrument": "GOLD",
-      "indicator": "adx_dmi",
-      "horizon": 5,
-      "eligible_decisions": 2682,
-      "non_neutral_learned_weights": 2019,
-      "final_prior_only_weight": 1.0144172259199524
-    },
-    {
-      "instrument": "GOLD",
-      "indicator": "ichimoku",
-      "horizon": 5,
-      "eligible_decisions": 2682,
-      "non_neutral_learned_weights": 1607,
-      "final_prior_only_weight": 1.0
-    },
-    {
-      "instrument": "GOLD",
-      "indicator": "rsi",
-      "horizon": 20,
-      "eligible_decisions": 2682,
-      "non_neutral_learned_weights": 445,
-      "final_prior_only_weight": 0.5
-    },
-    {
-      "instrument": "GOLD",
-      "indicator": "sma",
-      "horizon": 20,
-      "eligible_decisions": 2682,
-      "non_neutral_learned_weights": 1283,
-      "final_prior_only_weight": 1.3911056059688602
-    },
-    {
-      "instrument": "GOLD",
-      "indicator": "breakout",
-      "horizon": 20,
-      "eligible_decisions": 2682,
-      "non_neutral_learned_weights": 1769,
-      "final_prior_only_weight": 1.0
-    },
-    {
-      "instrument": "GOLD",
-      "indicator": "stochastic",
-      "horizon": 20,
-      "eligible_decisions": 2682,
-      "non_neutral_learned_weights": 504,
-      "final_prior_only_weight": 0.6917022382660927
-    },
-    {
-      "instrument": "GOLD",
-      "indicator": "macd",
-      "horizon": 20,
-      "eligible_decisions": 2682,
-      "non_neutral_learned_weights": 1653,
-      "final_prior_only_weight": 1.5
-    },
-    {
-      "instrument": "GOLD",
-      "indicator": "bollinger_mean_reversion",
-      "horizon": 20,
-      "eligible_decisions": 2682,
-      "non_neutral_learned_weights": 1540,
-      "final_prior_only_weight": 1.0
-    },
-    {
-      "instrument": "GOLD",
-      "indicator": "adx_dmi",
-      "horizon": 20,
-      "eligible_decisions": 2682,
-      "non_neutral_learned_weights": 1160,
-      "final_prior_only_weight": 1.5
-    },
-    {
-      "instrument": "GOLD",
-      "indicator": "ichimoku",
-      "horizon": 20,
-      "eligible_decisions": 2682,
-      "non_neutral_learned_weights": 1013,
-      "final_prior_only_weight": 1.5
-    },
-    {
-      "instrument": "IMPJ",
-      "indicator": "rsi",
-      "horizon": 1,
-      "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 827,
-      "final_prior_only_weight": 1.0
-    },
-    {
-      "instrument": "IMPJ",
-      "indicator": "sma",
-      "horizon": 1,
-      "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 1962,
-      "final_prior_only_weight": 0.8557754332915725
-    },
-    {
-      "instrument": "IMPJ",
-      "indicator": "breakout",
-      "horizon": 1,
-      "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 777,
-      "final_prior_only_weight": 1.0
-    },
-    {
-      "instrument": "IMPJ",
-      "indicator": "stochastic",
-      "horizon": 1,
-      "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 2337,
-      "final_prior_only_weight": 0.8753865194940849
-    },
-    {
-      "instrument": "IMPJ",
-      "indicator": "macd",
-      "horizon": 1,
-      "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 507,
-      "final_prior_only_weight": 1.0
-    },
-    {
-      "instrument": "IMPJ",
-      "indicator": "bollinger_mean_reversion",
-      "horizon": 1,
-      "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 1423,
-      "final_prior_only_weight": 1.0
-    },
-    {
-      "instrument": "IMPJ",
-      "indicator": "adx_dmi",
-      "horizon": 1,
-      "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 497,
-      "final_prior_only_weight": 1.0
-    },
-    {
-      "instrument": "IMPJ",
-      "indicator": "ichimoku",
-      "horizon": 1,
-      "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 443,
-      "final_prior_only_weight": 1.0
-    },
-    {
-      "instrument": "IMPJ",
-      "indicator": "rsi",
-      "horizon": 3,
-      "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 649,
-      "final_prior_only_weight": 1.0
-    },
-    {
-      "instrument": "IMPJ",
-      "indicator": "sma",
-      "horizon": 3,
-      "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 2061,
-      "final_prior_only_weight": 0.707090302622928
-    },
-    {
-      "instrument": "IMPJ",
-      "indicator": "breakout",
-      "horizon": 3,
-      "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 843,
-      "final_prior_only_weight": 0.5798352254987066
-    },
-    {
-      "instrument": "IMPJ",
-      "indicator": "stochastic",
-      "horizon": 3,
-      "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 1616,
-      "final_prior_only_weight": 1.0
-    },
-    {
-      "instrument": "IMPJ",
-      "indicator": "macd",
-      "horizon": 3,
-      "eligible_decisions": 2685,
       "non_neutral_learned_weights": 663,
       "final_prior_only_weight": 1.0
     },
     {
+      "instrument": "BRENT",
+      "indicator": "sma",
+      "horizon": 5,
+      "eligible_decisions": 2684,
+      "non_neutral_learned_weights": 1566,
+      "final_prior_only_weight": 1.0
+    },
+    {
+      "instrument": "BRENT",
+      "indicator": "breakout",
+      "horizon": 5,
+      "eligible_decisions": 2684,
+      "non_neutral_learned_weights": 1155,
+      "final_prior_only_weight": 1.0
+    },
+    {
+      "instrument": "BRENT",
+      "indicator": "stochastic",
+      "horizon": 5,
+      "eligible_decisions": 2684,
+      "non_neutral_learned_weights": 1540,
+      "final_prior_only_weight": 1.0
+    },
+    {
+      "instrument": "BRENT",
+      "indicator": "macd",
+      "horizon": 5,
+      "eligible_decisions": 2684,
+      "non_neutral_learned_weights": 692,
+      "final_prior_only_weight": 1.0
+    },
+    {
+      "instrument": "BRENT",
+      "indicator": "bollinger_mean_reversion",
+      "horizon": 5,
+      "eligible_decisions": 2684,
+      "non_neutral_learned_weights": 1075,
+      "final_prior_only_weight": 1.0
+    },
+    {
+      "instrument": "BRENT",
+      "indicator": "adx_dmi",
+      "horizon": 5,
+      "eligible_decisions": 2684,
+      "non_neutral_learned_weights": 2106,
+      "final_prior_only_weight": 0.9924779114116864
+    },
+    {
+      "instrument": "BRENT",
+      "indicator": "ichimoku",
+      "horizon": 5,
+      "eligible_decisions": 2684,
+      "non_neutral_learned_weights": 966,
+      "final_prior_only_weight": 1.0730742016602377
+    },
+    {
+      "instrument": "BRENT",
+      "indicator": "rsi",
+      "horizon": 20,
+      "eligible_decisions": 2684,
+      "non_neutral_learned_weights": 847,
+      "final_prior_only_weight": 1.0
+    },
+    {
+      "instrument": "BRENT",
+      "indicator": "sma",
+      "horizon": 20,
+      "eligible_decisions": 2684,
+      "non_neutral_learned_weights": 1348,
+      "final_prior_only_weight": 1.5
+    },
+    {
+      "instrument": "BRENT",
+      "indicator": "breakout",
+      "horizon": 20,
+      "eligible_decisions": 2684,
+      "non_neutral_learned_weights": 640,
+      "final_prior_only_weight": 1.274694742940068
+    },
+    {
+      "instrument": "BRENT",
+      "indicator": "stochastic",
+      "horizon": 20,
+      "eligible_decisions": 2684,
+      "non_neutral_learned_weights": 1346,
+      "final_prior_only_weight": 0.8286681259892986
+    },
+    {
+      "instrument": "BRENT",
+      "indicator": "macd",
+      "horizon": 20,
+      "eligible_decisions": 2684,
+      "non_neutral_learned_weights": 626,
+      "final_prior_only_weight": 1.2987751740142706
+    },
+    {
+      "instrument": "BRENT",
+      "indicator": "bollinger_mean_reversion",
+      "horizon": 20,
+      "eligible_decisions": 2684,
+      "non_neutral_learned_weights": 621,
+      "final_prior_only_weight": 1.0
+    },
+    {
+      "instrument": "BRENT",
+      "indicator": "adx_dmi",
+      "horizon": 20,
+      "eligible_decisions": 2684,
+      "non_neutral_learned_weights": 660,
+      "final_prior_only_weight": 1.2884520670592492
+    },
+    {
+      "instrument": "BRENT",
+      "indicator": "ichimoku",
+      "horizon": 20,
+      "eligible_decisions": 2684,
+      "non_neutral_learned_weights": 1145,
+      "final_prior_only_weight": 0.9871204748455275
+    },
+    {
+      "instrument": "GOLD",
+      "indicator": "rsi",
+      "horizon": 1,
+      "eligible_decisions": 2682,
+      "non_neutral_learned_weights": 2221,
+      "final_prior_only_weight": 0.953838433358644
+    },
+    {
+      "instrument": "GOLD",
+      "indicator": "sma",
+      "horizon": 1,
+      "eligible_decisions": 2682,
+      "non_neutral_learned_weights": 1020,
+      "final_prior_only_weight": 1.0
+    },
+    {
+      "instrument": "GOLD",
+      "indicator": "breakout",
+      "horizon": 1,
+      "eligible_decisions": 2682,
+      "non_neutral_learned_weights": 1334,
+      "final_prior_only_weight": 1.0058479603017718
+    },
+    {
+      "instrument": "GOLD",
+      "indicator": "stochastic",
+      "horizon": 1,
+      "eligible_decisions": 2682,
+      "non_neutral_learned_weights": 1516,
+      "final_prior_only_weight": 0.9753206936168456
+    },
+    {
+      "instrument": "GOLD",
+      "indicator": "macd",
+      "horizon": 1,
+      "eligible_decisions": 2682,
+      "non_neutral_learned_weights": 1250,
+      "final_prior_only_weight": 1.0680630201522108
+    },
+    {
+      "instrument": "GOLD",
+      "indicator": "bollinger_mean_reversion",
+      "horizon": 1,
+      "eligible_decisions": 2682,
+      "non_neutral_learned_weights": 1523,
+      "final_prior_only_weight": 0.9284010268315168
+    },
+    {
+      "instrument": "GOLD",
+      "indicator": "adx_dmi",
+      "horizon": 1,
+      "eligible_decisions": 2682,
+      "non_neutral_learned_weights": 1795,
+      "final_prior_only_weight": 1.0441955813869301
+    },
+    {
+      "instrument": "GOLD",
+      "indicator": "ichimoku",
+      "horizon": 1,
+      "eligible_decisions": 2682,
+      "non_neutral_learned_weights": 1136,
+      "final_prior_only_weight": 1.0
+    },
+    {
+      "instrument": "GOLD",
+      "indicator": "rsi",
+      "horizon": 3,
+      "eligible_decisions": 2682,
+      "non_neutral_learned_weights": 1899,
+      "final_prior_only_weight": 1.0
+    },
+    {
+      "instrument": "GOLD",
+      "indicator": "sma",
+      "horizon": 3,
+      "eligible_decisions": 2682,
+      "non_neutral_learned_weights": 705,
+      "final_prior_only_weight": 1.06038933188986
+    },
+    {
+      "instrument": "GOLD",
+      "indicator": "breakout",
+      "horizon": 3,
+      "eligible_decisions": 2682,
+      "non_neutral_learned_weights": 639,
+      "final_prior_only_weight": 1.0
+    },
+    {
+      "instrument": "GOLD",
+      "indicator": "stochastic",
+      "horizon": 3,
+      "eligible_decisions": 2682,
+      "non_neutral_learned_weights": 1275,
+      "final_prior_only_weight": 0.9537937287416361
+    },
+    {
+      "instrument": "GOLD",
+      "indicator": "macd",
+      "horizon": 3,
+      "eligible_decisions": 2682,
+      "non_neutral_learned_weights": 1472,
+      "final_prior_only_weight": 1.1291358744759576
+    },
+    {
+      "instrument": "GOLD",
+      "indicator": "bollinger_mean_reversion",
+      "horizon": 3,
+      "eligible_decisions": 2682,
+      "non_neutral_learned_weights": 696,
+      "final_prior_only_weight": 1.0
+    },
+    {
+      "instrument": "GOLD",
+      "indicator": "adx_dmi",
+      "horizon": 3,
+      "eligible_decisions": 2682,
+      "non_neutral_learned_weights": 1051,
+      "final_prior_only_weight": 1.06391196268639
+    },
+    {
+      "instrument": "GOLD",
+      "indicator": "ichimoku",
+      "horizon": 3,
+      "eligible_decisions": 2682,
+      "non_neutral_learned_weights": 878,
+      "final_prior_only_weight": 1.0
+    },
+    {
+      "instrument": "GOLD",
+      "indicator": "rsi",
+      "horizon": 5,
+      "eligible_decisions": 2682,
+      "non_neutral_learned_weights": 1587,
+      "final_prior_only_weight": 0.9092560248743774
+    },
+    {
+      "instrument": "GOLD",
+      "indicator": "sma",
+      "horizon": 5,
+      "eligible_decisions": 2682,
+      "non_neutral_learned_weights": 1393,
+      "final_prior_only_weight": 1.0
+    },
+    {
+      "instrument": "GOLD",
+      "indicator": "breakout",
+      "horizon": 5,
+      "eligible_decisions": 2682,
+      "non_neutral_learned_weights": 1344,
+      "final_prior_only_weight": 0.987042428825211
+    },
+    {
+      "instrument": "GOLD",
+      "indicator": "stochastic",
+      "horizon": 5,
+      "eligible_decisions": 2682,
+      "non_neutral_learned_weights": 1076,
+      "final_prior_only_weight": 0.9653723531637066
+    },
+    {
+      "instrument": "GOLD",
+      "indicator": "macd",
+      "horizon": 5,
+      "eligible_decisions": 2682,
+      "non_neutral_learned_weights": 1058,
+      "final_prior_only_weight": 1.1859443675017105
+    },
+    {
+      "instrument": "GOLD",
+      "indicator": "bollinger_mean_reversion",
+      "horizon": 5,
+      "eligible_decisions": 2682,
+      "non_neutral_learned_weights": 1648,
+      "final_prior_only_weight": 1.0
+    },
+    {
+      "instrument": "GOLD",
+      "indicator": "adx_dmi",
+      "horizon": 5,
+      "eligible_decisions": 2682,
+      "non_neutral_learned_weights": 983,
+      "final_prior_only_weight": 1.0
+    },
+    {
+      "instrument": "GOLD",
+      "indicator": "ichimoku",
+      "horizon": 5,
+      "eligible_decisions": 2682,
+      "non_neutral_learned_weights": 768,
+      "final_prior_only_weight": 1.0
+    },
+    {
+      "instrument": "GOLD",
+      "indicator": "rsi",
+      "horizon": 20,
+      "eligible_decisions": 2682,
+      "non_neutral_learned_weights": 538,
+      "final_prior_only_weight": 0.5
+    },
+    {
+      "instrument": "GOLD",
+      "indicator": "sma",
+      "horizon": 20,
+      "eligible_decisions": 2682,
+      "non_neutral_learned_weights": 1160,
+      "final_prior_only_weight": 1.4358602525499213
+    },
+    {
+      "instrument": "GOLD",
+      "indicator": "breakout",
+      "horizon": 20,
+      "eligible_decisions": 2682,
+      "non_neutral_learned_weights": 1658,
+      "final_prior_only_weight": 1.0
+    },
+    {
+      "instrument": "GOLD",
+      "indicator": "stochastic",
+      "horizon": 20,
+      "eligible_decisions": 2682,
+      "non_neutral_learned_weights": 662,
+      "final_prior_only_weight": 0.7291876026085268
+    },
+    {
+      "instrument": "GOLD",
+      "indicator": "macd",
+      "horizon": 20,
+      "eligible_decisions": 2682,
+      "non_neutral_learned_weights": 1852,
+      "final_prior_only_weight": 1.5
+    },
+    {
+      "instrument": "GOLD",
+      "indicator": "bollinger_mean_reversion",
+      "horizon": 20,
+      "eligible_decisions": 2682,
+      "non_neutral_learned_weights": 1698,
+      "final_prior_only_weight": 1.0
+    },
+    {
+      "instrument": "GOLD",
+      "indicator": "adx_dmi",
+      "horizon": 20,
+      "eligible_decisions": 2682,
+      "non_neutral_learned_weights": 1093,
+      "final_prior_only_weight": 1.5
+    },
+    {
+      "instrument": "GOLD",
+      "indicator": "ichimoku",
+      "horizon": 20,
+      "eligible_decisions": 2682,
+      "non_neutral_learned_weights": 1174,
+      "final_prior_only_weight": 1.5
+    },
+    {
+      "instrument": "IMPJ",
+      "indicator": "rsi",
+      "horizon": 1,
+      "eligible_decisions": 2685,
+      "non_neutral_learned_weights": 552,
+      "final_prior_only_weight": 1.0
+    },
+    {
+      "instrument": "IMPJ",
+      "indicator": "sma",
+      "horizon": 1,
+      "eligible_decisions": 2685,
+      "non_neutral_learned_weights": 366,
+      "final_prior_only_weight": 1.0
+    },
+    {
+      "instrument": "IMPJ",
+      "indicator": "breakout",
+      "horizon": 1,
+      "eligible_decisions": 2685,
+      "non_neutral_learned_weights": 915,
+      "final_prior_only_weight": 1.0
+    },
+    {
+      "instrument": "IMPJ",
+      "indicator": "stochastic",
+      "horizon": 1,
+      "eligible_decisions": 2685,
+      "non_neutral_learned_weights": 2273,
+      "final_prior_only_weight": 0.9133290019671488
+    },
+    {
+      "instrument": "IMPJ",
+      "indicator": "macd",
+      "horizon": 1,
+      "eligible_decisions": 2685,
+      "non_neutral_learned_weights": 1179,
+      "final_prior_only_weight": 1.0
+    },
+    {
+      "instrument": "IMPJ",
+      "indicator": "bollinger_mean_reversion",
+      "horizon": 1,
+      "eligible_decisions": 2685,
+      "non_neutral_learned_weights": 1341,
+      "final_prior_only_weight": 1.0
+    },
+    {
+      "instrument": "IMPJ",
+      "indicator": "adx_dmi",
+      "horizon": 1,
+      "eligible_decisions": 2685,
+      "non_neutral_learned_weights": 840,
+      "final_prior_only_weight": 1.0
+    },
+    {
+      "instrument": "IMPJ",
+      "indicator": "ichimoku",
+      "horizon": 1,
+      "eligible_decisions": 2685,
+      "non_neutral_learned_weights": 985,
+      "final_prior_only_weight": 1.076104456228735
+    },
+    {
+      "instrument": "IMPJ",
+      "indicator": "rsi",
+      "horizon": 3,
+      "eligible_decisions": 2685,
+      "non_neutral_learned_weights": 610,
+      "final_prior_only_weight": 1.0
+    },
+    {
+      "instrument": "IMPJ",
+      "indicator": "sma",
+      "horizon": 3,
+      "eligible_decisions": 2685,
+      "non_neutral_learned_weights": 1668,
+      "final_prior_only_weight": 0.7512683669677478
+    },
+    {
+      "instrument": "IMPJ",
+      "indicator": "breakout",
+      "horizon": 3,
+      "eligible_decisions": 2685,
+      "non_neutral_learned_weights": 758,
+      "final_prior_only_weight": 0.6019864126604632
+    },
+    {
+      "instrument": "IMPJ",
+      "indicator": "stochastic",
+      "horizon": 3,
+      "eligible_decisions": 2685,
+      "non_neutral_learned_weights": 1448,
+      "final_prior_only_weight": 1.0
+    },
+    {
+      "instrument": "IMPJ",
+      "indicator": "macd",
+      "horizon": 3,
+      "eligible_decisions": 2685,
+      "non_neutral_learned_weights": 1100,
+      "final_prior_only_weight": 1.0
+    },
+    {
       "instrument": "IMPJ",
       "indicator": "bollinger_mean_reversion",
       "horizon": 3,
       "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 1133,
+      "non_neutral_learned_weights": 1107,
       "final_prior_only_weight": 1.0
     },
     {
@@ -53039,7 +53039,7 @@
       "indicator": "adx_dmi",
       "horizon": 3,
       "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 786,
+      "non_neutral_learned_weights": 1185,
       "final_prior_only_weight": 1.0
     },
     {
@@ -53047,15 +53047,15 @@
       "indicator": "ichimoku",
       "horizon": 3,
       "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 808,
-      "final_prior_only_weight": 1.0
+      "non_neutral_learned_weights": 1066,
+      "final_prior_only_weight": 1.1303365642775278
     },
     {
       "instrument": "IMPJ",
       "indicator": "rsi",
       "horizon": 5,
       "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 619,
+      "non_neutral_learned_weights": 583,
       "final_prior_only_weight": 1.0
     },
     {
@@ -53063,23 +53063,23 @@
       "indicator": "sma",
       "horizon": 5,
       "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 2177,
-      "final_prior_only_weight": 0.5352104338911987
+      "non_neutral_learned_weights": 2022,
+      "final_prior_only_weight": 0.5793563585630219
     },
     {
       "instrument": "IMPJ",
       "indicator": "breakout",
       "horizon": 5,
       "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 709,
-      "final_prior_only_weight": 0.5284857571214392
+      "non_neutral_learned_weights": 691,
+      "final_prior_only_weight": 0.5451301057293911
     },
     {
       "instrument": "IMPJ",
       "indicator": "stochastic",
       "horizon": 5,
       "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 1000,
+      "non_neutral_learned_weights": 917,
       "final_prior_only_weight": 1.0
     },
     {
@@ -53087,7 +53087,7 @@
       "indicator": "macd",
       "horizon": 5,
       "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 542,
+      "non_neutral_learned_weights": 847,
       "final_prior_only_weight": 1.0
     },
     {
@@ -53095,7 +53095,7 @@
       "indicator": "bollinger_mean_reversion",
       "horizon": 5,
       "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 1186,
+      "non_neutral_learned_weights": 1141,
       "final_prior_only_weight": 1.0
     },
     {
@@ -53103,7 +53103,7 @@
       "indicator": "adx_dmi",
       "horizon": 5,
       "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 912,
+      "non_neutral_learned_weights": 1031,
       "final_prior_only_weight": 1.0
     },
     {
@@ -53111,7 +53111,7 @@
       "indicator": "ichimoku",
       "horizon": 5,
       "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 990,
+      "non_neutral_learned_weights": 1059,
       "final_prior_only_weight": 1.0
     },
     {
@@ -53119,23 +53119,23 @@
       "indicator": "rsi",
       "horizon": 20,
       "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 708,
-      "final_prior_only_weight": 0.6186858926947124
+      "non_neutral_learned_weights": 577,
+      "final_prior_only_weight": 0.6556167450847734
     },
     {
       "instrument": "IMPJ",
       "indicator": "sma",
       "horizon": 20,
       "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 1065,
-      "final_prior_only_weight": 0.905739388170687
+      "non_neutral_learned_weights": 907,
+      "final_prior_only_weight": 0.9496385372549654
     },
     {
       "instrument": "IMPJ",
       "indicator": "breakout",
       "horizon": 20,
       "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 214,
+      "non_neutral_learned_weights": 235,
       "final_prior_only_weight": 1.0
     },
     {
@@ -53143,7 +53143,7 @@
       "indicator": "stochastic",
       "horizon": 20,
       "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 424,
+      "non_neutral_learned_weights": 422,
       "final_prior_only_weight": 1.0
     },
     {
@@ -53151,7 +53151,7 @@
       "indicator": "macd",
       "horizon": 20,
       "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 1331,
+      "non_neutral_learned_weights": 1379,
       "final_prior_only_weight": 1.0
     },
     {
@@ -53159,7 +53159,7 @@
       "indicator": "bollinger_mean_reversion",
       "horizon": 20,
       "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 1079,
+      "non_neutral_learned_weights": 1066,
       "final_prior_only_weight": 1.0
     },
     {
@@ -53167,7 +53167,7 @@
       "indicator": "adx_dmi",
       "horizon": 20,
       "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 455,
+      "non_neutral_learned_weights": 356,
       "final_prior_only_weight": 1.0
     },
     {
@@ -53175,15 +53175,15 @@
       "indicator": "ichimoku",
       "horizon": 20,
       "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 1277,
-      "final_prior_only_weight": 1.0166106523446008
+      "non_neutral_learned_weights": 1301,
+      "final_prior_only_weight": 1.0640332133012333
     },
     {
       "instrument": "JSE_ALL_SHARE_PROXY",
       "indicator": "rsi",
       "horizon": 1,
       "eligible_decisions": 2669,
-      "non_neutral_learned_weights": 1792,
+      "non_neutral_learned_weights": 947,
       "final_prior_only_weight": 1.0
     },
     {
@@ -53191,7 +53191,7 @@
       "indicator": "sma",
       "horizon": 1,
       "eligible_decisions": 2669,
-      "non_neutral_learned_weights": 2612,
+      "non_neutral_learned_weights": 2047,
       "final_prior_only_weight": 0.5
     },
     {
@@ -53199,7 +53199,7 @@
       "indicator": "breakout",
       "horizon": 1,
       "eligible_decisions": 2669,
-      "non_neutral_learned_weights": 2358,
+      "non_neutral_learned_weights": 2175,
       "final_prior_only_weight": 0.5
     },
     {
@@ -53207,7 +53207,7 @@
       "indicator": "stochastic",
       "horizon": 1,
       "eligible_decisions": 2669,
-      "non_neutral_learned_weights": 1836,
+      "non_neutral_learned_weights": 646,
       "final_prior_only_weight": 1.0
     },
     {
@@ -53215,7 +53215,7 @@
       "indicator": "macd",
       "horizon": 1,
       "eligible_decisions": 2669,
-      "non_neutral_learned_weights": 2596,
+      "non_neutral_learned_weights": 2284,
       "final_prior_only_weight": 0.5
     },
     {
@@ -53223,7 +53223,7 @@
       "indicator": "bollinger_mean_reversion",
       "horizon": 1,
       "eligible_decisions": 2669,
-      "non_neutral_learned_weights": 1723,
+      "non_neutral_learned_weights": 907,
       "final_prior_only_weight": 1.0
     },
     {
@@ -53231,7 +53231,7 @@
       "indicator": "adx_dmi",
       "horizon": 1,
       "eligible_decisions": 2669,
-      "non_neutral_learned_weights": 2575,
+      "non_neutral_learned_weights": 2076,
       "final_prior_only_weight": 0.5
     },
     {
@@ -53239,7 +53239,7 @@
       "indicator": "ichimoku",
       "horizon": 1,
       "eligible_decisions": 2669,
-      "non_neutral_learned_weights": 2557,
+      "non_neutral_learned_weights": 2300,
       "final_prior_only_weight": 0.5081861266695389
     },
     {
@@ -53247,7 +53247,7 @@
       "indicator": "rsi",
       "horizon": 3,
       "eligible_decisions": 2669,
-      "non_neutral_learned_weights": 1176,
+      "non_neutral_learned_weights": 888,
       "final_prior_only_weight": 1.0
     },
     {
@@ -53255,7 +53255,7 @@
       "indicator": "sma",
       "horizon": 3,
       "eligible_decisions": 2669,
-      "non_neutral_learned_weights": 2488,
+      "non_neutral_learned_weights": 2230,
       "final_prior_only_weight": 0.5
     },
     {
@@ -53263,7 +53263,7 @@
       "indicator": "breakout",
       "horizon": 3,
       "eligible_decisions": 2669,
-      "non_neutral_learned_weights": 2311,
+      "non_neutral_learned_weights": 2250,
       "final_prior_only_weight": 0.5
     },
     {
@@ -53271,15 +53271,15 @@
       "indicator": "stochastic",
       "horizon": 3,
       "eligible_decisions": 2669,
-      "non_neutral_learned_weights": 787,
-      "final_prior_only_weight": 1.0
+      "non_neutral_learned_weights": 1667,
+      "final_prior_only_weight": 1.492
     },
     {
       "instrument": "JSE_ALL_SHARE_PROXY",
       "indicator": "macd",
       "horizon": 3,
       "eligible_decisions": 2669,
-      "non_neutral_learned_weights": 2541,
+      "non_neutral_learned_weights": 2316,
       "final_prior_only_weight": 0.5
     },
     {
@@ -53287,7 +53287,7 @@
       "indicator": "bollinger_mean_reversion",
       "horizon": 3,
       "eligible_decisions": 2669,
-      "non_neutral_learned_weights": 928,
+      "non_neutral_learned_weights": 1467,
       "final_prior_only_weight": 1.0
     },
     {
@@ -53295,7 +53295,7 @@
       "indicator": "adx_dmi",
       "horizon": 3,
       "eligible_decisions": 2669,
-      "non_neutral_learned_weights": 2393,
+      "non_neutral_learned_weights": 2344,
       "final_prior_only_weight": 0.5
     },
     {
@@ -53303,7 +53303,7 @@
       "indicator": "ichimoku",
       "horizon": 3,
       "eligible_decisions": 2669,
-      "non_neutral_learned_weights": 2550,
+      "non_neutral_learned_weights": 2337,
       "final_prior_only_weight": 0.5
     },
     {
@@ -53311,7 +53311,7 @@
       "indicator": "rsi",
       "horizon": 5,
       "eligible_decisions": 2669,
-      "non_neutral_learned_weights": 804,
+      "non_neutral_learned_weights": 984,
       "final_prior_only_weight": 1.0
     },
     {
@@ -53319,7 +53319,7 @@
       "indicator": "sma",
       "horizon": 5,
       "eligible_decisions": 2669,
-      "non_neutral_learned_weights": 2468,
+      "non_neutral_learned_weights": 2221,
       "final_prior_only_weight": 0.5
     },
     {
@@ -53327,7 +53327,7 @@
       "indicator": "breakout",
       "horizon": 5,
       "eligible_decisions": 2669,
-      "non_neutral_learned_weights": 2320,
+      "non_neutral_learned_weights": 2316,
       "final_prior_only_weight": 0.5
     },
     {
@@ -53335,7 +53335,7 @@
       "indicator": "stochastic",
       "horizon": 5,
       "eligible_decisions": 2669,
-      "non_neutral_learned_weights": 1709,
+      "non_neutral_learned_weights": 2125,
       "final_prior_only_weight": 1.5
     },
     {
@@ -53343,7 +53343,7 @@
       "indicator": "macd",
       "horizon": 5,
       "eligible_decisions": 2669,
-      "non_neutral_learned_weights": 2474,
+      "non_neutral_learned_weights": 2276,
       "final_prior_only_weight": 0.5
     },
     {
@@ -53351,7 +53351,7 @@
       "indicator": "bollinger_mean_reversion",
       "horizon": 5,
       "eligible_decisions": 2669,
-      "non_neutral_learned_weights": 1948,
+      "non_neutral_learned_weights": 2146,
       "final_prior_only_weight": 1.5
     },
     {
@@ -53359,7 +53359,7 @@
       "indicator": "adx_dmi",
       "horizon": 5,
       "eligible_decisions": 2669,
-      "non_neutral_learned_weights": 2366,
+      "non_neutral_learned_weights": 2332,
       "final_prior_only_weight": 0.5
     },
     {
@@ -53367,7 +53367,7 @@
       "indicator": "ichimoku",
       "horizon": 5,
       "eligible_decisions": 2669,
-      "non_neutral_learned_weights": 2532,
+      "non_neutral_learned_weights": 2427,
       "final_prior_only_weight": 0.5
     },
     {
@@ -53375,7 +53375,7 @@
       "indicator": "rsi",
       "horizon": 20,
       "eligible_decisions": 2669,
-      "non_neutral_learned_weights": 2381,
+      "non_neutral_learned_weights": 2398,
       "final_prior_only_weight": 1.5
     },
     {
@@ -53383,7 +53383,7 @@
       "indicator": "sma",
       "horizon": 20,
       "eligible_decisions": 2669,
-      "non_neutral_learned_weights": 1892,
+      "non_neutral_learned_weights": 1678,
       "final_prior_only_weight": 0.5003944773175542
     },
     {
@@ -53391,7 +53391,7 @@
       "indicator": "breakout",
       "horizon": 20,
       "eligible_decisions": 2669,
-      "non_neutral_learned_weights": 2373,
+      "non_neutral_learned_weights": 2359,
       "final_prior_only_weight": 0.5
     },
     {
@@ -53399,7 +53399,7 @@
       "indicator": "stochastic",
       "horizon": 20,
       "eligible_decisions": 2669,
-      "non_neutral_learned_weights": 2008,
+      "non_neutral_learned_weights": 2283,
       "final_prior_only_weight": 1.5
     },
     {
@@ -53407,7 +53407,7 @@
       "indicator": "macd",
       "horizon": 20,
       "eligible_decisions": 2669,
-      "non_neutral_learned_weights": 2365,
+      "non_neutral_learned_weights": 2193,
       "final_prior_only_weight": 0.5
     },
     {
@@ -53415,7 +53415,7 @@
       "indicator": "bollinger_mean_reversion",
       "horizon": 20,
       "eligible_decisions": 2669,
-      "non_neutral_learned_weights": 1896,
+      "non_neutral_learned_weights": 2165,
       "final_prior_only_weight": 1.5
     },
     {
@@ -53423,7 +53423,7 @@
       "indicator": "adx_dmi",
       "horizon": 20,
       "eligible_decisions": 2669,
-      "non_neutral_learned_weights": 2477,
+      "non_neutral_learned_weights": 2412,
       "final_prior_only_weight": 0.5
     },
     {
@@ -53431,7 +53431,7 @@
       "indicator": "ichimoku",
       "horizon": 20,
       "eligible_decisions": 2669,
-      "non_neutral_learned_weights": 2505,
+      "non_neutral_learned_weights": 2489,
       "final_prior_only_weight": 0.5
     },
     {
@@ -53439,31 +53439,31 @@
       "indicator": "rsi",
       "horizon": 1,
       "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 1813,
-      "final_prior_only_weight": 0.8519177081127458
+      "non_neutral_learned_weights": 1290,
+      "final_prior_only_weight": 1.0
     },
     {
       "instrument": "NPN",
       "indicator": "sma",
       "horizon": 1,
       "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 2550,
-      "final_prior_only_weight": 0.8422819582861054
+      "non_neutral_learned_weights": 2271,
+      "final_prior_only_weight": 0.8860659199017316
     },
     {
       "instrument": "NPN",
       "indicator": "breakout",
       "horizon": 1,
       "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 1910,
-      "final_prior_only_weight": 0.8226436698198005
+      "non_neutral_learned_weights": 1574,
+      "final_prior_only_weight": 0.8454734756728494
     },
     {
       "instrument": "NPN",
       "indicator": "stochastic",
       "horizon": 1,
       "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 1584,
+      "non_neutral_learned_weights": 445,
       "final_prior_only_weight": 1.0
     },
     {
@@ -53471,455 +53471,455 @@
       "indicator": "macd",
       "horizon": 1,
       "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 2498,
-      "final_prior_only_weight": 0.8962151478550618
+      "non_neutral_learned_weights": 1572,
+      "final_prior_only_weight": 0.9417230540565148
     },
     {
       "instrument": "NPN",
       "indicator": "bollinger_mean_reversion",
       "horizon": 1,
       "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 951,
-      "final_prior_only_weight": 1.0
+      "non_neutral_learned_weights": 613,
+      "final_prior_only_weight": 1.045927012575524
     },
     {
       "instrument": "NPN",
       "indicator": "adx_dmi",
       "horizon": 1,
-      "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 2289,
-      "final_prior_only_weight": 0.9286266462725266
-    },
-    {
-      "instrument": "NPN",
-      "indicator": "ichimoku",
-      "horizon": 1,
-      "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 2446,
-      "final_prior_only_weight": 0.9585990287598816
-    },
-    {
-      "instrument": "NPN",
-      "indicator": "rsi",
-      "horizon": 3,
-      "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 1408,
-      "final_prior_only_weight": 0.85787276120413
-    },
-    {
-      "instrument": "NPN",
-      "indicator": "sma",
-      "horizon": 3,
-      "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 2428,
-      "final_prior_only_weight": 0.6889160871156845
-    },
-    {
-      "instrument": "NPN",
-      "indicator": "breakout",
-      "horizon": 3,
-      "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 1035,
-      "final_prior_only_weight": 0.8795952184588043
-    },
-    {
-      "instrument": "NPN",
-      "indicator": "stochastic",
-      "horizon": 3,
-      "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 1723,
-      "final_prior_only_weight": 1.1094460574886704
-    },
-    {
-      "instrument": "NPN",
-      "indicator": "macd",
-      "horizon": 3,
-      "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 1812,
-      "final_prior_only_weight": 0.7604981476179781
-    },
-    {
-      "instrument": "NPN",
-      "indicator": "bollinger_mean_reversion",
-      "horizon": 3,
-      "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 643,
-      "final_prior_only_weight": 1.03389750339509
-    },
-    {
-      "instrument": "NPN",
-      "indicator": "adx_dmi",
-      "horizon": 3,
-      "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 1007,
-      "final_prior_only_weight": 0.7537407916369825
-    },
-    {
-      "instrument": "NPN",
-      "indicator": "ichimoku",
-      "horizon": 3,
-      "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 1910,
-      "final_prior_only_weight": 0.9118941356014086
-    },
-    {
-      "instrument": "NPN",
-      "indicator": "rsi",
-      "horizon": 5,
-      "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 903,
-      "final_prior_only_weight": 1.0
-    },
-    {
-      "instrument": "NPN",
-      "indicator": "sma",
-      "horizon": 5,
-      "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 1908,
-      "final_prior_only_weight": 0.5652008901680601
-    },
-    {
-      "instrument": "NPN",
-      "indicator": "breakout",
-      "horizon": 5,
-      "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 1129,
-      "final_prior_only_weight": 0.855678877927766
-    },
-    {
-      "instrument": "NPN",
-      "indicator": "stochastic",
-      "horizon": 5,
-      "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 2138,
-      "final_prior_only_weight": 1.18708196650991
-    },
-    {
-      "instrument": "NPN",
-      "indicator": "macd",
-      "horizon": 5,
-      "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 1762,
-      "final_prior_only_weight": 0.6836644346024185
-    },
-    {
-      "instrument": "NPN",
-      "indicator": "bollinger_mean_reversion",
-      "horizon": 5,
-      "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 1377,
-      "final_prior_only_weight": 1.1247762222938396
-    },
-    {
-      "instrument": "NPN",
-      "indicator": "adx_dmi",
-      "horizon": 5,
-      "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 963,
-      "final_prior_only_weight": 0.6932638643389033
-    },
-    {
-      "instrument": "NPN",
-      "indicator": "ichimoku",
-      "horizon": 5,
-      "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 1940,
-      "final_prior_only_weight": 0.8418922628702776
-    },
-    {
-      "instrument": "NPN",
-      "indicator": "rsi",
-      "horizon": 20,
-      "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 1776,
-      "final_prior_only_weight": 1.0
-    },
-    {
-      "instrument": "NPN",
-      "indicator": "sma",
-      "horizon": 20,
-      "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 1373,
-      "final_prior_only_weight": 1.0
-    },
-    {
-      "instrument": "NPN",
-      "indicator": "breakout",
-      "horizon": 20,
-      "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 966,
-      "final_prior_only_weight": 1.0
-    },
-    {
-      "instrument": "NPN",
-      "indicator": "stochastic",
-      "horizon": 20,
-      "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 1284,
-      "final_prior_only_weight": 1.0
-    },
-    {
-      "instrument": "NPN",
-      "indicator": "macd",
-      "horizon": 20,
-      "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 1653,
-      "final_prior_only_weight": 1.0
-    },
-    {
-      "instrument": "NPN",
-      "indicator": "bollinger_mean_reversion",
-      "horizon": 20,
-      "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 1449,
-      "final_prior_only_weight": 1.0
-    },
-    {
-      "instrument": "NPN",
-      "indicator": "adx_dmi",
-      "horizon": 20,
-      "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 2087,
-      "final_prior_only_weight": 0.5
-    },
-    {
-      "instrument": "NPN",
-      "indicator": "ichimoku",
-      "horizon": 20,
-      "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 1101,
-      "final_prior_only_weight": 0.8225342233508319
-    },
-    {
-      "instrument": "SASOL",
-      "indicator": "rsi",
-      "horizon": 1,
-      "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 1795,
-      "final_prior_only_weight": 1.0
-    },
-    {
-      "instrument": "SASOL",
-      "indicator": "sma",
-      "horizon": 1,
-      "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 1073,
-      "final_prior_only_weight": 1.0
-    },
-    {
-      "instrument": "SASOL",
-      "indicator": "breakout",
-      "horizon": 1,
-      "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 787,
-      "final_prior_only_weight": 1.0
-    },
-    {
-      "instrument": "SASOL",
-      "indicator": "stochastic",
-      "horizon": 1,
-      "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 1494,
-      "final_prior_only_weight": 1.0
-    },
-    {
-      "instrument": "SASOL",
-      "indicator": "macd",
-      "horizon": 1,
-      "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 1313,
-      "final_prior_only_weight": 1.0
-    },
-    {
-      "instrument": "SASOL",
-      "indicator": "bollinger_mean_reversion",
-      "horizon": 1,
-      "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 1806,
-      "final_prior_only_weight": 0.8759377993308413
-    },
-    {
-      "instrument": "SASOL",
-      "indicator": "adx_dmi",
-      "horizon": 1,
-      "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 898,
-      "final_prior_only_weight": 1.0
-    },
-    {
-      "instrument": "SASOL",
-      "indicator": "ichimoku",
-      "horizon": 1,
-      "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 2002,
-      "final_prior_only_weight": 0.9270912337701422
-    },
-    {
-      "instrument": "SASOL",
-      "indicator": "rsi",
-      "horizon": 3,
-      "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 756,
-      "final_prior_only_weight": 1.0
-    },
-    {
-      "instrument": "SASOL",
-      "indicator": "sma",
-      "horizon": 3,
-      "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 500,
-      "final_prior_only_weight": 1.0
-    },
-    {
-      "instrument": "SASOL",
-      "indicator": "breakout",
-      "horizon": 3,
-      "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 836,
-      "final_prior_only_weight": 1.0
-    },
-    {
-      "instrument": "SASOL",
-      "indicator": "stochastic",
-      "horizon": 3,
-      "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 917,
-      "final_prior_only_weight": 1.0
-    },
-    {
-      "instrument": "SASOL",
-      "indicator": "macd",
-      "horizon": 3,
-      "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 1031,
-      "final_prior_only_weight": 1.0
-    },
-    {
-      "instrument": "SASOL",
-      "indicator": "bollinger_mean_reversion",
-      "horizon": 3,
-      "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 1452,
-      "final_prior_only_weight": 1.0
-    },
-    {
-      "instrument": "SASOL",
-      "indicator": "adx_dmi",
-      "horizon": 3,
-      "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 1034,
-      "final_prior_only_weight": 1.0
-    },
-    {
-      "instrument": "SASOL",
-      "indicator": "ichimoku",
-      "horizon": 3,
-      "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 1564,
-      "final_prior_only_weight": 0.8930070431197072
-    },
-    {
-      "instrument": "SASOL",
-      "indicator": "rsi",
-      "horizon": 5,
-      "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 710,
-      "final_prior_only_weight": 1.0
-    },
-    {
-      "instrument": "SASOL",
-      "indicator": "sma",
-      "horizon": 5,
-      "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 599,
-      "final_prior_only_weight": 1.0
-    },
-    {
-      "instrument": "SASOL",
-      "indicator": "breakout",
-      "horizon": 5,
-      "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 685,
-      "final_prior_only_weight": 1.0
-    },
-    {
-      "instrument": "SASOL",
-      "indicator": "stochastic",
-      "horizon": 5,
-      "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 869,
-      "final_prior_only_weight": 1.0
-    },
-    {
-      "instrument": "SASOL",
-      "indicator": "macd",
-      "horizon": 5,
-      "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 1084,
-      "final_prior_only_weight": 1.0
-    },
-    {
-      "instrument": "SASOL",
-      "indicator": "bollinger_mean_reversion",
-      "horizon": 5,
-      "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 895,
-      "final_prior_only_weight": 1.0
-    },
-    {
-      "instrument": "SASOL",
-      "indicator": "adx_dmi",
-      "horizon": 5,
-      "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 1171,
-      "final_prior_only_weight": 1.0
-    },
-    {
-      "instrument": "SASOL",
-      "indicator": "ichimoku",
-      "horizon": 5,
-      "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 1102,
-      "final_prior_only_weight": 0.9202666111060929
-    },
-    {
-      "instrument": "SASOL",
-      "indicator": "rsi",
-      "horizon": 20,
-      "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 777,
-      "final_prior_only_weight": 1.0
-    },
-    {
-      "instrument": "SASOL",
-      "indicator": "sma",
-      "horizon": 20,
-      "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 1244,
-      "final_prior_only_weight": 1.5
-    },
-    {
-      "instrument": "SASOL",
-      "indicator": "breakout",
-      "horizon": 20,
       "eligible_decisions": 2685,
       "non_neutral_learned_weights": 810,
       "final_prior_only_weight": 1.0
     },
     {
+      "instrument": "NPN",
+      "indicator": "ichimoku",
+      "horizon": 1,
+      "eligible_decisions": 2685,
+      "non_neutral_learned_weights": 1618,
+      "final_prior_only_weight": 1.004613303465862
+    },
+    {
+      "instrument": "NPN",
+      "indicator": "rsi",
+      "horizon": 3,
+      "eligible_decisions": 2685,
+      "non_neutral_learned_weights": 820,
+      "final_prior_only_weight": 1.0
+    },
+    {
+      "instrument": "NPN",
+      "indicator": "sma",
+      "horizon": 3,
+      "eligible_decisions": 2685,
+      "non_neutral_learned_weights": 2314,
+      "final_prior_only_weight": 0.7326657316881491
+    },
+    {
+      "instrument": "NPN",
+      "indicator": "breakout",
+      "horizon": 3,
+      "eligible_decisions": 2685,
+      "non_neutral_learned_weights": 725,
+      "final_prior_only_weight": 0.9025009666610725
+    },
+    {
+      "instrument": "NPN",
+      "indicator": "stochastic",
+      "horizon": 3,
+      "eligible_decisions": 2685,
+      "non_neutral_learned_weights": 1976,
+      "final_prior_only_weight": 1.1456638056399446
+    },
+    {
+      "instrument": "NPN",
+      "indicator": "macd",
+      "horizon": 3,
+      "eligible_decisions": 2685,
+      "non_neutral_learned_weights": 935,
+      "final_prior_only_weight": 0.8059812584091499
+    },
+    {
+      "instrument": "NPN",
+      "indicator": "bollinger_mean_reversion",
+      "horizon": 3,
+      "eligible_decisions": 2685,
+      "non_neutral_learned_weights": 1152,
+      "final_prior_only_weight": 1.066475203839384
+    },
+    {
+      "instrument": "NPN",
+      "indicator": "adx_dmi",
+      "horizon": 3,
+      "eligible_decisions": 2685,
+      "non_neutral_learned_weights": 847,
+      "final_prior_only_weight": 1.0
+    },
+    {
+      "instrument": "NPN",
+      "indicator": "ichimoku",
+      "horizon": 3,
+      "eligible_decisions": 2685,
+      "non_neutral_learned_weights": 1332,
+      "final_prior_only_weight": 0.9578863728371335
+    },
+    {
+      "instrument": "NPN",
+      "indicator": "rsi",
+      "horizon": 5,
+      "eligible_decisions": 2685,
+      "non_neutral_learned_weights": 615,
+      "final_prior_only_weight": 1.0
+    },
+    {
+      "instrument": "NPN",
+      "indicator": "sma",
+      "horizon": 5,
+      "eligible_decisions": 2685,
+      "non_neutral_learned_weights": 1433,
+      "final_prior_only_weight": 0.6089160280906035
+    },
+    {
+      "instrument": "NPN",
+      "indicator": "breakout",
+      "horizon": 5,
+      "eligible_decisions": 2685,
+      "non_neutral_learned_weights": 1065,
+      "final_prior_only_weight": 0.8785846261300341
+    },
+    {
+      "instrument": "NPN",
+      "indicator": "stochastic",
+      "horizon": 5,
+      "eligible_decisions": 2685,
+      "non_neutral_learned_weights": 2264,
+      "final_prior_only_weight": 1.2232997146611837
+    },
+    {
+      "instrument": "NPN",
+      "indicator": "macd",
+      "horizon": 5,
+      "eligible_decisions": 2685,
+      "non_neutral_learned_weights": 1252,
+      "final_prior_only_weight": 0.7291226130315647
+    },
+    {
+      "instrument": "NPN",
+      "indicator": "bollinger_mean_reversion",
+      "horizon": 5,
+      "eligible_decisions": 2685,
+      "non_neutral_learned_weights": 1473,
+      "final_prior_only_weight": 1.1573539227381338
+    },
+    {
+      "instrument": "NPN",
+      "indicator": "adx_dmi",
+      "horizon": 5,
+      "eligible_decisions": 2685,
+      "non_neutral_learned_weights": 1159,
+      "final_prior_only_weight": 1.0
+    },
+    {
+      "instrument": "NPN",
+      "indicator": "ichimoku",
+      "horizon": 5,
+      "eligible_decisions": 2685,
+      "non_neutral_learned_weights": 1680,
+      "final_prior_only_weight": 0.8878623405053715
+    },
+    {
+      "instrument": "NPN",
+      "indicator": "rsi",
+      "horizon": 20,
+      "eligible_decisions": 2685,
+      "non_neutral_learned_weights": 1801,
+      "final_prior_only_weight": 1.0
+    },
+    {
+      "instrument": "NPN",
+      "indicator": "sma",
+      "horizon": 20,
+      "eligible_decisions": 2685,
+      "non_neutral_learned_weights": 1357,
+      "final_prior_only_weight": 1.0
+    },
+    {
+      "instrument": "NPN",
+      "indicator": "breakout",
+      "horizon": 20,
+      "eligible_decisions": 2685,
+      "non_neutral_learned_weights": 931,
+      "final_prior_only_weight": 1.0
+    },
+    {
+      "instrument": "NPN",
+      "indicator": "stochastic",
+      "horizon": 20,
+      "eligible_decisions": 2685,
+      "non_neutral_learned_weights": 1306,
+      "final_prior_only_weight": 1.0
+    },
+    {
+      "instrument": "NPN",
+      "indicator": "macd",
+      "horizon": 20,
+      "eligible_decisions": 2685,
+      "non_neutral_learned_weights": 1485,
+      "final_prior_only_weight": 1.0
+    },
+    {
+      "instrument": "NPN",
+      "indicator": "bollinger_mean_reversion",
+      "horizon": 20,
+      "eligible_decisions": 2685,
+      "non_neutral_learned_weights": 1595,
+      "final_prior_only_weight": 1.0
+    },
+    {
+      "instrument": "NPN",
+      "indicator": "adx_dmi",
+      "horizon": 20,
+      "eligible_decisions": 2685,
+      "non_neutral_learned_weights": 2009,
+      "final_prior_only_weight": 0.5
+    },
+    {
+      "instrument": "NPN",
+      "indicator": "ichimoku",
+      "horizon": 20,
+      "eligible_decisions": 2685,
+      "non_neutral_learned_weights": 1120,
+      "final_prior_only_weight": 0.8687613848738818
+    },
+    {
+      "instrument": "SASOL",
+      "indicator": "rsi",
+      "horizon": 1,
+      "eligible_decisions": 2685,
+      "non_neutral_learned_weights": 885,
+      "final_prior_only_weight": 1.0
+    },
+    {
+      "instrument": "SASOL",
+      "indicator": "sma",
+      "horizon": 1,
+      "eligible_decisions": 2685,
+      "non_neutral_learned_weights": 1101,
+      "final_prior_only_weight": 1.0
+    },
+    {
+      "instrument": "SASOL",
+      "indicator": "breakout",
+      "horizon": 1,
+      "eligible_decisions": 2685,
+      "non_neutral_learned_weights": 780,
+      "final_prior_only_weight": 1.0
+    },
+    {
+      "instrument": "SASOL",
+      "indicator": "stochastic",
+      "horizon": 1,
+      "eligible_decisions": 2685,
+      "non_neutral_learned_weights": 747,
+      "final_prior_only_weight": 1.0
+    },
+    {
+      "instrument": "SASOL",
+      "indicator": "macd",
+      "horizon": 1,
+      "eligible_decisions": 2685,
+      "non_neutral_learned_weights": 1327,
+      "final_prior_only_weight": 1.0
+    },
+    {
+      "instrument": "SASOL",
+      "indicator": "bollinger_mean_reversion",
+      "horizon": 1,
+      "eligible_decisions": 2685,
+      "non_neutral_learned_weights": 628,
+      "final_prior_only_weight": 1.0
+    },
+    {
+      "instrument": "SASOL",
+      "indicator": "adx_dmi",
+      "horizon": 1,
+      "eligible_decisions": 2685,
+      "non_neutral_learned_weights": 825,
+      "final_prior_only_weight": 1.0
+    },
+    {
+      "instrument": "SASOL",
+      "indicator": "ichimoku",
+      "horizon": 1,
+      "eligible_decisions": 2685,
+      "non_neutral_learned_weights": 613,
+      "final_prior_only_weight": 0.9730375022370514
+    },
+    {
+      "instrument": "SASOL",
+      "indicator": "rsi",
+      "horizon": 3,
+      "eligible_decisions": 2685,
+      "non_neutral_learned_weights": 726,
+      "final_prior_only_weight": 1.0
+    },
+    {
+      "instrument": "SASOL",
+      "indicator": "sma",
+      "horizon": 3,
+      "eligible_decisions": 2685,
+      "non_neutral_learned_weights": 652,
+      "final_prior_only_weight": 1.0
+    },
+    {
+      "instrument": "SASOL",
+      "indicator": "breakout",
+      "horizon": 3,
+      "eligible_decisions": 2685,
+      "non_neutral_learned_weights": 774,
+      "final_prior_only_weight": 1.0
+    },
+    {
+      "instrument": "SASOL",
+      "indicator": "stochastic",
+      "horizon": 3,
+      "eligible_decisions": 2685,
+      "non_neutral_learned_weights": 808,
+      "final_prior_only_weight": 1.0
+    },
+    {
+      "instrument": "SASOL",
+      "indicator": "macd",
+      "horizon": 3,
+      "eligible_decisions": 2685,
+      "non_neutral_learned_weights": 1257,
+      "final_prior_only_weight": 1.0
+    },
+    {
+      "instrument": "SASOL",
+      "indicator": "bollinger_mean_reversion",
+      "horizon": 3,
+      "eligible_decisions": 2685,
+      "non_neutral_learned_weights": 1114,
+      "final_prior_only_weight": 1.0
+    },
+    {
+      "instrument": "SASOL",
+      "indicator": "adx_dmi",
+      "horizon": 3,
+      "eligible_decisions": 2685,
+      "non_neutral_learned_weights": 1112,
+      "final_prior_only_weight": 1.0
+    },
+    {
+      "instrument": "SASOL",
+      "indicator": "ichimoku",
+      "horizon": 3,
+      "eligible_decisions": 2685,
+      "non_neutral_learned_weights": 932,
+      "final_prior_only_weight": 0.939080095161089
+    },
+    {
+      "instrument": "SASOL",
+      "indicator": "rsi",
+      "horizon": 5,
+      "eligible_decisions": 2685,
+      "non_neutral_learned_weights": 785,
+      "final_prior_only_weight": 1.0
+    },
+    {
+      "instrument": "SASOL",
+      "indicator": "sma",
+      "horizon": 5,
+      "eligible_decisions": 2685,
+      "non_neutral_learned_weights": 426,
+      "final_prior_only_weight": 1.0
+    },
+    {
+      "instrument": "SASOL",
+      "indicator": "breakout",
+      "horizon": 5,
+      "eligible_decisions": 2685,
+      "non_neutral_learned_weights": 723,
+      "final_prior_only_weight": 1.0
+    },
+    {
+      "instrument": "SASOL",
+      "indicator": "stochastic",
+      "horizon": 5,
+      "eligible_decisions": 2685,
+      "non_neutral_learned_weights": 841,
+      "final_prior_only_weight": 1.0
+    },
+    {
+      "instrument": "SASOL",
+      "indicator": "macd",
+      "horizon": 5,
+      "eligible_decisions": 2685,
+      "non_neutral_learned_weights": 1257,
+      "final_prior_only_weight": 1.045032555951822
+    },
+    {
+      "instrument": "SASOL",
+      "indicator": "bollinger_mean_reversion",
+      "horizon": 5,
+      "eligible_decisions": 2685,
+      "non_neutral_learned_weights": 761,
+      "final_prior_only_weight": 1.0
+    },
+    {
+      "instrument": "SASOL",
+      "indicator": "adx_dmi",
+      "horizon": 5,
+      "eligible_decisions": 2685,
+      "non_neutral_learned_weights": 1259,
+      "final_prior_only_weight": 1.0
+    },
+    {
+      "instrument": "SASOL",
+      "indicator": "ichimoku",
+      "horizon": 5,
+      "eligible_decisions": 2685,
+      "non_neutral_learned_weights": 771,
+      "final_prior_only_weight": 0.9663396631474745
+    },
+    {
+      "instrument": "SASOL",
+      "indicator": "rsi",
+      "horizon": 20,
+      "eligible_decisions": 2685,
+      "non_neutral_learned_weights": 699,
+      "final_prior_only_weight": 1.1315059834889447
+    },
+    {
+      "instrument": "SASOL",
+      "indicator": "sma",
+      "horizon": 20,
+      "eligible_decisions": 2685,
+      "non_neutral_learned_weights": 1398,
+      "final_prior_only_weight": 1.5
+    },
+    {
+      "instrument": "SASOL",
+      "indicator": "breakout",
+      "horizon": 20,
+      "eligible_decisions": 2685,
+      "non_neutral_learned_weights": 844,
+      "final_prior_only_weight": 1.0
+    },
+    {
       "instrument": "SASOL",
       "indicator": "stochastic",
       "horizon": 20,
       "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 1440,
-      "final_prior_only_weight": 0.5497945682511178
+      "non_neutral_learned_weights": 1342,
+      "final_prior_only_weight": 1.0
     },
     {
       "instrument": "SASOL",
       "indicator": "macd",
       "horizon": 20,
       "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 979,
+      "non_neutral_learned_weights": 963,
       "final_prior_only_weight": 1.5
     },
     {
@@ -53927,7 +53927,7 @@
       "indicator": "bollinger_mean_reversion",
       "horizon": 20,
       "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 896,
+      "non_neutral_learned_weights": 863,
       "final_prior_only_weight": 0.5
     },
     {
@@ -53935,15 +53935,15 @@
       "indicator": "adx_dmi",
       "horizon": 20,
       "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 1534,
-      "final_prior_only_weight": 1.3765756592160538
+      "non_neutral_learned_weights": 1664,
+      "final_prior_only_weight": 1.418227446045897
     },
     {
       "instrument": "SASOL",
       "indicator": "ichimoku",
       "horizon": 20,
       "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 1183,
+      "non_neutral_learned_weights": 1073,
       "final_prior_only_weight": 1.0
     },
     {
@@ -53951,80 +53951,80 @@
       "indicator": "rsi",
       "horizon": 1,
       "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 1335,
-      "final_prior_only_weight": 1.0
+      "non_neutral_learned_weights": 2198,
+      "final_prior_only_weight": 1.109846852653623
     },
     {
       "instrument": "SHPJ",
       "indicator": "sma",
       "horizon": 1,
       "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 2364,
-      "final_prior_only_weight": 0.8976066943107062
+      "non_neutral_learned_weights": 2307,
+      "final_prior_only_weight": 0.9421922447238399
     },
     {
       "instrument": "SHPJ",
       "indicator": "breakout",
       "horizon": 1,
       "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 2528,
-      "final_prior_only_weight": 0.683259070673579
+      "non_neutral_learned_weights": 2525,
+      "final_prior_only_weight": 0.7042393816022394
     },
     {
       "instrument": "SHPJ",
       "indicator": "stochastic",
       "horizon": 1,
       "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 432,
-      "final_prior_only_weight": 1.0
+      "non_neutral_learned_weights": 2229,
+      "final_prior_only_weight": 1.0875051362653712
     },
     {
       "instrument": "SHPJ",
       "indicator": "macd",
       "horizon": 1,
       "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 2480,
-      "final_prior_only_weight": 0.8891806073929122
+      "non_neutral_learned_weights": 2414,
+      "final_prior_only_weight": 0.9354522356281667
     },
     {
       "instrument": "SHPJ",
       "indicator": "bollinger_mean_reversion",
       "horizon": 1,
       "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 559,
-      "final_prior_only_weight": 1.0
+      "non_neutral_learned_weights": 1343,
+      "final_prior_only_weight": 1.1782449169753235
     },
     {
       "instrument": "SHPJ",
       "indicator": "adx_dmi",
       "horizon": 1,
       "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 2491,
-      "final_prior_only_weight": 0.8594253598043639
+      "non_neutral_learned_weights": 2407,
+      "final_prior_only_weight": 0.900164280474789
     },
     {
       "instrument": "SHPJ",
       "indicator": "ichimoku",
       "horizon": 1,
       "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 2521,
-      "final_prior_only_weight": 0.8693965482022036
+      "non_neutral_learned_weights": 2444,
+      "final_prior_only_weight": 0.9157170788193515
     },
     {
       "instrument": "SHPJ",
       "indicator": "rsi",
       "horizon": 3,
       "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 1689,
-      "final_prior_only_weight": 1.244501951628873
+      "non_neutral_learned_weights": 1895,
+      "final_prior_only_weight": 1.2795358428329524
     },
     {
       "instrument": "SHPJ",
       "indicator": "sma",
       "horizon": 3,
       "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 2314,
-      "final_prior_only_weight": 0.8340718249838335
+      "non_neutral_learned_weights": 2243,
+      "final_prior_only_weight": 0.8786274839665096
     },
     {
       "instrument": "SHPJ",
@@ -54039,407 +54039,407 @@
       "indicator": "stochastic",
       "horizon": 3,
       "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 1832,
-      "final_prior_only_weight": 1.112773751215838
-    },
-    {
-      "instrument": "SHPJ",
-      "indicator": "macd",
-      "horizon": 3,
-      "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 2453,
-      "final_prior_only_weight": 0.8285231606348491
-    },
-    {
-      "instrument": "SHPJ",
-      "indicator": "bollinger_mean_reversion",
-      "horizon": 3,
-      "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 1983,
-      "final_prior_only_weight": 1.3858865711498136
-    },
-    {
-      "instrument": "SHPJ",
-      "indicator": "adx_dmi",
-      "horizon": 3,
-      "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 2494,
-      "final_prior_only_weight": 0.7235483147040724
-    },
-    {
-      "instrument": "SHPJ",
-      "indicator": "ichimoku",
-      "horizon": 3,
-      "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 2486,
-      "final_prior_only_weight": 0.8231687122858649
-    },
-    {
-      "instrument": "SHPJ",
-      "indicator": "rsi",
-      "horizon": 5,
-      "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 1735,
-      "final_prior_only_weight": 1.4159829703690436
-    },
-    {
-      "instrument": "SHPJ",
-      "indicator": "sma",
-      "horizon": 5,
-      "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 2287,
-      "final_prior_only_weight": 0.7572274950189394
-    },
-    {
-      "instrument": "SHPJ",
-      "indicator": "breakout",
-      "horizon": 5,
-      "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 2205,
-      "final_prior_only_weight": 0.5
-    },
-    {
-      "instrument": "SHPJ",
-      "indicator": "stochastic",
-      "horizon": 5,
-      "eligible_decisions": 2685,
       "non_neutral_learned_weights": 2067,
-      "final_prior_only_weight": 1.1967852863058408
+      "final_prior_only_weight": 1.1488343706618291
     },
     {
       "instrument": "SHPJ",
       "indicator": "macd",
-      "horizon": 5,
+      "horizon": 3,
       "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 2428,
-      "final_prior_only_weight": 0.7626672419881617
+      "non_neutral_learned_weights": 2414,
+      "final_prior_only_weight": 0.8747742090443626
     },
     {
       "instrument": "SHPJ",
       "indicator": "bollinger_mean_reversion",
-      "horizon": 5,
-      "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 2077,
-      "final_prior_only_weight": 1.5
-    },
-    {
-      "instrument": "SHPJ",
-      "indicator": "adx_dmi",
-      "horizon": 5,
-      "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 2496,
-      "final_prior_only_weight": 0.6413519784075826
-    },
-    {
-      "instrument": "SHPJ",
-      "indicator": "ichimoku",
-      "horizon": 5,
-      "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 2493,
-      "final_prior_only_weight": 0.7828419005797904
-    },
-    {
-      "instrument": "SHPJ",
-      "indicator": "rsi",
-      "horizon": 20,
-      "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 2295,
-      "final_prior_only_weight": 1.5
-    },
-    {
-      "instrument": "SHPJ",
-      "indicator": "sma",
-      "horizon": 20,
-      "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 1818,
-      "final_prior_only_weight": 0.5782174691219856
-    },
-    {
-      "instrument": "SHPJ",
-      "indicator": "breakout",
-      "horizon": 20,
-      "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 2236,
-      "final_prior_only_weight": 0.5
-    },
-    {
-      "instrument": "SHPJ",
-      "indicator": "stochastic",
-      "horizon": 20,
-      "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 1974,
-      "final_prior_only_weight": 1.4457010134754706
-    },
-    {
-      "instrument": "SHPJ",
-      "indicator": "macd",
-      "horizon": 20,
-      "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 1709,
-      "final_prior_only_weight": 0.5
-    },
-    {
-      "instrument": "SHPJ",
-      "indicator": "bollinger_mean_reversion",
-      "horizon": 20,
-      "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 1934,
-      "final_prior_only_weight": 1.5
-    },
-    {
-      "instrument": "SHPJ",
-      "indicator": "adx_dmi",
-      "horizon": 20,
-      "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 2486,
-      "final_prior_only_weight": 0.566802587933054
-    },
-    {
-      "instrument": "SHPJ",
-      "indicator": "ichimoku",
-      "horizon": 20,
-      "eligible_decisions": 2685,
-      "non_neutral_learned_weights": 1863,
-      "final_prior_only_weight": 0.5333814067251501
-    },
-    {
-      "instrument": "USDZAR",
-      "indicator": "rsi",
-      "horizon": 1,
-      "eligible_decisions": 2777,
-      "non_neutral_learned_weights": 1075,
-      "final_prior_only_weight": 1.0
-    },
-    {
-      "instrument": "USDZAR",
-      "indicator": "sma",
-      "horizon": 1,
-      "eligible_decisions": 2777,
-      "non_neutral_learned_weights": 2702,
-      "final_prior_only_weight": 0.8679488264822723
-    },
-    {
-      "instrument": "USDZAR",
-      "indicator": "breakout",
-      "horizon": 1,
-      "eligible_decisions": 2777,
-      "non_neutral_learned_weights": 2397,
-      "final_prior_only_weight": 0.7619600417130993
-    },
-    {
-      "instrument": "USDZAR",
-      "indicator": "stochastic",
-      "horizon": 1,
-      "eligible_decisions": 2777,
-      "non_neutral_learned_weights": 2223,
-      "final_prior_only_weight": 1.0
-    },
-    {
-      "instrument": "USDZAR",
-      "indicator": "macd",
-      "horizon": 1,
-      "eligible_decisions": 2777,
-      "non_neutral_learned_weights": 2581,
-      "final_prior_only_weight": 0.8858839491393985
-    },
-    {
-      "instrument": "USDZAR",
-      "indicator": "bollinger_mean_reversion",
-      "horizon": 1,
-      "eligible_decisions": 2777,
-      "non_neutral_learned_weights": 1443,
-      "final_prior_only_weight": 1.0
-    },
-    {
-      "instrument": "USDZAR",
-      "indicator": "adx_dmi",
-      "horizon": 1,
-      "eligible_decisions": 2777,
-      "non_neutral_learned_weights": 1566,
-      "final_prior_only_weight": 1.0
-    },
-    {
-      "instrument": "USDZAR",
-      "indicator": "ichimoku",
-      "horizon": 1,
-      "eligible_decisions": 2777,
-      "non_neutral_learned_weights": 2655,
-      "final_prior_only_weight": 0.8556607703619974
-    },
-    {
-      "instrument": "USDZAR",
-      "indicator": "rsi",
       "horizon": 3,
-      "eligible_decisions": 2777,
-      "non_neutral_learned_weights": 1549,
-      "final_prior_only_weight": 1.190139790122181
-    },
-    {
-      "instrument": "USDZAR",
-      "indicator": "sma",
-      "horizon": 3,
-      "eligible_decisions": 2777,
-      "non_neutral_learned_weights": 1907,
-      "final_prior_only_weight": 0.8124351881641875
-    },
-    {
-      "instrument": "USDZAR",
-      "indicator": "breakout",
-      "horizon": 3,
-      "eligible_decisions": 2777,
-      "non_neutral_learned_weights": 2594,
-      "final_prior_only_weight": 0.7433828885262518
-    },
-    {
-      "instrument": "USDZAR",
-      "indicator": "stochastic",
-      "horizon": 3,
-      "eligible_decisions": 2777,
-      "non_neutral_learned_weights": 578,
-      "final_prior_only_weight": 1.0
-    },
-    {
-      "instrument": "USDZAR",
-      "indicator": "macd",
-      "horizon": 3,
-      "eligible_decisions": 2777,
-      "non_neutral_learned_weights": 2472,
-      "final_prior_only_weight": 0.8061948572185346
-    },
-    {
-      "instrument": "USDZAR",
-      "indicator": "bollinger_mean_reversion",
-      "horizon": 3,
-      "eligible_decisions": 2777,
-      "non_neutral_learned_weights": 1289,
-      "final_prior_only_weight": 1.1496925256823582
-    },
-    {
-      "instrument": "USDZAR",
-      "indicator": "adx_dmi",
-      "horizon": 3,
-      "eligible_decisions": 2777,
-      "non_neutral_learned_weights": 830,
-      "final_prior_only_weight": 1.0
-    },
-    {
-      "instrument": "USDZAR",
-      "indicator": "ichimoku",
-      "horizon": 3,
-      "eligible_decisions": 2777,
-      "non_neutral_learned_weights": 2534,
-      "final_prior_only_weight": 0.8346204454445443
-    },
-    {
-      "instrument": "USDZAR",
-      "indicator": "rsi",
-      "horizon": 5,
-      "eligible_decisions": 2777,
-      "non_neutral_learned_weights": 1652,
-      "final_prior_only_weight": 1.2154232419211894
-    },
-    {
-      "instrument": "USDZAR",
-      "indicator": "sma",
-      "horizon": 5,
-      "eligible_decisions": 2777,
-      "non_neutral_learned_weights": 1704,
-      "final_prior_only_weight": 0.7681392747540129
-    },
-    {
-      "instrument": "USDZAR",
-      "indicator": "breakout",
-      "horizon": 5,
-      "eligible_decisions": 2777,
-      "non_neutral_learned_weights": 1920,
-      "final_prior_only_weight": 0.7503639367084556
-    },
-    {
-      "instrument": "USDZAR",
-      "indicator": "stochastic",
-      "horizon": 5,
-      "eligible_decisions": 2777,
-      "non_neutral_learned_weights": 655,
-      "final_prior_only_weight": 1.0
-    },
-    {
-      "instrument": "USDZAR",
-      "indicator": "macd",
-      "horizon": 5,
-      "eligible_decisions": 2777,
-      "non_neutral_learned_weights": 2440,
-      "final_prior_only_weight": 0.7775283977253745
-    },
-    {
-      "instrument": "USDZAR",
-      "indicator": "bollinger_mean_reversion",
-      "horizon": 5,
-      "eligible_decisions": 2777,
-      "non_neutral_learned_weights": 1247,
-      "final_prior_only_weight": 1.1114109871096238
-    },
-    {
-      "instrument": "USDZAR",
-      "indicator": "adx_dmi",
-      "horizon": 5,
-      "eligible_decisions": 2777,
-      "non_neutral_learned_weights": 1194,
-      "final_prior_only_weight": 0.8996725944274908
-    },
-    {
-      "instrument": "USDZAR",
-      "indicator": "ichimoku",
-      "horizon": 5,
-      "eligible_decisions": 2777,
-      "non_neutral_learned_weights": 2488,
-      "final_prior_only_weight": 0.8261189628748146
-    },
-    {
-      "instrument": "USDZAR",
-      "indicator": "rsi",
-      "horizon": 20,
-      "eligible_decisions": 2777,
-      "non_neutral_learned_weights": 1993,
-      "final_prior_only_weight": 1.4785047390944746
-    },
-    {
-      "instrument": "USDZAR",
-      "indicator": "sma",
-      "horizon": 20,
-      "eligible_decisions": 2777,
-      "non_neutral_learned_weights": 1897,
-      "final_prior_only_weight": 0.7067283863574396
-    },
-    {
-      "instrument": "USDZAR",
-      "indicator": "breakout",
-      "horizon": 20,
-      "eligible_decisions": 2777,
-      "non_neutral_learned_weights": 1994,
-      "final_prior_only_weight": 0.5
-    },
-    {
-      "instrument": "USDZAR",
-      "indicator": "stochastic",
-      "horizon": 20,
-      "eligible_decisions": 2777,
-      "non_neutral_learned_weights": 1635,
-      "final_prior_only_weight": 1.376975665436961
-    },
-    {
-      "instrument": "USDZAR",
-      "indicator": "macd",
-      "horizon": 20,
-      "eligible_decisions": 2777,
+      "eligible_decisions": 2685,
       "non_neutral_learned_weights": 2048,
-      "final_prior_only_weight": 0.7763934451161022
+      "final_prior_only_weight": 1.4156276165030146
+    },
+    {
+      "instrument": "SHPJ",
+      "indicator": "adx_dmi",
+      "horizon": 3,
+      "eligible_decisions": 2685,
+      "non_neutral_learned_weights": 2479,
+      "final_prior_only_weight": 0.7642355346652341
+    },
+    {
+      "instrument": "SHPJ",
+      "indicator": "ichimoku",
+      "horizon": 3,
+      "eligible_decisions": 2685,
+      "non_neutral_learned_weights": 2485,
+      "final_prior_only_weight": 0.8694688946996085
+    },
+    {
+      "instrument": "SHPJ",
+      "indicator": "rsi",
+      "horizon": 5,
+      "eligible_decisions": 2685,
+      "non_neutral_learned_weights": 1827,
+      "final_prior_only_weight": 1.4511396790130942
+    },
+    {
+      "instrument": "SHPJ",
+      "indicator": "sma",
+      "horizon": 5,
+      "eligible_decisions": 2685,
+      "non_neutral_learned_weights": 2224,
+      "final_prior_only_weight": 0.8017530974194556
+    },
+    {
+      "instrument": "SHPJ",
+      "indicator": "breakout",
+      "horizon": 5,
+      "eligible_decisions": 2685,
+      "non_neutral_learned_weights": 2203,
+      "final_prior_only_weight": 0.5
+    },
+    {
+      "instrument": "SHPJ",
+      "indicator": "stochastic",
+      "horizon": 5,
+      "eligible_decisions": 2685,
+      "non_neutral_learned_weights": 2149,
+      "final_prior_only_weight": 1.232807004612946
+    },
+    {
+      "instrument": "SHPJ",
+      "indicator": "macd",
+      "horizon": 5,
+      "eligible_decisions": 2685,
+      "non_neutral_learned_weights": 2386,
+      "final_prior_only_weight": 0.8088975969040001
+    },
+    {
+      "instrument": "SHPJ",
+      "indicator": "bollinger_mean_reversion",
+      "horizon": 5,
+      "eligible_decisions": 2685,
+      "non_neutral_learned_weights": 2075,
+      "final_prior_only_weight": 1.5
+    },
+    {
+      "instrument": "SHPJ",
+      "indicator": "adx_dmi",
+      "horizon": 5,
+      "eligible_decisions": 2685,
+      "non_neutral_learned_weights": 2489,
+      "final_prior_only_weight": 0.6819872055915535
+    },
+    {
+      "instrument": "SHPJ",
+      "indicator": "ichimoku",
+      "horizon": 5,
+      "eligible_decisions": 2685,
+      "non_neutral_learned_weights": 2445,
+      "final_prior_only_weight": 0.8291216219766258
+    },
+    {
+      "instrument": "SHPJ",
+      "indicator": "rsi",
+      "horizon": 20,
+      "eligible_decisions": 2685,
+      "non_neutral_learned_weights": 2301,
+      "final_prior_only_weight": 1.5
+    },
+    {
+      "instrument": "SHPJ",
+      "indicator": "sma",
+      "horizon": 20,
+      "eligible_decisions": 2685,
+      "non_neutral_learned_weights": 1714,
+      "final_prior_only_weight": 0.6225122898596691
+    },
+    {
+      "instrument": "SHPJ",
+      "indicator": "breakout",
+      "horizon": 20,
+      "eligible_decisions": 2685,
+      "non_neutral_learned_weights": 2231,
+      "final_prior_only_weight": 0.5
+    },
+    {
+      "instrument": "SHPJ",
+      "indicator": "stochastic",
+      "horizon": 20,
+      "eligible_decisions": 2685,
+      "non_neutral_learned_weights": 1991,
+      "final_prior_only_weight": 1.4815103224362804
+    },
+    {
+      "instrument": "SHPJ",
+      "indicator": "macd",
+      "horizon": 20,
+      "eligible_decisions": 2685,
+      "non_neutral_learned_weights": 1573,
+      "final_prior_only_weight": 0.5
+    },
+    {
+      "instrument": "SHPJ",
+      "indicator": "bollinger_mean_reversion",
+      "horizon": 20,
+      "eligible_decisions": 2685,
+      "non_neutral_learned_weights": 1936,
+      "final_prior_only_weight": 1.5
+    },
+    {
+      "instrument": "SHPJ",
+      "indicator": "adx_dmi",
+      "horizon": 20,
+      "eligible_decisions": 2685,
+      "non_neutral_learned_weights": 2481,
+      "final_prior_only_weight": 0.6073663086408396
+    },
+    {
+      "instrument": "SHPJ",
+      "indicator": "ichimoku",
+      "horizon": 20,
+      "eligible_decisions": 2685,
+      "non_neutral_learned_weights": 1741,
+      "final_prior_only_weight": 0.579674035990962
+    },
+    {
+      "instrument": "USDZAR",
+      "indicator": "rsi",
+      "horizon": 1,
+      "eligible_decisions": 2777,
+      "non_neutral_learned_weights": 1451,
+      "final_prior_only_weight": 1.1359333959336844
+    },
+    {
+      "instrument": "USDZAR",
+      "indicator": "sma",
+      "horizon": 1,
+      "eligible_decisions": 2777,
+      "non_neutral_learned_weights": 1397,
+      "final_prior_only_weight": 0.9116081494393627
+    },
+    {
+      "instrument": "USDZAR",
+      "indicator": "breakout",
+      "horizon": 1,
+      "eligible_decisions": 2777,
+      "non_neutral_learned_weights": 1953,
+      "final_prior_only_weight": 0.784888215851782
+    },
+    {
+      "instrument": "USDZAR",
+      "indicator": "stochastic",
+      "horizon": 1,
+      "eligible_decisions": 2777,
+      "non_neutral_learned_weights": 1958,
+      "final_prior_only_weight": 1.0
+    },
+    {
+      "instrument": "USDZAR",
+      "indicator": "macd",
+      "horizon": 1,
+      "eligible_decisions": 2777,
+      "non_neutral_learned_weights": 2090,
+      "final_prior_only_weight": 0.9307550306734965
+    },
+    {
+      "instrument": "USDZAR",
+      "indicator": "bollinger_mean_reversion",
+      "horizon": 1,
+      "eligible_decisions": 2777,
+      "non_neutral_learned_weights": 533,
+      "final_prior_only_weight": 1.0
+    },
+    {
+      "instrument": "USDZAR",
+      "indicator": "adx_dmi",
+      "horizon": 1,
+      "eligible_decisions": 2777,
+      "non_neutral_learned_weights": 2111,
+      "final_prior_only_weight": 1.0
+    },
+    {
+      "instrument": "USDZAR",
+      "indicator": "ichimoku",
+      "horizon": 1,
+      "eligible_decisions": 2777,
+      "non_neutral_learned_weights": 1811,
+      "final_prior_only_weight": 0.9004777991860247
+    },
+    {
+      "instrument": "USDZAR",
+      "indicator": "rsi",
+      "horizon": 3,
+      "eligible_decisions": 2777,
+      "non_neutral_learned_weights": 2318,
+      "final_prior_only_weight": 1.2259159095839878
+    },
+    {
+      "instrument": "USDZAR",
+      "indicator": "sma",
+      "horizon": 3,
+      "eligible_decisions": 2777,
+      "non_neutral_learned_weights": 491,
+      "final_prior_only_weight": 1.0
+    },
+    {
+      "instrument": "USDZAR",
+      "indicator": "breakout",
+      "horizon": 3,
+      "eligible_decisions": 2777,
+      "non_neutral_learned_weights": 2421,
+      "final_prior_only_weight": 0.7663110626649351
+    },
+    {
+      "instrument": "USDZAR",
+      "indicator": "stochastic",
+      "horizon": 3,
+      "eligible_decisions": 2777,
+      "non_neutral_learned_weights": 1094,
+      "final_prior_only_weight": 1.1428395613305748
+    },
+    {
+      "instrument": "USDZAR",
+      "indicator": "macd",
+      "horizon": 3,
+      "eligible_decisions": 2777,
+      "non_neutral_learned_weights": 2166,
+      "final_prior_only_weight": 0.8510376321760221
+    },
+    {
+      "instrument": "USDZAR",
+      "indicator": "bollinger_mean_reversion",
+      "horizon": 3,
+      "eligible_decisions": 2777,
+      "non_neutral_learned_weights": 1557,
+      "final_prior_only_weight": 1.1794574152138937
+    },
+    {
+      "instrument": "USDZAR",
+      "indicator": "adx_dmi",
+      "horizon": 3,
+      "eligible_decisions": 2777,
+      "non_neutral_learned_weights": 552,
+      "final_prior_only_weight": 1.0
+    },
+    {
+      "instrument": "USDZAR",
+      "indicator": "ichimoku",
+      "horizon": 3,
+      "eligible_decisions": 2777,
+      "non_neutral_learned_weights": 1912,
+      "final_prior_only_weight": 0.8794088330534228
+    },
+    {
+      "instrument": "USDZAR",
+      "indicator": "rsi",
+      "horizon": 5,
+      "eligible_decisions": 2777,
+      "non_neutral_learned_weights": 2159,
+      "final_prior_only_weight": 1.2511993613829964
+    },
+    {
+      "instrument": "USDZAR",
+      "indicator": "sma",
+      "horizon": 5,
+      "eligible_decisions": 2777,
+      "non_neutral_learned_weights": 900,
+      "final_prior_only_weight": 0.811728402848295
+    },
+    {
+      "instrument": "USDZAR",
+      "indicator": "breakout",
+      "horizon": 5,
+      "eligible_decisions": 2777,
+      "non_neutral_learned_weights": 1640,
+      "final_prior_only_weight": 0.7732921108471387
+    },
+    {
+      "instrument": "USDZAR",
+      "indicator": "stochastic",
+      "horizon": 5,
+      "eligible_decisions": 2777,
+      "non_neutral_learned_weights": 1354,
+      "final_prior_only_weight": 1.126993026302852
+    },
+    {
+      "instrument": "USDZAR",
+      "indicator": "macd",
+      "horizon": 5,
+      "eligible_decisions": 2777,
+      "non_neutral_learned_weights": 2252,
+      "final_prior_only_weight": 0.8223427098053474
+    },
+    {
+      "instrument": "USDZAR",
+      "indicator": "bollinger_mean_reversion",
+      "horizon": 5,
+      "eligible_decisions": 2777,
+      "non_neutral_learned_weights": 1344,
+      "final_prior_only_weight": 1.141175876641159
+    },
+    {
+      "instrument": "USDZAR",
+      "indicator": "adx_dmi",
+      "horizon": 5,
+      "eligible_decisions": 2777,
+      "non_neutral_learned_weights": 438,
+      "final_prior_only_weight": 1.0
+    },
+    {
+      "instrument": "USDZAR",
+      "indicator": "ichimoku",
+      "horizon": 5,
+      "eligible_decisions": 2777,
+      "non_neutral_learned_weights": 2100,
+      "final_prior_only_weight": 0.8708785507173291
+    },
+    {
+      "instrument": "USDZAR",
+      "indicator": "rsi",
+      "horizon": 20,
+      "eligible_decisions": 2777,
+      "non_neutral_learned_weights": 2105,
+      "final_prior_only_weight": 1.5
+    },
+    {
+      "instrument": "USDZAR",
+      "indicator": "sma",
+      "horizon": 20,
+      "eligible_decisions": 2777,
+      "non_neutral_learned_weights": 1322,
+      "final_prior_only_weight": 0.7500472872020053
+    },
+    {
+      "instrument": "USDZAR",
+      "indicator": "breakout",
+      "horizon": 20,
+      "eligible_decisions": 2777,
+      "non_neutral_learned_weights": 1894,
+      "final_prior_only_weight": 0.5
+    },
+    {
+      "instrument": "USDZAR",
+      "indicator": "stochastic",
+      "horizon": 20,
+      "eligible_decisions": 2777,
+      "non_neutral_learned_weights": 2000,
+      "final_prior_only_weight": 1.411294922672014
+    },
+    {
+      "instrument": "USDZAR",
+      "indicator": "macd",
+      "horizon": 20,
+      "eligible_decisions": 2777,
+      "non_neutral_learned_weights": 1580,
+      "final_prior_only_weight": 0.8212647931855009
     },
     {
       "instrument": "USDZAR",
       "indicator": "bollinger_mean_reversion",
       "horizon": 20,
       "eligible_decisions": 2777,
-      "non_neutral_learned_weights": 1001,
+      "non_neutral_learned_weights": 1132,
       "final_prior_only_weight": 1.5
     },
     {
@@ -54447,16 +54447,16 @@
       "indicator": "adx_dmi",
       "horizon": 20,
       "eligible_decisions": 2777,
-      "non_neutral_learned_weights": 1245,
-      "final_prior_only_weight": 0.6405623849471266
+      "non_neutral_learned_weights": 899,
+      "final_prior_only_weight": 1.0
     },
     {
       "instrument": "USDZAR",
       "indicator": "ichimoku",
       "horizon": 20,
       "eligible_decisions": 2777,
-      "non_neutral_learned_weights": 1875,
-      "final_prior_only_weight": 0.783765618996405
+      "non_neutral_learned_weights": 1682,
+      "final_prior_only_weight": 0.8283040650523615
     }
   ]
 }

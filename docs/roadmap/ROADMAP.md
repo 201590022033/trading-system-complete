@@ -2,6 +2,21 @@
 
 Only one milestone is ACTIVE. Advancement requires tests, docs and a commit.
 
+## HR9 — Causal adaptive technical ensemble [COMPLETE 2026-09-04]
+- Preserve the 101,536-row interrupted ensemble as the pre-HR9 baseline.
+- Share one authoritative technical-signal definition across HR8 and HR9.
+- Reuse HR8 reliability gates and correct signal-state turnover costs.
+- Keep 1/3/5/20-session targets independent and fully explainable.
+- Evaluate causality, uncertainty, costs, turnover, drawdown and temporal stability.
+- Keep all adaptive output shadow-only and disconnected from Flask/production.
+
+Acceptance evidence: 14 focused tests pass; 101,536 aligned causal decisions
+have zero key, clock, sample-gate or shadow-boundary violations. Performance is
+not consistently superior to legacy, so completion means a sound research
+artifact—not adaptive promotion. See `docs/research/HR9_ADAPTIVE_ENSEMBLE_REPORT.md`.
+
+Recommended next milestone: HR10 robustness and admission gates; not active.
+
 ## M0 — Protect and characterize baseline [COMPLETE 2026-09-03]
 - Inspect Git state and secrets.
 - Confirm `.env` is ignored/untracked; do not print secret values.

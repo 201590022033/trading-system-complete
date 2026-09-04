@@ -1,0 +1,51 @@
+{
+  "version": "adaptive-technical-ensemble-v2",
+  "path": "analysis/data/hr9/adaptive_technical_decisions_v2.csv",
+  "pre_hr9_baseline": "analysis/data/hr9/adaptive_technical_decisions.csv",
+  "input_path": "analysis/data/hr7/asset_technical_features.csv",
+  "input_sha256": "42ae6a5741235327886441822f7e657ea79598a6f4d51b16c7cbc6828144f844",
+  "signal_definition_version": "technical-signals-v1",
+  "evidence_contract_version": "indicator-effectiveness-v1",
+  "horizon_roles": {
+    "1": "next_session_tactical",
+    "3": "three_session_short_term",
+    "5": "five_session_swing",
+    "20": "twenty_session_position"
+  },
+  "sha256": "a7544ede96a1157c450e97fe69d446a20231d37a1946f91428753386ceb3cfb7",
+  "rows": 101536,
+  "actions": {
+    "hold": 68579,
+    "buy": 19728,
+    "sell": 13229
+  },
+  "non_neutral_weight_cells": 355556,
+  "threshold": 0.35,
+  "shadow_only": true,
+  "explainability_columns": [
+    "rsi_signal",
+    "rsi_weight",
+    "rsi_contribution",
+    "sma_signal",
+    "sma_weight",
+    "sma_contribution",
+    "breakout_signal",
+    "breakout_weight",
+    "breakout_contribution",
+    "stochastic_signal",
+    "stochastic_weight",
+    "stochastic_contribution",
+    "macd_signal",
+    "macd_weight",
+    "macd_contribution",
+    "bollinger_mean_reversion_signal",
+    "bollinger_mean_reversion_weight",
+    "bollinger_mean_reversion_contribution",
+    "adx_dmi_signal",
+    "adx_dmi_weight",
+    "adx_dmi_contribution",
+    "ichimoku_signal",
+    "ichimoku_weight",
+    "ichimoku_contribution"
+  ]
+}
