@@ -152,6 +152,11 @@ OI1 adds a responsive fabricated decision card, collapsed diagnostics, safe
 public-link/copy affordances and browser-local feedback. The demo suggestion is
 explicitly rejected and has no server-side execution route.
 
+UIR1 history audit established that this repository never contained the richer
+dashboard described by the owner. `app.py` first appears at `332666a` as the
+simulated ticker; richer backend decision/news/OST capabilities exist but were
+never connected to a committed UI here. See `docs/ui/UI_RECOVERY_REPORT.md`.
+
 ## Existing strengths
 - Good separation between ingestion, observations, signal fusion and governance.
 - Real SA/JSE adaptation already underway.

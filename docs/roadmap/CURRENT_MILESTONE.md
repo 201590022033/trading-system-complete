@@ -1,6 +1,29 @@
 # Current Milestone
 
-**OI1 COMPLETE — operational UI, integration discovery and research reset**
+**UIR1 COMPLETE — historical UI source not present**
+
+## UIR1 scope — activated 2026-09-04
+
+- [x] Search reachable/unreachable Git history, deleted paths, archives and the
+  protected `generate_app.py` worktree for the reported complete dashboard.
+- [x] Identify the actual origin and data state of every historical Flask UI.
+- [x] Map each reported feature to historical UI evidence and surviving backend.
+- [x] Stop before reconstruction because no recoverable implementation exists.
+- [x] Record security/provenance concerns without exposing credentials.
+
+UIR1 is an audit/recovery milestone. HR7–HR10 artifacts and OI1 safety
+boundaries remain immutable.
+
+## UIR1 acceptance record — 2026-09-04
+
+- [x] Confirmed `app.py` first appears at `332666a` as a simulated ticker.
+- [x] Found no templates/static dashboard in reachable, deleted or unreachable history.
+- [x] Confirmed `generate_app.py` audits HTML; it does not generate the application.
+- [x] Mapped all seven reported UI groups to surviving/missing backend capabilities.
+- [x] Determined that “30 steps” documents simulation iterations, not a 30-check confidence model.
+- [x] Identified no live data in the current UI and made no provider/network calls.
+- [x] Stopped without reconstructing or changing `app.py`.
+- [x] Preserved HR7–HR10, OI1, `.env` and unrelated worktree changes.
 
 ## OI1 scope — activated 2026-09-04
 

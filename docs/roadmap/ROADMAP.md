@@ -52,6 +52,20 @@ focused OI1/HR10 tests and 98 safe offline regression tests pass.
 Recommended next milestone: build a licensed, point-in-time JSE SENS event
 dataset and classifier; separately procure a small intraday Level 1/2 sample.
 
+## UIR1 — Historical UI recovery audit [COMPLETE 2026-09-04]
+- Locate the reported complete dashboard before any reconstruction.
+- Inspect reachable/unreachable history, deleted paths, archives and protected worktree files.
+- Map missing UI features to surviving backend capabilities and exact data states.
+- Stop and report if no historical implementation can be recovered.
+
+Acceptance: evidence-backed archaeology report with no invented UI replacement,
+no broker/network execution and no modification of unrelated work.
+
+Evidence: all reachable `app.py` versions, deleted paths, unreachable blobs,
+archives and protected `generate_app.py` history were inspected. No complete
+historical dashboard was found; reconstruction stopped pending original source
+or screenshots. Surviving backend capabilities are mapped in the recovery report.
+
 ## M0 — Protect and characterize baseline [COMPLETE 2026-09-03]
 - Inspect Git state and secrets.
 - Confirm `.env` is ignored/untracked; do not print secret values.
