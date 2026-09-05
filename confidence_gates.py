@@ -38,7 +38,7 @@ def evaluate_gates(market: dict, technical: dict, news: dict, decision: dict):
     t = technical.get("metrics", {}) if technical.get("success") else {}
     values = {
         "current_data_available": (0 if market.get("success") else None, "market component"),
-        "freshness": (None if market.get("state") == "HISTORICAL" else 0, market.get("state", UNAVAILABLE)),
+        "freshness": (0 if market.get("success") and market.get("freshness_verified") else None, market.get("state", UNAVAILABLE)),
         "history_sufficient": (0 if technical.get("history_count", 0) >= 40 else None, "price history"),
         "spread_liquidity": (None, "no order book connected"), "anomaly_free": (0, "finite validated values"),
         "short_trend": (t.get("sma_signal"), "legacy indicators"),

@@ -144,18 +144,18 @@ OI1 adds explicit `ResearchDataProvider`, `SignalEngine`, `TradeSuggestion` and
 `BrokerAccount` boundaries. Trade suggestions validate provenance and clocks;
 rejected or stale suggestions cannot reach even paper preview.
 
-### `app.py`
-Standalone Flask-SocketIO human-review surface over an in-memory random walk.
-UI and JSON endpoints explicitly identify the feed as simulated/research/not
-live. It is not connected to HR9, HR10, providers or broker accounts.
-OI1 adds a responsive fabricated decision card, collapsed diagnostics, safe
-public-link/copy affordances and browser-local feedback. The demo suggestion is
-explicitly rejected and has no server-side execution route.
+### `app.py` and `dashboard_feeds.py`
+Flask dashboard with current public quote cards, timestamped stock/index charts,
+and the retained `MacroSentimentScanner` news feed. A bounded background cache
+reuses the existing Yahoo and news adapters. Each item discloses AI versus
+keyword analysis and each provider exposes availability and source timestamps.
+The operational analysis panel retains its historical HR7 technical benchmark;
+current market and news components remain independently labelled. Broker writes
+are disabled. See `OI3_PUBLIC_FEEDS.md` for contracts and current limitations.
 
-UIR1 history audit established that this repository never contained the richer
-dashboard described by the owner. `app.py` first appears at `332666a` as the
-simulated ticker; richer backend decision/news/OST capabilities exist but were
-never connected to a committed UI here. See `docs/ui/UI_RECOVERY_REPORT.md`.
+OI2 replaced the earlier simulated inline ticker with a historical dashboard,
+but its offline completion did not establish current feed/chart/AI integration.
+OI3 restores those paths without recreating the unavailable original UI source.
 
 ## Existing strengths
 - Good separation between ingestion, observations, signal fusion and governance.

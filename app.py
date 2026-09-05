@@ -3,6 +3,7 @@ from flask import Flask, jsonify, render_template, request
 from flask_socketio import SocketIO
 from instrument_registry import instrument_list, resolve_instrument
 from operational_intelligence import service
+from dashboard_feeds import feeds
 
 app = Flask(__name__); app.config["SECRET_KEY"] = "local-oi2-session"
 socketio = SocketIO(app, cors_allowed_origins="*")
@@ -15,6 +16,11 @@ def health(): return jsonify(status="ok", service="oi2", live_execution=False)
 def status(): return jsonify(service.status())
 @app.get("/api/instruments")
 def instruments(): return jsonify(instruments=instrument_list())
+@app.get("/api/feed/market/<instrument>")
+def market_feed(instrument):
+    return respond(lambda: feeds.chart(instrument, request.args.get("period", "3mo")))
+@app.get("/api/feed/news")
+def news_feed(): return jsonify(feeds.news())
 @app.get("/api/market/<instrument>")
 def market(instrument): return respond(lambda: service.market(instrument, request.args.get("provider", "historical")))
 @app.post("/api/analysis/<instrument>")

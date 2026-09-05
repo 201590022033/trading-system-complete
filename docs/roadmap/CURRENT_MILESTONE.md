@@ -1,6 +1,32 @@
 # Current Milestone
 
-**OI2 COMPLETE — operational intelligence dashboard and end-to-end orchestration**
+**OI3 ACTIVE — reconnect public market charts and AI sentiment feeds**
+
+OI2's offline acceptance did not establish a functioning current-data dashboard.
+OI3 restores automatically refreshed public market data, daily/intraday charts,
+and the existing macro sentiment scanner with retained headlines and explicit
+AI/fallback provenance. Preserve legacy research and execution boundaries.
+Acceptance requires provider-failure tests, browser interaction checks, and a
+documented real-provider smoke check; unavailable providers must remain visible.
+
+The referenced root `MASTER_VSCODE_AGENT_PROMPT.md` is absent. Follow AGENTS,
+the Constitution and the owner's explicit restoration request.
+
+## OI3 progress — 2026-09-05
+
+- [x] Restore cached public quotes and timestamped stock/index charts.
+- [x] Connect MacroSentimentScanner; retain and render headlines, macro impacts,
+  source links and per-item AI/keyword provenance.
+- [x] Keep pending loads responsive and preserve data on source failure.
+- [x] Validate 114 safe offline tests, real-provider browser flow, mobile layout,
+  and browser-only failure/retention fixtures.
+- [x] Confirm real Yahoo data and ten Moneyweb headlines in the running app.
+- [ ] Restore a usable AI model service: current runtime uses keyword fallback;
+  the previous provider/model has been requested from the owner.
+
+SENS returns HTTP 403; NewsAPI is unconfigured. These source states remain
+visible. OI3 stays ACTIVE; do not infer AI-feed completion from offline tests.
+See `docs/reports/OI3_RESTORATION_REPORT.md` for evidence and remaining work.
 
 ## OI2 scope — activated 2026-09-04
 

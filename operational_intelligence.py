@@ -70,17 +70,16 @@ class OperationalIntelligence:
         item = resolve_instrument(symbol)
         now = utcnow().isoformat()
         if provider == "yahoo":
-            try:
-                from jse_adapter import YahooFinanceFetcher
-                price = YahooFinanceFetcher().get_current_price(item.research_symbol)
-                if price is None: raise RuntimeError("provider returned no quote")
-                return ComponentResult("market", True, "CURRENT_PUBLIC", "Yahoo Finance via yfinance",
-                                       None, now, {"price": price, "currency": "ZAR",
-                                                   "symbol": item.yahoo_symbol},
-                                       "Exchange timestamp is not exposed by the adapter").to_dict()
-            except Exception as exc:
-                return ComponentResult("market", False, "UNAVAILABLE", "Yahoo Finance via yfinance",
-                                       None, now, reason=str(exc)).to_dict()
+            from dashboard_feeds import feeds
+            snapshot = feeds.chart(symbol, "1d")
+            data = snapshot.get("data") or {}
+            usable = snapshot["state"] == "AVAILABLE"
+            return ComponentResult("market", usable,
+                                   snapshot["data_state"] if usable else snapshot["state"],
+                                   snapshot["source"], data.get("source_timestamp"), now,
+                                   {"price": data.get("price"), "currency": data.get("currency"),
+                                    "symbol": item.yahoo_symbol, "last_success": snapshot["last_success"]},
+                                   snapshot.get("error") or snapshot["note"]).to_dict()
         if provider != "historical":
             return ComponentResult("market", False, "UNAVAILABLE", provider, None, now,
                                    reason="Unsupported provider").to_dict()
@@ -126,22 +125,22 @@ class OperationalIntelligence:
         if not allow_network:
             return ComponentResult("news", False, "UNAVAILABLE", "SENS and Moneyweb public feeds",
                                    None, now, reason="Network scan not requested; no fabricated fallback").to_dict()
-        try:
-            from jse_adapter import MoneywebRSSFetcher, SENSFeedFetcher
-            raw = SENSFeedFetcher().fetch_recent(15) + MoneywebRSSFetcher().fetch_recent(15)
-            needles = {x.lower() for x in (item.display_symbol, item.research_symbol, item.name)}
-            matched = [n for n in raw if any(k in (n.headline + " " + n.text).lower() for k in needles)]
-            scores = [float(n.sentiment_score) for n in matched]
-            data = {"items": [{"headline": n.headline, "source": n.source,
-                               "timestamp": n.timestamp.isoformat(), "sentiment_score": n.sentiment_score}
-                              for n in matched], "sentiment_score": sum(scores) / len(scores) if scores else 0.0,
-                    "sens_signal": None, "agreement_signal": None, "macro_signal": None, "conflict_signal": None}
-            return ComponentResult("news", True, "CURRENT_PUBLIC", "Public SENS and Moneyweb feeds",
-                                   max((n.timestamp for n in matched), default=None).isoformat() if matched else None,
-                                   now, data, None if matched else "Sources reached; no matching items").to_dict()
-        except Exception as exc:
-            return ComponentResult("news", False, "UNAVAILABLE", "Public SENS and Moneyweb feeds",
-                                   None, now, reason=str(exc)).to_dict()
+        from dashboard_feeds import feeds
+        snapshot = feeds.news()
+        report = snapshot.get("data") or {}
+        matched = [n for n in report.get("items", [])
+                   if any(a["name"] == item.research_symbol for a in n.get("assets", []))]
+        score = report.get("tickers", {}).get(item.research_symbol, {}).get("score", 0.0)
+        success = snapshot["state"] in {"AVAILABLE", "PARTIAL"} and report.get("feed_state") != "UNAVAILABLE"
+        return ComponentResult("news", success, "CURRENT_PUBLIC" if success else snapshot["state"],
+                               snapshot["source"], None, now,
+                               {"items": matched, "sentiment_score": score,
+                                "macro": report.get("macro", {}), "llm_used": report.get("llm_used", False),
+                                "analysis_method": report.get("analysis_method", "Loading"),
+                                "sens_signal": None, "agreement_signal": None, "macro_signal": None,
+                                "conflict_signal": None},
+                               snapshot.get("error") or ("News scan in progress" if snapshot["refreshing"] else
+                               "See market-wide news stream for macro headlines and publication timestamps")).to_dict()
 
     def analyze(self, symbol, horizon="swing", provider="historical", allow_network=False):
         started = utcnow(); item = resolve_instrument(symbol)
@@ -175,7 +174,7 @@ class OperationalIntelligence:
         return {"service": "operational", "live_execution": False, "default_data_state": "HISTORICAL",
                 "dataset": {"available": DATASET.exists(), "rows": sum(map(len, rows.values())),
                             "instruments": len(rows)}, "providers": {"historical": "AVAILABLE",
-                            "yahoo": "ON_DEMAND", "sens_moneyweb": "ON_DEMAND", "broker": "DISABLED"},
+                            "yahoo": "CACHED_PUBLIC_FEED", "sens_moneyweb": "CACHED_SENTIMENT_FEED", "broker": "DISABLED"},
                 "timestamp": utcnow().isoformat()}
 
 

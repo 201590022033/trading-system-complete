@@ -15,7 +15,7 @@ from urllib.parse import urlparse
 
 import yfinance as yf
 import pandas as pd
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import List, Dict, Optional, Tuple, Type
 import requests
 from enum import Enum
@@ -145,6 +145,44 @@ class YahooFinanceFetcher(PriceFetcher):
         self.cache = {}
         self.cache_time = {}
         self.cache_ttl = 60  # seconds
+
+    def get_chart(self, ticker: str, period: str = "3mo") -> Dict:
+        """Timestamped public bars for display; never substitutes mock prices.
+
+        Keep legacy scalar methods unchanged. Yahoo equities may be quoted in
+        South African cents; normalize only when currency metadata confirms it.
+        Daily timestamps identify sessions, not the time of the latest trade.
+        """
+        import math
+        if period not in {"1d", "1mo", "3mo", "1y"}:
+            raise ValueError("Unsupported chart period")
+        symbol = JSE_TICKERS.get(ticker, {}).get("yahoo_symbol", ticker)
+        stock = yf.Ticker(symbol)
+        interval = "5m" if period == "1d" else "1d"
+        frame = stock.history(period=period, interval=interval, auto_adjust=False,
+                              actions=False, timeout=10)
+        if frame.empty:
+            raise ValueError("Yahoo returned no bars")
+        metadata = stock.get_history_metadata() or {}
+        raw_currency = metadata.get("currency") or "UNKNOWN"
+        is_index = symbol.startswith("^")
+        scale = 0.01 if raw_currency == "ZAc" and not is_index else 1.0
+        unit = "points" if is_index else ("ZAR" if raw_currency == "ZAc" else raw_currency)
+        bars = []
+        for stamp, row in frame.iterrows():
+            close = float(row["Close"]) * scale
+            if not math.isfinite(close) or close <= 0:
+                continue
+            bars.append({"timestamp": stamp.isoformat(), "close": close,
+                         "volume": float(row["Volume"]) if math.isfinite(float(row["Volume"])) else None})
+        if not bars:
+            raise ValueError("Yahoo returned no valid closing prices")
+        return {"symbol": symbol, "currency": unit, "provider_currency": raw_currency,
+                "interval": interval, "period": period, "bars": bars,
+                "price": bars[-1]["close"], "source_timestamp": bars[-1]["timestamp"],
+                "timestamp_kind": "bar_start" if interval == "5m" else "session_date",
+                "change_pct": (bars[-1]["close"] / bars[0]["close"] - 1) * 100,
+                "change_basis": "selected chart period"}
     
     def get_current_price(self, ticker: str) -> Optional[float]:
         """Get current price from Yahoo Finance"""
@@ -477,6 +515,7 @@ class SENSFeedFetcher:
 
     def __init__(self, base_url: str = "https://www.moneyweb.co.za/tools-and-data/moneyweb-sens/"):
         self.base_url = base_url
+        self.last_status = "NOT_REQUESTED"
         self.session = requests.Session()
         self.session.headers.update(self._BROWSER_HEADERS)
 
@@ -493,9 +532,13 @@ class SENSFeedFetcher:
         try:
             response = target_session.get(self.base_url, timeout=15)
             if response.status_code >= 400:
+                self.last_status = f"HTTP_{response.status_code}"
                 return []
-            return self._parse_moneyweb_sens(response.text, limit)
+            items = self._parse_moneyweb_sens(response.text, limit)
+            self.last_status = "AVAILABLE" if items else "EMPTY_OR_UNAVAILABLE"
+            return items
         except Exception:
+            self.last_status = "UNAVAILABLE"
             return []
 
     @classmethod
@@ -511,10 +554,12 @@ class SENSFeedFetcher:
                     ticker="JSE",
                     headline=f"{company}: {title}",
                     source="JSE SENS (via Moneyweb)",
-                    timestamp=datetime.now(),
+                    timestamp=datetime.now(timezone.utc),
                     sentiment_label=SentimentLabel.NEUTRAL,
                     sentiment_score=0.0,
                     text=f"SENS announcement from {company}: {title}",
+                    url=cls.MONEYWEB_SENS_URL,
+                    timestamp_kind="observed; publication time unavailable",
                 ))
                 if len(items) >= limit:
                     break
@@ -683,8 +728,10 @@ class MoneywebRSSFetcher:
                 date_text = node.findtext("pubDate", default="")
                 try:
                     timestamp = datetime.strptime(date_text, "%a, %d %b %Y %H:%M:%S %z")
+                    timestamp_kind = "published"
                 except Exception:
-                    timestamp = datetime.now()
+                    timestamp = datetime.now(timezone.utc)
+                    timestamp_kind = "observed; publication time unavailable"
                 sentiment_score = 0.0
                 label = SentimentLabel.NEUTRAL
                 content = f"{title} {desc}".lower()
@@ -705,7 +752,8 @@ class MoneywebRSSFetcher:
                     timestamp=timestamp,
                     sentiment_label=label,
                     sentiment_score=sentiment_score,
-                    text=f"{desc} | {link}"
+                    text=f"{desc} | {link}",
+                    url=link, timestamp_kind=timestamp_kind
                 ))
             return items
         except Exception:

@@ -14,3 +14,10 @@
 The previous inline prototype was a simulated presentation surface. Its
 compatibility endpoints remain non-live but no longer generate simulated prices
 or a fabricated trade idea.
+
+## OI3 correction — 2026-09-05
+
+OI2 did not render news items or charts and did not invoke MacroSentimentScanner.
+OI3 now exposes cached Yahoo charts/quotes and retained scanner headlines with
+AI/keyword labels. See `OI3_PUBLIC_FEEDS.md`; real AI provider availability still
+requires resolution in the current runtime.

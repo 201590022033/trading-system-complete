@@ -2,6 +2,16 @@
 
 Only one milestone is ACTIVE. Advancement requires tests, docs and a commit.
 
+## OI3 — Restore connected market and sentiment dashboard [ACTIVE 2026-09-05]
+- Reuse Yahoo and MacroSentimentScanner for auto-refreshing, cached public feeds.
+- Render dated price charts, retained headlines, AI summaries and macro impacts.
+- Expose source failures, last-success time, delayed data and keyword fallback.
+- Validate browser behavior and provider failures; preserve research/execution safety.
+
+Progress: charts, public quotes and retained news restored; 114 offline tests and
+real/fixture browser checks pass. AI provider restoration remains pending; SENS
+returns HTTP 403 and NewsAPI is unconfigured. OI3 remains ACTIVE.
+
 ## HR9 — Causal adaptive technical ensemble [COMPLETE 2026-09-04]
 - Preserve the 101,536-row interrupted ensemble as the pre-HR9 baseline.
 - Share one authoritative technical-signal definition across HR8 and HR9.

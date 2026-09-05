@@ -18,6 +18,7 @@ import json
 import os
 import re
 import socket
+import importlib.util
 from dataclasses import dataclass, field
 from datetime import datetime
 from typing import Dict, List, Optional
@@ -98,6 +99,8 @@ class AnalyzedItem:
     score: float                       # -1.0 .. 1.0
     assets: List[AssetImpact] = field(default_factory=list)
     llm_used: bool = False
+    url: str = ""
+    timestamp_kind: str = "published"
 
 
 @dataclass
@@ -123,6 +126,8 @@ class MacroReport:
                     "sentiment": i.sentiment,
                     "score": round(i.score, 2),
                     "llm_used": i.llm_used,
+                    "url": i.url,
+                    "timestamp_kind": i.timestamp_kind,
                     "assets": [
                         {"name": a.name, "direction": a.direction, "strength": round(a.strength, 2)}
                         for a in i.assets
@@ -143,6 +148,8 @@ _LOCAL_MODEL = os.environ.get("OLLAMA_LOCAL_MODEL", "llama3")
 
 
 def _ollama_available() -> bool:
+    if importlib.util.find_spec("ollama") is None:
+        return False
     if _OLLAMA_API_KEY:
         return True
     try:
@@ -262,7 +269,7 @@ def _llm_analyze(headline: str, source: str, text: str) -> Optional[Dict]:
             return None
         return data
     except Exception as exc:
-        print(f"[SENTIMENT] LLM analysis failed: {exc}")
+        print(f"[SENTIMENT] LLM analysis failed ({type(exc).__name__}); using keywords")
         return None
 
 
@@ -331,6 +338,8 @@ def analyze_item(item: NewsItem, use_llm: bool) -> AnalyzedItem:
         score=score,
         assets=impacts,
         llm_used=llm_used,
+        url=getattr(item, "url", "") or next(iter(re.findall(r"https?://[^\s<>]+", getattr(item, "text", ""))), ""),
+        timestamp_kind=getattr(item, "timestamp_kind", "published"),
     )
 
 
@@ -341,7 +350,7 @@ def analyze_item(item: NewsItem, use_llm: bool) -> AnalyzedItem:
 class MacroSentimentScanner:
     """Fetches SA + global headlines and builds a macro/ticker sentiment report."""
 
-    def __init__(self, max_llm_items: int = 8):
+    def __init__(self, max_llm_items: int = 8, retain_items: bool = False):
         self.adapter = JSEDataAdapter(
             price_source=DataSourceType.MOCK,   # we only need its news fetchers
             news_source="mock",
@@ -349,6 +358,9 @@ class MacroSentimentScanner:
         self.use_llm = _ollama_available()
         self.max_llm_items = max_llm_items
         self._seen_headlines = set()
+        self.retain_items = retain_items
+        self._analyzed_cache = {}
+        self.source_status = {}
         self.newsapi_key = os.environ.get("NEWSAPI_KEY", "").strip()
 
     # Global macro queries that move the Rand / commodities / SA sentiment
@@ -362,6 +374,7 @@ class MacroSentimentScanner:
     def _fetch_global_newsapi(self, limit: int = 8) -> List[NewsItem]:
         """Global headlines from NewsAPI (requires free NEWSAPI_KEY in .env)."""
         if not self.newsapi_key:
+            self.source_status["NewsAPI"] = "NOT_CONFIGURED"
             return []
         import requests
         items: List[NewsItem] = []
@@ -396,42 +409,80 @@ class MacroSentimentScanner:
                         sentiment_label=SentimentLabel.NEUTRAL,
                         sentiment_score=0.0,
                         text=(art.get("description") or "")[:300],
+                        url=art.get("url") or "",
+                        timestamp_kind="published" if art.get("publishedAt") else "observed; publication time unavailable",
                     ))
             except Exception as exc:
-                print(f"[SENTIMENT] NewsAPI fetch failed for '{q[:30]}': {exc}")
+                print(f"[SENTIMENT] NewsAPI fetch failed ({type(exc).__name__})")
+        self.source_status["NewsAPI"] = "AVAILABLE" if items else "EMPTY_OR_UNAVAILABLE"
         return items
 
     def _fetch(self, moneyweb_limit: int, sens_limit: int) -> List[NewsItem]:
         items: List[NewsItem] = []
         try:
-            items.extend(self.adapter.get_moneyweb_news(limit=moneyweb_limit))
+            fetched = self.adapter.get_moneyweb_news(limit=moneyweb_limit)
+            items.extend(fetched)
+            self.source_status["Moneyweb"] = "AVAILABLE" if fetched else "EMPTY_OR_UNAVAILABLE"
         except Exception as exc:
-            print(f"[SENTIMENT] Moneyweb fetch failed: {exc}")
+            self.source_status["Moneyweb"] = "UNAVAILABLE"
         try:
-            items.extend(self.adapter.get_sens_news(limit=sens_limit))
+            fetched = self.adapter.get_sens_news(limit=sens_limit)
+            items.extend(fetched)
+            self.source_status["SENS"] = "AVAILABLE" if fetched else "EMPTY_OR_UNAVAILABLE"
+            if not fetched and self.adapter.sens_fetcher.last_status.startswith("HTTP_"):
+                self.source_status["SENS"] = self.adapter.sens_fetcher.last_status
         except Exception as exc:
-            print(f"[SENTIMENT] SENS fetch failed: {exc}")
+            self.source_status["SENS"] = "UNAVAILABLE"
         items.extend(self._fetch_global_newsapi(limit=8))
 
         fresh = []
+        batch_seen = set()
         for it in items:
             key = it.headline.strip().lower()
-            if key and key not in self._seen_headlines:
+            if key and key not in batch_seen and (self.retain_items or key not in self._seen_headlines):
+                batch_seen.add(key)
                 self._seen_headlines.add(key)
                 fresh.append(it)
+        if self.retain_items:
+            self._seen_headlines = batch_seen
         return fresh
 
-    def scan(self, moneyweb_limit: int = 12, sens_limit: int = 8) -> MacroReport:
+    def scan(self, moneyweb_limit: int = 12, sens_limit: int = 8, on_progress=None) -> MacroReport:
         raw_items = self._fetch(moneyweb_limit, sens_limit)
+
+        if on_progress is not None:
+            # Publish usable headlines before potentially slow model requests.
+            preview = {it.headline.strip().lower():
+                       self._analyzed_cache.get(it.headline.strip().lower()) or analyze_item(it, False)
+                       for it in raw_items}
+            preview.update({k: v for k, v in self._analyzed_cache.items() if k not in preview})
+            on_progress(self._report(list(preview.values())[:100]))
 
         analyzed: List[AnalyzedItem] = []
         llm_budget = self.max_llm_items if self.use_llm else 0
         for item in raw_items:
+            key = item.headline.strip().lower()
+            cached = self._analyzed_cache.get(key) if self.retain_items else None
+            if cached is not None:
+                analyzed.append(cached)
+                continue
             use_llm_now = llm_budget > 0
             result = analyze_item(item, use_llm=use_llm_now)
             if use_llm_now:
                 llm_budget -= 1
             analyzed.append(result)
+
+        if self.retain_items:
+            # Keep up to 100 headlines across polls; duplicates never consume AI budget.
+            current = {i.headline.strip().lower(): i for i in analyzed}
+            current.update({k: v for k, v in self._analyzed_cache.items() if k not in current})
+            self._analyzed_cache = dict(list(current.items())[:100])
+            analyzed = list(self._analyzed_cache.values())
+
+        return self._report(analyzed)
+
+    @staticmethod
+    def _report(analyzed: List[AnalyzedItem]) -> MacroReport:
 
         # Aggregate macro asset scores
         macro: Dict[str, Dict] = {}

@@ -47,6 +47,8 @@ class NewsItem:
     sentiment_label: SentimentLabel
     sentiment_score: float  # -1.0 to 1.0
     text: str = ""
+    url: str = ""
+    timestamp_kind: str = "published"
 
 
 @dataclass
