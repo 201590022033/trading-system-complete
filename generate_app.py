@@ -1,32 +1,18 @@
 import os
+from dotenv import load_dotenv
 from openai import OpenAI
+from app import INDEX_HTML
 
-# 1. Put your real Kimi developer token inside the quotes
-API_KEY = "sk-bqKmPtr5lS9KWaOptg8DMIHLquev4rDCFrahSf6Yd3UcDDb1"
-BASE_URL = "https://moonshot.ai"
+load_dotenv()
+
+API_KEY = os.environ["MOONSHOT_API_KEY"]
+BASE_URL = "https://api.moonshot.ai/v1"
 
 client = OpenAI(api_key=API_KEY, base_url=BASE_URL)
 
-# 2. Automatically locate your HTML dashboard wherever it is hiding
-ui_file_path = None
-possible_paths = ["index.html", "templates/index.html", "web/index.html", "src/index.html"]
-
-for path in possible_paths:
-    if os.path.exists(path):
-        ui_file_path = path
-        break
-
-if not ui_file_path:
-    print("❌ Error: Could not find your dashboard index.html file anywhere in the workspace!")
-    exit()
-
-try:
-    with open(ui_file_path, "r") as f:
-        html_code = f.read()
-    print(f"📦 Successfully found and loaded your UI file from: '{ui_file_path}'")
-except Exception as e:
-    print(f"❌ Error reading file: {e}")
-    exit()
+# The dashboard is embedded in app.py and rendered with render_template_string().
+html_code = INDEX_HTML
+print("📦 Successfully loaded embedded dashboard UI from: 'app.py:INDEX_HTML'")
 
 prompt = f"""
 I am streaming live JSE trading ticks every single second via Flask-SocketIO. 
@@ -46,6 +32,6 @@ try:
         messages=[{"role": "user", "content": prompt}]
     )
     print("\n--- 📊 KIMI K3 AUDIT RESULTS ---")
-    print(completion.choices.message.content)
+    print(completion.choices[0].message.content)
 except Exception as e:
     print(f"\n❌ Network Transaction Failed: {e}")
