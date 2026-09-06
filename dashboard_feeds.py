@@ -100,6 +100,16 @@ class DashboardFeeds:
             result["state"] = "PARTIAL" if not result["error"] else "STALE"
         return result
 
+    def opportunities(self):
+        def load():
+            from opportunity_scanner import discover
+            news_snapshot = self.news()
+            return discover(news_snapshot.get("data") or {})
+
+        result = self._snapshot("opportunities", 300, load)
+        result.update(source="Yahoo Finance + current public news", data_state="PUBLIC_RESEARCH")
+        return result
+
     def _news_report(self, result):
         report = result.to_dict()
         report["sources"] = dict(self._scanner.source_status)

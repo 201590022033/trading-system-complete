@@ -99,6 +99,14 @@ async function refreshNews() {
   }
   catch (error) { $('#news-status').textContent = `News refresh failed: ${error.message}. Previously displayed items may be stale.`; }
 }
+async function refreshOpportunities() {
+  $('#opportunity-status').textContent = 'Scanning broad public universe and combining available evidence…';
+  try {
+    const result = await api('/api/opportunities'), data = result.data || {};
+    $('#opportunity-status').textContent = `${result.state} · scanned ${data.scanned || 0} of ${data.universe_size || 0} · ${data.method || ''} · ${when(result.last_success)}`;
+    $('#opportunities').innerHTML = (data.opportunities || []).length ? `<table><tr><th>Share</th><th>Combined</th><th>20d</th><th>RSI</th><th>News</th><th>Evidence</th></tr>${data.opportunities.map(row=>`<tr><td><b>${esc(row.symbol)}</b><br><small>${esc(row.name)}</small></td><td>${esc(num(row.combined_score))}</td><td>${esc(num(row.momentum_20d_pct))}%</td><td>${esc(num(row.rsi_14))}</td><td>${esc(row.news_mentions || 0)} mentions</td><td>${esc(row.state)}<br><small>${esc((row.evidence || []).join(' · '))}</small></td></tr>`).join('')}</table>` : '<p class="muted">No current candidates with sufficient public data.</p>';
+  } catch (error) { $('#opportunity-status').textContent = `Discovery failed: ${error.message}`; }
+}
 async function refreshQuotes() {
   await Promise.allSettled(instruments.map(async item=>{
     const card = $(`#quote-${item.instrument_id}`);
@@ -145,6 +153,7 @@ action('#scan',async()=>{
 action('#research-load',async()=>$('#research-result').textContent=JSON.stringify(await api(`/api/research/${$('#instrument').value}`),null,2));
 action('#refresh-feeds',refreshFeeds);
 action('#refresh-news',refreshNews);
+action('#refresh-opportunities',refreshOpportunities);
 $('#instrument').onchange=selectedChanged;
 $('#chart-period').onchange=()=>{selectionVersion++; refreshCharts();};
 $('#news-filter').onchange=()=>{if(newsSnapshot) showNews(newsSnapshot);};
@@ -159,5 +168,6 @@ $('#auto-refresh').onchange=()=>{if($('#auto-refresh').checked) refreshFeeds();}
   document.querySelectorAll('.quote').forEach(card=>card.onclick=()=>{$('#instrument').value=card.dataset.instrument; selectedChanged();});
   selectedChanged();
   await refreshFeeds();
+  await refreshOpportunities();
   setInterval(()=>{if($('#auto-refresh').checked && !document.hidden) refreshFeeds();},10000);
 })().catch(error=>{$('#system-pill').textContent='SYSTEM UNAVAILABLE';$('#feed-notice').textContent=error.message;});

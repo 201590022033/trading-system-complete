@@ -21,8 +21,15 @@ the Constitution and the owner's explicit restoration request.
 - [x] Validate 114 safe offline tests, real-provider browser flow, mobile layout,
   and browser-only failure/retention fixtures.
 - [x] Confirm real Yahoo data and ten Moneyweb headlines in the running app.
+- [x] Add a separate broad-universe opportunity scan using current Yahoo
+  momentum/RSI plus matched public-news impacts; baseline quote cards are not
+  presented as the opportunity selection.
 - [ ] Restore a usable AI model service: current runtime uses keyword fallback;
   the previous provider/model has been requested from the owner.
+- [ ] Connect additional permitted public sources and verify Ollama-backed
+  ticker discovery, including Efficient Group/public commentary where legally
+  accessible. Private Facebook access and SENS challenge bypass remain out of
+  scope.
 
 SENS returns HTTP 403; NewsAPI is unconfigured. These source states remain
 visible. OI3 stays ACTIVE; do not infer AI-feed completion from offline tests.

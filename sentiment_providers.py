@@ -60,7 +60,7 @@ class SentimentProviders:
         env = os.environ if environ is None else environ
         self.transport = transport or requests
         self.providers = [
-            Provider('ollama_local', 'Local Ollama', env.get('OLLAMA_LOCAL_MODEL') or 'llama3',
+            Provider('ollama_local', 'Local Ollama', env.get('OLLAMA_LOCAL_MODEL') or 'llama3.2:3b',
                      (env.get('OLLAMA_HOST') or 'http://127.0.0.1:11434').rstrip('/')),
             Provider('ollama_cloud', 'Ollama Cloud', env.get('OLLAMA_CLOUD_MODEL') or 'gpt-oss:20b',
                      'https://ollama.com', env.get('OLLAMA_API_KEY','').strip()),

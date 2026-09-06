@@ -23,6 +23,8 @@ def market_feed(instrument):
     return respond(lambda: feeds.chart(instrument, request.args.get("period", "3mo")))
 @app.get("/api/feed/news")
 def news_feed(): return jsonify(feeds.news())
+@app.get("/api/opportunities")
+def opportunities(): return jsonify(feeds.opportunities())
 @app.get("/api/market/<instrument>")
 def market(instrument): return respond(lambda: service.market(instrument, request.args.get("provider", "historical")))
 @app.post("/api/analysis/<instrument>")

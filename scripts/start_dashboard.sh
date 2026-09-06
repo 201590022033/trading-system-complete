@@ -19,6 +19,17 @@ if ! "${PYTHON}" -c 'import flask, flask_socketio' >/dev/null 2>&1; then
 fi
 
 cd "${PROJECT_ROOT}"
+
+# Codespaces and containers often do not run systemd; keep local Ollama one-command.
+if command -v ollama >/dev/null 2>&1 && ! curl --silent --max-time 2 http://127.0.0.1:11434/api/tags >/dev/null 2>&1; then
+    echo "Starting local Ollama service"
+    nohup ollama serve >"${TMPDIR:-/tmp}/trading-system-ollama.log" 2>&1 &
+    for _ in {1..20}; do
+        curl --silent --max-time 2 http://127.0.0.1:11434/api/tags >/dev/null 2>&1 && break
+        sleep 1
+    done
+fi
+
 echo "Starting dashboard from ${PROJECT_ROOT}/app.py on ${HOST}:${PORT}"
 echo "Open the forwarded port in your workspace; health check: http://127.0.0.1:${PORT}/health"
 exec env HOST="${HOST}" PORT="${PORT}" "${PYTHON}" app.py

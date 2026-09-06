@@ -107,11 +107,14 @@ class FeedTests(unittest.TestCase):
 
 
 class NewsRetentionTests(unittest.TestCase):
-    @patch('sentiment_analyzer._ollama_available', return_value=True)
-    @patch('sentiment_analyzer._llm_analyze', return_value={'summary':'Sasol earnings improve',
-           'sentiment':'bullish', 'score':0.6, 'assets':[{'name':'SOL','direction':1,'strength':0.6}]})
-    def test_progress_publishes_headlines_before_ai_and_caches_ai_result(self, model, _):
-        scanner = MacroSentimentScanner(retain_items=True)
+    def test_progress_publishes_headlines_before_ai_and_caches_ai_result(self):
+        providers = Mock()
+        providers.begin_scan.return_value = True
+        providers.analyze.return_value = {'summary':'Sasol earnings improve',
+            'sentiment':'bullish', 'score':0.6,
+            'assets':[{'name':'SOL','direction':1,'strength':0.6}],
+            '_provider':'ollama_local', '_model':'llama3'}
+        scanner = MacroSentimentScanner(retain_items=True, providers=providers)
         item = NewsItem('SASOL','Sasol profits rise','Moneyweb',datetime.now(timezone.utc),
                         SentimentLabel.NEUTRAL,0)
         scanner.adapter.get_moneyweb_news = Mock(return_value=[item])
@@ -124,11 +127,12 @@ class NewsRetentionTests(unittest.TestCase):
         self.assertEqual(result['items'][0]['summary'],'Sasol earnings improve')
         self.assertIn('SASOL',result['tickers'])
         scanner.scan()
-        model.assert_called_once()
+        providers.analyze.assert_called_once()
 
-    @patch('sentiment_analyzer._ollama_available', return_value=False)
-    def test_headlines_persist_and_keyword_fallback_is_honest(self, _):
-        scanner = MacroSentimentScanner(retain_items=True)
+    def test_headlines_persist_and_keyword_fallback_is_honest(self):
+        providers = Mock()
+        providers.begin_scan.return_value = False
+        scanner = MacroSentimentScanner(retain_items=True, providers=providers)
         item = NewsItem('SASOL','Sasol profits rise','Moneyweb',datetime.now(timezone.utc),
                         SentimentLabel.NEUTRAL,0,text='Sasol growth', url='https://example.com/news')
         scanner.adapter.get_moneyweb_news = Mock(side_effect=[[item],[item],[]])

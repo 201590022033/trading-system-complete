@@ -28,6 +28,16 @@ asset tags and AI/keyword provenance are visible.
   items per scan use the configured existing Ollama path; duplicate headlines do
   not consume the AI budget. Every item has an explicit AI or keyword label.
 
+## Opportunity discovery
+
+`GET /api/opportunities` is separate from the six-instrument baseline
+watchlist. It scans the broader public JSE universe represented by the adapter,
+calculates current Yahoo 20-session momentum and RSI, and overlays matching
+current-news ticker impacts when available. Results carry `TECHNICAL_ONLY` or
+`NEWS_AND_TECHNICAL` state and are research-only. Missing bars, unavailable
+providers and insufficient evidence remain visible; no result is an order or a
+claim of predictive accuracy.
+
 ## Data interpretation
 
 Yahoo currency metadata determines conversion: confirmed `ZAc` is divided by
@@ -54,6 +64,8 @@ Run `.venv/bin/python -m pip install -r requirements.txt`, then
 AI sentiment. Never paste keys into chat or commit local credential files.
 Without a usable model the news feed remains available with keyword labels.
 NewsAPI remains optional and uses the scanner's existing environment configuration.
+The default local model is `llama3.2:3b`; set `OLLAMA_LOCAL_MODEL` only when a
+different model has been installed with `ollama pull`.
 
 Offline regression:
 

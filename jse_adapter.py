@@ -88,7 +88,17 @@ JSE_TICKERS = {
         "sector": "Retail",
         "description": "Automotive retail",
         "yahoo_symbol": "JDI.JO"
-    }
+    },
+    "AGL": {"name": "Anglo American", "sector": "Mining", "description": "Diversified mining", "yahoo_symbol": "AGL.JO"},
+    "BTI": {"name": "British American Tobacco", "sector": "Consumer", "description": "Tobacco and consumer products", "yahoo_symbol": "BTI.JO"},
+    "CFR": {"name": "Richemont", "sector": "Luxury Goods", "description": "Luxury goods", "yahoo_symbol": "CFR.JO"},
+    "FSR": {"name": "FirstRand", "sector": "Financial Services", "description": "Banking and financial services", "yahoo_symbol": "FSR.JO"},
+    "GFI": {"name": "Gold Fields", "sector": "Mining", "description": "Gold mining", "yahoo_symbol": "GFI.JO"},
+    "KIO": {"name": "Kumba Iron Ore", "sector": "Mining", "description": "Iron ore mining", "yahoo_symbol": "KIO.JO"},
+    "MTN": {"name": "MTN Group", "sector": "Telecommunications", "description": "Telecommunications", "yahoo_symbol": "MTN.JO"},
+    "NED": {"name": "Nedbank", "sector": "Financial Services", "description": "Banking and financial services", "yahoo_symbol": "NED.JO"},
+    "REM": {"name": "Remgro", "sector": "Investment", "description": "Investment holding company", "yahoo_symbol": "REM.JO"},
+    "VOD": {"name": "Vodacom", "sector": "Telecommunications", "description": "Telecommunications", "yahoo_symbol": "VOD.JO"}
 }
 
 # South African news sources
