@@ -43,3 +43,19 @@ Added explicit per-instrument/currency cost schedules with turnover units, half-
 ## Stage HR11.8
 
 Cross-asset joins now select only timestamp-available observations, enforce each source maximum event age and retain source IDs plus input record hashes. Late publication cannot refresh an old event. Return factors require consecutive same-source bars; absent or stale factors remain explicitly unavailable.
+
+## Stage HR11.9
+
+The authoritative technical_signal_frame now receives an intraday feature adapter. Every signal retains availability, weight, contribution and evidence count. Existing shrunk ReliabilityAccumulator weights remain neutral below 30 independent matured outcomes, separated by instrument/type/timeframe/horizon/profile/regimes with explicit purge and embargo. Research gates cover source freshness/grade, session, liquidity, spread, feature/context sufficiency and explicit costs versus observed ATR (not predicted edge).
+
+## Stage HR11.10
+
+Added fixed UTC weekly walk-forward folds with 60-minute purge and five-minute embargo, frozen prior-fold training evidence and one open position per instrument/timeframe/horizon. Entry is the next observed interval open at the decision timestamp, an explicit zero-latency paper assumption; exact target-end bars and complete execution paths are required. Costs, financing, non-overlap, MFE/MAE, turnover, exposure and holding times are reported. Reliability training uses only independently entered trade windows, with side-specific costs; this selection limitation is explicit.
+
+## Stage HR11.11
+
+Added a pure hypothetical paper-preview router, separated from broker providers. It rechecks instrument identity/enabled state, clock/session freshness, research gates, admission, direction, sizing and costs. Only ADMIT_FOR_CONTINUED_SHADOW can produce a preview; submit/cancel unconditionally raise the existing LiveExecutionDisabled exception.
+
+## Stage HR11.12
+
+Reused HR10 block-bootstrap confidence intervals, Benjamini–Hochberg correction and admission rules. Inference uses one-sided normal approximations on non-overlapping block means and is explicitly approximate. Minimum 30 trades, three folds, regime evidence, static baseline and two sensitivity runs are required before testing positive net/CI, fold stability, doubled-cost stress, drawdown, parameter stability, FDR and baseline outperformance. Empty metrics remain null; only reject, insufficient or continued-shadow states exist.
