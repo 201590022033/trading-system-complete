@@ -200,3 +200,9 @@ DEFAULT_TECHNICAL_REGISTRY = build_default_registry()
 
 def write_registry(path: Path | str) -> None:
     Path(path).write_text(json.dumps(DEFAULT_TECHNICAL_REGISTRY.to_dict(), indent=2) + "\n", encoding="utf-8")
+
+
+def build_intraday_registry(**session_context) -> TechnicalFeatureRegistry:
+    """Add HR11 entries without altering the daily/default registry contract."""
+    from intraday_features import extend_registry
+    return extend_registry(**session_context)
