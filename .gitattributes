@@ -1,0 +1,10 @@
+# Research evidence must retain committed bytes, including hash-pinned code.
+# Leave ordinary source and documentation normalization to the user's Git config.
+/analysis/data/** -text -filter -ident !working-tree-encoding
+/analysis/results/** -text -filter -ident !working-tree-encoding
+/technical_signals.py -text -filter -ident !working-tree-encoding
+/adaptive_technical_ensemble.py -text -filter -ident !working-tree-encoding
+/hr10_robustness.py -text -filter -ident !working-tree-encoding
+/indicator_effectiveness.py -text -filter -ident !working-tree-encoding
+/cross_asset_features.py -text -filter -ident !working-tree-encoding
+/market_profiles.py -text -filter -ident !working-tree-encoding

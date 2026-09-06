@@ -23,9 +23,9 @@ def dependency_status(root=ROOT):
     constraints = root / 'constraints-dev.txt'
     pins = {}
     if constraints.is_file():
-        pins = {re.sub(r'[-_.]+', '-', name).lower(): version for line in constraints.read_text().splitlines()
+        pins = {re.sub(r'[-_.]+', '-', name).lower(): version for line in constraints.read_text(encoding='utf-8').splitlines()
                 if '==' in line and not line.startswith('#') for name, version in [line.split('==', 1)]}
-    for line in (root / 'requirements.txt').read_text().splitlines():
+    for line in (root / 'requirements.txt').read_text(encoding='utf-8').splitlines():
         name = re.split(r'[<>=!~;\s]', line.strip())[0]
         if not name or name.startswith('#'):
             continue
@@ -111,7 +111,7 @@ def main():
         checks['PROJECT IMPORT'] = False
     print('PROJECT IMPORT:', 'PASS' if checks['PROJECT IMPORT'] else 'FAIL (run dependency install; captured output withheld)')
     checkpoint_path = ROOT / 'docs/roadmap/CURRENT_MILESTONE.md'
-    checkpoint = checkpoint_path.read_text() if checkpoint_path.is_file() else ''
+    checkpoint = checkpoint_path.read_text(encoding='utf-8') if checkpoint_path.is_file() else ''
     summary = next((line.strip('*') for line in checkpoint.splitlines() if line.startswith('**')), 'UNAVAILABLE')
     print('ROADMAP CHECKPOINT:', summary)
     if repository:

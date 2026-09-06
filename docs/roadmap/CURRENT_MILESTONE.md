@@ -348,3 +348,10 @@ portable development environment and laptop handoff in `docs/LAPTOP_HANDOFF.md`.
 After setup, resume the OI3 provider verification/public-source checklist through
 an explicit roadmap activation; do not invent HR12 or promote HR11 signals.
 The Windows MCP cleanup remains blocked by absent Windows filesystem access.
+
+## Windows portability maintenance - 2026-09-06
+
+No research milestone activated; OI3 remains deferred and HR12 not started.
+Protected checkout bytes and UTF-8 diagnostics fixed; 184 safe tests pass on
+Windows Python 3.12.10. All 45 audited protected paths match committed bytes.
+See [validation](../handoffs/2026-09-06-WINDOWS-PORTABILITY.md).
