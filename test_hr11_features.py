@@ -34,3 +34,13 @@ class FeatureTests(unittest.TestCase):
     def test_missing_session_start_blocks_session_features(self):
         result=compute_features(self.bars[1:],self.bars[-1].event_time,[self.session])
         self.assertNotIn('session_vwap',result.values)
+    def test_benchmark_requires_timestamp_availability_and_retains_lineage(self):
+        benchmark=[replace(b,instrument_id='JSE_INDEX_PROXY') for b in self.bars]
+        cutoff=self.bars[40].event_time
+        result=compute_features(self.bars,cutoff,[self.session],benchmark)
+        self.assertEqual(result.values['relative_strength'],0)
+        self.assertEqual(len(result.benchmark_record_ids),41)
+        late=[replace(b,available_time=b.available_time+timedelta(seconds=1),decision_time=b.decision_time+timedelta(seconds=1)) for b in benchmark]
+        self.assertNotIn('relative_strength',compute_features(self.bars,cutoff,[self.session],late).values)
+        future=[b if i<=40 else replace(b,close=b.close+100,open=b.open+100,high=b.high+100,low=b.low+100) for i,b in enumerate(benchmark)]
+        self.assertEqual(result,compute_features(self.bars,cutoff,[self.session],future))

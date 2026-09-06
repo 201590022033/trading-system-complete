@@ -91,17 +91,20 @@ class FeatureSnapshot:
     values: dict
     unavailable: dict
     input_record_ids: tuple
+    benchmark_record_ids: tuple=()
     version: str=VERSION
 
 
-def compute_features(bars,decision_time,sessions=(),benchmark_closes=None):
+def compute_features(bars,decision_time,sessions=(),benchmark_bars=()):
     known=as_of(bars,decision_time)
     if not known:raise ValueError('No available observations')
     if len({(b.instrument_id,b.timeframe) for b in known})!=1:raise ValueError('One instrument/timeframe required')
     # Refuse to compress missing or stale observations into a deceptively contiguous window.
     if any(b.close is None or b.stale for b in known):
         return FeatureSnapshot(known[-1].instrument_id,known[-1].timeframe,utc(decision_time),{}, {'all':'MISSING_OR_STALE_PRICES'},tuple(b.record_id for b in known))
-    gaps=any(a.session_id==b.session_id and a.event_time!=b.interval_start for a,b in zip(known,known[1:]))
+    breaks={s.session_id:s.breaks for s in sessions}
+    gaps=any(a.session_id==b.session_id and a.event_time!=b.interval_start and
+        (a.event_time,b.interval_start) not in breaks.get(a.session_id,()) for a,b in zip(known,known[1:]))
     if gaps:return FeatureSnapshot(known[-1].instrument_id,known[-1].timeframe,utc(decision_time),{}, {'all':'INCOMPLETE_BAR_SEQUENCE'},tuple(b.record_id for b in known))
     current=tuple(b for b in known if b.session_id==known[-1].session_id)
     windows=sorted(sessions,key=lambda s:s.open_time);window=next((s for s in windows if s.session_id==current[-1].session_id),None)
@@ -110,6 +113,17 @@ def compute_features(bars,decision_time,sessions=(),benchmark_closes=None):
     complete=bool(window and current[0].interval_start==window.open_time)
     prior_complete=bool(previous and prior and prior[0].interval_start==previous.open_time and prior[-1].event_time==previous.close_time)
     registry=extend_registry(current,prior,complete,prior_complete)
+    benchmark_closes=None;benchmark_ids=()
+    if benchmark_bars:
+        aligned=[]
+        for observation in known:
+            candidates=[b for b in as_of(benchmark_bars,observation.decision_time) if b.timeframe==observation.timeframe
+                and b.event_time==observation.event_time and b.close is not None and not b.stale
+                and (observation.decision_time-b.event_time).total_seconds()<=b.source.max_age_seconds]
+            if len(candidates)!=1:break
+            aligned.append(candidates[0])
+        if len(aligned)==len(known):
+            benchmark_closes=[b.close for b in aligned];benchmark_ids=tuple(b.record_id for b in aligned)
     caps=DataCapabilities(all(all(getattr(b,k) is not None for k in ('open','high','low')) for b in known),
         all(b.volume is not None for b in known),benchmark_closes is not None,True,known[-1].timeframe)
     raw=[MarketBar(b.close,b.high,b.low,b.open,b.volume) for b in known]
@@ -122,4 +136,4 @@ def compute_features(bars,decision_time,sessions=(),benchmark_closes=None):
         if result.available:values.update(result.values)
         else:unavailable[name]=result.reason
     if 'median_dollar_volume' in values:values['median_quote_notional_volume']=values.pop('median_dollar_volume')
-    return FeatureSnapshot(known[-1].instrument_id,known[-1].timeframe,utc(decision_time),values,unavailable,tuple(b.record_id for b in known))
+    return FeatureSnapshot(known[-1].instrument_id,known[-1].timeframe,utc(decision_time),values,unavailable,tuple(b.record_id for b in known),benchmark_ids)

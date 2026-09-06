@@ -30,7 +30,7 @@ class SourcePolicy:
     version: str = 'intraday-source-policy-v1'
 
     def __post_init__(self):
-        if not self.source_id or not 1 <= self.authority_tier <= 4 or self.max_age_seconds <= 0:
+        if not self.source_id or not 1 <= self.authority_tier <= 4 or not math.isfinite(self.max_age_seconds) or self.max_age_seconds <= 0:
             raise ValueError('Explicit source identity, tier and freshness required')
         if self.access_mode not in {'licensed','public_delayed','manual_research'}:
             raise ValueError('Unsupported access mode')

@@ -1,9 +1,12 @@
 # Current Milestone
 
-**HR11 ACTIVE — Short-Term Multi-Instrument Research Layer**
+**HR11 COMPLETE — Short-Term Multi-Instrument Research Layer (2026-09-06)**
 
-Activated by the owner’s implementation mandate on 2026-09-06. See `HR11.md`
-for stage acceptance and `HR11_REQUEST.md` for the preserved request.
+Completed all 15 implementation stages under the owner’s 2026-09-06 mandate.
+175 safe tests pass; 39 protected hashes match. The default research report has
+180 insufficient-evidence cells and no real intraday records or trades. See
+`HR11.md`, `HR11_REQUEST.md` and `docs/reports/HR11_REPORT.md`.
+No successor milestone has been activated.
 OI3 is DEFERRED, not complete; its outstanding work below is preserved.
 See ADR 0021 for the explicit milestone transition.
 

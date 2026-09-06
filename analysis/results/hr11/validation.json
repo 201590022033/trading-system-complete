@@ -1,0 +1,15 @@
+{
+  "safe_tests_passed": 175,
+  "new_hr11_tests": 61,
+  "existing_safe_tests": 114,
+  "excluded_manual_network_modules": [
+    "test_cloud",
+    "test_llm_sentiment",
+    "test_ost_login",
+    "test_reddit",
+    "test_sentiment"
+  ],
+  "compiled_root_python_files": 103,
+  "immutable_hashes_verified": 39,
+  "result": "PASS"
+}

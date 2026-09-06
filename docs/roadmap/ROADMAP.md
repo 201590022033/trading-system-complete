@@ -2,10 +2,12 @@
 
 Only one milestone is ACTIVE. Advancement requires tests, docs and a commit.
 
-## HR11 — Short-Term Multi-Instrument Research Layer [ACTIVE 2026-09-06]
+## HR11 — Short-Term Multi-Instrument Research Layer [COMPLETE 2026-09-06]
 
-Implement the staged pipeline in `HR11.md`. Preserve daily HR9/HR10 semantics
-and artifacts. Every stage requires focused and related regression tests.
+All stages HR11.0–HR11.14 are complete. 175 safe tests pass, including 61 new
+HR11 tests; 39 protected daily hashes are unchanged. The default report contains
+180 insufficient-evidence cells and no fabricated intraday observations.
+See `docs/reports/HR11_REPORT.md`. No successor milestone is active.
 
 ## OI3 — Restore connected market and sentiment dashboard [DEFERRED 2026-09-06]
 - Reuse Yahoo and MacroSentimentScanner for auto-refreshing, cached public feeds.

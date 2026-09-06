@@ -101,6 +101,7 @@ def evaluate(instrument,decision_bars,execution_bars,sessions,horizon,schedule,d
     trades=[];records=[];warnings=[];evidence=[];busy_until=None
     for current in sorted(decisions_bars,key=lambda b:(b.decision_time,b.event_time)):
         now=current.decision_time
+        if current.event_time!=max(b.event_time for b in as_of(decisions_bars,now)):continue
         if busy_until is not None and now<busy_until:continue
         session=windows[current.session_id];fold_start,fold_end=policy.fold(now)
         prior=training_evidence(evidence,fold_start,policy)
@@ -143,5 +144,5 @@ def evaluate(instrument,decision_bars,execution_bars,sessions,horizon,schedule,d
                     signal_fraction=(signal_entry.total+signal_exit.total)/notional
                     evidence.append(EvidenceOutcome(decision.cell,indicator,now,target,maturity,directional-signal_fraction,directional))
     timeframe=decisions_bars[0].timeframe if decisions_bars else 'unknown'
-    span=sum(s.trading_seconds() for s in windows.values() if s.open_time<cutoff)
+    span=sum((min(s.close_time,cutoff)-s.open_time).total_seconds()-sum(max(0,(min(b,cutoff)-a).total_seconds()) for a,b in s.breaks if a<cutoff) for s in windows.values() if s.open_time<cutoff)
     return EvaluationResult(instrument.instrument_id,timeframe,horizon.horizon_id,tuple(trades),tuple(records),tuple(sorted(set(warnings))),metrics(trades,len(records),span),policy)

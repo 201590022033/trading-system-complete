@@ -172,3 +172,15 @@ OI3 restores those paths without recreating the unavailable original UI source.
 - Transaction costs are configurable in research evaluation; derivative spread/liquidity data remains unavailable.
 - Expanded features exist in research mode but are not yet fused or historically evaluated.
 - Legacy macro coefficients are explicit profile configuration; richer conditional macro features remain unimplemented.
+
+## HR11 short-term research extension — 2026-09-06
+
+`hr11_research.py` is a separate offline research entry point. Versioned
+`intraday_*` modules provide instrument identities, canonical completed bars,
+explicit sessions, technical-registry adapters, horizons, profiles, costs,
+availability-time cross-asset joins, research gates, prior-fold signal reliability,
+non-overlapping evaluation, paper previews and conservative robustness reports.
+The default universe has no real intraday history or verified contract cost
+schedules and reports insufficient evidence. Existing dashboard providers and
+daily HR8/HR9/HR10 code paths remain unchanged. See `docs/research/HR11_METHOD.md`
+and ADRs 0015–0021 for contracts and limitations.

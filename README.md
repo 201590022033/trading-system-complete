@@ -425,3 +425,11 @@ python main.py
 ```
 
 Good luck! 🚀
+
+## Short-term multi-instrument research (HR11)
+
+Run `python hr11_research.py` for an offline universe/capability audit. Real
+intraday inputs, session calendars and instrument cost schedules are explicit;
+the default report shows insufficient evidence and places no orders.
+See [HR11 method and input contracts](docs/research/HR11_METHOD.md) and
+[HR11 completion report](docs/reports/HR11_REPORT.md).

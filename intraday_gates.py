@@ -20,7 +20,7 @@ def evaluate_gates(instrument,bar,session,profile,snapshot,decision,cross_asset,
     def check(name,state,reason):
         checks[name]=state
         if state!='PASS':reasons.append(name+':'+reason)
-    check('identity','PASS' if instrument.enabled and bar.instrument_id==instrument.instrument_id and snapshot.instrument_id==instrument.instrument_id else 'FAIL','DISABLED_OR_MISMATCH')
+    check('identity','PASS' if instrument.enabled and instrument.supports_intraday and bar.instrument_id==instrument.instrument_id and snapshot.instrument_id==instrument.instrument_id else 'FAIL','DISABLED_OR_MISMATCH')
     fresh=bar.available_time<=now and bar.decision_time<=now and not bar.stale and (now-bar.event_time).total_seconds()<=bar.source.max_age_seconds
     check('freshness','PASS' if fresh else 'FAIL','STALE_OR_UNAVAILABLE')
     open_=bool(session and session.session_id==bar.session_id and session.open_time<=now<session.close_time and not any(a<=now<b for a,b in session.breaks) and bar.market_state=='OPEN')
