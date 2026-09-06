@@ -7,9 +7,9 @@
 - Research commit: **`8b7c591`**, already pushed before this handoff.
   Pull the later **`chore: add reproducible development environment and laptop handoff`**
   commit for these setup files; `git log -1 --oneline` identifies the exact checkpoint.
-- **OI3** (letter I, not “O13”): DEFERRED and unfinished. Local/cloud Ollama and
-  Kimi routing already exist in `3762f9b`; real-provider success, usable AI
-  comprehension/ticker discovery and additional permitted sources remain to verify.
+- **OI3** (letter I, not “O13”): DEFERRED and unfinished. Local Ollama
+  (`llama3.2:3b`) is now installed and verified on this laptop; cloud/Kimi keys
+  remain MISSING, ticker discovery and additional permitted sources remain to verify.
   Earlier SENS challenges/NewsAPI gaps are recorded, not bypassed.
 - **HR11:** COMPLETE, committed/pushed. Research engineering only: 180 insufficient
   cells because actual 5m history/session/cost inputs remain unavailable.
@@ -47,9 +47,17 @@
 
    Leave commented HOST/PORT/REDDIT_USER_AGENT unset unless assigning valid values.
    Reauthenticate Git/editor AI tools separately. Never copy the Linux `.venv`.
-5. Ollama is optional. For local AI sentiment, install it separately and run
-   `ollama pull llama3.2:3b`; start its service if not running. No cloud model pull
-   is required. See [OLLAMA_MODELS.md](OLLAMA_MODELS.md).
+5. Ollama is optional. Use the repository helper to install/verify it and pull
+   the default model:
+
+   ```powershell
+   powershell -ExecutionPolicy Bypass -File ./setup_ai.ps1 -InstallOllama -PullModel -SkipKimiKey
+   ```
+
+   Then verify with `.venv\Scripts\python.exe scripts/check_dev_environment.py --ollama`.
+   See [OLLAMA_MODELS.md](OLLAMA_MODELS.md) for model details and
+   [WORKSTATION_HANDOFF.md](WORKSTATION_HANDOFF.md) for the primary work desktop
+   reproduction checklist.
 6. Run the one-command diagnostic and safe tests:
 
    ```powershell
@@ -57,7 +65,7 @@
    .\.venv\Scripts\python.exe scripts/run_tests.py
    ```
 
-   Expect diagnostic **PASS (offline development)** and **180 tests, OK**. Missing
+   Expect diagnostic **PASS (offline development)** and **208 tests, OK**. Missing
    optional credentials or stopped Ollama do not fail the offline diagnostic.
    Windows runtime/PowerShell execution was not available here; report any local
    failure before proceeding. Clean Linux execution and Windows wheel downloads

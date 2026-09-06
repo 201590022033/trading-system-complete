@@ -8,28 +8,52 @@ Developer Codex/Copilot/Kimi Code tooling is separate.
 
 | Model | Role | Current evidence |
 |---|---|---|
-| `llama3.2:3b` | Optional default local Ollama model | Model manifest exists on this Codespace; serving/inference not verified |
+| `llama3.2:3b` | Optional default local Ollama model | **Installed and verified** on this Windows laptop via Ollama 0.33.3; direct and provider-boundary inference succeed |
 | `gpt-oss:20b` | Optional Ollama **Cloud** default | Code default; cloud access requires OLLAMA_API_KEY; not a mandatory local pull |
 | `kimi-k3` | Optional Moonshot/Kimi HTTP default | Code default, not Ollama; account/model availability unverified |
 
 Local Ollama CLI version: **0.33.3**. The default server endpoint
-`http://127.0.0.1:11434` was unreachable. The only model manifest found was
-`llama3.2:3b`; no unrelated model needs copying. Model binaries were not inspected
-or committed. The Python client `ollama==0.6.2` is a declared dependency; installing
-it does not install the Ollama service or models.
+`http://127.0.0.1:11434` is reachable on this laptop. The only pulled model is
+`llama3.2:3b` (~2.0 GB); no unrelated model needs copying. Model binaries are
+machine-local and must not be committed or synced through Git.
 
-After separately installing Ollama, if local AI comprehension is desired:
+The Python client `ollama==0.6.2` is a declared dependency; installing it does
+not install the Ollama service or models.
+
+## Reproducing this setup on a fresh Windows workstation
+
+Use the repository's PowerShell helper (requires PowerShell and winget):
+
+```powershell
+powershell -ExecutionPolicy Bypass -File ./setup_ai.ps1 -InstallOllama -PullModel -SkipKimiKey
+```
+
+Then verify:
+
+```powershell
+.venv\Scripts\python.exe scripts/check_dev_environment.py --ollama
+```
+
+Expected result:
 
 ```text
-ollama pull llama3.2:3b
-ollama serve
+OLLAMA: OK
+OLLAMA VERSION: 0.33.3
+OLLAMA INSTALLED: YES
+OLLAMA REACHABLE: YES
+OLLAMA MODEL PRESENT: YES
+OLLAMA MODELS: llama3.2:3b
 ```
+
+If Ollama is already installed, the script is idempotent and will not reinstall.
+If the model is already present, it will not re-download it. If the download
+would exceed ~5 GB, stop and ask the owner before proceeding.
 
 Do not start a second service if the Ollama desktop app already runs one. Use the
 project interpreter to run `scripts/check_dev_environment.py --ollama`; it probes
 only loopback, reports service/model presence, and performs no generation. Model
 presence is not successful structured-output validation. Re-pull on the new
-laptop rather than copying model blobs through Git.
+workstation rather than copying model blobs through Git.
 
 Optional overrides: OLLAMA_HOST, OLLAMA_LOCAL_MODEL, OLLAMA_CLOUD_MODEL.
 Cloud key: OLLAMA_API_KEY. Kimi keys/models: MOONSHOT_API_KEY/KIMI_API_KEY and

@@ -46,16 +46,62 @@ def compile_sources(root=ROOT):
     return len(paths)
 
 
-def ollama_status():
+def ollama_exe_path():
+    if sys.platform == 'win32':
+        for base in (os.environ.get('LOCALAPPDATA'), os.environ.get('PROGRAMFILES'), os.environ.get('PROGRAMFILES(x86)')):
+            if base:
+                for suffix in ('Programs\\Ollama', 'Ollama'):
+                    candidate = Path(base) / suffix / 'ollama.exe'
+                    if candidate.is_file():
+                        return str(candidate)
+    else:
+        for name in ('/usr/local/bin/ollama', '/usr/bin/ollama'):
+            if Path(name).is_file():
+                return name
+    return shutil.which('ollama')
+
+
+def ollama_version(exe):
+    if not exe:
+        return None
+    try:
+        result = subprocess.run([exe, '--version'], capture_output=True, text=True, timeout=5)
+        match = re.search(r'(\d+\.\d+\.\d+)', result.stdout + result.stderr)
+        return match.group(1) if match else None
+    except Exception:
+        return None
+
+
+def ollama_status(model='llama3.2:3b'):
     # Only inspect the default local service. Never send configured keys or probe private URLs.
+    exe = ollama_exe_path()
+    version = ollama_version(exe)
+    installed = exe is not None
     try:
         opener = urllib.request.build_opener(urllib.request.ProxyHandler({}))
         with opener.open('http://127.0.0.1:11434/api/tags', timeout=2) as response:
             data = json.load(response)
         names = {m.get('name') for m in data.get('models', [])}
-        return 'AVAILABLE', 'PRESENT' if 'llama3.2:3b' in names else 'MISSING'
+        model_present = model in names or f'{model}:latest' in names
+        state = 'OK' if model_present else 'MODEL_MISSING'
+        return {
+            'state': state,
+            'installed': installed,
+            'version': version,
+            'reachable': True,
+            'model_present': model_present,
+            'models': sorted(names),
+        }
     except Exception:
-        return 'UNAVAILABLE (optional)', 'UNKNOWN (service unavailable)'
+        state = 'NOT_INSTALLED' if not installed else 'SERVER_UNREACHABLE'
+        return {
+            'state': state,
+            'installed': installed,
+            'version': version,
+            'reachable': False,
+            'model_present': False,
+            'models': [],
+        }
 
 
 def main():
@@ -91,12 +137,15 @@ def main():
         print(' ', name + ':', 'SET' if os.environ.get(name) else 'MISSING (optional)')
     print('ENV FILE:', 'PRESENT (not inspected)' if (ROOT / '.env').exists() else 'ABSENT (optional)')
     if args.ollama:
-        service, models = ollama_status()
-        print('OLLAMA:', service)
-        print('OLLAMA MODELS:', models)
+        status = ollama_status()
+        print('OLLAMA:', status['state'])
+        print('OLLAMA VERSION:', status['version'] or 'UNKNOWN')
+        print('OLLAMA INSTALLED:', 'YES' if status['installed'] else 'NO')
+        print('OLLAMA REACHABLE:', 'YES' if status['reachable'] else 'NO')
+        print('OLLAMA MODEL PRESENT:', 'YES' if status['model_present'] else 'NO')
+        print('OLLAMA MODELS:', ', '.join(status['models']) if status['models'] else 'NONE')
     else:
         print('OLLAMA: NOT_REQUIRED for offline work')
-    if not args.ollama:
         print('OLLAMA MODELS: NOT_CHECKED; optional --ollama checks default local model')
     excluded = {'test_cloud', 'test_ost_login', 'test_reddit', 'test_sentiment', 'test_llm_sentiment'}
     modules = [p for p in ROOT.glob('test_*.py') if p.stem not in excluded]

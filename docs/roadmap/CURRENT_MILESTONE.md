@@ -4,10 +4,10 @@
 
 The ViewPoint adapter scaffold is prepare-only and fail-closed. No authenticated
 ViewPoint payload, endpoint, selector, account, cash, position or order behavior
-has been verified. Legacy OST browser code remains unchanged. Ollama recovery
-found no executable in common install locations, no running process and no local
-API response; OI3 is still blocked pending real provider verification. HR12 is
-not started.
+has been verified. Legacy OST browser code remains unchanged. Local Ollama
+(0.33.3, `llama3.2:3b`) is now installed and verified on this laptop through the
+existing `SentimentProviders` boundary; cloud/Kimi keys remain MISSING and OI3
+remains deferred pending those provider verifications. HR12 is not started.
 
 See [ADR 0022](../adr/0022-viewpoint-broker-boundary.md).
 
@@ -16,10 +16,12 @@ See [ADR 0022](../adr/0022-viewpoint-broker-boundary.md).
 Owner-authorized OI3 verification resumed from `1fc8994`; this pass completed
 available public-source checks and offline routing/discovery verification.
 Moneyweb RSS and SENS succeeded here; three Yahoo discovery symbols succeeded.
-Local Ollama is unreachable; cloud/Kimi keys are MISSING. Real AI summaries and
-AI-backed discovery remain blocked. Additional commentary ingestion needs a
-verified feed/permission; Efficient Group remains manual-only and disabled.
-196 safe tests pass. See [current evidence and exact blockers](../reports/OI3_WINDOWS_PROVIDER_VERIFICATION.md).
+Local Ollama (`llama3.2:3b`) is installed, reachable and produces valid structured
+output through `SentimentProviders`; cloud/Kimi keys are MISSING. Real AI summaries
+for retained headlines and AI-backed discovery remain blocked until a cloud key or
+permitted source is configured. Additional commentary ingestion needs a verified
+feed/permission; Efficient Group remains manual-only and disabled.
+208 safe tests pass. See [current evidence and exact blockers](../reports/OI3_WINDOWS_PROVIDER_VERIFICATION.md).
 No milestone is ACTIVE; HR12 is NOT STARTED. Historical checkpoints below remain
 as records of their dates and are superseded by this status where they differ.
 

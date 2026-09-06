@@ -94,8 +94,12 @@ class DevelopmentEnvironmentTests(unittest.TestCase):
 
     def test_ollama_unavailable_is_not_required(self):
         diagnostic = load('check_dev_environment')
-        with patch.object(diagnostic.urllib.request, 'build_opener', side_effect=OSError):
-            self.assertEqual(diagnostic.ollama_status()[0], 'UNAVAILABLE (optional)')
+        with patch.object(diagnostic.urllib.request, 'build_opener', side_effect=OSError), \
+             patch.object(diagnostic, 'ollama_exe_path', return_value=None):
+            status = diagnostic.ollama_status()
+            self.assertEqual(status['state'], 'NOT_INSTALLED')
+            self.assertFalse(status['installed'])
+            self.assertFalse(status['reachable'])
 
     def test_compile_does_not_write_bytecode(self):
         diagnostic = load('check_dev_environment')
