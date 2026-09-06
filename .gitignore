@@ -10,6 +10,7 @@ analysis/cache/
 Thumbs.db
 Desktop.ini
 /debug.log
+.viewpoint-discovery/
 
 # Probe/debug scripts (one-off diagnostics, not part of the system)
 probe_*.py
