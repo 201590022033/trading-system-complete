@@ -16,8 +16,9 @@ See `docs/reports/HR11_REPORT.md`. No successor milestone is active.
 - Validate browser behavior and provider failures; preserve research/execution safety.
 
 Progress: charts, public quotes and retained news restored; 114 offline tests and
-real/fixture browser checks pass. AI provider restoration remains pending; SENS
-returns HTTP 403 and NewsAPI is unconfigured. OI3 remains deferred under the owner’s HR11 mandate; outstanding work is retained.
+real/fixture browser checks pass. Local/cloud Ollama and Kimi routing is
+implemented; real-provider validation remains pending. The last source check
+recorded SENS HTTP 403 and unconfigured NewsAPI. OI3 remains deferred under the owner’s HR11 mandate; outstanding work is retained.
 
 ## HR9 — Causal adaptive technical ensemble [COMPLETE 2026-09-04]
 - Preserve the 101,536-row interrupted ensemble as the pre-HR9 baseline.
@@ -208,3 +209,10 @@ Produce a final evidence report recommending one of:
 Decision: **continue shadow collection**. See `FUSION_COMPLETION_REPORT.md`.
 Historical macro/source alignment is unavailable and only 9 of 24 sufficient-
 sample adaptive overall rows had positive mean net return.
+
+## Laptop handoff checkpoint — 2026-09-06
+
+HR11 is committed/pushed; HR12 is NOT STARTED (no files or commits found).
+OI3 remains deferred with the checklist in CURRENT_MILESTONE.md. No research
+work is activated by environment preparation. See `docs/LAPTOP_HANDOFF.md` for
+bootstrap, diagnostics, local-data transfer and exact continuation instructions.

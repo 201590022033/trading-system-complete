@@ -34,8 +34,9 @@ the Constitution and the owner's explicit restoration request.
 - [x] Add a separate broad-universe opportunity scan using current Yahoo
   momentum/RSI plus matched public-news impacts; baseline quote cards are not
   presented as the opportunity selection.
-- [ ] Restore a usable AI model service: current runtime uses keyword fallback;
-  the previous provider/model has been requested from the owner.
+- [ ] Verify successful real AI comprehension and provider failure handling.
+  `sentiment_providers.py` already implements local Ollama, Ollama Cloud and Kimi
+  routing (committed in `3762f9b`); live success is not established by this handoff.
 - [ ] Connect additional permitted public sources and verify Ollama-backed
   ticker discovery, including Efficient Group/public commentary where legally
   accessible. Private Facebook access and SENS challenge bypass remain out of
@@ -337,3 +338,13 @@ scraping and production promotion remain outside this milestone.
 - [x] Restored canonical six-ticker two-year backtest; 24 report rows and finite metrics.
 - [x] Recorded baseline findings in `backtest_report.md` and the indicator bible.
 - [x] Committed M0 baseline artifacts.
+
+## Laptop checkpoint — 2026-09-06
+
+HR11 is complete and pushed at `8b7c591`; HR12 has no tracked files or commits
+and is NOT STARTED. “O13” refers to OI3 (letter I), still DEFERRED/incomplete.
+No research milestone is active. The current non-research deliverable is the
+portable development environment and laptop handoff in `docs/LAPTOP_HANDOFF.md`.
+After setup, resume the OI3 provider verification/public-source checklist through
+an explicit roadmap activation; do not invent HR12 or promote HR11 signals.
+The Windows MCP cleanup remains blocked by absent Windows filesystem access.

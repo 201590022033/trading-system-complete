@@ -15,8 +15,9 @@ The earlier 2026-09-05 handoff/conversation records remain intact. These files
 preserve continuation context; the Codex sidebar chat itself is not portable via Git.
 
 No next milestone is active. OI3 remains DEFERRED and incomplete: public dashboard
-charts/news were restored previously, but complete local Ollama/Ollama Cloud/Kimi
-provider support and additional permitted public sources remain pending. Do not
+charts/news were restored previously. Local Ollama/Ollama Cloud/Kimi routing is
+already committed in `3762f9b`; live provider verification and additional permitted
+public sources remain pending. See the newer `docs/LAPTOP_HANDOFF.md` for setup. Do not
 claim those were completed by HR11. Preserve current dashboard and legacy signals.
 
 Potential next work is authorized real intraday data/calendar/cost integration,

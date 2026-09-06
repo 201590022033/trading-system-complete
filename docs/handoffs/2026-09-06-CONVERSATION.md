@@ -27,3 +27,14 @@ The completion report and latest continuation handoff distinguish completed HR11
 engineering from unfinished OI3 provider restoration. Earlier authorization to save
 work and continuation context to GitHub remains the basis for publishing this work
 on master. No `.env` contents or credentials are included.
+
+## Laptop preparation continuation
+
+The owner requested a verified cross-laptop checkpoint, environment manifest,
+Windows bootstrap, read-only diagnostic, safe test tasks, dependency reproduction,
+local-data inventory and GitHub synchronization. Inspection verified HR11 pushed
+at 8b7c591, OI3 deferred and HR12 not started. Provider routing already exists in
+3762f9b; live verification remains outstanding. The previous Windows MCP cleanup
+was not performed because this session cannot access Windows user storage.
+See docs/LAPTOP_HANDOFF.md and the dated laptop validation record for current
+commands and checks. No credentials or user-level AI configuration were copied.

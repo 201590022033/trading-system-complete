@@ -20,3 +20,8 @@ verify_final.py
 # OST browser session (contains login cookies — never commit)
 .ost-browser-profile/
 ost_page_sample.html
+
+# Local development environments and handoff smoke outputs
+.venv/
+.venv-*/
+analysis/results/hr11-local/

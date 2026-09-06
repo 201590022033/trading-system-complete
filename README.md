@@ -4,6 +4,14 @@
 - **Option A**: Multi-agent governance + decision system
 - **Option B**: Real JSE data adapter with news sentiment
 
+## Continue on another laptop
+
+Start with [Laptop handoff](docs/LAPTOP_HANDOFF.md) and the
+[verified development environment](docs/DEVELOPMENT_ENVIRONMENT.md). On Windows:
+`py -3.12 scripts/setup_dev.py`, then
+`.\.venv\Scripts\python.exe scripts/check_dev_environment.py`.
+The older example below runs the legacy CLI; use the Start dashboard task for the UI.
+
 ## Quick Start
 
 ```bash

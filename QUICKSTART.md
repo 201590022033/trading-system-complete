@@ -1,5 +1,9 @@
 # Merged Trading System - Quick Start Guide
 
+For the verified laptop setup and current roadmap, read
+[docs/LAPTOP_HANDOFF.md](docs/LAPTOP_HANDOFF.md). Historical merge suggestions
+below are archival and do not authorize live trading or supersede AGENTS.md.
+
 ## Start the Dashboard
 
 From the repository root, run the one canonical launcher:
