@@ -2,6 +2,16 @@
 
 Only one milestone is ACTIVE. Advancement requires tests, docs and a commit.
 
+## ViewPoint broker integration + bounded Ollama recovery [ACTIVE 2026-09-06]
+- Diagnose the local Ollama installation without broad Windows changes or model downloads.
+- Establish a vendor-neutral broker-observed state boundary and ViewPoint adapter scaffold.
+- Keep account, cash, positions, orders and mappings fail-closed and prepare-only.
+- Preserve OST history, HR11 artifacts, OI3 separation, paper/shadow execution and `live_execution:false`.
+
+Initial acceptance: Ollama has no executable/process/API response in the checked
+Windows locations; ViewPoint transport and authenticated broker state remain
+unverified; the prepare-only scaffold and focused/full safety tests pass.
+
 ## HR11 — Short-Term Multi-Instrument Research Layer [COMPLETE 2026-09-06]
 
 All stages HR11.0–HR11.14 are complete. 175 safe tests pass, including 61 new

@@ -1,5 +1,16 @@
 # Current Milestone
 
+**ViewPoint broker integration + bounded Ollama recovery — ACTIVE 2026-09-06**
+
+The ViewPoint adapter scaffold is prepare-only and fail-closed. No authenticated
+ViewPoint payload, endpoint, selector, account, cash, position or order behavior
+has been verified. Legacy OST browser code remains unchanged. Ollama recovery
+found no executable in common install locations, no running process and no local
+API response; OI3 is still blocked pending real provider verification. HR12 is
+not started.
+
+See [ADR 0022](../adr/0022-viewpoint-broker-boundary.md).
+
 **OI3 DEFERRED/BLOCKED - Windows provider verification (2026-09-06)**
 
 Owner-authorized OI3 verification resumed from `1fc8994`; this pass completed

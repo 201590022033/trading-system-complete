@@ -144,6 +144,17 @@ OI1 adds explicit `ResearchDataProvider`, `SignalEngine`, `TradeSuggestion` and
 `BrokerAccount` boundaries. Trade suggestions validate provenance and clocks;
 rejected or stale suggestions cannot reach even paper preview.
 
+### `viewpoint_adapter.py` — ViewPoint broker boundary (2026-09-06)
+The additive scaffold separates broker-observed state from research signals:
+typed account, cash, position, open-order, mapping, prepared-order and
+reconciliation objects are available only from an explicitly available
+adapter. Unknown cash is not zero and blocks preparation; missing mappings,
+insufficient funds and duplicate pending orders fail closed. The adapter has
+no verified ViewPoint transport, endpoint or selector and its submission
+method always raises, leaving final review/submission to the authenticated
+user in the broker UI. Existing `ost_browser.py` remains an OST-specific
+historical/manual experiment and was not renamed or reused as ViewPoint.
+
 ### `app.py` and `dashboard_feeds.py`
 Flask dashboard with current public quote cards, timestamped stock/index charts,
 and the retained `MacroSentimentScanner` news feed. A bounded background cache
