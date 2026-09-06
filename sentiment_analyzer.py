@@ -8,8 +8,8 @@ structured impact records:
   - a one-line summary
 
 Company-name -> ticker alias detection is deterministic (no LLM needed).
-Direction/strength comprehension uses the local Ollama LLM when available,
-falling back to a keyword scorer when it isn't.
+Direction/strength comprehension rotates across configured local Ollama, Ollama
+Cloud and Kimi providers, falling back to labelled keywords when unavailable.
 """
 
 from __future__ import annotations
@@ -17,8 +17,6 @@ from __future__ import annotations
 import json
 import os
 import re
-import socket
-import importlib.util
 from dataclasses import dataclass, field
 from datetime import datetime
 from typing import Dict, List, Optional
@@ -101,6 +99,8 @@ class AnalyzedItem:
     llm_used: bool = False
     url: str = ""
     timestamp_kind: str = "published"
+    analysis_provider: str = "keywords"
+    analysis_model: str | None = None
 
 
 @dataclass
@@ -126,6 +126,8 @@ class MacroReport:
                     "sentiment": i.sentiment,
                     "score": round(i.score, 2),
                     "llm_used": i.llm_used,
+                    "analysis_provider": i.analysis_provider,
+                    "analysis_model": i.analysis_model,
                     "url": i.url,
                     "timestamp_kind": i.timestamp_kind,
                     "assets": [
@@ -136,45 +138,6 @@ class MacroReport:
                 for i in self.items
             ],
         }
-
-
-# =========================
-# LLM availability (cloud key first, then local service)
-# =========================
-
-_OLLAMA_API_KEY = os.environ.get("OLLAMA_API_KEY", "").strip()
-_CLOUD_MODEL = os.environ.get("OLLAMA_CLOUD_MODEL", "gpt-oss:20b-cloud")
-_LOCAL_MODEL = os.environ.get("OLLAMA_LOCAL_MODEL", "llama3")
-
-
-def _ollama_available() -> bool:
-    if importlib.util.find_spec("ollama") is None:
-        return False
-    if _OLLAMA_API_KEY:
-        return True
-    try:
-        with socket.create_connection(("127.0.0.1", 11434), timeout=1):
-            return True
-    except OSError:
-        return False
-
-
-_ollama_client = None
-
-
-def _get_ollama():
-    global _ollama_client
-    if _ollama_client is None:
-        import ollama
-        if _OLLAMA_API_KEY:
-            _ollama_client = ollama.Client(
-                host="https://ollama.com",
-                headers={"Authorization": f"Bearer {_OLLAMA_API_KEY}"},
-                timeout=60,
-            )
-        else:
-            _ollama_client = ollama.Client(timeout=45)
-    return _ollama_client
 
 
 # =========================
@@ -252,25 +215,11 @@ Rules:
 
 
 def _llm_analyze(headline: str, source: str, text: str) -> Optional[Dict]:
-    """Ask the local LLM to read the item. Returns parsed dict or None."""
-    try:
-        client = _get_ollama()
-        model = _CLOUD_MODEL if _OLLAMA_API_KEY else _LOCAL_MODEL
-        response = client.generate(
-            model=model,
-            prompt=_LLM_PROMPT.format(headline=headline, source=source, text=text[:800]),
-        )
-        raw = response.get("response", "")
-        match = re.search(r"\{.*\}", raw, re.S)
-        if not match:
-            return None
-        data = json.loads(match.group(0))
-        if not isinstance(data, dict):
-            return None
-        return data
-    except Exception as exc:
-        print(f"[SENTIMENT] LLM analysis failed ({type(exc).__name__}); using keywords")
-        return None
+    """Compatibility helper for direct one-item callers; scanner owns its budget."""
+    from sentiment_providers import SentimentProviders
+    providers = SentimentProviders()
+    providers.begin_scan(budget=3)
+    return providers.analyze(_LLM_PROMPT.format(headline=headline, source=source, text=text[:800]))
 
 
 # Alias that maps LLM-returned tickers (SOL, ABG, IMP...) to internal keys
@@ -284,10 +233,11 @@ _LLM_TICKER_MAP = {
 }
 
 
-def analyze_item(item: NewsItem, use_llm: bool) -> AnalyzedItem:
+def analyze_item(item: NewsItem, use_llm: bool, llm_analyzer=None) -> AnalyzedItem:
     """Full analysis of one news item: mentions + direction/strength."""
     text = f"{item.headline} {getattr(item, 'text', '') or ''}"
     llm_used = False
+    analysis_provider, analysis_model = "keywords", None
     summary = item.headline
     sentiment = item.sentiment_label.value if item.sentiment_label else "neutral"
     score = item.sentiment_score or 0.0
@@ -296,9 +246,11 @@ def analyze_item(item: NewsItem, use_llm: bool) -> AnalyzedItem:
     impacts = detect_mentions(text)
 
     if use_llm:
-        data = _llm_analyze(item.headline, item.source, getattr(item, "text", "") or "")
+        data = (llm_analyzer or _llm_analyze)(item.headline, item.source, getattr(item, "text", "") or "")
         if data:
             llm_used = True
+            analysis_provider = data.get("_provider", "unknown")
+            analysis_model = data.get("_model")
             summary = str(data.get("summary") or item.headline)[:200]
             sentiment = str(data.get("sentiment") or sentiment).lower()
             try:
@@ -317,8 +269,7 @@ def analyze_item(item: NewsItem, use_llm: bool) -> AnalyzedItem:
                         llm_impacts.append(AssetImpact(name, direction, strength))
                 except (TypeError, ValueError):
                     continue
-            if llm_impacts:
-                impacts = llm_impacts
+            impacts = llm_impacts
 
     if not llm_used:
         # Keyword fallback: apply one direction to every mention
@@ -338,6 +289,7 @@ def analyze_item(item: NewsItem, use_llm: bool) -> AnalyzedItem:
         score=score,
         assets=impacts,
         llm_used=llm_used,
+        analysis_provider=analysis_provider, analysis_model=analysis_model,
         url=getattr(item, "url", "") or next(iter(re.findall(r"https?://[^\s<>]+", getattr(item, "text", ""))), ""),
         timestamp_kind=getattr(item, "timestamp_kind", "published"),
     )
@@ -350,12 +302,14 @@ def analyze_item(item: NewsItem, use_llm: bool) -> AnalyzedItem:
 class MacroSentimentScanner:
     """Fetches SA + global headlines and builds a macro/ticker sentiment report."""
 
-    def __init__(self, max_llm_items: int = 8, retain_items: bool = False):
+    def __init__(self, max_llm_items: int = 8, retain_items: bool = False, providers=None):
         self.adapter = JSEDataAdapter(
             price_source=DataSourceType.MOCK,   # we only need its news fetchers
             news_source="mock",
         )
-        self.use_llm = _ollama_available()
+        from sentiment_providers import SentimentProviders
+        self.providers = providers or SentimentProviders()
+        self.use_llm = False
         self.max_llm_items = max_llm_items
         self._seen_headlines = set()
         self.retain_items = retain_items
@@ -448,6 +402,7 @@ class MacroSentimentScanner:
         return fresh
 
     def scan(self, moneyweb_limit: int = 12, sens_limit: int = 8, on_progress=None) -> MacroReport:
+        self.use_llm = self.providers.begin_scan(self.max_llm_items)
         raw_items = self._fetch(moneyweb_limit, sens_limit)
 
         if on_progress is not None:
@@ -463,11 +418,13 @@ class MacroSentimentScanner:
         for item in raw_items:
             key = item.headline.strip().lower()
             cached = self._analyzed_cache.get(key) if self.retain_items else None
-            if cached is not None:
+            if cached is not None and (cached.llm_used or not self.use_llm):
                 analyzed.append(cached)
                 continue
             use_llm_now = llm_budget > 0
-            result = analyze_item(item, use_llm=use_llm_now)
+            result = analyze_item(item, use_llm=use_llm_now, llm_analyzer=
+                lambda headline, source, text: self.providers.analyze(
+                    _LLM_PROMPT.format(headline=headline, source=source, text=text[:800])))
             if use_llm_now:
                 llm_budget -= 1
             analyzed.append(result)

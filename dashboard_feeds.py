@@ -104,6 +104,7 @@ class DashboardFeeds:
         report = result.to_dict()
         report["sources"] = dict(self._scanner.source_status)
         report["ai_available"] = self._scanner.use_llm
+        report["ai_providers"] = self._scanner.providers.statuses()
         report["analysis_method"] = "AI + keyword fallback" if report["llm_used"] else "Keyword fallback (no successful AI analysis)"
         report["feed_state"] = ("PARTIAL" if any(v == "AVAILABLE" for v in report["sources"].values())
                                  and any(v not in {"AVAILABLE", "NOT_CONFIGURED"} for v in report["sources"].values())
