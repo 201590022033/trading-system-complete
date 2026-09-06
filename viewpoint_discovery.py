@@ -35,6 +35,24 @@ def _field_names(value: Any, prefix: str = "") -> set[str]:
     return names
 
 
+def _schema(value: Any) -> Any:
+    """Describe JSON shape without retaining any scalar or array values."""
+    if isinstance(value, dict):
+        return {str(key): _schema(item) for key, item in value.items()
+                if not SENSITIVE.search(str(key))}
+    if isinstance(value, list):
+        if not value:
+            return {"type": "array", "items": "<empty>"}
+        return {"type": "array", "items": _schema(value[0])}
+    if value is None:
+        return "<null>"
+    if isinstance(value, bool):
+        return "<boolean>"
+    if isinstance(value, (int, float)) and not isinstance(value, bool):
+        return "<number>"
+    return "<string>"
+
+
 def sanitize_har_file(input_path: str | Path, output_path: str | Path) -> dict[str, Any]:
     """Convert a raw HAR to structural evidence without retaining values."""
     raw = json.loads(Path(input_path).read_text(encoding="utf-8"))
@@ -49,20 +67,34 @@ def sanitize_har_file(input_path: str | Path, output_path: str | Path) -> dict[s
         parts = urlsplit(url)
         path = parts.path or "/"
         response_content = response.get("content", {})
-        fields = _field_names(response_content.get("_json", {}))
+        parsed = response_content.get("_json")
         # Some HAR producers store JSON as text; parse it transiently only.
         text_value = response_content.get("text")
-        if not fields and isinstance(text_value, str) and "json" in str(response_content.get("mimeType", "")):
+        if parsed is None and isinstance(text_value, str) and "json" in str(response_content.get("mimeType", "")):
             try:
-                fields = _field_names(json.loads(text_value))
+                parsed = json.loads(text_value)
             except (ValueError, TypeError):
-                pass
+                parsed = {}
+        fields = _field_names(parsed)
         resource = str(item.get("_resourceType", "")).lower()
         transport = "websocket" if resource == "websocket" or "websocket" in path.lower() else (
             "fetch" if resource in {"fetch", "xhr"} else "http")
+        item_schema = _schema(parsed) if isinstance(parsed, (dict, list)) else "<unavailable>"
         structural.append({"method": str(request.get("method", "UNKNOWN")),
             "path": path, "content_type": str(response_content.get("mimeType", "UNKNOWN")).split(";", 1)[0],
-            "transport": transport, "field_names": sorted(fields)})
+            "transport": transport, "field_names": sorted(fields), "schema": item_schema})
+        # HAR WebSocket messages are retained by Chromium as frames. Parse each
+        # frame transiently; only the resulting type schema is written.
+        for frame in item.get("_webSocketMessages", []) or []:
+            if not isinstance(frame, dict) or not isinstance(frame.get("data"), str):
+                continue
+            try:
+                frame_value = json.loads(frame["data"])
+            except (ValueError, TypeError):
+                continue
+            structural.append({"method": "MESSAGE", "path": path,
+                "content_type": "application/json", "transport": "websocket",
+                "field_names": sorted(_field_names(frame_value)), "schema": _schema(frame_value)})
     result = {"sanitized": True, "source": "HAR structural extraction",
               "entries": structural, "entry_count": len(structural)}
     checked = ingest_sanitized_capture(result)
@@ -107,6 +139,7 @@ def ingest_sanitized_capture(document: dict[str, Any]) -> dict[str, Any]:
             "content_type": entry.get("content_type", "UNKNOWN"),
             "transport": entry.get("transport", "UNKNOWN"),
             "field_names": sorted(set(entry.get("field_names", []))),
+            "schema": entry.get("schema", "<unavailable>"),
             "message_type": entry.get("message_type"),
         })
     return {"sanitized": True, "entries": summary, "entry_count": len(summary)}

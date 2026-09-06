@@ -29,3 +29,24 @@ visually inspect the export first. No endpoint, selector, status, or broker
 schema is considered verified until supplied in this form.
 
 Current result: no authenticated ViewPoint evidence has been supplied.
+
+## Binary WebSocket action correlation
+
+Manual evidence identifies `data.iress.co.za` as an instrument/action-correlated
+binary channel. This is VERIFIED only as an observation; it is not identified
+as an order, quote, account, or portfolio channel. `trpc` produced a generic
+subscription acknowledgement. The logger, settings, and Heap endpoints are
+classified as telemetry/settings/third-party analytics and excluded from
+candidate broker-transport reports.
+
+Use `viewpoint_ws_discovery.py` with metadata recorded from DevTools: action
+type/alias, socket host/path, direction, TEXT/BINARY type, byte length, and a
+local SHA-256 hash. Never export frames. Compare repeated actions and aliases;
+do not infer semantics from length, timing, or hash differences alone.
+
+Minimal matrix: idle baseline; repeat one equity three times; compare two
+equities; compare equity/ETF/future/index/commodity aliases where available;
+change market/limit and stop controls; edit quantity/price; clear ticket;
+open portfolio/trades/order pad/account selector. Close every ticket without
+submitting. Retain raw frame material only in `.viewpoint-discovery/` and
+delete it after metadata extraction.
