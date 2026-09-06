@@ -1,4 +1,6 @@
 """OI2 operational dashboard; analysis-only, with no live execution path."""
+import os
+
 from flask import Flask, jsonify, render_template, request
 from flask_socketio import SocketIO
 from instrument_registry import instrument_list, resolve_instrument
@@ -53,4 +55,10 @@ def respond(operation):
     try: return jsonify(operation())
     except KeyError as exc: return jsonify(error=str(exc)),404
     except ValueError as exc: return jsonify(error=str(exc)),400
-if __name__ == "__main__": socketio.run(app,host="0.0.0.0",port=5000,debug=False)
+if __name__ == "__main__":
+    socketio.run(
+        app,
+        host=os.environ.get("HOST", "0.0.0.0"),
+        port=int(os.environ.get("PORT", "5000")),
+        debug=False,
+    )

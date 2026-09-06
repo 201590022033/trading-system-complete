@@ -1,5 +1,22 @@
 # Merged Trading System - Quick Start Guide
 
+## Start the Dashboard
+
+From the repository root, run the one canonical launcher:
+
+```bash
+./scripts/start_dashboard.sh
+```
+
+This starts the browser dashboard from `app.py` using the repository's `.venv` and listens on port `5000`.
+Forward port `5000` in your development environment. To use another forwarded port, run for example:
+
+```bash
+PORT=5001 ./scripts/start_dashboard.sh
+```
+
+Check that it is running at `/health`. `main.py` is the legacy command-line trading integration, and `generate_app.py` is an audit script; neither is the dashboard launcher.
+
 ## What You Now Have
 
 You've got **two complete trading systems** that we're merging:
