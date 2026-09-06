@@ -36,3 +36,10 @@ Cloud key: OLLAMA_API_KEY. Kimi keys/models: MOONSHOT_API_KEY/KIMI_API_KEY and
 MOONSHOT_MODEL/KIMI_MODEL. Never expose values. The existing providers rotate a
 bounded budget and label failures/fallback. OI3 still needs real-provider success
 and discovery verification; this environment handoff does not complete it.
+
+The application loads an optional repository-root `.env` through `ai_config.py`;
+explicit process variables take precedence. Run `setup_ai.ps1` in PowerShell to
+enter a Kimi/Moonshot key without echoing it and write local Ollama defaults.
+The helper refuses to continue unless `.env` is Git-ignored and never changes
+global Windows, Continue, Codex or Copilot configuration. Local Ollama requires
+no API key.

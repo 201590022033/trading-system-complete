@@ -12,6 +12,7 @@ import re
 from time import monotonic
 
 import requests
+from ai_config import project_environment
 
 
 @dataclass
@@ -57,7 +58,7 @@ def validated_result(raw):
 
 class SentimentProviders:
     def __init__(self, environ=None, transport=None):
-        env = os.environ if environ is None else environ
+        env = project_environment(environ)
         self.transport = transport or requests
         self.providers = [
             Provider('ollama_local', 'Local Ollama', env.get('OLLAMA_LOCAL_MODEL') or 'llama3.2:3b',
