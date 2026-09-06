@@ -9,6 +9,7 @@ analysis/cache/
 # OS
 Thumbs.db
 Desktop.ini
+/debug.log
 
 # Probe/debug scripts (one-off diagnostics, not part of the system)
 probe_*.py
