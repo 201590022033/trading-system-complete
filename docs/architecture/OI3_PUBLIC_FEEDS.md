@@ -1,5 +1,10 @@
 # OI3 public market and sentiment feeds
 
+Current provider verification: [Windows evidence and blockers](../reports/OI3_WINDOWS_PROVIDER_VERIFICATION.md).
+OI3 remains DEFERRED/BLOCKED. Windows Moneyweb/SENS checks succeeded; local AI
+is unreachable and cloud credentials are missing. Historical checks below retain
+their original dates. No live AI success is implied by offline routing tests.
+
 The root dashboard automatically loads six quote cards, selected-stock and JSE
 All Share proxy charts, and the existing SA/global sentiment scanner. Click a
 quote or select an instrument; choose intraday (five-minute bars), one month,

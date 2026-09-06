@@ -9,7 +9,7 @@ HR11 tests; 39 protected daily hashes are unchanged. The default report contains
 180 insufficient-evidence cells and no fabricated intraday observations.
 See `docs/reports/HR11_REPORT.md`. No successor milestone is active.
 
-## OI3 — Restore connected market and sentiment dashboard [DEFERRED 2026-09-06]
+## OI3 — Restore connected market and sentiment dashboard [DEFERRED/BLOCKED 2026-09-06]
 - Reuse Yahoo and MacroSentimentScanner for auto-refreshing, cached public feeds.
 - Render dated price charts, retained headlines, AI summaries and macro impacts.
 - Expose source failures, last-success time, delayed data and keyword fallback.
@@ -17,8 +17,12 @@ See `docs/reports/HR11_REPORT.md`. No successor milestone is active.
 
 Progress: charts, public quotes and retained news restored; 114 offline tests and
 real/fixture browser checks pass. Local/cloud Ollama and Kimi routing is
-implemented; real-provider validation remains pending. The last source check
-recorded SENS HTTP 403 and unconfigured NewsAPI. OI3 remains deferred under the owner’s HR11 mandate; outstanding work is retained.
+implemented. Owner-authorized Windows verification from `1fc8994` confirmed
+Moneyweb RSS/SENS and three Yahoo discovery symbols; 196 safe tests pass.
+Local Ollama remains unreachable and cloud/Kimi/NewsAPI keys are MISSING.
+Real AI summaries, AI-backed discovery and additional approved source ingestion
+remain unresolved. See `docs/reports/OI3_WINDOWS_PROVIDER_VERIFICATION.md` for
+the evidence and exact prerequisites. No successor milestone is activated.
 
 ## HR9 — Causal adaptive technical ensemble [COMPLETE 2026-09-04]
 - Preserve the 101,536-row interrupted ensemble as the pre-HR9 baseline.

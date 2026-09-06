@@ -8,6 +8,12 @@ from source_catalog import DEFAULT_SPECIALIST_SOURCES
 
 
 class SourceCatalogTests(unittest.TestCase):
+    def test_efficient_group_public_links_do_not_enable_automated_ingestion(self):
+        policy = DEFAULT_SPECIALIST_SOURCES.get('efficient_group_commentary')
+        self.assertEqual(policy.access_mode, 'public_manual')
+        self.assertEqual(policy.status, 'no_stable_feed_verified')
+        self.assertFalse(DEFAULT_SPECIALIST_SOURCES.poll_allowed(policy.source_id))
+
     def test_only_existing_permitted_collectors_are_enabled(self):
         enabled = {item.source_id for item in DEFAULT_SPECIALIST_SOURCES.configured() if item.enabled}
         self.assertEqual(enabled, {"moneyweb_sens", "moneyweb_rss"})

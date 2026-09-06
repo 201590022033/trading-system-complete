@@ -1,6 +1,18 @@
 # Current Milestone
 
-**HR11 COMPLETE — Short-Term Multi-Instrument Research Layer (2026-09-06)**
+**OI3 DEFERRED/BLOCKED - Windows provider verification (2026-09-06)**
+
+Owner-authorized OI3 verification resumed from `1fc8994`; this pass completed
+available public-source checks and offline routing/discovery verification.
+Moneyweb RSS and SENS succeeded here; three Yahoo discovery symbols succeeded.
+Local Ollama is unreachable; cloud/Kimi keys are MISSING. Real AI summaries and
+AI-backed discovery remain blocked. Additional commentary ingestion needs a
+verified feed/permission; Efficient Group remains manual-only and disabled.
+196 safe tests pass. See [current evidence and exact blockers](../reports/OI3_WINDOWS_PROVIDER_VERIFICATION.md).
+No milestone is ACTIVE; HR12 is NOT STARTED. Historical checkpoints below remain
+as records of their dates and are superseded by this status where they differ.
+
+## HR11 completion checkpoint
 
 Completed all 15 implementation stages under the owner’s 2026-09-06 mandate.
 175 safe tests pass; 39 protected hashes match. The default research report has
