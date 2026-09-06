@@ -1,6 +1,13 @@
 # Current Milestone
 
-**OI3 ACTIVE — reconnect public market charts and AI sentiment feeds**
+**HR11 ACTIVE — Short-Term Multi-Instrument Research Layer**
+
+Activated by the owner’s implementation mandate on 2026-09-06. See `HR11.md`
+for stage acceptance and `HR11_REQUEST.md` for the preserved request.
+OI3 is DEFERRED, not complete; its outstanding work below is preserved.
+See ADR 0021 for the explicit milestone transition.
+
+## Deferred OI3 context
 
 OI2's offline acceptance did not establish a functioning current-data dashboard.
 OI3 restores automatically refreshed public market data, daily/intraday charts,
@@ -32,7 +39,7 @@ the Constitution and the owner's explicit restoration request.
   scope.
 
 SENS returns HTTP 403; NewsAPI is unconfigured. These source states remain
-visible. OI3 stays ACTIVE; do not infer AI-feed completion from offline tests.
+visible. OI3 remains DEFERRED; do not infer AI-feed completion from offline tests.
 See `docs/reports/OI3_RESTORATION_REPORT.md` for evidence and remaining work.
 
 ## OI2 scope — activated 2026-09-04
