@@ -5,6 +5,32 @@ outstanding provider/source/discovery verification from `1fc8994`. This pass
 does not activate HR12 or change HR11 results. Prior browser acceptance remains
 historical evidence; no new browser acceptance is claimed.
 
+## Second verification pass — 2026-09-08
+
+The local development environment was bootstrapped on the owner's Windows laptop
+(Project Python 3.12.2, fresh `.venv`). Ollama 0.33.2 is installed; the default
+`llama3.2:3b` model is **not** present, but `llama3:latest` is. GPU inference
+crashes with a CUDA/toolchain error on this machine, so CPU-only execution was
+enabled via the new `OLLAMA_LOCAL_OPTIONS={"num_gpu":0}` `.env` setting.
+
+| Component | Actual result | Remaining limitation |
+| --- | --- | --- |
+| Local Ollama | AVAILABLE via `SentimentProviders` with `llama3` on CPU | GPU path fails; default `llama3.2:3b` not installed |
+| Ollama `/api/generate` | Valid structured JSON for permitted Sasol headline; assets include `OIL` (+1) and `ZAR` (-1) | One sample headline, not a production accuracy claim |
+| Dashboard `/api/feed/news` | Items returned with `llm_used: true`, `analysis_provider: ollama_local`, `analysis_model: llama3` | Subsequent requests may time out on CPU and fall back to keywords |
+| Keyword fallback | Confirmed when Ollama is unreachable or budget exhausted | — |
+| Ollama Cloud | NOT_CONFIGURED; OLLAMA_API_KEY MISSING | No authenticated generation or account/model entitlement verified |
+| Moonshot/Kimi | NOT_CONFIGURED; MOONSHOT_API_KEY and KIMI_API_KEY MISSING | No authenticated generation or account/model entitlement verified |
+| Moneyweb RSS | AVAILABLE in dashboard feed | Dated public observations only |
+| Moneyweb SENS | HTTP 403 challenge page remains visible | No challenge bypass attempted |
+| NewsAPI | NOT_CONFIGURED; NEWSAPI_KEY MISSING | Optional source; no requests sent |
+| Safe suite | Focused provider tests 12/12 pass; full suite pending below | — |
+
+The verification script `scripts/verify_ollama_ai.py` now exercises the local
+Ollama path directly without leaking credentials. Four new focused tests cover
+`OLLAMA_LOCAL_OPTIONS` parsing/merging, generation timeout, and scanner keyword
+fallback after a successful-then-failing provider.
+
 ## Scope established from repository state
 
 Read README, the governing architecture/roadmap documents, laptop/environment
@@ -92,19 +118,15 @@ immutable hashes. Historical research reports were not edited or regenerated.
 
 ## Exact unresolved items / next OI3 action
 
-1. Supply a running local Ollama service with the configured model, or privately
-   configure an authorized Ollama Cloud/Moonshot key and supported model. Verify
-   one real permitted headline yields valid structured output with correct
-   provider/model attribution and meaningful summary/ticker impacts; then verify
-   that result through the existing dashboard feed. At least one live AI success
-   is required before claiming the operational AI feed works.
-2. Repeat bounded authenticated checks for any optional cloud route the owner
-   wants to use. Offline protocol tests are not account entitlement verification.
+1. ✅ Local Ollama AI comprehension is verified. Cloud/Kimi verification remains
+   blocked on missing keys; configure an authorized Ollama Cloud/Moonshot key and
+   supported model, then repeat the bounded headline/dashboard check.
+2. Verify AI-backed ticker impacts on real permitted news and broader discovery
+   coverage. The discovery scanner already mixes news scores with Yahoo technicals;
+   live Ollama-backed impacts are now possible locally but not yet validated across
+   the full universe.
 3. Establish a supported feed/permission for additional commentary ingestion,
    including Efficient Group if desired, before enabling a connector. Existing
    public Moneyweb/SENS paths worked in this Windows check. NewsAPI is optional.
-4. Verify AI-backed ticker impacts on real permitted news and broader discovery
-   coverage once inputs are available. Three technical-only symbols are not
-   whole-universe or AI discovery acceptance.
 
 No successor milestone is activated. Stop here; HR12 remains NOT STARTED.

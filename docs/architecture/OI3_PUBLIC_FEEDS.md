@@ -2,8 +2,8 @@
 
 Current provider verification: [Windows evidence and blockers](../reports/OI3_WINDOWS_PROVIDER_VERIFICATION.md).
 OI3 remains DEFERRED/BLOCKED. Windows Moneyweb/SENS checks succeeded; local AI
-is unreachable and cloud credentials are missing. Historical checks below retain
-their original dates. No live AI success is implied by offline routing tests.
+is verified with `llama3` on CPU. Cloud credentials remain missing. Historical
+checks below retain their original dates where they differ.
 
 The root dashboard automatically loads six quote cards, selected-stock and JSE
 All Share proxy charts, and the existing SA/global sentiment scanner. Click a
@@ -70,7 +70,9 @@ AI sentiment. Never paste keys into chat or commit local credential files.
 Without a usable model the news feed remains available with keyword labels.
 NewsAPI remains optional and uses the scanner's existing environment configuration.
 The default local model is `llama3.2:3b`; set `OLLAMA_LOCAL_MODEL` only when a
-different model has been installed with `ollama pull`.
+different model has been installed with `ollama pull`. Set `OLLAMA_LOCAL_OPTIONS`
+to a JSON object of Ollama `/api/generate` options (for example `{"num_gpu":0}`
+for CPU-only inference) when the default GPU path fails.
 
 Offline regression:
 
@@ -86,7 +88,8 @@ The new adapter uses the documented
 
 ## Remaining runtime dependency
 
-The 2026-09-05 smoke check returned real Yahoo bars and Moneyweb headlines, but
-no successful AI analysis. SENS returned HTTP 403 and NewsAPI was not
-configured. Identifying/restoring the owner's former AI provider is still pending;
-these are not grounds to claim an operational AI feed.
+The 2026-09-08 smoke check returned real Yahoo bars, Moneyweb headlines and
+successful local Ollama (`llama3`) AI analysis with provider/model attribution
+when CPU-only options are configured. SENS returned HTTP 403 and NewsAPI was not
+configured. Cloud/Kimi routes remain blocked on missing credentials; these are
+not grounds to claim fully operational multi-provider AI feed.

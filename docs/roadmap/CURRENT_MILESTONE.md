@@ -1,27 +1,33 @@
 # Current Milestone
 
-**ViewPoint broker integration + bounded Ollama recovery — ACTIVE 2026-09-06**
+**ViewPoint broker integration + bounded Ollama recovery — ACTIVE 2026-09-08**
 
 The ViewPoint adapter scaffold is prepare-only and fail-closed. No authenticated
 ViewPoint payload, endpoint, selector, account, cash, position or order behavior
 has been verified. Legacy OST browser code remains unchanged. Local Ollama
-(0.33.3, `llama3.2:3b`) is now installed and verified on this laptop through the
-existing `SentimentProviders` boundary; cloud/Kimi keys remain MISSING and OI3
-remains deferred pending those provider verifications. HR12 is not started.
+(0.33.2, `llama3`) is installed and verified on this laptop through the existing
+`SentimentProviders` boundary; the default `llama3.2:3b` is not present. The
+`OLLAMA_LOCAL_MODEL` and `OLLAMA_LOCAL_OPTIONS` settings are now read from `.env`
+to support non-default models and runtime options such as CPU-only execution.
+Cloud/Kimi keys remain MISSING and OI3 remains deferred pending those provider
+verifications. HR12 is not started.
 
 See [ADR 0022](../adr/0022-viewpoint-broker-boundary.md).
 
-**OI3 DEFERRED/BLOCKED - Windows provider verification (2026-09-06)**
+**OI3 DEFERRED/BLOCKED - Windows provider verification (2026-09-08)**
 
 Owner-authorized OI3 verification resumed from `1fc8994`; this pass completed
 available public-source checks and offline routing/discovery verification.
 Moneyweb RSS and SENS succeeded here; three Yahoo discovery symbols succeeded.
-Local Ollama (`llama3.2:3b`) is installed, reachable and produces valid structured
-output through `SentimentProviders`; cloud/Kimi keys are MISSING. Real AI summaries
-for retained headlines and AI-backed discovery remain blocked until a cloud key or
-permitted source is configured. Additional commentary ingestion needs a verified
-feed/permission; Efficient Group remains manual-only and disabled.
-208 safe tests pass. See [current evidence and exact blockers](../reports/OI3_WINDOWS_PROVIDER_VERIFICATION.md).
+Local Ollama (`llama3`) is installed, reachable and produces valid structured
+output through `SentimentProviders` and the dashboard `/api/feed/news` endpoint
+when CPU-only execution is enabled via `OLLAMA_LOCAL_OPTIONS={"num_gpu":0}`;
+cloud/Kimi keys are MISSING. Real AI summaries for retained headlines are now
+verified locally; provider failure/fallback coverage is expanded in
+`test_sentiment_providers.py`. AI-backed discovery and additional permitted
+commentary ingestion remain blocked until a verified feed/permission is available;
+Efficient Group remains manual-only and disabled.
+See [current evidence and exact blockers](../reports/OI3_WINDOWS_PROVIDER_VERIFICATION.md).
 No milestone is ACTIVE; HR12 is NOT STARTED. Historical checkpoints below remain
 as records of their dates and are superseded by this status where they differ.
 
@@ -59,9 +65,11 @@ the Constitution and the owner's explicit restoration request.
 - [x] Add a separate broad-universe opportunity scan using current Yahoo
   momentum/RSI plus matched public-news impacts; baseline quote cards are not
   presented as the opportunity selection.
-- [ ] Verify successful real AI comprehension and provider failure handling.
-  `sentiment_providers.py` already implements local Ollama, Ollama Cloud and Kimi
-  routing (committed in `3762f9b`); live success is not established by this handoff.
+- [x] Verify successful real AI comprehension and provider failure handling.
+  Local Ollama (`llama3`) now produces valid structured output for permitted
+  headlines through `SentimentProviders` and the dashboard. CPU-only execution is
+  configurable via `OLLAMA_LOCAL_OPTIONS`; fallback to keyword analysis is tested.
+  Cloud/Kimi routes remain unverified because keys are missing.
 - [ ] Connect additional permitted public sources and verify Ollama-backed
   ticker discovery, including Efficient Group/public commentary where legally
   accessible. Private Facebook access and SENS challenge bypass remain out of

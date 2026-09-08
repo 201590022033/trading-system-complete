@@ -2,15 +2,17 @@
 
 Only one milestone is ACTIVE. Advancement requires tests, docs and a commit.
 
-## ViewPoint broker integration + bounded Ollama recovery [ACTIVE 2026-09-06]
+## ViewPoint broker integration + bounded Ollama recovery [ACTIVE 2026-09-08]
 - Diagnose the local Ollama installation without broad Windows changes or model downloads.
 - Establish a vendor-neutral broker-observed state boundary and ViewPoint adapter scaffold.
 - Keep account, cash, positions, orders and mappings fail-closed and prepare-only.
 - Preserve OST history, HR11 artifacts, OI3 separation, paper/shadow execution and `live_execution:false`.
 
-Initial acceptance: Ollama has no executable/process/API response in the checked
-Windows locations; ViewPoint transport and authenticated broker state remain
-unverified; the prepare-only scaffold and focused/full safety tests pass.
+Status: local Ollama (`llama3`) verified producing structured, attributed sentiment
+output through `SentimentProviders` and the dashboard news feed. CPU-only mode is
+configurable via `OLLAMA_LOCAL_OPTIONS` for GPUs with incompatible toolchains.
+ViewPoint transport and authenticated broker state remain unverified pending a
+sanitized user capture; the prepare-only scaffold and safety tests pass.
 
 ## HR11 — Short-Term Multi-Instrument Research Layer [COMPLETE 2026-09-06]
 
@@ -19,7 +21,7 @@ HR11 tests; 39 protected daily hashes are unchanged. The default report contains
 180 insufficient-evidence cells and no fabricated intraday observations.
 See `docs/reports/HR11_REPORT.md`. No successor milestone is active.
 
-## OI3 — Restore connected market and sentiment dashboard [DEFERRED/BLOCKED 2026-09-06]
+## OI3 — Restore connected market and sentiment dashboard [DEFERRED/BLOCKED 2026-09-08]
 - Reuse Yahoo and MacroSentimentScanner for auto-refreshing, cached public feeds.
 - Render dated price charts, retained headlines, AI summaries and macro impacts.
 - Expose source failures, last-success time, delayed data and keyword fallback.
@@ -29,10 +31,12 @@ Progress: charts, public quotes and retained news restored; 114 offline tests an
 real/fixture browser checks pass. Local/cloud Ollama and Kimi routing is
 implemented. Owner-authorized Windows verification from `1fc8994` confirmed
 Moneyweb RSS/SENS and three Yahoo discovery symbols; 196 safe tests pass.
-Local Ollama remains unreachable and cloud/Kimi/NewsAPI keys are MISSING.
-Real AI summaries, AI-backed discovery and additional approved source ingestion
-remain unresolved. See `docs/reports/OI3_WINDOWS_PROVIDER_VERIFICATION.md` for
-the evidence and exact prerequisites. No successor milestone is activated.
+Local Ollama (`llama3`) is now verified producing structured AI summaries and
+provider-model attribution through the dashboard; CPU-only execution is supported
+via `OLLAMA_LOCAL_OPTIONS`. Cloud/Kimi/NewsAPI keys remain MISSING. AI-backed
+discovery and additional approved source ingestion remain unresolved. See
+`docs/reports/OI3_WINDOWS_PROVIDER_VERIFICATION.md` for the evidence and exact
+prerequisites. No successor milestone is activated.
 
 ## HR9 — Causal adaptive technical ensemble [COMPLETE 2026-09-04]
 - Preserve the 101,536-row interrupted ensemble as the pre-HR9 baseline.

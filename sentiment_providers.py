@@ -74,6 +74,17 @@ class SentimentProviders:
         self.remaining = 0
         self.cursor = 0
         self._local_probe_after = 0
+        self._local_options = self._parse_options(env.get('OLLAMA_LOCAL_OPTIONS'))
+
+    @staticmethod
+    def _parse_options(value):
+        if not value:
+            return {}
+        try:
+            parsed = json.loads(value)
+            return parsed if isinstance(parsed, dict) else {}
+        except Exception:
+            return {}
 
     def statuses(self):
         return [{"provider":p.name, "label":p.label, "model":p.model,
@@ -138,7 +149,7 @@ class SentimentProviders:
             payload = {'model':provider.model,'prompt':prompt,'stream':False}
             if provider.name == 'ollama_local':
                 payload['format'] = 'json'
-                payload['options'] = {'num_predict':1024}
+                payload['options'] = {'num_predict':1024, **self._local_options}
             response = self.transport.post(provider.host+'/api/generate', headers=headers,
                                            json=payload, timeout=(5,45), allow_redirects=False)
         response.raise_for_status()

@@ -16,7 +16,7 @@ class DiscoveryTests(unittest.TestCase):
         transport = Mock()
         transport.get.return_value = response({'models': [{'name': 'llama3.2:3b'}]})
         transport.post.return_value = response({'done': True, 'response': json.dumps(RESULT)})
-        providers = SentimentProviders(environ={}, transport=transport)
+        providers = SentimentProviders(environ={'OLLAMA_LOCAL_MODEL': 'llama3.2:3b'}, transport=transport)
         scanner = MacroSentimentScanner(providers=providers, max_llm_items=1)
         scanner._fetch = Mock(return_value=[NewsItem(
             'SASOL', 'Synthetic earnings fixture', 'test fixture', datetime(2026, 9, 6, tzinfo=timezone.utc),

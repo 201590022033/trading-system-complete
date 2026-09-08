@@ -21,9 +21,12 @@ def response(data):
 
 class RoutingTests(unittest.TestCase):
     def router(self, env=None, local=True):
+        # Tests must not depend on the local .env; pin the default model.
+        env = {'OLLAMA_LOCAL_MODEL': 'llama3.2:3b', **(env or {})}
         transport = Mock()
-        transport.get.return_value = response({'models': [{'name': 'llama3.2:3b'}] if local else []})
-        return SentimentProviders(environ=env or {}, transport=transport)
+        model = env.get('OLLAMA_LOCAL_MODEL')
+        transport.get.return_value = response({'models': [{'name': model}] if local else []})
+        return SentimentProviders(environ=env, transport=transport)
 
     def test_local_structured_output_has_real_router_provenance(self):
         router = self.router()
@@ -112,6 +115,49 @@ class RoutingTests(unittest.TestCase):
             router.begin_scan(0)
             router.transport.get.assert_called_once()
             self.assertIsNone(router.analyze('synthetic prompt'))
+
+    def test_local_options_merge_without_leaking_secrets(self):
+        router = self.router({'OLLAMA_LOCAL_OPTIONS': '{"num_gpu":0,"temperature":0.1}'})
+        router.transport.post.return_value = response({'done': True, 'response': json.dumps(RESULT)})
+        router.begin_scan(1)
+        router.analyze('synthetic prompt')
+        options = router.transport.post.call_args.kwargs['json']['options']
+        self.assertEqual(options['num_gpu'], 0)
+        self.assertEqual(options['temperature'], 0.1)
+        self.assertEqual(options['num_predict'], 1024)
+
+    def test_malformed_local_options_ignored(self):
+        router = self.router({'OLLAMA_LOCAL_OPTIONS': 'not-json'})
+        self.assertEqual(router._local_options, {})
+        router = self.router({'OLLAMA_LOCAL_OPTIONS': '[1,2,3]'})
+        self.assertEqual(router._local_options, {})
+
+    def test_generation_timeout_marks_local_unreachable(self):
+        router = self.router()
+        router.transport.post.side_effect = requests.Timeout('synthetic-timeout')
+        router.begin_scan(1)
+        self.assertIsNone(router.analyze('synthetic prompt'))
+        self.assertEqual(router.statuses()[0]['state'], 'UNREACHABLE')
+
+    def test_scanner_keyword_fallback_when_local_becomes_unreachable(self):
+        router = self.router()
+        # First call succeeds, second times out to exhaust the small budget.
+        router.transport.post.side_effect = [
+            response({'done': True, 'response': json.dumps(RESULT)}),
+            requests.Timeout('synthetic-timeout'),
+        ]
+        scanner = MacroSentimentScanner(providers=router, retain_items=True, max_llm_items=2)
+        items = [
+            NewsItem('SASOL', 'First synthetic headline', 'test fixture',
+                     datetime(2026, 9, 6, tzinfo=timezone.utc), SentimentLabel.NEUTRAL, 0),
+            NewsItem('SASOL', 'Second synthetic headline', 'test fixture',
+                     datetime(2026, 9, 6, tzinfo=timezone.utc), SentimentLabel.NEUTRAL, 0),
+        ]
+        scanner._fetch = Mock(return_value=items)
+        report = scanner.scan().to_dict()
+        self.assertTrue(report['items'][0]['llm_used'])
+        self.assertFalse(report['items'][1]['llm_used'])
+        self.assertEqual(report['items'][1]['analysis_provider'], 'keywords')
 
     def test_unreachable_service_keeps_scanner_keyword_provenance(self):
         router = self.router()
