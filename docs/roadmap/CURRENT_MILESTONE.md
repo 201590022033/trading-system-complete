@@ -1,14 +1,32 @@
 # Current Milestone
 
-**ViewPoint broker integration + bounded Ollama recovery — ACTIVE 2026-09-08**
+**OI4 — Market-intelligence UI redesign [ACTIVE 2026-09-08]**
 
-The ViewPoint adapter scaffold is prepare-only and fail-closed. No authenticated
+Build a configurable market-intelligence layer and redesigned UI around three
+main views: Market AI/News, Technical Intelligence, and Portfolio/Trade Summary.
+Preserve the existing research, signal, ensemble and risk boundaries. No LLM or
+news item may directly generate an executable trade. Broker/execution integration
+remains prepare-only.
+
+Phase A delivers the foundational `market_intelligence` package: schemas,
+SQLite store with migrations, persisted source registry and additive tests.
+Later phases will add Efficient Group/Dawie Roodt ingestion, PDF analysis,
+Market AI structured narrative, dynamic ticker, technical explainability graph,
+portfolio summary UI and ViewPoint preparation.
+
+See [ADR 0024](../adr/0024-market-intelligence-pipeline.md).
+
+## Previous milestone closure
+
+**ViewPoint broker integration + bounded Ollama recovery — COMPLETE 2026-09-08**
+
+Closed to enforce the Constitution rule of exactly one ACTIVE milestone. The
+ViewPoint adapter scaffold and safety tests are in place, but no authenticated
 ViewPoint payload, endpoint, selector, account, cash, position or order behavior
 has been verified. Legacy OST browser code remains unchanged. Local Ollama
 (0.33.2, `llama3`) is installed and verified on this laptop through the existing
 `SentimentProviders` boundary; the default `llama3.2:3b` is not present. The
-`OLLAMA_LOCAL_MODEL` and `OLLAMA_LOCAL_OPTIONS` settings are now read from `.env`
-to support non-default models and runtime options such as CPU-only execution.
+`OLLAMA_LOCAL_MODEL` and `OLLAMA_LOCAL_OPTIONS` settings are read from `.env`.
 Cloud/Kimi keys remain MISSING and OI3 remains deferred pending those provider
 verifications. HR12 is not started.
 

@@ -2,7 +2,26 @@
 
 Only one milestone is ACTIVE. Advancement requires tests, docs and a commit.
 
-## ViewPoint broker integration + bounded Ollama recovery [ACTIVE 2026-09-08]
+## OI4 — Market-intelligence UI redesign [ACTIVE 2026-09-08]
+- Add a configurable, auditable market-intelligence layer on top of existing evidence,
+  source-catalog and research boundaries.
+- Redesign the UI around three tabs: Market AI/News, Technical Intelligence and
+  Portfolio/Trade Summary, with a persistent hybrid pinned + AI-dynamic ticker.
+- Implement Efficient Group / Dawie Roodt ingestion and a safe PDF analysis pipeline
+  with hash-based deduplication.
+- Produce structured market narratives, instrument candidates and inspectable
+  provenance from source → theme → candidate → watchlist.
+- Build a technical explainability graph from actual system state, not LLM invention.
+- Prepare a broker/account abstraction for future ViewPoint integration; keep all
+  execution actions manual/paper-only.
+- Preserve the existing signal contract, ensemble, risk gates and research-only
+  adaptive output.
+
+Status: Phase A complete — `market_intelligence` package with schemas, SQLite store,
+migrations, persisted source registry and 15 new offline tests. See
+[ADR 0024](../adr/0024-market-intelligence-pipeline.md).
+
+## ViewPoint broker integration + bounded Ollama recovery [COMPLETE 2026-09-08]
 - Diagnose the local Ollama installation without broad Windows changes or model downloads.
 - Establish a vendor-neutral broker-observed state boundary and ViewPoint adapter scaffold.
 - Keep account, cash, positions, orders and mappings fail-closed and prepare-only.
@@ -13,6 +32,7 @@ output through `SentimentProviders` and the dashboard news feed. CPU-only mode i
 configurable via `OLLAMA_LOCAL_OPTIONS` for GPUs with incompatible toolchains.
 ViewPoint transport and authenticated broker state remain unverified pending a
 sanitized user capture; the prepare-only scaffold and safety tests pass.
+Closed to activate OI4 under the single-active-milestone rule.
 
 ## HR11 — Short-Term Multi-Instrument Research Layer [COMPLETE 2026-09-06]
 
