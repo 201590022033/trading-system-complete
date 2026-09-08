@@ -93,3 +93,15 @@ successful local Ollama (`llama3`) AI analysis with provider/model attribution
 when CPU-only options are configured. SENS returned HTTP 403 and NewsAPI was not
 configured. Cloud/Kimi routes remain blocked on missing credentials; these are
 not grounds to claim fully operational multi-provider AI feed.
+
+## SENS burst bounds - 2026-09-08
+
+The public SENS downloader streams at most 2 MiB of decompressed HTML and stops
+with RESPONSE_TOO_LARGE above that bound. Lazy parsing returns at most 100 entries;
+the dashboard requests 15. Scanner intake independently caps each source to its
+requested count (maximum 100 per Moneyweb/SENS source, eight NewsAPI items).
+Retained report/preview history remains capped at 100 headlines. Non-retaining
+scanner dedup history now evicts oldest entries above 1,000, so sufficiently old
+headlines may be processed again after eviction. The existing one-in-flight news
+job and eight-request AI budget remain in force. Burst regressions live in
+`test_news_backpressure.py`; they are offline and do not call AI providers.

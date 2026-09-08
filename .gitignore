@@ -27,3 +27,7 @@ ost_page_sample.html
 .venv/
 .venv-*/
 analysis/results/hr11-local/
+
+# Local market-intelligence runtime database
+/market_intelligence.db
+/market_intelligence.db-*

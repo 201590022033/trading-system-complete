@@ -16,6 +16,57 @@ portfolio summary UI and ViewPoint preparation.
 
 See [ADR 0024](../adr/0024-market-intelligence-pipeline.md).
 
+## Dashboard recovery check - 2026-09-08
+
+The dashboard was not listening on port 5000 at inspection; no evidence establishes
+that the quote ticker terminated the previous process. Reproduced an HTTP 500
+from the new sources endpoint: its module-level SQLite connection crossed request
+threads. Source routes now use request-scoped connections closed at teardown.
+Removed duplicate news/opportunity DOM containers and assigned the technical tab
+a unique ID in the template. Existing user edits were preserved.
+
+Validation: 29 focused feed, operational, UI, provider and legacy tests pass,
+including concurrent source requests and unique DOM/navigation IDs. Browser
+interaction remains unverified (Playwright is unavailable in this environment).
+The first recovery process inherited sandbox network restrictions (WinError 10013);
+Yahoo and Moneyweb both returned HTTP 200 outside the sandbox. Restarted the local
+dashboard with network access for public-provider verification. At 16:36 SAST,
+SOL intraday returned AVAILABLE (R210.62, provider bar 16:20 SAST), the JSE proxy
+chart returned AVAILABLE, and news exposed 25 headlines with Moneyweb/SENS
+AVAILABLE. News AI processing was still in progress; the preview was explicitly
+keyword-labelled, so completed AI inference is not claimed. OI4 remains ACTIVE.
+
+## SENS intake/cache hardening - 2026-09-08
+
+Follow-up to the reported overload: confirmed dashboard news has one shared
+in-flight refresh, a 300-second post-completion refresh interval, 100 retained
+headlines and at most eight AI requests per scan. Found no proof of the original
+crash. Closed two unbounded paths: SENS now streams at most 2 MiB of decompressed
+response bytes, closes oversized responses and reports RESPONSE_TOO_LARGE;
+non-retaining scanners keep at most 1,000 seen headlines (oldest evicted).
+The SENS parser uses lazy matches and caps output at 100 items. Scanner source
+intake enforces requested limits even if an adapter over-returns. Dashboard
+requests remain 20 Moneyweb / 15 SENS / 8 NewsAPI items per scan.
+
+Validation: 46 focused tests pass, including 1,000 pending polls producing one
+job, repeated 1,000-item source bursts retaining at most 100, outage retention,
+non-retaining dedup bounds and streamed-response early closure. Real bounded
+SENS fetch returned AVAILABLE with 15 items. Restarted the dashboard to load the
+fix. These checks establish bounded item counts/response size, not a long-duration
+memory soak or proof of the prior crash cause. OI4 remains ACTIVE.
+
+## Resume checkpoint - 2026-09-08 evening
+
+OI4 remains ACTIVE and incomplete. This checkpoint saves the in-progress source
+configuration/portfolio CSV UI plus dashboard recovery and SENS cache bounds.
+Local SQLite runtime data is ignored and is recreated/seeded at startup. Restored
+UTF-8 punctuation in dashboard assets during pre-commit review.
+Tomorrow: verify browser interactions and sustained memory use under news refresh;
+recheck local Ollama inference (latest running feed reported UNREACHABLE and used
+keyword fallback). Source configuration is persisted but is not yet connected to
+the existing dashboard collectors. The portfolio opportunities panel remains
+unpopulated. Do not infer full OI4 completion or successful AI from available news.
+
 ## Previous milestone closure
 
 **ViewPoint broker integration + bounded Ollama recovery — COMPLETE 2026-09-08**

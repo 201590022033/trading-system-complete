@@ -1,14 +1,33 @@
 """OI2 operational dashboard; analysis-only, with no live execution path."""
 import os
 
-from flask import Flask, jsonify, render_template, request
+from flask import Flask, g, jsonify, render_template, request
 from flask_socketio import SocketIO
 from instrument_registry import instrument_list, resolve_instrument
 from operational_intelligence import service
 from dashboard_feeds import feeds
+from market_intelligence.source_registry import SourceRegistry
+from market_intelligence.store import MarketIntelligenceStore
+
+market_store = MarketIntelligenceStore()
+source_registry = SourceRegistry(market_store)
+source_registry.seed_defaults()
+market_store.close()
+
+def request_source_registry():
+    if "market_store" not in g:
+        g.market_store = MarketIntelligenceStore()
+    return SourceRegistry(g.market_store)
+portfolio_rows = []
 
 app = Flask(__name__); app.config["SECRET_KEY"] = "local-oi2-session"
 socketio = SocketIO(app, cors_allowed_origins="*")
+
+@app.teardown_appcontext
+def close_market_store(error=None):
+    store = g.pop("market_store", None)
+    if store is not None:
+        store.close()
 
 @app.get("/")
 def index(): return render_template("dashboard.html")
@@ -16,6 +35,28 @@ def index(): return render_template("dashboard.html")
 def health(): return jsonify(status="ok", service="oi2", live_execution=False)
 @app.get("/api/system/status")
 def status(): return jsonify(service.status())
+@app.get("/api/market-intelligence/sources")
+def intelligence_sources():
+    return jsonify(sources=[s.__dict__ for s in request_source_registry().list_policies()])
+@app.post("/api/market-intelligence/sources/<source_id>")
+def intelligence_source_toggle(source_id):
+    body = request.get_json(silent=True) or {}
+    return jsonify(source=request_source_registry().enable(source_id, bool(body.get("enabled"))).__dict__)
+@app.post("/api/portfolio/csv")
+def portfolio_csv():
+    import csv, io
+    global portfolio_rows
+    body = request.get_json(silent=True) or {}
+    text = body.get("csv", "")
+    if not text.strip(): return jsonify(error="CSV content is required"), 400
+    rows = list(csv.DictReader(io.StringIO(text)))
+    required = {"instrument", "quantity"}
+    if not rows or not required.issubset(rows[0]):
+        return jsonify(error="CSV must include instrument and quantity columns"), 400
+    portfolio_rows = rows
+    return jsonify(rows=portfolio_rows, count=len(rows), state="IMPORTED_CSV", live_execution=False)
+@app.get("/api/portfolio")
+def portfolio(): return jsonify(rows=portfolio_rows, state="IMPORTED_CSV" if portfolio_rows else "NOT_LOADED", live_execution=False)
 @app.get("/api/instruments")
 def instruments(): return jsonify(instruments=instrument_list())
 @app.get("/api/feed/market/<instrument>")

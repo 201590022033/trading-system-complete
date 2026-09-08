@@ -510,6 +510,9 @@ class SENSFeedFetcher:
     in a stable <strong>COMPANY</strong> – Title format.
     """
 
+    MAX_RESPONSE_BYTES = 2 * 1024 * 1024
+    MAX_ITEMS = 100
+
     MONEYWEB_SENS_URL = "https://www.moneyweb.co.za/tools-and-data/moneyweb-sens/"
 
     _BROWSER_HEADERS = {
@@ -540,11 +543,19 @@ class SENSFeedFetcher:
             target_session.headers.update(merged)
 
         try:
-            response = target_session.get(self.base_url, timeout=15)
-            if response.status_code >= 400:
-                self.last_status = f"HTTP_{response.status_code}"
-                return []
-            items = self._parse_moneyweb_sens(response.text, limit)
+            # Bound decompressed bytes before parsing, even without Content-Length.
+            with target_session.get(self.base_url, timeout=15, stream=True) as response:
+                if response.status_code >= 400:
+                    self.last_status = f"HTTP_{response.status_code}"
+                    return []
+                body = bytearray()
+                for chunk in response.iter_content(chunk_size=16384):
+                    if len(body) + len(chunk) > self.MAX_RESPONSE_BYTES:
+                        self.last_status = "RESPONSE_TOO_LARGE"
+                        return []
+                    body.extend(chunk)
+                text = body.decode(response.encoding or "utf-8", errors="replace")
+            items = self._parse_moneyweb_sens(text, limit)
             self.last_status = "AVAILABLE" if items else "EMPTY_OR_UNAVAILABLE"
             return items
         except Exception:
@@ -555,7 +566,11 @@ class SENSFeedFetcher:
     def _parse_moneyweb_sens(cls, text: str, limit: int) -> List[NewsItem]:
         items: List[NewsItem] = []
         try:
-            for company, title in cls._ENTRY_RE.findall(text):
+            limit = max(0, min(cls.MAX_ITEMS, limit))
+            if not limit:
+                return []
+            for match in cls._ENTRY_RE.finditer(text):
+                company, title = match.groups()
                 company = company.strip()
                 title = title.strip()
                 if not company or not title:

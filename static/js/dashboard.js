@@ -133,12 +133,22 @@ function selectedChanged() {
   if (newsSnapshot) showNews(newsSnapshot);
 }
 function action(selector, handler) {
+  if (!$(selector)) return;
   $(selector).onclick = async () => {
     const button = $(selector); button.disabled = true;
     try { await handler(); } catch(error) { $('#notice').textContent = `Unable to complete request: ${error.message}`; }
     finally { button.disabled = false; }
   };
 }
+async function refreshSources() {
+  const result = await api('/api/market-intelligence/sources');
+  $('#sources').innerHTML = (result.sources || []).map(s => `<label class="source-row"><input type="checkbox" data-source="${esc(s.source_id)}" ${s.enabled ? 'checked' : ''}> <b>${esc(s.source_name)}</b><small>${esc(s.status)} · ${esc(s.access_mode)} · ${esc(s.url || '')}</small></label>`).join('') || '<p class="muted">No configured sources.</p>';
+  document.querySelectorAll('[data-source]').forEach(box => box.onchange = async () => { await post(`/api/market-intelligence/sources/${encodeURIComponent(box.dataset.source)}`, {enabled: box.checked}); });
+}
+function renderPortfolio(rows) {
+  $('#portfolio-table').innerHTML = rows.length ? `<table><tr>${Object.keys(rows[0]).map(k=>`<th>${esc(k)}</th>`).join('')}</tr>${rows.map(r=>`<tr>${Object.keys(rows[0]).map(k=>`<td>${esc(r[k])}</td>`).join('')}</tr>`).join('')}</table>` : '<p class="muted">No portfolio snapshot loaded.</p>';
+}
+async function loadPortfolio() { const result = await api('/api/portfolio'); renderPortfolio(result.rows || []); }
 document.querySelectorAll('nav button').forEach(button=>button.onclick=()=>{
   document.querySelectorAll('.tab').forEach(tab=>tab.classList.remove('active'));
   $('#'+button.dataset.tab).classList.add('active');
@@ -154,6 +164,8 @@ action('#research-load',async()=>$('#research-result').textContent=JSON.stringif
 action('#refresh-feeds',refreshFeeds);
 action('#refresh-news',refreshNews);
 action('#refresh-opportunities',refreshOpportunities);
+action('#reload-sources',refreshSources);
+action('#import-portfolio',async()=>{ const result=await post('/api/portfolio/csv',{csv:$('#portfolio-csv').value}); $('#portfolio-status').textContent=`Imported ${result.count} position(s) · CSV snapshot only`; renderPortfolio(result.rows); });
 $('#instrument').onchange=selectedChanged;
 $('#chart-period').onchange=()=>{selectionVersion++; refreshCharts();};
 $('#news-filter').onchange=()=>{if(newsSnapshot) showNews(newsSnapshot);};
@@ -168,6 +180,7 @@ $('#auto-refresh').onchange=()=>{if($('#auto-refresh').checked) refreshFeeds();}
   document.querySelectorAll('.quote').forEach(card=>card.onclick=()=>{$('#instrument').value=card.dataset.instrument; selectedChanged();});
   selectedChanged();
   await refreshFeeds();
+  await Promise.allSettled([refreshSources(), loadPortfolio()]);
   await refreshOpportunities();
   setInterval(()=>{if($('#auto-refresh').checked && !document.hidden) refreshFeeds();},10000);
 })().catch(error=>{$('#system-pill').textContent='SYSTEM UNAVAILABLE';$('#feed-notice').textContent=error.message;});

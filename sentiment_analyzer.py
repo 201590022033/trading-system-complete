@@ -14,6 +14,8 @@ Cloud and Kimi providers, falling back to labelled keywords when unavailable.
 
 from __future__ import annotations
 
+from collections import OrderedDict
+from itertools import islice
 import json
 import os
 import re
@@ -302,6 +304,10 @@ def analyze_item(item: NewsItem, use_llm: bool, llm_analyzer=None) -> AnalyzedIt
 class MacroSentimentScanner:
     """Fetches SA + global headlines and builds a macro/ticker sentiment report."""
 
+    MAX_RETAINED_ITEMS = 100
+    MAX_SEEN_HEADLINES = 1000
+    MAX_SOURCE_ITEMS = 100
+
     def __init__(self, max_llm_items: int = 8, retain_items: bool = False, providers=None):
         self.adapter = JSEDataAdapter(
             price_source=DataSourceType.MOCK,   # we only need its news fetchers
@@ -310,8 +316,8 @@ class MacroSentimentScanner:
         from sentiment_providers import SentimentProviders
         self.providers = providers or SentimentProviders()
         self.use_llm = False
-        self.max_llm_items = max_llm_items
-        self._seen_headlines = set()
+        self.max_llm_items = max(0, min(8, max_llm_items))
+        self._seen_headlines = OrderedDict()
         self.retain_items = retain_items
         self._analyzed_cache = {}
         self.source_status = {}
@@ -372,22 +378,24 @@ class MacroSentimentScanner:
         return items
 
     def _fetch(self, moneyweb_limit: int, sens_limit: int) -> List[NewsItem]:
+        moneyweb_limit = max(0, min(self.MAX_SOURCE_ITEMS, moneyweb_limit))
+        sens_limit = max(0, min(self.MAX_SOURCE_ITEMS, sens_limit))
         items: List[NewsItem] = []
         try:
-            fetched = self.adapter.get_moneyweb_news(limit=moneyweb_limit)
+            fetched = list(islice(self.adapter.get_moneyweb_news(limit=moneyweb_limit), moneyweb_limit))
             items.extend(fetched)
             self.source_status["Moneyweb"] = "AVAILABLE" if fetched else "EMPTY_OR_UNAVAILABLE"
         except Exception as exc:
             self.source_status["Moneyweb"] = "UNAVAILABLE"
         try:
-            fetched = self.adapter.get_sens_news(limit=sens_limit)
+            fetched = list(islice(self.adapter.get_sens_news(limit=sens_limit), sens_limit))
             items.extend(fetched)
             self.source_status["SENS"] = "AVAILABLE" if fetched else "EMPTY_OR_UNAVAILABLE"
-            if not fetched and self.adapter.sens_fetcher.last_status.startswith("HTTP_"):
+            if not fetched and self.adapter.sens_fetcher.last_status not in {"NOT_REQUESTED", "AVAILABLE"}:
                 self.source_status["SENS"] = self.adapter.sens_fetcher.last_status
         except Exception as exc:
             self.source_status["SENS"] = "UNAVAILABLE"
-        items.extend(self._fetch_global_newsapi(limit=8))
+        items.extend(islice(self._fetch_global_newsapi(limit=8), 8))
 
         fresh = []
         batch_seen = set()
@@ -395,10 +403,12 @@ class MacroSentimentScanner:
             key = it.headline.strip().lower()
             if key and key not in batch_seen and (self.retain_items or key not in self._seen_headlines):
                 batch_seen.add(key)
-                self._seen_headlines.add(key)
+                self._seen_headlines[key] = None
+                if len(self._seen_headlines) > self.MAX_SEEN_HEADLINES:
+                    self._seen_headlines.popitem(last=False)
                 fresh.append(it)
         if self.retain_items:
-            self._seen_headlines = batch_seen
+            self._seen_headlines = OrderedDict.fromkeys(batch_seen)
         return fresh
 
     def scan(self, moneyweb_limit: int = 12, sens_limit: int = 8, on_progress=None) -> MacroReport:
@@ -411,7 +421,7 @@ class MacroSentimentScanner:
                        self._analyzed_cache.get(it.headline.strip().lower()) or analyze_item(it, False)
                        for it in raw_items}
             preview.update({k: v for k, v in self._analyzed_cache.items() if k not in preview})
-            on_progress(self._report(list(preview.values())[:100]))
+            on_progress(self._report(list(preview.values())[:self.MAX_RETAINED_ITEMS]))
 
         analyzed: List[AnalyzedItem] = []
         llm_budget = self.max_llm_items if self.use_llm else 0
@@ -433,7 +443,7 @@ class MacroSentimentScanner:
             # Keep up to 100 headlines across polls; duplicates never consume AI budget.
             current = {i.headline.strip().lower(): i for i in analyzed}
             current.update({k: v for k, v in self._analyzed_cache.items() if k not in current})
-            self._analyzed_cache = dict(list(current.items())[:100])
+            self._analyzed_cache = dict(list(current.items())[:self.MAX_RETAINED_ITEMS])
             analyzed = list(self._analyzed_cache.values())
 
         return self._report(analyzed)
