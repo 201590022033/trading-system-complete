@@ -1,5 +1,19 @@
 # Linear Fusion Roadmap
 
+## M11 — Contextual Feature Effectiveness Learning [COMPLETE 2026-09-09]
+
+Added a causal, research-only effectiveness learner with typed feature outcomes
+and estimates partitioned by feature, instrument, horizon and regime. It excludes
+immature outcomes, supports configured minimum evidence, hierarchical fallback,
+prior shrinkage, optional recency weighting, explicit uncertainty and retained
+negative evidence. Divergence states are evaluable without assuming predictive
+value. Canonical turnover-cost and daily/intraday horizon semantics remain
+explicit. No learned effectiveness is wired into production decisions. The suite
+passes 301 tests and all 39 immutable research artifacts remain unchanged. See
+[M11 Contextual Effectiveness](../research/M11_CONTEXTUAL_EFFECTIVENESS.md).
+
+Next milestone: M12 — Instrument Selection & Suitability Learning [NOT STARTED].
+
 ## M10 — Divergence & Disagreement Feature Implementation [COMPLETE 2026-09-09]
 
 Added versioned, unweighted `divergence-v1` summaries for causal signal

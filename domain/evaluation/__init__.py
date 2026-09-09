@@ -1,0 +1,1 @@
+"""Canonical research evaluation contracts."""

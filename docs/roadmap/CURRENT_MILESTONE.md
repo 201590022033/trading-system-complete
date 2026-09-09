@@ -1,5 +1,21 @@
 # Current Milestone
 
+## M11 — Contextual Feature Effectiveness Learning [COMPLETE 2026-09-09]
+
+Added canonical research contracts for matured feature outcomes and contextual
+effectiveness estimates. The learner preserves causal availability/maturity
+boundaries, explicit gross/net outcomes, configurable minimum evidence,
+hierarchical fallback, prior shrinkage, optional recency weighting and negative
+evidence. It supports technical, divergence and causally supplied cross-asset
+features without fabricating unavailable inputs. Daily and intraday horizons
+remain distinct.
+
+No learned output is connected to scoring, ranking, risk, GUI, Railway or broker
+runtime. The safe suite passed 301 tests and all 39 immutable research artifacts
+remain unchanged. See `docs/research/M11_CONTEXTUAL_EFFECTIVENESS.md`.
+
+Next milestone: M12 — Instrument Selection & Suitability Learning [NOT STARTED].
+
 ## M10 — Divergence & Disagreement Feature Implementation [COMPLETE 2026-09-09]
 
 Added the research-only `divergence-v1` feature family. It measures positive,
