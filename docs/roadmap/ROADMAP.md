@@ -1,5 +1,20 @@
 # Linear Fusion Roadmap
 
+## M10 — Divergence & Disagreement Feature Implementation [COMPLETE 2026-09-09]
+
+Added versioned, unweighted `divergence-v1` summaries for causal signal
+evidence. The feature family preserves active, positive, negative, neutral and
+unavailable counts; directional balance; disagreement; agreement; dominance;
+intensity; dispersion; coverage; pair/group identity and provenance. Explicit
+states distinguish low evidence from balanced conflict and directional
+dominance with residual conflict. Future inputs are excluded by availability
+time, and optional regime metadata remains descriptive. No price-pivot hindsight
+feature, learned weight, profitability optimization or runtime integration was
+introduced. The suite passes 296 tests and all 39 immutable research artifacts
+remain unchanged. See [M10 Divergence Features](../research/M10_DIVERGENCE_FEATURES.md).
+
+Next milestone: M11 — Contextual Feature Effectiveness Learning [NOT STARTED].
+
 ## M9 — Canonical Regime Engine & Versioning [COMPLETE 2026-09-09]
 
 Added a typed, versioned `MarketRegime` contract and registry while preserving

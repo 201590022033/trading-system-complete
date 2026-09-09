@@ -1,5 +1,21 @@
 # Current Milestone
 
+## M10 — Divergence & Disagreement Feature Implementation [COMPLETE 2026-09-09]
+
+Added the research-only `divergence-v1` feature family. It measures positive,
+negative, neutral and unavailable evidence separately, distinguishing low
+evidence, high agreement, high disagreement and directional dominance with
+residual conflict. Pair/group summaries retain instrument, horizon, availability,
+feature-version and optional regime context.
+
+Future inputs are excluded from earlier summaries; no learned weights, hindsight
+pivots or synthetic macro/news history are used. The feature family is not
+connected to scoring, ranking, risk, GUI, Railway or broker paths. The safe suite
+passed 296 tests and all 39 immutable research artifacts remain unchanged. See
+`docs/research/M10_DIVERGENCE_FEATURES.md`.
+
+Next milestone: M11 — Contextual Feature Effectiveness Learning [NOT STARTED].
+
 ## M9 — Canonical Regime Engine & Versioning [COMPLETE 2026-09-09]
 
 Added `domain.features.regime` with a typed `MarketRegime` contract, explicit
