@@ -1,5 +1,15 @@
 # Current Milestone
 
+## M4 — Canonical Source Registry Promotion [COMPLETE 2026-09-09]
+
+Promoted the existing OI4 source registry through an additive canonical facade.
+The 16 built-in policies, custom registration, enable/disable state, manual
+weights, audit behavior and SQLite restart persistence are preserved. Learned
+reliability remains a placeholder; collectors and evidence deduplication are
+unchanged. The safe suite passes 259 tests and all 39 protected artifacts match.
+
+Next milestone: M5 — Event Provenance & Configurable Clustering Engine [NOT STARTED].
+
 ## M3 — Instrument Registry Reconciliation [COMPLETE 2026-09-09]
 
 Added the broker-neutral canonical instrument registry and mapping document.
