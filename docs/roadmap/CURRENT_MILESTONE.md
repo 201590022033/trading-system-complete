@@ -1,5 +1,24 @@
 # Current Milestone
 
+## M7 — Early Railway Foundation Validation [COMPLETE 2026-09-09]
+
+Railway Web and Worker services were externally validated by the operator.
+The Web service returned HTTP 200 from `/health` with `mode=RESEARCH`,
+`live_execution=false` and `database=CONFIGURED_POSTGRES`; Gunicorn bound the
+Railway port successfully. The Worker emitted heartbeats and recovered after
+redeployment. Real Railway PostgreSQL write/verify validation passed for source
+policy, evidence, clustered event and audit records, including UTC round-trip,
+transaction rollback and persistence across a fresh Web container.
+
+The local safe suite passed 281 tests and all 39 immutable research artifacts
+remained unchanged. Local tests cover fail-closed PostgreSQL configuration; no
+deliberate production outage test was performed. Supplied Railway logs exposed
+no secrets, and no trading behavior was activated. The distinction between
+local automated checks and operator-observed external evidence is recorded in
+`docs/research/M7_RAILWAY_FOUNDATION.md`.
+
+Next milestone: M8 — Preserve & Migrate HR11 Causal Core [NOT STARTED].
+
 ## M6 — Persistence Abstraction Layer [COMPLETE 2026-09-09]
 
 Added the domain-oriented `StorageRepository` boundary with an SQLite adapter

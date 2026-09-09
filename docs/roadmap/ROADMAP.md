@@ -1,5 +1,20 @@
 # Linear Fusion Roadmap
 
+## M7 — Early Railway Foundation Validation [COMPLETE 2026-09-09]
+
+Operator-observed Railway validation passed for the Web service, Worker
+heartbeat/recovery and real PostgreSQL persistence. The Web health endpoint
+confirmed `mode=RESEARCH`, `live_execution=false` and configured PostgreSQL;
+write/verify validation covered source policy, evidence, clustered event and
+audit records, UTC timestamps, rollback and persistence across redeployment.
+Local automated validation passed 281 tests with 39/39 immutable research
+artifacts unchanged. External deployment evidence was manually supplied by the
+operator; it was not accessed directly by the coding workspace. No deliberate
+production outage test was performed and M7 did not activate trading behavior.
+See [M7 Railway Foundation](../research/M7_RAILWAY_FOUNDATION.md).
+
+Next milestone: M8 — Preserve & Migrate HR11 Causal Core [NOT STARTED].
+
 ## M6 — Persistence Abstraction Layer [COMPLETE 2026-09-09]
 
 Added the domain-oriented `StorageRepository` boundary with an SQLite adapter
