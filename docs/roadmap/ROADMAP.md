@@ -1,5 +1,15 @@
 # Linear Fusion Roadmap
 
+## M6 — Persistence Abstraction Layer [COMPLETE 2026-09-09]
+
+Added the domain-oriented `StorageRepository` boundary with an SQLite adapter
+delegating existing `MarketIntelligenceStore` behavior and a PostgreSQL adapter
+activated only by `DATABASE_URL`. Added one additive clustered-event migration;
+source policies, evidence, audits and clustered events have contract coverage.
+No live PostgreSQL instance was available, so integration remains unvalidated.
+The safe suite passes 274 tests and all 39 protected artifacts remain unchanged.
+Next milestone: M7 — Early Railway Foundation Validation [NOT STARTED].
+
 ## M5 — Event Provenance & Configurable Clustering Engine [COMPLETE 2026-09-09]
 
 Added an isolated deterministic Tier-2 event clusterer with versioned research
