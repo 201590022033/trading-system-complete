@@ -26,6 +26,7 @@ ost_page_sample.html
 # Local development environments and handoff smoke outputs
 .venv/
 .venv-*/
+.venv-m0/
 analysis/results/hr11-local/
 
 # Local market-intelligence runtime database

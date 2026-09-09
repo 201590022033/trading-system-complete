@@ -1,6 +1,16 @@
 # Current Milestone
 
-**OI4 — Market-intelligence UI redesign [ACTIVE 2026-09-08]**
+## M0 — Baseline Freeze & Verification [COMPLETE 2026-09-09]
+
+- Preparation commit: `374fbae8d177b5e6da33382bcd72b2cd0a30cfed` on `master`.
+- Safe suite: 234 passed, 0 failed, 0 skipped, 30.202 seconds, Python 3.12.2
+  in `.venv-m0`, dependencies from `requirements.txt`.
+- Immutable HR11 baseline: 39 expected, 39 verified, 0 mismatched, 0 missing.
+- No trading/research computation, data migration, GUI or Railway behavior changed.
+- Completed 2026-09-09 (Africa/Johannesburg).
+- Next authorized milestone: M1 — Canonical Domain Contracts [NOT STARTED].
+
+**OI4 — Market-intelligence UI redesign [PAUSED 2026-09-09; not active]**
 
 Build a configurable market-intelligence layer and redesigned UI around three
 main views: Market AI/News, Technical Intelligence, and Portfolio/Trade Summary.
