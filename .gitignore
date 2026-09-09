@@ -31,3 +31,6 @@ analysis/results/hr11-local/
 # Local market-intelligence runtime database
 /market_intelligence.db
 /market_intelligence.db-*
+
+# Generated audit/export artifact
+repomix-output.xml
