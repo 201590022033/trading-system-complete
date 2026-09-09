@@ -15,6 +15,21 @@ unchanged. No ranking, portfolio selection, strategy weighting, dashboard,
 Railway or broker integration was added. See
 `docs/research/M12_INSTRUMENT_SUITABILITY.md`.
 
+## M12A — IG Discovery, Authentication & Canonical Market Mapping [BLOCKED]
+
+Read-only IG discovery infrastructure is implemented with explicit DEMO/LIVE
+configuration, in-memory authentication, account discovery, market search,
+market detail normalization and distinct EPIC/product mappings. Offline tests
+pass, but operator validation with real credentials is still required. No IG
+dealing or runtime integration is enabled. See
+`docs/integrations/IG_M12A_DISCOVERY.md`.
+
+Next milestone: M12B — IG Historical Data Ingestion & Validation [NOT STARTED].
+
+## M12B — IG Historical Data Ingestion & Validation [NOT STARTED]
+
+Deferred until M12A external discovery validation succeeds.
+
 Next milestone: M13 — Opportunity Ranking [NOT STARTED].
 
 ## M11 — Contextual Feature Effectiveness Learning [COMPLETE 2026-09-09]
