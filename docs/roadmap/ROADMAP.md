@@ -1,5 +1,18 @@
 # Linear Fusion Roadmap
 
+## M12 — Instrument Selection & Suitability Learning [COMPLETE 2026-09-09]
+
+Added canonical instrument suitability contracts using the existing registry and
+M11 evidence. Hard eligibility cannot be averaged away; research and execution
+suitability remain distinct. Data grade, horizon support, execution metadata,
+assumed/observed cost burden, unknown liquidity, feature evidence, stability,
+regime coverage and governance blockers are reported independently. Discovered
+instruments remain candidate/research and no portfolio or opportunity ranking is
+performed. The suite passes 307 tests and all 39 immutable research artifacts
+remain unchanged. See [M12 Instrument Suitability](../research/M12_INSTRUMENT_SUITABILITY.md).
+
+Next milestone: M13 — Opportunity Ranking [NOT STARTED].
+
 ## M11 — Contextual Feature Effectiveness Learning [COMPLETE 2026-09-09]
 
 Added a causal, research-only effectiveness learner with typed feature outcomes

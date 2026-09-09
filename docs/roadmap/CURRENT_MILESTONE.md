@@ -1,5 +1,22 @@
 # Current Milestone
 
+## M12 — Instrument Selection & Suitability Learning [COMPLETE 2026-09-09]
+
+Added a canonical suitability evaluator around the existing instrument registry
+and M11 effectiveness records. Hard eligibility is separated from soft
+suitability; manual blocks, permissions, horizon support, data requirements and
+execution metadata remain decisive. Research suitability is distinct from
+execution suitability. Data grade, assumed versus observed costs, unknown
+liquidity, feature evidence, stability and regime coverage remain separate
+states. Discovered instruments remain candidate/research only.
+
+The safe suite passed 307 tests and all 39 immutable research artifacts remain
+unchanged. No ranking, portfolio selection, strategy weighting, dashboard,
+Railway or broker integration was added. See
+`docs/research/M12_INSTRUMENT_SUITABILITY.md`.
+
+Next milestone: M13 — Opportunity Ranking [NOT STARTED].
+
 ## M11 — Contextual Feature Effectiveness Learning [COMPLETE 2026-09-09]
 
 Added canonical research contracts for matured feature outcomes and contextual
