@@ -8,7 +8,15 @@
 - Immutable HR11 baseline: 39 expected, 39 verified, 0 mismatched, 0 missing.
 - No trading/research computation, data migration, GUI or Railway behavior changed.
 - Completed 2026-09-09 (Africa/Johannesburg).
-- Next authorized milestone: M1 — Canonical Domain Contracts [NOT STARTED].
+- M1 completed 2026-09-09 as an additive contracts-only milestone.
+- Next milestone: M2 — Versioned Feature Registry & Semantic Parity Testing [NOT STARTED].
+
+## M1 — Canonical Domain Contracts [COMPLETE 2026-09-09]
+
+Added immutable, timezone-aware, serializable domain contracts under
+`domain/contracts/`. Focused tests cover contract invariants and failure modes;
+the complete safe suite passes 241 tests. Legacy behavior and historical
+artifacts remain unchanged.
 
 **OI4 — Market-intelligence UI redesign [PAUSED 2026-09-09; not active]**
 

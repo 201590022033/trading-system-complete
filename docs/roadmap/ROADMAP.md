@@ -8,7 +8,14 @@ Preparation commit `374fbae8d177b5e6da33382bcd72b2cd0a30cfed` recorded the
 approved architecture and roadmap on `master`. The safe suite passed 234 tests
 with Python 3.12.2 in `.venv-m0`; all 39 protected HR11 artifacts matched their
 recorded SHA-256 hashes. No trading or research computation changed.
-Next authorized milestone: M1 — Canonical Domain Contracts [NOT STARTED].
+M1 completed 2026-09-09 as an additive contracts-only milestone. Next milestone:
+M2 — Versioned Feature Registry & Semantic Parity Testing [NOT STARTED].
+
+## M1 — Canonical Domain Contracts [COMPLETE 2026-09-09]
+
+Added immutable, timezone-aware, serializable domain contracts under
+`domain/contracts/` with focused invariant tests. The complete safe suite passes
+241 tests; legacy behavior and historical artifacts remain unchanged.
 
 ## OI4 — Market-intelligence UI redesign [PAUSED 2026-09-09; not active]
 - Add a configurable, auditable market-intelligence layer on top of existing evidence,
