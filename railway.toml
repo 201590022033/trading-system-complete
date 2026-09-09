@@ -1,0 +1,11 @@
+[build]
+builder = "DOCKERFILE"
+
+[deploy]
+startCommand = "gunicorn --bind 0.0.0.0:$PORT --workers 1 app:app"
+healthcheckPath = "/health"
+healthcheckTimeout = 30
+restartPolicyType = "ON_FAILURE"
+
+[environments.worker.deploy]
+startCommand = "python -m workers.heartbeat"

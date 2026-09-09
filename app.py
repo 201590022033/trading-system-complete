@@ -32,7 +32,15 @@ def close_market_store(error=None):
 @app.get("/")
 def index(): return render_template("dashboard.html")
 @app.get("/health")
-def health(): return jsonify(status="ok", service="oi2", live_execution=False)
+def health():
+    mode = os.environ.get("APP_MODE", "DEVELOPMENT").upper()
+    database_url = os.environ.get("DATABASE_URL", "").strip()
+    production = mode not in {"DEVELOPMENT", "RESEARCH"}
+    database = "CONFIGURED_POSTGRES" if database_url.lower().startswith(("postgresql://", "postgres://")) else (
+        "MISSING_POSTGRES" if production else "LOCAL_SQLITE")
+    healthy = database != "MISSING_POSTGRES"
+    return jsonify(status="ok" if healthy else "degraded", application="trading-system",
+                   service="oi2", database=database, mode=mode, live_execution=False), (200 if healthy else 503)
 @app.get("/api/system/status")
 def status(): return jsonify(service.status())
 @app.get("/api/market-intelligence/sources")
