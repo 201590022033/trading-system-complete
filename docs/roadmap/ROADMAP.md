@@ -1,5 +1,15 @@
 # Linear Fusion Roadmap
 
+## M5 — Event Provenance & Configurable Clustering Engine [COMPLETE 2026-09-09]
+
+Added an isolated deterministic Tier-2 event clusterer with versioned research
+policies, token-Jaccard similarity, entity overlap, bounded time windows,
+stable event IDs and causal snapshots. Original EvidenceRecords and Tier-1
+exact deduplication remain unchanged. No persistence schema or runtime scoring
+path changed. The safe suite passes 268 tests and all 39 protected artifacts
+remain unchanged.
+Next milestone: M6 — Persistence Abstraction Layer [NOT STARTED].
+
 ## M4 — Canonical Source Registry Promotion [COMPLETE 2026-09-09]
 
 Promoted the existing OI4 source registry through an additive canonical facade.
