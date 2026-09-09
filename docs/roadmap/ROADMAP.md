@@ -8,8 +8,16 @@ Preparation commit `374fbae8d177b5e6da33382bcd72b2cd0a30cfed` recorded the
 approved architecture and roadmap on `master`. The safe suite passed 234 tests
 with Python 3.12.2 in `.venv-m0`; all 39 protected HR11 artifacts matched their
 recorded SHA-256 hashes. No trading or research computation changed.
-M1 completed 2026-09-09 as an additive contracts-only milestone. Next milestone:
-M2 — Versioned Feature Registry & Semantic Parity Testing [NOT STARTED].
+M1 completed 2026-09-09 as an additive contracts-only milestone. M2 completed
+2026-09-09 as a versioned registry and parity-only milestone. Next milestone:
+M3 — Instrument Registry Reconciliation [NOT STARTED].
+
+## M2 — Versioned Feature Registry & Semantic Parity Testing [COMPLETE 2026-09-09]
+
+Added isolated versioned feature definitions, legacy reference wrappers,
+candidate v2 calculators, registry lookup, parity tests and a semantic drift
+register. Legacy runtime paths and historical artifacts remain unchanged; the
+safe suite passes 247 tests and all 39 protected hashes remain unchanged.
 
 ## M1 — Canonical Domain Contracts [COMPLETE 2026-09-09]
 

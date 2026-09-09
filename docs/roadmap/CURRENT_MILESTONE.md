@@ -9,7 +9,8 @@
 - No trading/research computation, data migration, GUI or Railway behavior changed.
 - Completed 2026-09-09 (Africa/Johannesburg).
 - M1 completed 2026-09-09 as an additive contracts-only milestone.
-- Next milestone: M2 — Versioned Feature Registry & Semantic Parity Testing [NOT STARTED].
+- M2 completed 2026-09-09 as a versioned registry and parity-only milestone.
+- Next milestone: M3 — Instrument Registry Reconciliation [NOT STARTED].
 
 ## M1 — Canonical Domain Contracts [COMPLETE 2026-09-09]
 
@@ -17,6 +18,13 @@ Added immutable, timezone-aware, serializable domain contracts under
 `domain/contracts/`. Focused tests cover contract invariants and failure modes;
 the complete safe suite passes 241 tests. Legacy behavior and historical
 artifacts remain unchanged.
+
+## M2 — Versioned Feature Registry & Semantic Parity Testing [COMPLETE 2026-09-09]
+
+Added isolated versioned feature definitions, legacy reference wrappers,
+candidate v2 calculators, registry lookup, parity tests and the semantic drift
+register. Legacy runtime paths remain unchanged; all 39 protected artifacts
+remain byte-for-byte verified. The safe suite passes 247 tests.
 
 **OI4 — Market-intelligence UI redesign [PAUSED 2026-09-09; not active]**
 
