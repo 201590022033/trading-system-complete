@@ -1,5 +1,22 @@
 # Current Milestone
 
+## M9 — Canonical Regime Engine & Versioning [COMPLETE 2026-09-09]
+
+Added `domain.features.regime` with a typed `MarketRegime` contract, explicit
+availability states, versioned regime definitions and a registry. Existing
+daily `regime-v1` and HR11 intraday regime semantics remain reference/legacy
+implementations with parity coverage. A parameterized candidate regime remains
+research-only; thresholds are supplied as configuration and missing macro or
+liquidity inputs remain explicit unknown/unavailable states.
+
+The full safe suite passed 291 tests and all 39 immutable research artifacts
+remain unchanged. Causal tests prove future observations cannot alter an earlier
+classification. No production runtime, scoring, ranking, GUI, Railway, broker
+or historical research behavior changed. See
+`docs/research/M9_REGIME_VERSIONING.md`.
+
+Next milestone: M10 — Divergence & Disagreement Feature Implementation [NOT STARTED].
+
 ## M8 — Preserve & Migrate HR11 Causal Core [COMPLETE 2026-09-09]
 
 Added canonical `domain.market_data` facades for the preserved HR11 session,

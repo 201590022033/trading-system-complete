@@ -1,5 +1,19 @@
 # Linear Fusion Roadmap
 
+## M9 — Canonical Regime Engine & Versioning [COMPLETE 2026-09-09]
+
+Added a typed, versioned `MarketRegime` contract and registry while preserving
+exact daily `regime-v1` and HR11 intraday regime semantics as reference/legacy
+models. A parameterized multidimensional candidate supports explicit trend and
+volatility thresholds plus optional liquidity and macro dimensions, with
+`UNKNOWN`/`UNAVAILABLE` states for missing inputs. Future-observation mutation
+invariance and legacy parity are tested. Candidate output remains disconnected
+from scoring, ranking, risk, GUI, Railway and broker paths. The suite passes 291
+tests and all 39 immutable research artifacts remain unchanged. See
+[M9 Regime Versioning](../research/M9_REGIME_VERSIONING.md).
+
+Next milestone: M10 — Divergence & Disagreement Feature Implementation [NOT STARTED].
+
 ## M8 — Preserve & Migrate HR11 Causal Core [COMPLETE 2026-09-09]
 
 Preserved the HR11 causal infrastructure behind canonical `domain.market_data`
