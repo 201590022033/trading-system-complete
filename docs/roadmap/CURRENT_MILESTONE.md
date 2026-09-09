@@ -1,5 +1,15 @@
 # Current Milestone
 
+## M3 — Instrument Registry Reconciliation [COMPLETE 2026-09-09]
+
+Added the broker-neutral canonical instrument registry and mapping document.
+Legacy aliases, six operational equities and all nine enabled HR11 identities
+remain compatible. Discovery and execution mappings remain explicit and
+unresolved where unverified. The safe suite passes 254 tests; all 39 protected
+artifacts remain unchanged.
+
+Next milestone: M4 — Canonical Source Registry Promotion [NOT STARTED].
+
 ## M0 — Baseline Freeze & Verification [COMPLETE 2026-09-09]
 
 - Preparation commit: `374fbae8d177b5e6da33382bcd72b2cd0a30cfed` on `master`.

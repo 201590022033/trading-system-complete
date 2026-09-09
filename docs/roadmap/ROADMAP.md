@@ -1,5 +1,13 @@
 # Linear Fusion Roadmap
 
+## M3 — Instrument Registry Reconciliation [COMPLETE 2026-09-09]
+
+Added the broker-neutral canonical instrument registry and mapping document
+while preserving legacy aliases, six operational equities and all nine enabled
+HR11 identities. Unresolved discovery and execution mappings remain explicit.
+The safe suite passes 254 tests and all 39 protected artifacts remain unchanged.
+Next milestone: M4 — Canonical Source Registry Promotion [NOT STARTED].
+
 Only one milestone is ACTIVE. Advancement requires tests, docs and a commit.
 
 ## M0 — Baseline Freeze & Verification [COMPLETE 2026-09-09]
