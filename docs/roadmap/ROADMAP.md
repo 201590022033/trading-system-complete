@@ -1,5 +1,19 @@
 # Linear Fusion Roadmap
 
+## M8 — Preserve & Migrate HR11 Causal Core [COMPLETE 2026-09-09]
+
+Preserved the HR11 causal infrastructure behind canonical `domain.market_data`
+interfaces for sessions, completed-bar aggregation, non-colliding horizons,
+availability-time cross-asset alignment and position-transition costs. Backward
+compatibility with the existing `intraday_*` modules and HR11 tests remains.
+Explicit regression coverage proves session boundaries, timezone handling,
+future-mutation invariance, missing-data propagation, horizon identity and
+turnover/reversal semantics. The suite passes 286 tests and all 39 immutable
+research artifacts remain unchanged. No real-data HR11 rerun or strategy
+promotion occurred. See [M8 HR11 Causal Core](../research/M8_HR11_CAUSAL_CORE.md).
+
+Next milestone: M9 — Canonical Regime Engine & Versioning [NOT STARTED].
+
 ## M7 — Early Railway Foundation Validation [COMPLETE 2026-09-09]
 
 Operator-observed Railway validation passed for the Web service, Worker

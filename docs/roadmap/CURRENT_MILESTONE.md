@@ -1,5 +1,22 @@
 # Current Milestone
 
+## M8 — Preserve & Migrate HR11 Causal Core [COMPLETE 2026-09-09]
+
+Added canonical `domain.market_data` facades for the preserved HR11 session,
+completed-bar aggregation, horizon, cross-asset and turnover-cost contracts.
+Intraday duration and daily session horizons have distinct identities.
+Availability-time joins, missing-data states, session boundaries, break rules,
+future-mutation invariance and position-transition costs remain unchanged.
+
+HR11 scripts and legacy tests remain compatible. Experimental signals, profiles
+and paper router were left unchanged and disconnected from production paths.
+The safe suite passed 286 tests; all 39 immutable research artifacts remain
+unchanged. No HR11 real-data rerun occurred and the known 180 insufficient-
+evidence cells were not reinterpreted. See
+`docs/research/M8_HR11_CAUSAL_CORE.md`.
+
+Next milestone: M9 — Canonical Regime Engine & Versioning [NOT STARTED].
+
 ## M7 — Early Railway Foundation Validation [COMPLETE 2026-09-09]
 
 Railway Web and Worker services were externally validated by the operator.
