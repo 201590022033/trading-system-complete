@@ -23,10 +23,17 @@ including preservation of unavailable metadata. The coding workspace did not
 access the operator account. No dealing, historical ingestion or runtime
 integration is enabled. See [IG M12A discovery](../integrations/IG_M12A_DISCOVERY.md).
 
-## M12B — IG Historical Data Ingestion & Validation [NOT STARTED]
+## M12B — IG Historical Data Ingestion & Validation [ACTIVE — BLOCKED]
 
-M12A external read-only validation is complete. No M12B work has begun; M12B is
-NOT STARTED.
+Added a local read-only candidate for IG `/prices/{epic}` v3 history. It maps
+only documented resolutions, preserves bid/ask/last OHLC, produces versioned
+derived-mid M8 canonical completed bars, normalizes UTC timestamps, follows
+bounded pagination, and exposes gaps, duplicates, truncation, provenance,
+research data grade and factual suitability metadata. No persistence, scoring,
+execution, opportunity ranking or HR11 evaluation changed. M12B remains blocked
+until the operator validates daily, intraday and 5-minute Demo history. See
+[IG M12B historical data](../integrations/IG_M12B_HISTORICAL_DATA.md).
+The full safe suite passes 350 tests and all 39 protected artifacts are unchanged.
 
 Next milestone: M13 — Opportunity Ranking [NOT STARTED].
 

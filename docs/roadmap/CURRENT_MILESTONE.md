@@ -51,11 +51,24 @@ tradeable Brent market-detail normalization. Null currency, margin factor and
 trading hours remained explicit. The coding workspace did not access the
 operator account, and no account ID or secret is recorded.
 
-Next milestone: M12B — IG Historical Data Ingestion & Validation [NOT STARTED].
+Next milestone: M12B — IG Historical Data Ingestion & Validation [ACTIVE].
 
-## M12B — IG Historical Data Ingestion & Validation [NOT STARTED]
+## M12B — IG Historical Data Ingestion & Validation [ACTIVE — BLOCKED]
 
-M12A validation is complete. M12B remains NOT STARTED and is not active.
+The local read-only candidate retrieves IG `/prices/{epic}` v3 history with an
+explicit documented resolution map, bounded pagination, canonical completed-bar
+normalization, preserved bid/ask/last OHLC components, versioned derived mids,
+UTC timestamps, provenance, duplicate/discontinuity/truncation diagnostics,
+research-only data grade and factual suitability evidence. No data is persisted,
+no scoring or runtime trading changes, and no HR11 rerun occurred. See
+`docs/integrations/IG_M12B_HISTORICAL_DATA.md`.
+
+The full safe suite passes 350 tests; all 39 immutable research artifacts remain
+unchanged.
+
+M12B remains blocked pending operator external IG Demo validation of daily,
+intraday and 5-minute history for the proven Brent EPIC. The coding workspace
+has not accessed the operator account.
 
 Next milestone: M13 — Opportunity Ranking [NOT STARTED].
 

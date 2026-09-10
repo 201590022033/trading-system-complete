@@ -26,6 +26,7 @@ _KNOWN_ERROR_CATEGORIES = {
     "error.security.two-factor-authentication-required": "TWO_FACTOR_REQUIRED",
     "error.public-api.exceeded-api-key-allowance": "RATE_LIMITED",
     "error.public-api.exceeded-account-allowance": "RATE_LIMITED",
+    "error.public-api.exceeded-account-historical-data-allowance": "RATE_LIMITED",
 }
 
 
@@ -279,6 +280,10 @@ class IGReadOnlyAdapter:
             raise IGRequestError(status, None, "MALFORMED_RESPONSE", "IG returned an unexpected response")
         return (payload, response_headers) if return_headers else payload
 
+    @staticmethod
+    def malformed_response(message):
+        return IGRequestError(200, None, "MALFORMED_RESPONSE", message)
+
     def authenticate(self):
         _, response_headers = self._request(
             "POST", "/session", version=2,
@@ -321,6 +326,10 @@ class IGReadOnlyAdapter:
     def get_market(self, epic):
         return self._normalize_market(self._request("GET", "/markets/" + quote(epic, safe=""), version=3))
 
+    def get_historical_prices(self, epic, resolution, start, end, **limits):
+        from domain.broker.ig_history import fetch_historical_prices
+        return fetch_historical_prices(self, epic, resolution, start, end, **limits)
+
     def _normalize_market(self, item: Mapping):
         dealing = item.get("dealingRules") or {}
         instrument = item.get("instrument") or {}
@@ -350,16 +359,17 @@ class IGReadOnlyAdapter:
     def capabilities(self):
         return {"broker": self.broker, "environment": self.config.environment, "read_only": True,
                 "authentication": True, "accounts": True, "market_search": True, "market_detail": True,
+                "historical_prices": True,
                 "order_submission": False, "position_modification": False, "version": VERSION}
 
     def place_order(self, *args, **kwargs):
-        raise RuntimeError("IG execution disabled in M12A")
+        raise RuntimeError("IG execution disabled")
 
     def close_position(self, *args, **kwargs):
-        raise RuntimeError("IG execution disabled in M12A")
+        raise RuntimeError("IG execution disabled")
 
     def amend_order(self, *args, **kwargs):
-        raise RuntimeError("IG execution disabled in M12A")
+        raise RuntimeError("IG execution disabled")
 
 
 __all__ = ["BASE_URLS", "ERROR_CATEGORIES", "IDENTIFIER_PATTERN", "IGAccount", "IGConfig", "IGMapping", "IGMarket",

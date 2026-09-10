@@ -6,6 +6,10 @@ from dotenv import dotenv_values
 ROOT = Path(__file__).resolve().parent
 
 def project_environment(environ=None):
-    values = {k: v for k, v in dotenv_values(ROOT / ".env").items() if v is not None}
-    values.update(dict(os.environ if environ is None else environ))
+    source = os.environ if environ is None else environ
+    disabled = str(source.get("PYTHON_DOTENV_DISABLED", os.environ.get("PYTHON_DOTENV_DISABLED", ""))).lower()
+    values = {} if disabled in {"1", "true", "yes"} else {
+        k: v for k, v in dotenv_values(ROOT / ".env").items() if v is not None
+    }
+    values.update(dict(source))
     return values
