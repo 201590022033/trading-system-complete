@@ -83,6 +83,14 @@ Historical failures are not retried automatically, avoiding multiplied quota
 use or masked partial results. HTTP 429 and IG's historical-allowance error are
 surfaced as `RATE_LIMITED`; the operator can retry after the allowance resets.
 
+Historical CLI failures are emitted as one safe JSON object rather than a Python
+traceback. It includes status, HTTP status, bounded response content type, IG
+error code/category and safe message. For non-JSON bodies it may also include a
+sanitized 240-character text excerpt; HTML tags are removed, whitespace is
+collapsed, and configured credentials/session values plus credential-like fields
+are redacted. Empty bodies remain explicit. The existing authentication-status
+diagnostic format is unchanged.
+
 ## Automated evidence
 
 Mocked tests cover retrieval, resolutions, canonical OHLC, quote preservation,
@@ -91,7 +99,7 @@ pagination, ordering, overlaps, duplicates, discontinuities, truncation, empty
 and malformed responses, allowance errors, redaction, M8 lineage, factual
 suitability metadata, and disabled execution.
 
-The full safe suite passes 350 tests. All 39 protected research artifacts match
+The full safe suite passes 355 tests. All 39 protected research artifacts match
 their baseline SHA-256 values.
 
 ## Required external IG Demo validation

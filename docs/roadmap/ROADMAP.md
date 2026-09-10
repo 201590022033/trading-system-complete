@@ -33,7 +33,7 @@ research data grade and factual suitability metadata. No persistence, scoring,
 execution, opportunity ranking or HR11 evaluation changed. M12B remains blocked
 until the operator validates daily, intraday and 5-minute Demo history. See
 [IG M12B historical data](../integrations/IG_M12B_HISTORICAL_DATA.md).
-The full safe suite passes 350 tests and all 39 protected artifacts are unchanged.
+The full safe suite passes 355 tests and all 39 protected artifacts are unchanged.
 
 Next milestone: M13 — Opportunity Ranking [NOT STARTED].
 

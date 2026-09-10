@@ -63,7 +63,7 @@ research-only data grade and factual suitability evidence. No data is persisted,
 no scoring or runtime trading changes, and no HR11 rerun occurred. See
 `docs/integrations/IG_M12B_HISTORICAL_DATA.md`.
 
-The full safe suite passes 350 tests; all 39 immutable research artifacts remain
+The full safe suite passes 355 tests; all 39 immutable research artifacts remain
 unchanged.
 
 M12B remains blocked pending operator external IG Demo validation of daily,

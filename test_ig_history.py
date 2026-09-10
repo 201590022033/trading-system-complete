@@ -152,6 +152,59 @@ class IGHistoryTests(unittest.TestCase):
             adapter.get_historical_prices("EPIC", "DAY", self.start, self.end)
         self.assertEqual(raised.exception.error_category, "RATE_LIMITED")
 
+    def history_error(self, status, body, content_type=None):
+        raw = body if isinstance(body, bytes) else body.encode()
+        headers = {} if content_type is None else {"cOnTeNt-TyPe": content_type}
+        adapter = IGReadOnlyAdapter(self.adapter.config,
+                                    lambda *args: (status, headers, raw))
+        adapter._session = self.adapter._session
+        with self.assertRaises(IGRequestError) as raised:
+            adapter.get_historical_prices("EPIC", "DAY", self.start, self.end)
+        return raised.exception.history_diagnostic()
+
+    def test_json_history_error_preserves_safe_code_message_and_content_type(self):
+        diagnostic = self.history_error(
+            400, json.dumps({"errorCode": "error.invalid.daterange",
+                             "message": "Invalid date range"}), "application/json; charset=UTF-8")
+        self.assertEqual(diagnostic["status"], "ERROR")
+        self.assertEqual(diagnostic["http_status"], 400)
+        self.assertEqual(diagnostic["response_content_type"], "application/json; charset=UTF-8")
+        self.assertEqual(diagnostic["ig_error_code"], "error.invalid.daterange")
+        self.assertEqual(diagnostic["error_category"], "MALFORMED_REQUEST")
+        self.assertEqual(diagnostic["message"], "Invalid date range")
+        self.assertNotIn("response_excerpt", diagnostic)
+
+    def test_text_empty_and_html_history_errors_are_bounded_and_safe(self):
+        text = self.history_error(400, "plain upstream rejection", "text/plain")
+        self.assertEqual(text["response_excerpt"], "plain upstream rejection")
+        empty = self.history_error(403, b"", None)
+        self.assertEqual(empty["error_category"], "PERMISSION_DENIED")
+        self.assertIsNone(empty["response_content_type"])
+        self.assertNotIn("response_excerpt", empty)
+        html = self.history_error(404, "<html><body><h1>Not Found</h1></body></html>", "text/html")
+        self.assertEqual(html["error_category"], "NOT_FOUND")
+        self.assertEqual(html["response_excerpt"], "Not Found")
+        self.assertNotIn("<", html["response_excerpt"])
+
+    def test_history_status_categories_cover_400_403_404_and_429(self):
+        expected = {400: "MALFORMED_REQUEST", 403: "PERMISSION_DENIED",
+                    404: "NOT_FOUND", 429: "RATE_LIMITED"}
+        for status, category in expected.items():
+            with self.subTest(status=status):
+                diagnostic = self.history_error(status, "failure", "text/plain")
+                self.assertEqual(diagnostic["http_status"], status)
+                self.assertEqual(diagnostic["error_category"], category)
+
+    def test_history_error_excerpt_redacts_secrets_and_is_bounded(self):
+        body = ("password=password api_key=API-SECRET identifier=user account_id=ACCOUNT-SECRET "
+                "CST=CST-SECRET X-SECURITY-TOKEN=TOKEN-SECRET cookie=session-secret " + "x" * 500)
+        diagnostic = self.history_error(403, body, "text/plain")
+        rendered = json.dumps(diagnostic)
+        for secret in ("password", "API-SECRET", "user", "ACCOUNT-SECRET", "CST-SECRET",
+                       "TOKEN-SECRET", "session-secret"):
+            self.assertNotIn(secret, rendered)
+        self.assertLessEqual(len(diagnostic["response_excerpt"]), 241)
+
     def test_summary_and_errors_do_not_expose_secrets(self):
         rendered = json.dumps(self.fetch().summary())
         for secret in ("API-SECRET", "password", "CST-SECRET", "TOKEN-SECRET"):
@@ -172,6 +225,25 @@ class IGHistoryTests(unittest.TestCase):
              patch.object(ig_discovery, "IGReadOnlyAdapter", FakeAdapter), patch("sys.stdout", output):
             ig_discovery.main()
         self.assertEqual(json.loads(output.getvalue()), {"bars_received": 1, "epic": "EPIC"})
+
+    def test_cli_history_error_is_structured_without_traceback(self):
+        from scripts import ig_discovery
+        failure = IGRequestError(400, "error.invalid.daterange", "MALFORMED_REQUEST",
+                                 "Invalid date range", response_content_type="application/json")
+        class FakeAdapter:
+            def __init__(self, config): pass
+            def authenticate(self): return {"authenticated": True}
+            def get_historical_prices(self, *args, **kwargs): raise failure
+        argv = ["ig_discovery", "history", "EPIC", "DAY",
+                "2026-01-01T00:00:00Z", "2026-01-02T00:00:00Z"]
+        output = io.StringIO()
+        with patch.object(sys, "argv", argv), \
+             patch.object(ig_discovery.IGConfig, "from_env", return_value=object()), \
+             patch.object(ig_discovery, "IGReadOnlyAdapter", FakeAdapter), patch("sys.stdout", output):
+            ig_discovery.main()
+        diagnostic = json.loads(output.getvalue())
+        self.assertEqual(diagnostic["status"], "ERROR")
+        self.assertEqual(diagnostic["ig_error_code"], "error.invalid.daterange")
 
     def test_m8_causal_semantics_and_lineage(self):
         bar = self.fetch().bars[0].canonical

@@ -1,6 +1,7 @@
 """Read-only IG REST discovery and canonical EPIC mapping boundary."""
 
 from dataclasses import dataclass
+from html import unescape
 import json
 import os
 import re
@@ -16,7 +17,7 @@ IDENTIFIER_PATTERN = re.compile(r"^[A-Za-z0-9_-]{1,30}$")
 ERROR_CATEGORIES = {
     "AUTHENTICATION_FAILED", "INVALID_API_KEY", "ENVIRONMENT_MISMATCH",
     "TWO_FACTOR_REQUIRED", "PERMISSION_DENIED", "RATE_LIMITED",
-    "NETWORK_ERROR", "MALFORMED_REQUEST", "MALFORMED_RESPONSE", "UNKNOWN_IG_ERROR",
+    "NETWORK_ERROR", "MALFORMED_REQUEST", "MALFORMED_RESPONSE", "NOT_FOUND", "UNKNOWN_IG_ERROR",
 }
 
 _KNOWN_ERROR_CATEGORIES = {
@@ -64,23 +65,37 @@ def _error_category(status, error_code):
         return "RATE_LIMITED"
     if status == 400:
         return "MALFORMED_REQUEST"
+    if status == 404:
+        return "NOT_FOUND"
     return "UNKNOWN_IG_ERROR"
 
 
 class IGRequestError(RuntimeError):
     """Structured error whose string representation is safe for operator output."""
 
-    def __init__(self, http_status, ig_error_code, error_category, message):
+    def __init__(self, http_status, ig_error_code, error_category, message, *,
+                 response_content_type=None, safe_body_excerpt=None):
         self.http_status = http_status
         self.ig_error_code = ig_error_code
         self.error_category = error_category
         self.safe_message = message
+        self.response_content_type = response_content_type
+        self.safe_body_excerpt = safe_body_excerpt
         super().__init__(message)
 
     def diagnostic(self, environment):
         return {"authenticated": False, "environment": environment,
                 "http_status": self.http_status, "ig_error_code": self.ig_error_code,
                 "error_category": self.error_category, "message": self.safe_message}
+
+    def history_diagnostic(self):
+        result = {"status": "ERROR", "http_status": self.http_status,
+                  "response_content_type": self.response_content_type,
+                  "ig_error_code": self.ig_error_code, "error_category": self.error_category,
+                  "message": self.safe_message}
+        if self.safe_body_excerpt:
+            result["response_excerpt"] = self.safe_body_excerpt
+        return result
 
 
 @dataclass(frozen=True)
@@ -220,10 +235,24 @@ class IGReadOnlyAdapter:
                 self.config.password,
                 self.config.account_id, *session_values)
 
-    def _rejection(self, status, raw):
+    def _safe_excerpt(self, raw, content_type, limit=240):
+        if not raw:
+            return None
+        text = raw.decode("utf-8", errors="replace") if isinstance(raw, bytes) else str(raw)
+        if "html" in (content_type or "").casefold() or re.search(r"<\s*(?:!doctype|html|body)\b", text, re.I):
+            text = re.sub(r"<[^>]*>", " ", text)
+            text = unescape(text)
+        text = sanitize_text(text, self._secrets())
+        text = " ".join(text.split())
+        return text[:limit] + ("…" if len(text) > limit else "") if text else None
+
+    def _rejection(self, status, raw, response_headers=None, *, authentication=False):
         error_code = None
         server_message = None
         malformed = False
+        content_type = _header_value(response_headers or {}, "Content-Type")
+        content_type = sanitize_text(content_type, self._secrets())[:120] or None
+        safe_excerpt = None
         try:
             payload = json.loads(raw.decode() or "{}")
             if not isinstance(payload, Mapping):
@@ -233,8 +262,9 @@ class IGReadOnlyAdapter:
                 server_message = payload.get("errorMessage") or payload.get("message")
         except (ValueError, UnicodeDecodeError):
             malformed = True
+            safe_excerpt = self._safe_excerpt(raw, content_type)
         category = _error_category(status, error_code)
-        if malformed and status not in (400, 401, 403, 429):
+        if malformed and status not in (400, 401, 403, 404, 429):
             category = "MALFORMED_RESPONSE"
         default_messages = {
             "AUTHENTICATION_FAILED": "IG rejected the supplied credentials",
@@ -243,12 +273,15 @@ class IGReadOnlyAdapter:
             "TWO_FACTOR_REQUIRED": "IG requires a two-factor security code",
             "PERMISSION_DENIED": "IG denied access for this account or API permission",
             "RATE_LIMITED": "IG rate-limited the request",
-            "MALFORMED_REQUEST": "IG rejected the authentication request",
+            "MALFORMED_REQUEST": ("IG rejected the authentication request" if authentication else
+                                  "IG rejected the request as malformed"),
             "MALFORMED_RESPONSE": "IG returned an unreadable error response",
+            "NOT_FOUND": "IG could not find the requested resource",
             "UNKNOWN_IG_ERROR": "IG rejected the request",
         }
         message = sanitize_text(server_message, self._secrets()) if server_message else default_messages[category]
-        return IGRequestError(status, sanitize_text(error_code, self._secrets()) or None, category, message)
+        return IGRequestError(status, sanitize_text(error_code, self._secrets()) or None, category, message,
+                              response_content_type=content_type, safe_body_excerpt=safe_excerpt)
 
     def _request(self, method, path, *, version, payload=None, auth=True, return_headers=False):
         headers = {"X-IG-API-KEY": self.config.api_key, "Accept-Version": str(version),
@@ -265,13 +298,14 @@ class IGReadOnlyAdapter:
         except IGRequestError:
             raise
         except HTTPError as exc:
-            raise self._rejection(exc.code, exc.read()) from None
+            raise self._rejection(exc.code, exc.read(), dict(exc.headers or {}),
+                                  authentication=path == "/session") from None
         except (URLError, TimeoutError, OSError):
             raise IGRequestError(None, None, "NETWORK_ERROR", "IG could not be reached") from None
         except Exception:
             raise IGRequestError(None, None, "UNKNOWN_IG_ERROR", "Unexpected IG transport failure") from None
         if status >= 400:
-            raise self._rejection(status, raw)
+            raise self._rejection(status, raw, response_headers, authentication=path == "/session")
         try:
             payload = json.loads(raw.decode() or "{}")
         except (ValueError, UnicodeDecodeError):

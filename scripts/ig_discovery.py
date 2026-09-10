@@ -4,7 +4,7 @@ import argparse
 from datetime import datetime
 import json
 
-from domain.broker.ig import IGConfig, IGReadOnlyAdapter
+from domain.broker.ig import IGConfig, IGReadOnlyAdapter, IGRequestError
 
 
 def main():
@@ -33,10 +33,13 @@ def main():
                 end = datetime.fromisoformat(args.end.replace("Z", "+00:00"))
             except ValueError:
                 parser.error("history START and END must be ISO-8601 timestamps")
-            result = adapter.get_historical_prices(
-                args.value, args.resolution, start, end,
-                max_points=args.max_points, page_size=args.page_size,
-            ).summary()
+            try:
+                result = adapter.get_historical_prices(
+                    args.value, args.resolution, start, end,
+                    max_points=args.max_points, page_size=args.page_size,
+                ).summary()
+            except IGRequestError as exc:
+                result = exc.history_diagnostic()
     print(json.dumps(result, sort_keys=True, default=str))
 
 
