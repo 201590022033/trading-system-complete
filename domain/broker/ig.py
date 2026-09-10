@@ -3,6 +3,7 @@
 from dataclasses import dataclass
 import json
 import os
+import re
 from typing import Callable, Mapping
 from urllib.error import HTTPError, URLError
 from urllib.parse import quote, urlencode
@@ -10,6 +11,74 @@ from urllib.request import Request, urlopen
 
 VERSION = "ig-discovery-v1"
 BASE_URLS = {"DEMO": "https://demo-api.ig.com/gateway/deal", "LIVE": "https://api.ig.com/gateway/deal"}
+
+ERROR_CATEGORIES = {
+    "AUTHENTICATION_FAILED", "INVALID_API_KEY", "ENVIRONMENT_MISMATCH",
+    "TWO_FACTOR_REQUIRED", "PERMISSION_DENIED", "RATE_LIMITED",
+    "NETWORK_ERROR", "MALFORMED_REQUEST", "MALFORMED_RESPONSE", "UNKNOWN_IG_ERROR",
+}
+
+_KNOWN_ERROR_CATEGORIES = {
+    "error.security.invalid-details": "AUTHENTICATION_FAILED",
+    "error.security.invalid-api-key": "INVALID_API_KEY",
+    "error.security.account-not-enabled-for-api": "PERMISSION_DENIED",
+    "error.security.two-factor-authentication-required": "TWO_FACTOR_REQUIRED",
+    "error.public-api.exceeded-api-key-allowance": "RATE_LIMITED",
+    "error.public-api.exceeded-account-allowance": "RATE_LIMITED",
+}
+
+
+def sanitize_text(value, secrets=()):
+    """Return operator-safe text without credentials, tokens, headers or cookies."""
+    text = str(value or "")
+    for secret in secrets:
+        if secret:
+            text = text.replace(str(secret), "[REDACTED]")
+    patterns = (
+        r'(?i)(password|api[_-]?key|identifier|username|account[_-]?id)\s*[:=]\s*[^\s,;}]+',
+        r'(?i)(CST|X-SECURITY-TOKEN|authorization|cookie)\s*[:=]\s*[^\s,;}]+',
+        r'(?i)bearer\s+[A-Za-z0-9._~+/=-]+',
+    )
+    for pattern in patterns:
+        text = re.sub(pattern, lambda match: match.group(0).split(":", 1)[0].split("=", 1)[0] + ":[REDACTED]", text)
+    return text
+
+
+def _error_category(status, error_code):
+    code = str(error_code or "").strip().lower()
+    if code in _KNOWN_ERROR_CATEGORIES:
+        return _KNOWN_ERROR_CATEGORIES[code]
+    if "two-factor" in code or "2fa" in code or "security-code" in code:
+        return "TWO_FACTOR_REQUIRED"
+    if "invalid-api-key" in code:
+        return "INVALID_API_KEY"
+    if "environment" in code and any(word in code for word in ("invalid", "mismatch", "wrong")):
+        return "ENVIRONMENT_MISMATCH"
+    if status == 401:
+        return "AUTHENTICATION_FAILED"
+    if status == 403:
+        return "PERMISSION_DENIED"
+    if status == 429:
+        return "RATE_LIMITED"
+    if status == 400:
+        return "MALFORMED_REQUEST"
+    return "UNKNOWN_IG_ERROR"
+
+
+class IGRequestError(RuntimeError):
+    """Structured error whose string representation is safe for operator output."""
+
+    def __init__(self, http_status, ig_error_code, error_category, message):
+        self.http_status = http_status
+        self.ig_error_code = ig_error_code
+        self.error_category = error_category
+        self.safe_message = message
+        super().__init__(message)
+
+    def diagnostic(self, environment):
+        return {"authenticated": False, "environment": environment,
+                "http_status": self.http_status, "ig_error_code": self.ig_error_code,
+                "error_category": self.error_category, "message": self.safe_message}
 
 
 @dataclass(frozen=True)
@@ -120,8 +189,45 @@ class IGReadOnlyAdapter:
         try:
             with urlopen(request, timeout=timeout) as response:
                 return response.status, dict(response.headers), response.read()
-        except (HTTPError, URLError, TimeoutError) as exc:
-            raise RuntimeError(f"IG request failed: {type(exc).__name__}") from None
+        except HTTPError as exc:
+            return exc.code, dict(exc.headers or {}), exc.read()
+        except (URLError, TimeoutError, OSError):
+            raise IGRequestError(None, None, "NETWORK_ERROR", "IG could not be reached") from None
+
+    def _secrets(self):
+        session_values = () if self._session is None else (self._session.cst, self._session.security_token)
+        return (self.config.api_key, self.config.username, self.config.password,
+                self.config.account_id, *session_values)
+
+    def _rejection(self, status, raw):
+        error_code = None
+        server_message = None
+        malformed = False
+        try:
+            payload = json.loads(raw.decode() or "{}")
+            if not isinstance(payload, Mapping):
+                malformed = True
+            else:
+                error_code = payload.get("errorCode") or payload.get("error_code") or payload.get("code")
+                server_message = payload.get("errorMessage") or payload.get("message")
+        except (ValueError, UnicodeDecodeError):
+            malformed = True
+        category = _error_category(status, error_code)
+        if malformed and status not in (400, 401, 403, 429):
+            category = "MALFORMED_RESPONSE"
+        default_messages = {
+            "AUTHENTICATION_FAILED": "IG rejected the supplied credentials",
+            "INVALID_API_KEY": "IG rejected the supplied API key",
+            "ENVIRONMENT_MISMATCH": "IG reported an environment mismatch",
+            "TWO_FACTOR_REQUIRED": "IG requires a two-factor security code",
+            "PERMISSION_DENIED": "IG denied access for this account or API permission",
+            "RATE_LIMITED": "IG rate-limited the request",
+            "MALFORMED_REQUEST": "IG rejected the authentication request",
+            "MALFORMED_RESPONSE": "IG returned an unreadable error response",
+            "UNKNOWN_IG_ERROR": "IG rejected the request",
+        }
+        message = sanitize_text(server_message, self._secrets()) if server_message else default_messages[category]
+        return IGRequestError(status, sanitize_text(error_code, self._secrets()) or None, category, message)
 
     def _request(self, method, path, *, version, payload=None, auth=True):
         headers = {"X-IG-API-KEY": self.config.api_key, "Accept-Version": str(version),
@@ -133,11 +239,23 @@ class IGReadOnlyAdapter:
         body = json.dumps(payload).encode() if payload is not None else None
         try:
             status, _, raw = self._transport(method, self.config.base_url + path, headers, body, self.config.timeout_seconds)
-            if status >= 400:
-                raise RuntimeError(f"IG request rejected with HTTP {status}")
-            return json.loads(raw.decode() or "{}")
+        except IGRequestError:
+            raise
+        except HTTPError as exc:
+            raise self._rejection(exc.code, exc.read()) from None
+        except (URLError, TimeoutError, OSError):
+            raise IGRequestError(None, None, "NETWORK_ERROR", "IG could not be reached") from None
+        except Exception:
+            raise IGRequestError(None, None, "UNKNOWN_IG_ERROR", "Unexpected IG transport failure") from None
+        if status >= 400:
+            raise self._rejection(status, raw)
+        try:
+            payload = json.loads(raw.decode() or "{}")
         except (ValueError, UnicodeDecodeError):
-            raise RuntimeError("IG returned invalid JSON") from None
+            raise IGRequestError(status, None, "MALFORMED_RESPONSE", "IG returned invalid JSON") from None
+        if not isinstance(payload, Mapping):
+            raise IGRequestError(status, None, "MALFORMED_RESPONSE", "IG returned an unexpected response")
+        return payload
 
     def authenticate(self):
         payload = self._request("POST", "/session", version=2,
@@ -146,9 +264,20 @@ class IGReadOnlyAdapter:
         cst = payload.get("cst")
         security = payload.get("x-security-token") or payload.get("securityToken")
         if not cst or not security:
-            raise RuntimeError("IG authentication response missing session credentials")
+            raise IGRequestError(200, None, "MALFORMED_RESPONSE",
+                                 "IG authentication response omitted session credentials")
         self._session = IGSession(str(cst), str(security), self.config.account_id)
-        return {"authenticated": True, "environment": self.config.environment, "account_id": self.config.account_id}
+        return {"authenticated": True, "environment": self.config.environment}
+
+    def authentication_status(self):
+        """Attempt authentication and return only a structured, redacted diagnostic."""
+        try:
+            return self.authenticate()
+        except IGRequestError as exc:
+            return exc.diagnostic(self.config.environment)
+        except Exception:
+            return IGRequestError(None, None, "UNKNOWN_IG_ERROR",
+                                  "Unexpected IG authentication failure").diagnostic(self.config.environment)
 
     def session_status(self):
         return {"authenticated": self._session is not None, "environment": self.config.environment}
@@ -208,4 +337,5 @@ class IGReadOnlyAdapter:
         raise RuntimeError("IG execution disabled in M12A")
 
 
-__all__ = ["BASE_URLS", "IGAccount", "IGConfig", "IGMapping", "IGMarket", "IGReadOnlyAdapter", "IGSession", "VERSION"]
+__all__ = ["BASE_URLS", "ERROR_CATEGORIES", "IGAccount", "IGConfig", "IGMapping", "IGMarket",
+           "IGReadOnlyAdapter", "IGRequestError", "IGSession", "VERSION", "sanitize_text"]

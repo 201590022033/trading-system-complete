@@ -13,7 +13,7 @@ def main():
     args = parser.parse_args()
     adapter = IGReadOnlyAdapter(IGConfig.from_env())
     if args.command == "status":
-        result = adapter.session_status()
+        result = adapter.authentication_status()
     else:
         adapter.authenticate()
         if args.command == "accounts": result = [item.__dict__ for item in adapter.get_accounts()]

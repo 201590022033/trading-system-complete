@@ -25,6 +25,31 @@ Session credentials are held only in memory. They are never printed, persisted,
 included in audit payloads or included in exception text. The CLI prints only
 normalized/redacted discovery results.
 
+## Authentication troubleshooting
+
+`python -m scripts.ig_discovery status` now performs a real read-only session
+authentication attempt. A failure prints only these sanitized fields:
+`authenticated`, `environment`, `http_status`, `ig_error_code`,
+`error_category` and `message`. The original IG error code is retained when the
+response provides one, but credentials, account IDs, session tokens, request
+payloads, headers and cookies are never returned.
+
+Categories distinguish supported evidence for invalid API keys, rejected
+credentials, explicit environment mismatches, two-factor requirements,
+permission failures, rate limiting, network failures and malformed responses.
+Ambiguous responses remain `UNKNOWN_IG_ERROR`; the adapter does not guess a
+more specific cause. HTTP 400 is reported as `MALFORMED_REQUEST`.
+
+If `TWO_FACTOR_REQUIRED` is returned, follow the account's normal IG security
+process. M12A does not append a security code to the password, prompt for one,
+or automate two-factor authentication. Do not paste the diagnostic together
+with secrets or raw HTTP headers.
+
+Focused mocked coverage exercises successful authentication, IG error-code
+preservation, HTTP 400/401/403/429 and unexpected failures, network and malformed
+responses, two-factor reporting, secret redaction and the disabled execution
+boundary. The complete safe suite passes 326 tests.
+
 ## Operator validation
 
 Set these environment variables through the operator’s secret manager or local

@@ -24,6 +24,14 @@ pass, but operator validation with real credentials is still required. No IG
 dealing or runtime integration is enabled. See
 `docs/integrations/IG_M12A_DISCOVERY.md`.
 
+Authentication diagnostics now make a read-only session attempt and retain
+sanitized HTTP status, IG error code, conservative error category and safe
+operator message. Credential, account, token, header, cookie and request-body
+values remain excluded. Two-factor requirements are reported but not automated.
+M12A remains blocked pending the same operator external validation; M12B is not
+active. The safe suite passes 326 tests and all 39 immutable research artifacts
+remain unchanged.
+
 Next milestone: M12B — IG Historical Data Ingestion & Validation [NOT STARTED].
 
 ## M12B — IG Historical Data Ingestion & Validation [NOT STARTED]
