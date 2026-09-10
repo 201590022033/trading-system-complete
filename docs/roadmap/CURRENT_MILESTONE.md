@@ -69,11 +69,18 @@ prices route to version 1 and returned HTML 404. The shared boundary now uses
 IG's documented `Version` header, safely anchors all endpoint paths beneath the
 gateway, and provides query-free route diagnostics.
 
-The full safe suite passes 356 tests; all 39 immutable research artifacts remain
+The operator subsequently retrieved non-truncated DAY (26 accepted/1 excluded),
+HOUR (39/6) and MINUTE_5 (457/70, two pages) history. The former aggregate
+counter cannot identify why rows were excluded. M12B now reports precise reason
+occurrences and optional bounded value-free shapes. The official contract does
+not establish a last-traded-only substitute for incomplete quote sides, so all
+such partial shapes remain excluded pending real shape evidence.
+
+The full safe suite passes 360 tests; all 39 immutable research artifacts remain
 unchanged.
 
-M12B remains blocked pending operator external IG Demo validation of daily,
-intraday and 5-minute history for the proven Brent EPIC. The coding workspace
+M12B remains blocked pending operator revalidation of excluded-reason counts and
+resulting daily/intraday quality for the proven Brent EPIC. The coding workspace
 has not accessed the operator account.
 
 Next milestone: M13 — Opportunity Ranking [NOT STARTED].

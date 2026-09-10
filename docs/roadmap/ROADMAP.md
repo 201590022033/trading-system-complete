@@ -36,8 +36,13 @@ until the operator validates daily, intraday and 5-minute Demo history. See
 The first external probe found that the path correctly retained `/gateway/deal`
 but the shared adapter sent `Accept-Version` instead of IG's documented
 `Version` header, making the v3-only prices route fall back to version 1 and
-return HTML 404. The shared header and gateway anchoring are corrected. The full
-safe suite passes 356 tests and all 39 protected artifacts are unchanged.
+return HTML 404. The shared header and gateway anchoring are corrected. External
+retrieval then returned DAY 26/1, HOUR 39/6 and MINUTE_5 457/70
+accepted/excluded bars. Exclusions now carry reason counts and optional bounded
+value-free shapes. Last-traded data does not replace incomplete bid/ask without
+real shape evidence. The full safe suite passes 360 tests
+and all 39 protected artifacts are unchanged. Operator reason-count revalidation
+remains required.
 
 Next milestone: M13 — Opportunity Ranking [NOT STARTED].
 

@@ -41,8 +41,11 @@ component sets and optional volume. No spread component is discarded.
 The embedded M8 `CanonicalBar` uses the explicit, versioned
 `ig-bid-ask-mid-v1` basis: each OHLC component is `(bid + ask) / 2`. Its `bid`
 and `ask` fields retain the closing quote pair. This derived mid is not an
-observed trade price. A row lacking complete bid and ask OHLC is excluded as
-malformed rather than fabricated from another basis.
+observed trade price. The official schema names all bid/ask fields and does not
+document a last-traded-only substitute for missing quote sides. Consequently,
+even complete `lastTraded` OHLC does not replace incomplete bid/ask OHLC without
+real shape evidence and an explicit later decision. Such rows remain excluded;
+no quote side or OHLC value is fabricated.
 
 The EPIC remains the bar identity at this broker boundary. Each bar carries a
 deterministic source-record hash, environment, and IG source identity. Retrieval
@@ -68,7 +71,12 @@ The importer follows v3 `metadata.pageData` within explicit `max_points`,
 `page_size`, and `max_pages` bounds. It sorts chronologically, deduplicates
 overlapping timestamps while reporting duplicates, and reports
 `PARTIAL_TRUNCATED` if a bound stops retrieval before `totalPages`. Empty and
-partially malformed results remain explicit.
+partially malformed results remain explicit. Exclusions now include reason
+occurrence counts for missing/null components, missing/invalid UTC timestamp,
+invalid numeric input, OHLC invariant failure, out-of-range record or other.
+One excluded record may contribute more than one reason. Optional
+`--malformed-samples 1..5` output contains only timestamp, component presence
+states, volume presence and reasons; it never includes price values or raw rows.
 
 `gaps` counts fixed-cadence interval discontinuities and is labeled
 `UNCLASSIFIED_INTERVAL_DISCONTINUITIES`. Without an instrument trading calendar,
@@ -111,10 +119,21 @@ pagination, ordering, overlaps, duplicates, discontinuities, truncation, empty
 and malformed responses, allowance errors, redaction, M8 lineage, factual
 suitability metadata, and disabled execution.
 
-The full safe suite passes 356 tests. All 39 protected research artifacts match
+The full safe suite passes 360 tests. All 39 protected research artifacts match
 their baseline SHA-256 values.
 
-## Required external IG Demo validation
+## External IG Demo evidence and required revalidation
+
+After the version-header repair, the operator obtained non-truncated Brent `$1`
+history: DAY accepted 26 and excluded 1; HOUR accepted 39 and excluded 6;
+MINUTE_5 accepted 457 and excluded 70 over two pages, with remaining allowance
+9401. The old candidate retained only one aggregate malformed counter, so the
+exact causes of those 77 records cannot be reconstructed from that output. The
+similar hourly/5-minute rates are an observation, not proof that transitions or
+any particular component caused them.
+
+Re-run the bounded windows to obtain reason counts. At most three safe shapes
+may be requested when component presence needs inspection.
 
 Run from the repository root with existing Demo secrets in the environment:
 
@@ -122,6 +141,7 @@ Run from the repository root with existing Demo secrets in the environment:
 python -m scripts.ig_discovery history "CC.D.LCO.BMU.IP" "DAY" "2026-08-01T00:00:00Z" "2026-09-01T00:00:00Z"
 python -m scripts.ig_discovery history "CC.D.LCO.BMU.IP" "HOUR" "2026-09-01T00:00:00Z" "2026-09-03T00:00:00Z"
 python -m scripts.ig_discovery history "CC.D.LCO.BMU.IP" "MINUTE_5" "2026-09-01T00:00:00Z" "2026-09-03T00:00:00Z"
+python -m scripts.ig_discovery history "CC.D.LCO.BMU.IP" "MINUTE_5" "2026-09-01T00:00:00Z" "2026-09-03T00:00:00Z" --malformed-samples 3
 ```
 
 Confirm non-empty output, chronological and sane UTC timestamps, consistent OHLC,

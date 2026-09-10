@@ -15,6 +15,8 @@ from intraday_instruments import DataGrade as SuitabilityDataGrade
 VERSION = "ig-history-v1"
 PRICE_BASIS_VERSION = "ig-bid-ask-mid-v1"
 HISTORY_API_VERSION = 3
+OHLC_FIELDS = (("open", "openPrice"), ("high", "highPrice"),
+               ("low", "lowPrice"), ("close", "closePrice"))
 
 RESOLUTIONS = {
     "SECOND": ("1s", 1), "MINUTE": ("1m", 60), "MINUTE_2": ("2m", 120),
@@ -92,6 +94,25 @@ class IGHistoricalBar:
 
 
 @dataclass(frozen=True)
+class IGMalformedShape:
+    timestamp: str | None
+    component_status: tuple[tuple[str, str], ...]
+    volume_status: str
+    reasons: tuple[str, ...]
+
+    def to_dict(self):
+        return {"timestamp": self.timestamp, "price_components": dict(self.component_status),
+                "volume": self.volume_status, "status": "EXCLUDED", "reasons": self.reasons}
+
+
+class IGNormalizationError(ValueError):
+    def __init__(self, reasons, shape):
+        self.reasons = tuple(dict.fromkeys(reasons)) or ("other",)
+        self.shape = shape
+        super().__init__(self.reasons[0])
+
+
+@dataclass(frozen=True)
 class IGHistoricalSeries:
     epic: str
     environment: str
@@ -108,6 +129,9 @@ class IGHistoricalSeries:
     truncated: bool
     pages_received: int
     remaining_allowance: int | None
+    excluded_reasons: tuple[tuple[str, int], ...] = ()
+    malformed_samples: tuple[IGMalformedShape, ...] = ()
+    price_basis_counts: tuple[tuple[str, int], ...] = ()
     source: str = "IG REST /prices/{epic} v3"
     source_limitations: tuple[str, ...] = (
         "IG historical allowance applies",
@@ -127,6 +151,8 @@ class IGHistoricalSeries:
         return "COMPLETE" if self.bars else "EMPTY"
 
     def summary(self):
+        basis_counts = dict(self.price_basis_counts)
+        price_basis = next(iter(basis_counts)) if len(basis_counts) == 1 else "MIXED" if basis_counts else None
         return {
             "epic": self.epic, "environment": self.environment, "resolution": self.resolution,
             "source": self.source,
@@ -138,8 +164,12 @@ class IGHistoricalSeries:
             "gaps": self.gaps, "duplicates": self.duplicates,
             "gap_semantics": "UNCLASSIFIED_INTERVAL_DISCONTINUITIES",
             "excluded_incomplete": self.excluded_incomplete, "excluded_malformed": self.excluded_malformed,
+            "excluded_reasons": dict(self.excluded_reasons),
+            "excluded_reason_semantics": "COUNTS_ARE_REASON_OCCURRENCES; ONE_RECORD_MAY_HAVE_MULTIPLE_REASONS",
+            "malformed_samples": tuple(sample.to_dict() for sample in self.malformed_samples),
+            "price_basis_counts": dict(self.price_basis_counts),
             "truncated": self.truncated, "completeness": self.completeness,
-            "timestamp_quality": self.timestamp_quality, "price_basis": "DERIVED_MID",
+            "timestamp_quality": self.timestamp_quality, "price_basis": price_basis,
             "data_grade": self.data_grade, "pages_received": self.pages_received,
             "remaining_allowance": self.remaining_allowance, "source_limitations": self.source_limitations,
         }
@@ -157,38 +187,101 @@ class IGHistoricalSeries:
         )
 
 
+def _timestamp_shape(item):
+    try:
+        return _source_time(item.get("snapshotTimeUTC")).isoformat()
+    except ValueError:
+        return "INVALID" if item.get("snapshotTimeUTC") is not None else None
+
+
 def _components(item):
-    def component(name):
-        value = item.get(name)
-        return value if isinstance(value, Mapping) else {}
-    fields = (component("openPrice"), component("highPrice"), component("lowPrice"), component("closePrice"))
-    def ohlc(key):
-        return IGPriceOHLC(*(_finite_number(value.get(key)) for value in fields))
-    return ohlc("bid"), ohlc("ask"), ohlc("lastTraded")
+    basis_names = (("bid", "bid"), ("ask", "ask"), ("lastTraded", "last_traded"))
+    values = {basis: [] for basis, _ in basis_names}
+    statuses, reasons = [], []
+    for ohlc_name, field_name in OHLC_FIELDS:
+        raw_component = item.get(field_name)
+        component = raw_component if isinstance(raw_component, Mapping) else {}
+        if not isinstance(raw_component, Mapping):
+            reasons.append(f"missing_{ohlc_name}_price")
+        for basis, safe_basis in basis_names:
+            label = f"{safe_basis}_{ohlc_name}"
+            if basis not in component:
+                value, status = None, "MISSING"
+            elif component[basis] is None:
+                value, status = None, "NULL"
+            else:
+                value = _finite_number(component[basis])
+                status = "PRESENT" if value is not None else "INVALID"
+                if value is None:
+                    reasons.append("invalid_numeric_value")
+            values[basis].append(value)
+            statuses.append((label, status))
+    return (IGPriceOHLC(*values["bid"]), IGPriceOHLC(*values["ask"]),
+            IGPriceOHLC(*values["lastTraded"]), tuple(statuses), reasons)
+
+
+def _missing_reasons(statuses, bases):
+    reasons = []
+    for label, status in statuses:
+        basis, ohlc = label.rsplit("_", 1)
+        if basis in bases and status in {"MISSING", "NULL"}:
+            reasons.append(f"missing_{basis}_{ohlc}")
+    return reasons
+
+
+def _shape(item, statuses, reasons):
+    if "lastTradedVolume" not in item:
+        volume_status = "MISSING"
+    elif item.get("lastTradedVolume") is None:
+        volume_status = "NULL"
+    else:
+        volume_status = "PRESENT" if _finite_number(item.get("lastTradedVolume")) is not None else "INVALID"
+    return IGMalformedShape(_timestamp_shape(item), statuses, volume_status,
+                            tuple(dict.fromkeys(reasons)) or ("other",))
 
 
 def _normalize_price(item, *, epic, environment, resolution):
-    start = _source_time(item.get("snapshotTimeUTC"))
+    try:
+        start = _source_time(item.get("snapshotTimeUTC"))
+    except ValueError:
+        reason = "missing_snapshot_time_utc" if item.get("snapshotTimeUTC") is None else "invalid_snapshot_time_utc"
+        _, _, _, statuses, component_reasons = _components(item)
+        reasons = [reason, *component_reasons]
+        raise IGNormalizationError(reasons, _shape(item, statuses, reasons)) from None
     seconds = RESOLUTIONS[resolution][1]
     end = _month_end(start) if seconds is None else start + timedelta(seconds=seconds)
-    bid, ask, last = _components(item)
+    bid, ask, last, statuses, component_reasons = _components(item)
+    if "invalid_numeric_value" in component_reasons:
+        raise IGNormalizationError(component_reasons, _shape(item, statuses, component_reasons))
+    if item.get("lastTradedVolume") is not None and _finite_number(item.get("lastTradedVolume")) is None:
+        reasons = [*component_reasons, "invalid_numeric_value"]
+        raise IGNormalizationError(reasons, _shape(item, statuses, reasons))
     if not bid.complete or not ask.complete:
-        raise ValueError("IG historical price lacks complete bid/ask OHLC")
-    mid = tuple((left + right) / 2 for left, right in zip(
+        reasons = [*component_reasons, *_missing_reasons(statuses, {"bid", "ask", "last_traded"})]
+        raise IGNormalizationError(reasons, _shape(item, statuses, reasons))
+    ohlc = tuple((left + right) / 2 for left, right in zip(
         (bid.open, bid.high, bid.low, bid.close), (ask.open, ask.high, ask.low, ask.close)))
+    canonical_bid, canonical_ask = bid.close, ask.close
+    price_basis, price_basis_version = "DERIVED_MID", PRICE_BASIS_VERSION
     raw_id = sha256(json.dumps(item, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
     policy = SourcePolicy("IG_REST_HISTORICAL", 1, "licensed", DataGrade.RESEARCH, 1,
-                          f"RESEARCH_ONLY; {PRICE_BASIS_VERSION}; historical-publication availability")
-    canonical = CanonicalBar(epic, RESOLUTIONS[resolution][0], start, end, end,
-                             mid[0], mid[1], mid[2], mid[3], _finite_number(item.get("lastTradedVolume")),
-                             bid.close, ask.close, policy, (f"ig:{environment}:{epic}:{raw_id}",))
+                          f"RESEARCH_ONLY; {price_basis_version}; historical-publication availability")
+    try:
+        canonical = CanonicalBar(epic, RESOLUTIONS[resolution][0], start, end, end,
+                                 ohlc[0], ohlc[1], ohlc[2], ohlc[3],
+                                 _finite_number(item.get("lastTradedVolume")), canonical_bid, canonical_ask,
+                                 policy, (f"ig:{environment}:{epic}:{raw_id}",))
+    except ValueError:
+        reasons = ["ohlc_invariant_failure"]
+        raise IGNormalizationError(reasons, _shape(item, statuses, reasons)) from None
     return IGHistoricalBar(canonical, epic, resolution, bid, ask, last,
                            _finite_number(item.get("lastTradedVolume")), item.get("snapshotTime"),
-                           "IG_MARKET_LOCAL_UNSPECIFIED")
+                           "IG_MARKET_LOCAL_UNSPECIFIED", price_basis, price_basis_version)
 
 
 def fetch_historical_prices(adapter, epic, resolution, start, end, *, max_points=10_000,
-                            page_size=500, max_pages=100, retrieved_at=None):
+                            page_size=500, max_pages=100, retrieved_at=None,
+                            diagnostic_sample_limit=0):
     """Fetch bounded v3 pages and return normalized, completed historical bars."""
     resolution = str(resolution).upper()
     if not isinstance(epic, str) or not epic.strip():
@@ -204,8 +297,11 @@ def fetch_historical_prices(adapter, epic, resolution, start, end, *, max_points
         raise ValueError("page_size must be between 1 and 500")
     if not isinstance(max_pages, int) or max_pages <= 0:
         raise ValueError("max_pages must be a positive integer")
+    if not isinstance(diagnostic_sample_limit, int) or not 0 <= diagnostic_sample_limit <= 5:
+        raise ValueError("diagnostic_sample_limit must be between 0 and 5")
     retrieved_at = _utc(retrieved_at or datetime.now(timezone.utc))
     normalized, seen = [], set()
+    reason_counts, samples, basis_counts = {}, [], {}
     duplicates = malformed = incomplete = pages = 0
     total_pages, remaining_allowance = 1, None
     while pages < total_pages and pages < max_pages and len(normalized) < max_points:
@@ -237,15 +333,25 @@ def fetch_historical_prices(adapter, epic, resolution, start, end, *, max_points
         for item in prices:
             if not isinstance(item, Mapping):
                 malformed += 1
+                reason_counts["other"] = reason_counts.get("other", 0) + 1
+                if len(samples) < diagnostic_sample_limit:
+                    samples.append(IGMalformedShape(None, (), "UNKNOWN", ("other",)))
                 continue
             try:
                 bar = _normalize_price(item, epic=epic, environment=adapter.config.environment, resolution=resolution)
-            except ValueError:
+            except IGNormalizationError as exc:
                 malformed += 1
+                for reason in exc.reasons:
+                    reason_counts[reason] = reason_counts.get(reason, 0) + 1
+                if len(samples) < diagnostic_sample_limit:
+                    samples.append(exc.shape)
                 continue
             timestamp = bar.canonical.interval_start
             if timestamp < start or timestamp >= end:
                 malformed += 1
+                reason_counts["outside_requested_range"] = reason_counts.get("outside_requested_range", 0) + 1
+                if len(samples) < diagnostic_sample_limit:
+                    samples.append(_shape(item, _components(item)[3], ["outside_requested_range"]))
                 continue
             if timestamp in seen:
                 duplicates += 1
@@ -255,6 +361,7 @@ def fetch_historical_prices(adapter, epic, resolution, start, end, *, max_points
                 incomplete += 1
                 continue
             normalized.append(bar)
+            basis_counts[bar.price_basis] = basis_counts.get(bar.price_basis, 0) + 1
             if len(normalized) >= max_points:
                 break
         if not prices:
@@ -268,8 +375,10 @@ def fetch_historical_prices(adapter, epic, resolution, start, end, *, max_points
                    for left, right in zip(normalized, normalized[1:]))
     return IGHistoricalSeries(epic, adapter.config.environment, resolution, RESOLUTIONS[resolution][0],
                               start, end, retrieved_at, tuple(normalized), duplicates, gaps, incomplete,
-                              malformed, pages < total_pages, pages, remaining_allowance)
+                              malformed, pages < total_pages, pages, remaining_allowance,
+                              tuple(sorted(reason_counts.items())), tuple(samples), tuple(sorted(basis_counts.items())))
 
 
-__all__ = ["HISTORY_API_VERSION", "IGHistoricalBar", "IGHistoricalSeries", "IGPriceOHLC",
-           "PRICE_BASIS_VERSION", "RESOLUTIONS", "VERSION", "fetch_historical_prices"]
+__all__ = ["HISTORY_API_VERSION", "IGHistoricalBar", "IGHistoricalSeries", "IGMalformedShape",
+           "IGNormalizationError", "IGPriceOHLC", "PRICE_BASIS_VERSION", "RESOLUTIONS", "VERSION",
+           "fetch_historical_prices"]

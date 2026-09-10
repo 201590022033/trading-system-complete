@@ -141,11 +141,69 @@ class IGHistoryTests(unittest.TestCase):
     def test_malformed_rows_are_excluded_not_fabricated(self):
         broken = price("2026-01-01T00:00:00")
         broken["openPrice"].pop("ask")
+        for name in ("openPrice", "highPrice", "lowPrice", "closePrice"):
+            broken[name]["lastTraded"] = None
         self.payloads[1] = response([broken])
         series = self.fetch()
         self.assertEqual(series.excluded_malformed, 1)
         self.assertFalse(series.bars)
         self.assertEqual(series.completeness, "PARTIAL_MALFORMED")
+        self.assertEqual(series.summary()["excluded_reasons"]["missing_ask_open"], 1)
+
+    def test_complete_last_traded_does_not_replace_missing_quote_side_without_evidence(self):
+        traded = price("2026-01-01T00:00:00")
+        for name in ("openPrice", "highPrice", "lowPrice", "closePrice"):
+            traded[name]["bid"] = None
+            traded[name]["ask"] = None
+        self.payloads[1] = response([traded])
+        series = self.fetch()
+        self.assertEqual(series.excluded_malformed, 1)
+        self.assertFalse(series.bars)
+        reasons = series.summary()["excluded_reasons"]
+        self.assertEqual(reasons["missing_bid_open"], 1)
+        self.assertEqual(reasons["missing_ask_open"], 1)
+
+    def test_exclusion_reasons_distinguish_timestamp_numeric_and_ohlc_failures(self):
+        missing_time = price("2026-01-01T00:00:00")
+        missing_time.pop("snapshotTimeUTC")
+        invalid_number = price("2026-01-01T00:05:00")
+        invalid_number["openPrice"]["bid"] = "not-a-price"
+        for name in ("openPrice", "highPrice", "lowPrice", "closePrice"):
+            invalid_number[name]["lastTraded"] = None
+        bad_ohlc = price("2026-01-01T00:10:00")
+        bad_ohlc["highPrice"] = {"bid": 90, "ask": 92, "lastTraded": 91}
+        self.payloads[1] = response([missing_time, invalid_number, bad_ohlc])
+        series = self.fetch(diagnostic_sample_limit=3)
+        reasons = series.summary()["excluded_reasons"]
+        self.assertEqual(series.excluded_malformed, 3)
+        self.assertEqual(reasons["missing_snapshot_time_utc"], 1)
+        self.assertEqual(reasons["invalid_numeric_value"], 1)
+        self.assertEqual(reasons["ohlc_invariant_failure"], 1)
+        self.assertEqual(len(series.malformed_samples), 3)
+
+    def test_malformed_shape_diagnostic_is_bounded_and_contains_no_price_values(self):
+        broken = price("2026-01-01T00:00:00", 987654)
+        broken["openPrice"]["ask"] = None
+        for name in ("openPrice", "highPrice", "lowPrice", "closePrice"):
+            broken[name]["lastTraded"] = None
+        self.payloads[1] = response([broken])
+        summary = self.fetch(diagnostic_sample_limit=1).summary()
+        sample = summary["malformed_samples"][0]
+        self.assertEqual(sample["timestamp"], "2026-01-01T00:00:00+00:00")
+        self.assertEqual(sample["price_components"]["ask_open"], "NULL")
+        self.assertEqual(sample["volume"], "PRESENT")
+        self.assertEqual(sample["status"], "EXCLUDED")
+        self.assertNotIn("987654", json.dumps(sample))
+        with self.assertRaisesRegex(ValueError, "between 0 and 5"):
+            self.fetch(diagnostic_sample_limit=6)
+
+    def test_invalid_supplied_volume_is_not_silently_treated_as_missing(self):
+        broken = price("2026-01-01T00:00:00")
+        broken["lastTradedVolume"] = "invalid-volume"
+        self.payloads[1] = response([broken])
+        series = self.fetch()
+        self.assertEqual(series.excluded_malformed, 1)
+        self.assertEqual(series.summary()["excluded_reasons"]["invalid_numeric_value"], 1)
 
     def test_historical_rate_limit_is_explicit(self):
         def transport(*args):
@@ -217,19 +275,23 @@ class IGHistoryTests(unittest.TestCase):
 
     def test_cli_history_prints_safe_summary_only(self):
         from scripts import ig_discovery
+        received = {}
         class FakeAdapter:
             def __init__(self, config): pass
             def authenticate(self): return {"authenticated": True}
-            def get_historical_prices(self, *args, **kwargs): return self
+            def get_historical_prices(self, *args, **kwargs):
+                received.update(kwargs)
+                return self
             def summary(self): return {"epic": "EPIC", "bars_received": 1}
         argv = ["ig_discovery", "history", "EPIC", "MINUTE_5",
-                "2026-01-01T00:00:00Z", "2026-01-02T00:00:00Z"]
+                "2026-01-01T00:00:00Z", "2026-01-02T00:00:00Z", "--malformed-samples", "2"]
         output = io.StringIO()
         with patch.object(sys, "argv", argv), \
              patch.object(ig_discovery.IGConfig, "from_env", return_value=object()), \
              patch.object(ig_discovery, "IGReadOnlyAdapter", FakeAdapter), patch("sys.stdout", output):
             ig_discovery.main()
         self.assertEqual(json.loads(output.getvalue()), {"bars_received": 1, "epic": "EPIC"})
+        self.assertEqual(received["diagnostic_sample_limit"], 2)
 
     def test_cli_history_error_is_structured_without_traceback(self):
         from scripts import ig_discovery

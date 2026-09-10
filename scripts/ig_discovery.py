@@ -16,6 +16,7 @@ def main():
     parser.add_argument("end", nargs="?")
     parser.add_argument("--max-points", type=int, default=10_000)
     parser.add_argument("--page-size", type=int, default=500)
+    parser.add_argument("--malformed-samples", type=int, choices=range(0, 6), default=0)
     args = parser.parse_args()
     adapter = IGReadOnlyAdapter(IGConfig.from_env())
     if args.command == "status":
@@ -37,6 +38,7 @@ def main():
                 result = adapter.get_historical_prices(
                     args.value, args.resolution, start, end,
                     max_points=args.max_points, page_size=args.page_size,
+                    diagnostic_sample_limit=args.malformed_samples,
                 ).summary()
             except IGRequestError as exc:
                 result = exc.history_diagnostic()
