@@ -29,8 +29,16 @@ sanitized HTTP status, IG error code, conservative error category and safe
 operator message. Credential, account, token, header, cookie and request-body
 values remain excluded. Two-factor requirements are reported but not automated.
 M12A remains blocked pending the same operator external validation; M12B is not
-active. The safe suite passes 326 tests and all 39 immutable research artifacts
+active. The safe suite passes 329 tests and all 39 immutable research artifacts
 remain unchanged.
+
+The LIVE validation error
+`validation.pattern.invalid.authenticationRequest.identifier` established that
+the configured value violated the v2 `/session` identifier pattern. M12A now
+uses explicit `IG_IDENTIFIER` semantics, validates IG's documented 1-30
+letter/digit/hyphen/underscore contract locally, retains `IG_USERNAME` only as
+an alias, and keeps `IG_ACCOUNT_ID` distinct. External validation remains
+blocked; no IG execution or M12B work is active.
 
 Next milestone: M12B — IG Historical Data Ingestion & Validation [NOT STARTED].
 

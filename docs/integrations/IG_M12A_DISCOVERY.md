@@ -16,10 +16,14 @@ normalizes account and market metadata and produces `IGMapping` records that
 retain the canonical instrument ID, broker, environment, EPIC and product
 variant. Cash, CFD, rolling, dated and other variants are not merged.
 
-Authentication uses `IG_API_KEY`, `IG_USERNAME`, `IG_PASSWORD`, optional
-`IG_ACCOUNT_ID` and `IG_ENVIRONMENT`. The environment is `DEMO` by default and
-must be explicitly `DEMO` or `LIVE`; it never defaults to LIVE. The base URLs
-are selected centrally by `IGConfig`.
+Authentication uses `IG_API_KEY`, `IG_IDENTIFIER`, `IG_PASSWORD`, optional
+`IG_ACCOUNT_ID` and `IG_ENVIRONMENT`. IG defines the v2 `/session` JSON
+`identifier` as the client login identifier and constrains it to 1-30 ASCII
+letters, digits, hyphens or underscores. Enter the unique IG API login username,
+not an email address and not the account ID. `IG_USERNAME` remains a
+backward-compatible alias only when `IG_IDENTIFIER` is unset. The environment is
+`DEMO` by default and must be explicitly `DEMO` or `LIVE`; it never defaults to
+LIVE. The base URLs are selected centrally by `IGConfig`.
 
 Session credentials are held only in memory. They are never printed, persisted,
 included in audit payloads or included in exception text. The CLI prints only
@@ -48,7 +52,7 @@ with secrets or raw HTTP headers.
 Focused mocked coverage exercises successful authentication, IG error-code
 preservation, HTTP 400/401/403/429 and unexpected failures, network and malformed
 responses, two-factor reporting, secret redaction and the disabled execution
-boundary. The complete safe suite passes 326 tests.
+boundary. The complete safe suite passes 329 tests.
 
 ## Operator validation
 
@@ -57,11 +61,15 @@ process environment only:
 
 ```text
 IG_API_KEY
-IG_USERNAME
+IG_IDENTIFIER
 IG_PASSWORD
 IG_ACCOUNT_ID (optional)
 IG_ENVIRONMENT=DEMO
 ```
+
+Older local configurations may use `IG_USERNAME` as the identifier alias. New
+configuration should use `IG_IDENTIFIER`. `IG_ACCOUNT_ID` selects or records an
+account after authentication and is never substituted into the login payload.
 
 Run from the repository root:
 

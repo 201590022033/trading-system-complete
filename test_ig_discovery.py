@@ -34,6 +34,33 @@ class IGDiscoveryTests(unittest.TestCase):
         with patch.dict(os.environ, {}, clear=True):
             with self.assertRaises(ValueError): IGConfig.from_env()
 
+    def test_explicit_identifier_maps_to_auth_payload_and_not_account_id(self):
+        calls = []
+        def transport(method, url, headers, body, timeout):
+            calls.append(json.loads(body))
+            return 200, {}, json.dumps({"cst": "CST-SECRET", "x-security-token": "SEC-SECRET"}).encode()
+        config = IGConfig("API-SECRET", "legacy-name", "password", account_id="ACCOUNT-123",
+                          identifier="ApiLogin_1")
+        IGReadOnlyAdapter(config, transport).authenticate()
+        self.assertEqual(calls[0]["identifier"], "ApiLogin_1")
+        self.assertNotEqual(calls[0]["identifier"], config.account_id)
+        self.assertNotIn("accountId", calls[0])
+
+    def test_identifier_configuration_and_legacy_alias(self):
+        explicit = IGConfig.from_env({"IG_API_KEY": "key", "IG_IDENTIFIER": "ApiLogin_1",
+                                      "IG_PASSWORD": "secret", "IG_ACCOUNT_ID": "ACC-1"})
+        alias = IGConfig.from_env({"IG_API_KEY": "key", "IG_USERNAME": "LegacyLogin",
+                                   "IG_PASSWORD": "secret"})
+        self.assertEqual(explicit.auth_identifier, "ApiLogin_1")
+        self.assertEqual(alias.auth_identifier, "LegacyLogin")
+        self.assertEqual(explicit.account_id, "ACC-1")
+
+    def test_malformed_identifier_is_rejected_locally_without_echo(self):
+        for invalid in ("name@example.com", "contains space", "x" * 31):
+            with self.assertRaisesRegex(ValueError, "IG_IDENTIFIER") as raised:
+                IGConfig("key", "", "secret", identifier=invalid)
+            self.assertNotIn(invalid, str(raised.exception))
+
     def test_authentication_is_normalized_and_secrets_not_logged(self):
         result = self.adapter.authenticate()
         self.assertTrue(result["authenticated"])

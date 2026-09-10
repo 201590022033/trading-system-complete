@@ -11,6 +11,7 @@ from urllib.request import Request, urlopen
 
 VERSION = "ig-discovery-v1"
 BASE_URLS = {"DEMO": "https://demo-api.ig.com/gateway/deal", "LIVE": "https://api.ig.com/gateway/deal"}
+IDENTIFIER_PATTERN = re.compile(r"^[A-Za-z0-9_-]{1,30}$")
 
 ERROR_CATEGORIES = {
     "AUTHENTICATION_FAILED", "INVALID_API_KEY", "ENVIRONMENT_MISMATCH",
@@ -89,14 +90,22 @@ class IGConfig:
     account_id: str | None = None
     environment: str = "DEMO"
     timeout_seconds: float = 20.0
+    identifier: str | None = None
 
     def __post_init__(self):
         if self.environment not in BASE_URLS:
             raise ValueError("IG_ENVIRONMENT must be DEMO or LIVE")
-        if not all((self.api_key, self.username, self.password)):
+        if not all((self.api_key, self.auth_identifier, self.password)):
             raise ValueError("IG credentials are required")
+        if not IDENTIFIER_PATTERN.fullmatch(self.auth_identifier):
+            raise ValueError("IG_IDENTIFIER must be 1-30 letters, digits, hyphens or underscores")
         if self.timeout_seconds <= 0:
             raise ValueError("timeout must be positive")
+
+    @property
+    def auth_identifier(self):
+        """Explicit API login identifier, with IG_USERNAME as a legacy alias."""
+        return (self.identifier or self.username).strip()
 
     @classmethod
     def from_env(cls, environ=None):
@@ -106,7 +115,8 @@ class IGConfig:
             raise ValueError("IG_ENVIRONMENT must be DEMO or LIVE")
         values = {"api_key": environ.get("IG_API_KEY", "").strip(),
                   "username": environ.get("IG_USERNAME", "").strip(),
-                  "password": environ.get("IG_PASSWORD", "").strip()}
+                  "password": environ.get("IG_PASSWORD", "").strip(),
+                  "identifier": environ.get("IG_IDENTIFIER", "").strip() or None}
         return cls(**values, account_id=environ.get("IG_ACCOUNT_ID") or None, environment=environment)
 
     @property
@@ -196,7 +206,8 @@ class IGReadOnlyAdapter:
 
     def _secrets(self):
         session_values = () if self._session is None else (self._session.cst, self._session.security_token)
-        return (self.config.api_key, self.config.username, self.config.password,
+        return (self.config.api_key, self.config.username, self.config.identifier,
+                self.config.password,
                 self.config.account_id, *session_values)
 
     def _rejection(self, status, raw):
@@ -259,7 +270,7 @@ class IGReadOnlyAdapter:
 
     def authenticate(self):
         payload = self._request("POST", "/session", version=2,
-                                payload={"identifier": self.config.username, "password": self.config.password,
+                                payload={"identifier": self.config.auth_identifier, "password": self.config.password,
                                          "encryptedPassword": False}, auth=False)
         cst = payload.get("cst")
         security = payload.get("x-security-token") or payload.get("securityToken")
@@ -337,5 +348,5 @@ class IGReadOnlyAdapter:
         raise RuntimeError("IG execution disabled in M12A")
 
 
-__all__ = ["BASE_URLS", "ERROR_CATEGORIES", "IGAccount", "IGConfig", "IGMapping", "IGMarket",
+__all__ = ["BASE_URLS", "ERROR_CATEGORIES", "IDENTIFIER_PATTERN", "IGAccount", "IGConfig", "IGMapping", "IGMarket",
            "IGReadOnlyAdapter", "IGRequestError", "IGSession", "VERSION", "sanitize_text"]
