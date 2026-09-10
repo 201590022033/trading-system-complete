@@ -29,7 +29,7 @@ sanitized HTTP status, IG error code, conservative error category and safe
 operator message. Credential, account, token, header, cookie and request-body
 values remain excluded. Two-factor requirements are reported but not automated.
 M12A remains blocked pending the same operator external validation; M12B is not
-active. The safe suite passes 329 tests and all 39 immutable research artifacts
+active. The safe suite passes 332 tests and all 39 immutable research artifacts
 remain unchanged.
 
 The LIVE validation error
@@ -39,6 +39,13 @@ uses explicit `IG_IDENTIFIER` semantics, validates IG's documented 1-30
 letter/digit/hyphen/underscore contract locally, retains `IG_USERNAME` only as
 an alias, and keeps `IG_ACCOUNT_ID` distinct. External validation remains
 blocked; no IG execution or M12B work is active.
+
+The subsequent DEMO HTTP 200 exposed a response-mapping defect: `/session` v2
+returns `CST` and `X-SECURITY-TOKEN` in case-insensitive HTTP response headers,
+while the adapter had discarded headers and searched the JSON body. The adapter
+now requires and retains both tokens only in memory and does not mix v3 OAuth
+tokens into the v2 contract. Final external read-only validation is still
+required.
 
 Next milestone: M12B — IG Historical Data Ingestion & Validation [NOT STARTED].
 

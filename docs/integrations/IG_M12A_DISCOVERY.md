@@ -29,6 +29,14 @@ Session credentials are held only in memory. They are never printed, persisted,
 included in audit payloads or included in exception text. The CLI prints only
 normalized/redacted discovery results.
 
+The adapter deliberately uses POST `/session` version 2. IG returns the required
+`CST` client token and `X-SECURITY-TOKEN` account token in HTTP response headers,
+not in the JSON response body. Header lookup is case-insensitive. Both tokens
+must be present before the adapter reports authentication success, and both are
+sent only on subsequent read-only authenticated requests. OAuth/bearer response
+tokens belong to `/session` version 3 and are not accepted or mixed into this
+version-2 session implementation.
+
 ## Authentication troubleshooting
 
 `python -m scripts.ig_discovery status` now performs a real read-only session
@@ -52,7 +60,7 @@ with secrets or raw HTTP headers.
 Focused mocked coverage exercises successful authentication, IG error-code
 preservation, HTTP 400/401/403/429 and unexpected failures, network and malformed
 responses, two-factor reporting, secret redaction and the disabled execution
-boundary. The complete safe suite passes 329 tests.
+boundary. The complete safe suite passes 332 tests.
 
 ## Operator validation
 

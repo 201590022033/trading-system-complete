@@ -183,6 +183,15 @@ def _number(value):
         return None
 
 
+def _header_value(headers, name):
+    """Read an HTTP response header using RFC case-insensitive semantics."""
+    wanted = name.casefold()
+    for key, value in headers.items():
+        if str(key).casefold() == wanted:
+            return value
+    return None
+
+
 class IGReadOnlyAdapter:
     """IG discovery adapter. No dealing endpoints or state-changing methods exist."""
 
@@ -240,7 +249,7 @@ class IGReadOnlyAdapter:
         message = sanitize_text(server_message, self._secrets()) if server_message else default_messages[category]
         return IGRequestError(status, sanitize_text(error_code, self._secrets()) or None, category, message)
 
-    def _request(self, method, path, *, version, payload=None, auth=True):
+    def _request(self, method, path, *, version, payload=None, auth=True, return_headers=False):
         headers = {"X-IG-API-KEY": self.config.api_key, "Accept-Version": str(version),
                    "Content-Type": "application/json", "Accept": "application/json"}
         if auth:
@@ -249,7 +258,9 @@ class IGReadOnlyAdapter:
             headers.update({"CST": self._session.cst, "X-SECURITY-TOKEN": self._session.security_token})
         body = json.dumps(payload).encode() if payload is not None else None
         try:
-            status, _, raw = self._transport(method, self.config.base_url + path, headers, body, self.config.timeout_seconds)
+            status, response_headers, raw = self._transport(
+                method, self.config.base_url + path, headers, body, self.config.timeout_seconds,
+            )
         except IGRequestError:
             raise
         except HTTPError as exc:
@@ -266,14 +277,17 @@ class IGReadOnlyAdapter:
             raise IGRequestError(status, None, "MALFORMED_RESPONSE", "IG returned invalid JSON") from None
         if not isinstance(payload, Mapping):
             raise IGRequestError(status, None, "MALFORMED_RESPONSE", "IG returned an unexpected response")
-        return payload
+        return (payload, response_headers) if return_headers else payload
 
     def authenticate(self):
-        payload = self._request("POST", "/session", version=2,
-                                payload={"identifier": self.config.auth_identifier, "password": self.config.password,
-                                         "encryptedPassword": False}, auth=False)
-        cst = payload.get("cst")
-        security = payload.get("x-security-token") or payload.get("securityToken")
+        _, response_headers = self._request(
+            "POST", "/session", version=2,
+            payload={"identifier": self.config.auth_identifier, "password": self.config.password,
+                     "encryptedPassword": False},
+            auth=False, return_headers=True,
+        )
+        cst = _header_value(response_headers, "CST")
+        security = _header_value(response_headers, "X-SECURITY-TOKEN")
         if not cst or not security:
             raise IGRequestError(200, None, "MALFORMED_RESPONSE",
                                  "IG authentication response omitted session credentials")

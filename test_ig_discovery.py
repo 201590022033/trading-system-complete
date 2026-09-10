@@ -13,7 +13,7 @@ class IGDiscoveryTests(unittest.TestCase):
         def transport(method, url, headers, body, timeout):
             self.calls.append((method, url, headers, body))
             if url.endswith("/session"):
-                return 200, {}, json.dumps({"cst": "CST-SECRET", "x-security-token": "SEC-SECRET"}).encode()
+                return 200, {"CST": "CST-SECRET", "X-SECURITY-TOKEN": "SEC-SECRET"}, b"{}"
             if url.endswith("/accounts"):
                 return 200, {}, json.dumps({"accounts": [{"accountId": "ACC", "accountName": "Demo", "currency": {"code": "ZAR"}, "preferred": True}]}).encode()
             if "/markets?" in url:
@@ -38,7 +38,7 @@ class IGDiscoveryTests(unittest.TestCase):
         calls = []
         def transport(method, url, headers, body, timeout):
             calls.append(json.loads(body))
-            return 200, {}, json.dumps({"cst": "CST-SECRET", "x-security-token": "SEC-SECRET"}).encode()
+            return 200, {"CST": "CST-SECRET", "X-SECURITY-TOKEN": "SEC-SECRET"}, b"{}"
         config = IGConfig("API-SECRET", "legacy-name", "password", account_id="ACCOUNT-123",
                           identifier="ApiLogin_1")
         IGReadOnlyAdapter(config, transport).authenticate()
@@ -68,6 +68,27 @@ class IGDiscoveryTests(unittest.TestCase):
         self.assertNotIn("CST-SECRET", str(result))
         self.assertNotIn("SEC-SECRET", str(result))
 
+    def test_session_headers_are_case_insensitive(self):
+        adapter = IGReadOnlyAdapter(
+            self.adapter.config,
+            lambda *args: (200, {"cSt": "CST-SECRET", "x-SeCuRiTy-ToKeN": "SEC-SECRET"}, b"{}"),
+        )
+        self.assertTrue(adapter.authenticate()["authenticated"])
+
+    def test_success_requires_both_v2_session_headers(self):
+        for headers in ({"CST": "CST-SECRET"}, {"X-SECURITY-TOKEN": "SEC-SECRET"}, {}):
+            with self.subTest(headers=tuple(headers)):
+                adapter = IGReadOnlyAdapter(self.adapter.config, lambda *args, h=headers: (200, h, b"{}"))
+                result = adapter.authentication_status()
+                self.assertEqual(result["error_category"], "MALFORMED_RESPONSE")
+                self.assertNotIn("SECRET", json.dumps(result))
+
+    def test_v2_does_not_accept_v3_oauth_body_as_session_tokens(self):
+        body = json.dumps({"oauthToken": {"access_token": "BEARER-SECRET"}}).encode()
+        result = IGReadOnlyAdapter(self.adapter.config, lambda *args: (200, {}, body)).authentication_status()
+        self.assertEqual(result["error_category"], "MALFORMED_RESPONSE")
+        self.assertNotIn("BEARER-SECRET", json.dumps(result))
+
     def test_accounts_search_and_market_detail(self):
         self.adapter.authenticate()
         self.assertEqual(self.adapter.get_accounts()[0].currency, "ZAR")
@@ -88,8 +109,12 @@ class IGDiscoveryTests(unittest.TestCase):
     def test_execution_methods_fail_closed_and_headers_are_not_cli_output(self):
         with self.assertRaises(RuntimeError): self.adapter.place_order({})
         self.adapter.authenticate()
+        accounts = self.adapter.get_accounts()
         auth_header = self.calls[-1][2]
-        self.assertNotIn("CST-SECRET", json.dumps(auth_header))  # token is only returned by transport, not stored in output
+        self.assertEqual(auth_header["CST"], "CST-SECRET")
+        self.assertEqual(auth_header["X-SECURITY-TOKEN"], "SEC-SECRET")
+        self.assertNotIn("CST-SECRET", repr(accounts))
+        self.assertNotIn("SEC-SECRET", repr(accounts))
         self.assertEqual(self.adapter.capabilities()["order_submission"], False)
 
     def test_invalid_username_or_password(self):
