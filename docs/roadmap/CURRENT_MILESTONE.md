@@ -15,21 +15,20 @@ unchanged. No ranking, portfolio selection, strategy weighting, dashboard,
 Railway or broker integration was added. See
 `docs/research/M12_INSTRUMENT_SUITABILITY.md`.
 
-## M12A — IG Discovery, Authentication & Canonical Market Mapping [BLOCKED]
+## M12A — IG Discovery, Authentication & Canonical Market Mapping [COMPLETE 2026-09-10]
 
 Read-only IG discovery infrastructure is implemented with explicit DEMO/LIVE
 configuration, in-memory authentication, account discovery, market search,
-market detail normalization and distinct EPIC/product mappings. Offline tests
-pass, but operator validation with real credentials is still required. No IG
-dealing or runtime integration is enabled. See
+market detail normalization and distinct EPIC/product mappings. Automated local
+tests pass, and the operator separately verified all four read-only commands
+against IG Demo. No IG dealing or runtime integration is enabled. See
 `docs/integrations/IG_M12A_DISCOVERY.md`.
 
 Authentication diagnostics now make a read-only session attempt and retain
 sanitized HTTP status, IG error code, conservative error category and safe
 operator message. Credential, account, token, header, cookie and request-body
 values remain excluded. Two-factor requirements are reported but not automated.
-M12A remains blocked pending the same operator external validation; M12B is not
-active. The safe suite passes 332 tests and all 39 immutable research artifacts
+The safe suite passes 332 tests and all 39 immutable research artifacts
 remain unchanged.
 
 The LIVE validation error
@@ -37,21 +36,26 @@ The LIVE validation error
 the configured value violated the v2 `/session` identifier pattern. M12A now
 uses explicit `IG_IDENTIFIER` semantics, validates IG's documented 1-30
 letter/digit/hyphen/underscore contract locally, retains `IG_USERNAME` only as
-an alias, and keeps `IG_ACCOUNT_ID` distinct. External validation remains
-blocked; no IG execution or M12B work is active.
+an alias, and keeps `IG_ACCOUNT_ID` distinct. No IG execution or M12B work is
+active.
 
 The subsequent DEMO HTTP 200 exposed a response-mapping defect: `/session` v2
 returns `CST` and `X-SECURITY-TOKEN` in case-insensitive HTTP response headers,
 while the adapter had discarded headers and searched the JSON body. The adapter
 now requires and retains both tokens only in memory and does not mix v3 OAuth
-tokens into the v2 contract. Final external read-only validation is still
-required.
+tokens into the v2 contract.
+
+Operator-provided external evidence confirms Demo authentication, enabled
+preferred CFD account discovery, distinct Brent EPIC/product-variant search and
+tradeable Brent market-detail normalization. Null currency, margin factor and
+trading hours remained explicit. The coding workspace did not access the
+operator account, and no account ID or secret is recorded.
 
 Next milestone: M12B — IG Historical Data Ingestion & Validation [NOT STARTED].
 
 ## M12B — IG Historical Data Ingestion & Validation [NOT STARTED]
 
-Deferred until M12A external discovery validation succeeds.
+M12A validation is complete. M12B remains NOT STARTED and is not active.
 
 Next milestone: M13 — Opportunity Ranking [NOT STARTED].
 

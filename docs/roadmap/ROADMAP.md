@@ -11,18 +11,22 @@ instruments remain candidate/research and no portfolio or opportunity ranking is
 performed. The suite passes 307 tests and all 39 immutable research artifacts
 remain unchanged. See [M12 Instrument Suitability](../research/M12_INSTRUMENT_SUITABILITY.md).
 
-## M12A — IG Discovery, Authentication & Canonical Market Mapping [BLOCKED]
+## M12A — IG Discovery, Authentication & Canonical Market Mapping [COMPLETE 2026-09-10]
 
 Added a read-only IG adapter for explicit DEMO/LIVE configuration, authentication
 and session establishment, account discovery, market search, market detail
 normalization and canonical EPIC mapping. Product variants remain distinct and
-credentials/tokens remain in memory only. Offline tests pass; operator
-validation with real credentials is required before completion. No dealing,
-historical ingestion or runtime integration is enabled. See [IG M12A discovery](../integrations/IG_M12A_DISCOVERY.md).
+credentials/tokens remain in memory only. Automated local tests pass. The
+operator separately verified Demo authentication, enabled preferred CFD account
+normalization, distinct Brent product search and market-detail normalization,
+including preservation of unavailable metadata. The coding workspace did not
+access the operator account. No dealing, historical ingestion or runtime
+integration is enabled. See [IG M12A discovery](../integrations/IG_M12A_DISCOVERY.md).
 
 ## M12B — IG Historical Data Ingestion & Validation [NOT STARTED]
 
-Requires successful M12A external validation. No M12B work has begun.
+M12A external read-only validation is complete. No M12B work has begun; M12B is
+NOT STARTED.
 
 Next milestone: M13 — Opportunity Ranking [NOT STARTED].
 

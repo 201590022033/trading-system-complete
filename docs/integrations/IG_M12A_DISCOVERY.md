@@ -2,7 +2,7 @@
 
 ## Status
 
-**BLOCKED — candidate implementation complete; external validation required**
+**COMPLETE — operator-verified read-only IG Demo validation 2026-09-10**
 
 The adapter is read-only and does not connect to strategy, dashboard, Railway
 worker, portfolio or execution paths. No credentials or session tokens are
@@ -57,12 +57,31 @@ process. M12A does not append a security code to the password, prompt for one,
 or automate two-factor authentication. Do not paste the diagnostic together
 with secrets or raw HTTP headers.
 
+### Automated/local evidence
+
 Focused mocked coverage exercises successful authentication, IG error-code
 preservation, HTTP 400/401/403/429 and unexpected failures, network and malformed
 responses, two-factor reporting, secret redaction and the disabled execution
 boundary. The complete safe suite passes 332 tests.
 
-## Operator validation
+### Operator-verified external IG Demo evidence
+
+The operator, outside the coding workspace, verified all four read-only commands:
+
+- `status` returned `authenticated: true` in `DEMO`, validating `/session` v2
+  authentication and case-insensitive session-header extraction.
+- `accounts` returned one enabled, preferred CFD account normalized with USD
+  currency. The account identifier is deliberately not reproduced here.
+- `search "Brent"` returned multiple distinct Brent EPICs and $1/$5/$10 product
+  variants; the adapter preserved them rather than collapsing them.
+- `market "CC.D.LCO.BMU.IP"` returned a tradeable Brent $1 commodity with
+  available normalized contract, lot, minimum-deal, tick, bid and offer data.
+  Currency, margin factor and trading hours remained explicitly unavailable.
+
+This evidence was supplied by the operator; the coding workspace did not access
+the account. No secret or session token was included in the recorded evidence.
+
+## Operator commands
 
 Set these environment variables through the operator’s secret manager or local
 process environment only:
@@ -88,7 +107,7 @@ python -m scripts.ig_discovery search "Brent"
 python -m scripts.ig_discovery market "<EPIC returned by search>"
 ```
 
-Use DEMO first. These commands perform authentication, account discovery,
+These commands perform authentication, account discovery,
 market search and one market metadata lookup only. Do not paste secrets or raw
 headers into chat. No dealing command exists in this milestone.
 
