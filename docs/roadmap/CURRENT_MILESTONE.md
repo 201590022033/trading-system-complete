@@ -63,7 +63,13 @@ research-only data grade and factual suitability evidence. No data is persisted,
 no scoring or runtime trading changes, and no HR11 rerun occurred. See
 `docs/integrations/IG_M12B_HISTORICAL_DATA.md`.
 
-The full safe suite passes 355 tests; all 39 immutable research artifacts remain
+The initial external history probe exposed an incorrect `Accept-Version` header.
+The URL path already retained `/gateway/deal`; the gateway defaulted the v3-only
+prices route to version 1 and returned HTML 404. The shared boundary now uses
+IG's documented `Version` header, safely anchors all endpoint paths beneath the
+gateway, and provides query-free route diagnostics.
+
+The full safe suite passes 356 tests; all 39 immutable research artifacts remain
 unchanged.
 
 M12B remains blocked pending operator external IG Demo validation of daily,

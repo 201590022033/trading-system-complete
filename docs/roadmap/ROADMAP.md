@@ -33,7 +33,11 @@ research data grade and factual suitability metadata. No persistence, scoring,
 execution, opportunity ranking or HR11 evaluation changed. M12B remains blocked
 until the operator validates daily, intraday and 5-minute Demo history. See
 [IG M12B historical data](../integrations/IG_M12B_HISTORICAL_DATA.md).
-The full safe suite passes 355 tests and all 39 protected artifacts are unchanged.
+The first external probe found that the path correctly retained `/gateway/deal`
+but the shared adapter sent `Accept-Version` instead of IG's documented
+`Version` header, making the v3-only prices route fall back to version 1 and
+return HTML 404. The shared header and gateway anchoring are corrected. The full
+safe suite passes 356 tests and all 39 protected artifacts are unchanged.
 
 Next milestone: M13 — Opportunity Ranking [NOT STARTED].
 

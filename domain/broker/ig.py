@@ -7,7 +7,7 @@ import os
 import re
 from typing import Callable, Mapping
 from urllib.error import HTTPError, URLError
-from urllib.parse import quote, urlencode
+from urllib.parse import quote, urlencode, urlsplit
 from urllib.request import Request, urlopen
 
 VERSION = "ig-discovery-v1"
@@ -235,6 +235,24 @@ class IGReadOnlyAdapter:
                 self.config.password,
                 self.config.account_id, *session_values)
 
+    def _effective_url(self, path):
+        """Keep every relative endpoint below the configured IG gateway root."""
+        parsed = urlsplit(path)
+        if parsed.scheme or parsed.netloc or parsed.fragment:
+            raise ValueError("IG request path must be relative to the configured gateway")
+        segments = parsed.path.split("/")
+        if any(segment in {".", ".."} for segment in segments):
+            raise ValueError("IG request path cannot traverse the configured gateway")
+        endpoint = "/" + parsed.path.lstrip("/")
+        query = "?" + parsed.query if parsed.query else ""
+        return self.config.base_url.rstrip("/") + endpoint + query
+
+    def request_route(self, method, path, version):
+        """Return safe routing metadata; query values and credentials are excluded."""
+        parsed = urlsplit(self._effective_url(path))
+        return {"environment": self.config.environment, "method": str(method).upper(),
+                "host": parsed.hostname, "path": parsed.path, "version": int(version)}
+
     def _safe_excerpt(self, raw, content_type, limit=240):
         if not raw:
             return None
@@ -284,7 +302,7 @@ class IGReadOnlyAdapter:
                               response_content_type=content_type, safe_body_excerpt=safe_excerpt)
 
     def _request(self, method, path, *, version, payload=None, auth=True, return_headers=False):
-        headers = {"X-IG-API-KEY": self.config.api_key, "Accept-Version": str(version),
+        headers = {"X-IG-API-KEY": self.config.api_key, "Version": str(version),
                    "Content-Type": "application/json", "Accept": "application/json"}
         if auth:
             if self._session is None:
@@ -293,7 +311,7 @@ class IGReadOnlyAdapter:
         body = json.dumps(payload).encode() if payload is not None else None
         try:
             status, response_headers, raw = self._transport(
-                method, self.config.base_url + path, headers, body, self.config.timeout_seconds,
+                method, self._effective_url(path), headers, body, self.config.timeout_seconds,
             )
         except IGRequestError:
             raise

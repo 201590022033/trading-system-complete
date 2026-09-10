@@ -56,11 +56,16 @@ class IGHistoryTests(unittest.TestCase):
         self.assertEqual((bar.canonical.open, bar.canonical.high, bar.canonical.low, bar.canonical.close),
                          (101, 105, 99, 103))
         self.assertEqual(bar.canonical.timeframe, "5m")
-        self.assertEqual(self.calls[-1][2]["Accept-Version"], str(HISTORY_API_VERSION))
+        self.assertNotIn("Accept-Version", self.calls[-1][2])
+        self.assertEqual(self.calls[-1][2]["Version"], str(HISTORY_API_VERSION))
         query = parse_qs(urlparse(self.calls[-1][1]).query)
         self.assertEqual(query["resolution"], ["MINUTE_5"])
-        self.assertIn("from", query)
-        self.assertIn("to", query)
+        self.assertEqual(query["from"], ["2026-01-01T00:00:00"])
+        self.assertEqual(query["to"], ["2026-01-02T00:00:00"])
+        self.assertEqual(query["pageSize"], ["500"])
+        self.assertEqual(query["pageNumber"], ["1"])
+        self.assertEqual(urlparse(self.calls[-1][1]).path,
+                         "/gateway/deal/prices/CC.D.LCO.BMU.IP")
 
     def test_all_and_only_documented_resolution_mappings_are_explicit(self):
         self.assertEqual(RESOLUTIONS["MINUTE_30"], ("30m", 1800))

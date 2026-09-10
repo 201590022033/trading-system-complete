@@ -13,6 +13,18 @@ or run HR11.
 `IGReadOnlyAdapter.get_historical_prices()` uses `GET /prices/{epic}` version 3
 with explicit `resolution`, `from`, `to`, `pageSize`, and `pageNumber` query
 parameters. This matches the official [IG Labs v3 prices reference](https://labs.ig.com/reference/prices-epic.html).
+The shared adapter constructs the effective URL beneath
+`https://demo-api.ig.com/gateway/deal` (or the LIVE gateway) and sends IG's
+documented `Version` request header. The initial candidate incorrectly sent
+`Accept-Version`; IG therefore treated the v3-only prices request as its default
+version 1 and returned a generic HTML/Tomcat 404 even though the effective path
+was already `/gateway/deal/prices/{epic}`. The corrected boundary uses
+`Version: 3`; it does not switch endpoint versions.
+
+`request_route()` exposes only environment, method, effective host, effective
+path and API version for offline routing diagnosis. Query values and all request
+headers/credentials are excluded. Absolute URLs and path traversal are rejected;
+both leading-slash and plain relative endpoints remain beneath `/gateway/deal`.
 The documented resolutions are `SECOND`, `MINUTE`, `MINUTE_2`, `MINUTE_3`,
 `MINUTE_5`, `MINUTE_10`, `MINUTE_15`, `MINUTE_30`, `HOUR`, `HOUR_2`,
 `HOUR_3`, `HOUR_4`, `DAY`, `WEEK`, and `MONTH`. They map explicitly to `1s`,
@@ -99,7 +111,7 @@ pagination, ordering, overlaps, duplicates, discontinuities, truncation, empty
 and malformed responses, allowance errors, redaction, M8 lineage, factual
 suitability metadata, and disabled execution.
 
-The full safe suite passes 355 tests. All 39 protected research artifacts match
+The full safe suite passes 356 tests. All 39 protected research artifacts match
 their baseline SHA-256 values.
 
 ## Required external IG Demo validation

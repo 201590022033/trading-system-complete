@@ -3,6 +3,7 @@ import os
 import unittest
 from unittest.mock import patch
 from urllib.error import URLError
+from urllib.parse import urlparse
 
 from domain.broker.ig import IGConfig, IGReadOnlyAdapter
 
@@ -95,6 +96,29 @@ class IGDiscoveryTests(unittest.TestCase):
         markets = self.adapter.search_markets("Brent")
         self.assertEqual(markets[0].epic, "CS.D.BRENT.CFD.IP")
         self.assertEqual(self.adapter.get_market(markets[0].epic).market_status, "TRADEABLE")
+
+    def test_all_routes_remain_under_gateway_and_use_official_version_header(self):
+        self.adapter.authenticate()
+        self.adapter.get_accounts()
+        self.adapter.search_markets("Brent crude")
+        self.adapter.get_market("CS.D.BRENT.CFD.IP")
+        paths = [urlparse(call[1]).path for call in self.calls]
+        self.assertEqual(paths, ["/gateway/deal/session", "/gateway/deal/accounts",
+                                 "/gateway/deal/markets", "/gateway/deal/markets/CS.D.BRENT.CFD.IP"])
+        self.assertEqual([call[2]["Version"] for call in self.calls], ["2", "1", "1", "3"])
+        self.assertTrue(all("Accept-Version" not in call[2] for call in self.calls))
+
+        leading = self.adapter.request_route("GET", "/prices/CC.D.LCO.BMU.IP?from=private", 3)
+        plain = self.adapter.request_route("GET", "prices/CC.D.LCO.BMU.IP", 3)
+        expected = {"environment": "DEMO", "method": "GET", "host": "demo-api.ig.com",
+                    "path": "/gateway/deal/prices/CC.D.LCO.BMU.IP", "version": 3}
+        self.assertEqual(leading, expected)
+        self.assertEqual(plain, expected)
+        self.assertNotIn("private", repr(leading))
+        with self.assertRaises(ValueError):
+            self.adapter.request_route("GET", "https://example.invalid/prices/EPIC", 3)
+        with self.assertRaises(ValueError):
+            self.adapter.request_route("GET", "../prices/EPIC", 3)
 
     def test_mapping_preserves_epic_and_variants(self):
         self.adapter.authenticate()
