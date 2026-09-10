@@ -23,15 +23,15 @@ including preservation of unavailable metadata. The coding workspace did not
 access the operator account. No dealing, historical ingestion or runtime
 integration is enabled. See [IG M12A discovery](../integrations/IG_M12A_DISCOVERY.md).
 
-## M12B — IG Historical Data Ingestion & Validation [ACTIVE — BLOCKED]
+## M12B — IG Historical Data Ingestion & Validation [COMPLETE 2026-09-10]
 
 Added a local read-only candidate for IG `/prices/{epic}` v3 history. It maps
 only documented resolutions, preserves bid/ask/last OHLC, produces versioned
 derived-mid M8 canonical completed bars, normalizes UTC timestamps, follows
 bounded pagination, and exposes gaps, duplicates, truncation, provenance,
 research data grade and factual suitability metadata. No persistence, scoring,
-execution, opportunity ranking or HR11 evaluation changed. M12B remains blocked
-until the operator validates daily, intraday and 5-minute Demo history. See
+execution, opportunity ranking or HR11 evaluation changed. Operator validation
+of daily, hourly and 5-minute Demo history is complete. See
 [IG M12B historical data](../integrations/IG_M12B_HISTORICAL_DATA.md).
 The first external probe found that the path correctly retained `/gateway/deal`
 but the shared adapter sent `Accept-Version` instead of IG's documented
@@ -43,8 +43,15 @@ were structurally valid records outside the requested range. Range exclusions
 are now counted independently from malformed/incomplete rows and do not cause
 `PARTIAL_MALFORMED`; the requested series remains bounded and market-calendar
 gap completeness remains unclaimed. The full safe suite passes 363 tests and all
-39 protected artifacts are unchanged. Final operator 5-minute revalidation
-remains required.
+39 protected artifacts are unchanged. Operator external IG Demo validation
+passed DAY, HOUR and MINUTE_5 retrieval. The final 5-minute result contained 457
+derived-mid `RESEARCH_DATA` bars, zero malformed/incomplete/duplicate rows, 70
+range exclusions, two pages and no truncation. Its requested-range completeness
+passed while 24 gaps remain unclassified without an EPIC-specific calendar.
+This makes IG Demo a viable candidate for later HR11 validation but does not
+prove long-horizon depth or authorize an HR11 rerun. The safe-suite `.env`
+isolation added through `ai_config.py` is configuration plumbing only; no AI,
+scoring, execution or runtime trading behavior changed.
 
 Next milestone: M13 — Opportunity Ranking [NOT STARTED].
 

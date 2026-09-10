@@ -36,8 +36,8 @@ The LIVE validation error
 the configured value violated the v2 `/session` identifier pattern. M12A now
 uses explicit `IG_IDENTIFIER` semantics, validates IG's documented 1-30
 letter/digit/hyphen/underscore contract locally, retains `IG_USERNAME` only as
-an alias, and keeps `IG_ACCOUNT_ID` distinct. No IG execution or M12B work is
-active.
+an alias, and keeps `IG_ACCOUNT_ID` distinct. At M12A closure no IG execution
+or M12B work was active.
 
 The subsequent DEMO HTTP 200 exposed a response-mapping defect: `/session` v2
 returns `CST` and `X-SECURITY-TOKEN` in case-insensitive HTTP response headers,
@@ -51,9 +51,9 @@ tradeable Brent market-detail normalization. Null currency, margin factor and
 trading hours remained explicit. The coding workspace did not access the
 operator account, and no account ID or secret is recorded.
 
-Next milestone: M12B — IG Historical Data Ingestion & Validation [ACTIVE].
+Next milestone: M12B — IG Historical Data Ingestion & Validation [COMPLETE].
 
-## M12B — IG Historical Data Ingestion & Validation [ACTIVE — BLOCKED]
+## M12B — IG Historical Data Ingestion & Validation [COMPLETE 2026-09-10]
 
 The local read-only candidate retrieves IG `/prices/{epic}` v3 history with an
 explicit documented resolution map, bounded pagination, canonical completed-bar
@@ -82,9 +82,20 @@ to API response processing, not market-calendar coverage, and gap semantics stay
 The full safe suite passes 363 tests; all 39 immutable research artifacts remain
 unchanged.
 
-M12B remains blocked pending final operator revalidation of corrected 5-minute
-range-exclusion counts and completeness for the proven Brent EPIC. The coding
-workspace has not accessed the operator account.
+The operator's final external IG Demo validation passed DAY, HOUR and MINUTE_5
+history. The 5-minute result contained 457 derived-mid research bars, zero
+malformed/incomplete/duplicate rows, 70 valid out-of-range exclusions, two pages
+and no truncation. It reported `COMPLETE_REQUESTED_RANGE`; 24 discontinuities
+remain `UNCLASSIFIED_INTERVAL_DISCONTINUITIES` because no EPIC-specific trading
+calendar exists. This proves IG Demo is a viable candidate source for later HR11
+validation, not full long-horizon depth or closure of the HR11 data gap. No HR11
+rerun occurred.
+
+The M12B `ai_config.py` change only prevents `.env` loading when the explicit
+safe-suite flag is set. It changes no AI decision, scoring, signal, execution or
+runtime trading behavior. The coding workspace did not access the operator
+account; Demo data remains `RESEARCH_DATA`, historical allowance and timezone
+limitations remain, and execution stays disabled.
 
 Next milestone: M13 — Opportunity Ranking [NOT STARTED].
 

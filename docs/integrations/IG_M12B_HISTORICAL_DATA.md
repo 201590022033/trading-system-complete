@@ -2,7 +2,7 @@
 
 ## Status
 
-**BLOCKED — local candidate complete; operator IG Demo validation required**
+**COMPLETE — operator IG Demo validation recorded 2026-09-10**
 
 This milestone adds only authenticated, read-only historical retrieval. It does
 not stream prices, place or modify orders, change scoring, rank opportunities,
@@ -123,6 +123,16 @@ collapsed, and configured credentials/session values plus credential-like fields
 are redacted. Empty bodies remain explicit. The existing authentication-status
 diagnostic format is unchanged.
 
+## AI configuration isolation
+
+The M12B foundation change in `ai_config.py` recognizes
+`PYTHON_DOTENV_DISABLED` and skips `.env` loading only when that configuration
+flag is explicitly enabled. `scripts/run_tests.py` enables it so offline tests
+cannot consume operator secrets. `test_ai_config.py` verifies that isolation.
+This is configuration plumbing only: it does not alter provider decisions,
+prompts, scoring, signals, execution, or runtime trading behavior. Normal local
+configuration continues to load `.env` when the flag is absent.
+
 ## Automated evidence
 
 Mocked tests cover retrieval, resolutions, canonical OHLC, quote preservation,
@@ -135,7 +145,7 @@ suitability metadata, and disabled execution.
 The full safe suite passes 363 tests. All 39 protected research artifacts match
 their baseline SHA-256 values.
 
-## External IG Demo evidence and required revalidation
+## Operator-verified external IG Demo evidence
 
 After the version-header repair, the operator obtained non-truncated Brent `$1`
 history: DAY accepted 26 and excluded 1; HOUR accepted 39 and excluded 6;
@@ -145,17 +155,26 @@ records had complete bid/ask OHLC, valid timestamps and volume; their only reaso
 was `outside_requested_range`. They were valid extra response records, not
 malformed bars. The local candidate now represents that distinction correctly.
 
-Re-run the bounded 5-minute window to verify `excluded_outside_range` and the
-corrected completeness classification against IG Demo.
+The operator's final revalidation of the same 5-minute request returned 457
+derived-mid bars, zero malformed, zero incomplete, zero duplicates, 70 valid
+out-of-range exclusions, two pages and no truncation. Timestamps span
+2026-09-01T00:00:00+00:00 through 2026-09-02T16:00:00+00:00. Completeness is
+`COMPLETE_REQUESTED_RANGE`, scoped to
+`API_RESPONSE_FILTERING_ONLY; MARKET_CALENDAR_UNASSESSED`; the 24 observed gaps
+remain `UNCLASSIFIED_INTERVAL_DISCONTINUITIES`. Daily and hourly requests were
+also externally verified non-empty, UTC-normalized, duplicate-free and
+non-truncated. This evidence came from the operator's IG Demo environment; the
+coding workspace did not access the operator account.
 
-Run from the repository root with existing Demo secrets in the environment:
+IG historical API, DAY/HOUR/MINUTE_5 retrieval, v3 pagination, UTC
+normalization, duplicate handling, range filtering, malformed classification,
+incomplete exclusion, truncation handling and price-basis provenance therefore
+pass M12B acceptance. IG Demo can provide real 5-minute historical Brent bars
+and is a viable candidate data source for later HR11 validation. This does not
+prove full long-horizon 5-minute depth, close the HR11 data gap, or authorize an
+HR11 rerun.
 
-```text
-python -m scripts.ig_discovery history "CC.D.LCO.BMU.IP" "MINUTE_5" "2026-09-01T00:00:00Z" "2026-09-03T00:00:00Z"
-```
-
-Confirm non-empty output, chronological and sane UTC timestamps, consistent OHLC,
-zero duplicate output timestamps, retained metadata, and no unexplained
-truncation. The 5-minute feed is only a **CANDIDATE FOR LATER HR11 VALIDATION**
-if external results demonstrate sufficient depth and quality. Do not run HR11
-during M12B.
+Remaining limitations are explicit: Demo data remains `RESEARCH_DATA`, the
+historical allowance applies, the market-local timezone identifier is
+unavailable, no EPIC-specific trading calendar exists, and interval
+discontinuities remain unclassified. Execution remains disabled.
