@@ -70,18 +70,21 @@ IG's documented `Version` header, safely anchors all endpoint paths beneath the
 gateway, and provides query-free route diagnostics.
 
 The operator subsequently retrieved non-truncated DAY (26 accepted/1 excluded),
-HOUR (39/6) and MINUTE_5 (457/70, two pages) history. The former aggregate
-counter cannot identify why rows were excluded. M12B now reports precise reason
-occurrences and optional bounded value-free shapes. The official contract does
-not establish a last-traded-only substitute for incomplete quote sides, so all
-such partial shapes remain excluded pending real shape evidence.
+HOUR (39/6) and MINUTE_5 (457/70, two pages) history. External inspection proved
+the 70 sampled 5-minute exclusions were structurally complete and solely outside
+the requested range. The adapter now counts valid extra response records as
+`excluded_outside_range`, not malformed, while continuing to filter them.
+Malformed, incomplete, range and duplicate counters remain distinct; range-only
+exclusions do not make completeness `PARTIAL_MALFORMED`. Completeness is scoped
+to API response processing, not market-calendar coverage, and gap semantics stay
+`UNCLASSIFIED_INTERVAL_DISCONTINUITIES`.
 
-The full safe suite passes 360 tests; all 39 immutable research artifacts remain
+The full safe suite passes 363 tests; all 39 immutable research artifacts remain
 unchanged.
 
-M12B remains blocked pending operator revalidation of excluded-reason counts and
-resulting daily/intraday quality for the proven Brent EPIC. The coding workspace
-has not accessed the operator account.
+M12B remains blocked pending final operator revalidation of corrected 5-minute
+range-exclusion counts and completeness for the proven Brent EPIC. The coding
+workspace has not accessed the operator account.
 
 Next milestone: M13 — Opportunity Ranking [NOT STARTED].
 

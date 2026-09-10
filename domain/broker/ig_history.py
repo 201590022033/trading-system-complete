@@ -125,6 +125,7 @@ class IGHistoricalSeries:
     duplicates: int
     gaps: int
     excluded_incomplete: int
+    excluded_outside_range: int
     excluded_malformed: int
     truncated: bool
     pages_received: int
@@ -148,7 +149,9 @@ class IGHistoricalSeries:
             return "PARTIAL_TRUNCATED"
         if self.excluded_malformed:
             return "PARTIAL_MALFORMED"
-        return "COMPLETE" if self.bars else "EMPTY"
+        if self.excluded_incomplete:
+            return "PARTIAL_INCOMPLETE"
+        return "COMPLETE_REQUESTED_RANGE" if self.bars else "EMPTY_REQUESTED_RANGE"
 
     def summary(self):
         basis_counts = dict(self.price_basis_counts)
@@ -163,12 +166,14 @@ class IGHistoricalSeries:
             "last_timestamp": self.bars[-1].canonical.interval_start.isoformat() if self.bars else None,
             "gaps": self.gaps, "duplicates": self.duplicates,
             "gap_semantics": "UNCLASSIFIED_INTERVAL_DISCONTINUITIES",
+            "excluded_outside_range": self.excluded_outside_range,
             "excluded_incomplete": self.excluded_incomplete, "excluded_malformed": self.excluded_malformed,
             "excluded_reasons": dict(self.excluded_reasons),
-            "excluded_reason_semantics": "COUNTS_ARE_REASON_OCCURRENCES; ONE_RECORD_MAY_HAVE_MULTIPLE_REASONS",
+            "excluded_reason_semantics": "STRUCTURAL_REASON_OCCURRENCES; ONE_RECORD_MAY_HAVE_MULTIPLE_REASONS",
             "malformed_samples": tuple(sample.to_dict() for sample in self.malformed_samples),
             "price_basis_counts": dict(self.price_basis_counts),
             "truncated": self.truncated, "completeness": self.completeness,
+            "completeness_scope": "API_RESPONSE_FILTERING_ONLY; MARKET_CALENDAR_UNASSESSED",
             "timestamp_quality": self.timestamp_quality, "price_basis": price_basis,
             "data_grade": self.data_grade, "pages_received": self.pages_received,
             "remaining_allowance": self.remaining_allowance, "source_limitations": self.source_limitations,
@@ -302,7 +307,7 @@ def fetch_historical_prices(adapter, epic, resolution, start, end, *, max_points
     retrieved_at = _utc(retrieved_at or datetime.now(timezone.utc))
     normalized, seen = [], set()
     reason_counts, samples, basis_counts = {}, [], {}
-    duplicates = malformed = incomplete = pages = 0
+    duplicates = malformed = incomplete = outside_range = pages = 0
     total_pages, remaining_allowance = 1, None
     while pages < total_pages and pages < max_pages and len(normalized) < max_points:
         page_number = pages + 1
@@ -338,20 +343,29 @@ def fetch_historical_prices(adapter, epic, resolution, start, end, *, max_points
                     samples.append(IGMalformedShape(None, (), "UNKNOWN", ("other",)))
                 continue
             try:
+                source_timestamp = _source_time(item.get("snapshotTimeUTC"))
+            except ValueError:
+                source_timestamp = None
+            is_outside_range = (source_timestamp is not None and
+                                (source_timestamp < start or source_timestamp >= end))
+            if is_outside_range:
+                outside_range += 1
+            try:
                 bar = _normalize_price(item, epic=epic, environment=adapter.config.environment, resolution=resolution)
             except IGNormalizationError as exc:
                 malformed += 1
                 for reason in exc.reasons:
                     reason_counts[reason] = reason_counts.get(reason, 0) + 1
                 if len(samples) < diagnostic_sample_limit:
-                    samples.append(exc.shape)
+                    if is_outside_range:
+                        samples.append(IGMalformedShape(
+                            exc.shape.timestamp, exc.shape.component_status, exc.shape.volume_status,
+                            tuple(dict.fromkeys((*exc.shape.reasons, "outside_requested_range")))))
+                    else:
+                        samples.append(exc.shape)
                 continue
             timestamp = bar.canonical.interval_start
-            if timestamp < start or timestamp >= end:
-                malformed += 1
-                reason_counts["outside_requested_range"] = reason_counts.get("outside_requested_range", 0) + 1
-                if len(samples) < diagnostic_sample_limit:
-                    samples.append(_shape(item, _components(item)[3], ["outside_requested_range"]))
+            if is_outside_range:
                 continue
             if timestamp in seen:
                 duplicates += 1
@@ -373,10 +387,14 @@ def fetch_historical_prices(adapter, epic, resolution, start, end, *, max_points
         cadence = timedelta(seconds=seconds)
         gaps = sum(max(0, int((right.canonical.interval_start - left.canonical.interval_start) / cadence) - 1)
                    for left, right in zip(normalized, normalized[1:]))
-    return IGHistoricalSeries(epic, adapter.config.environment, resolution, RESOLUTIONS[resolution][0],
-                              start, end, retrieved_at, tuple(normalized), duplicates, gaps, incomplete,
-                              malformed, pages < total_pages, pages, remaining_allowance,
-                              tuple(sorted(reason_counts.items())), tuple(samples), tuple(sorted(basis_counts.items())))
+    return IGHistoricalSeries(
+        epic=epic, environment=adapter.config.environment, resolution=resolution,
+        canonical_timeframe=RESOLUTIONS[resolution][0], requested_start=start, requested_end=end,
+        retrieved_at=retrieved_at, bars=tuple(normalized), duplicates=duplicates, gaps=gaps,
+        excluded_incomplete=incomplete, excluded_outside_range=outside_range,
+        excluded_malformed=malformed, truncated=pages < total_pages, pages_received=pages,
+        remaining_allowance=remaining_allowance, excluded_reasons=tuple(sorted(reason_counts.items())),
+        malformed_samples=tuple(samples), price_basis_counts=tuple(sorted(basis_counts.items())))
 
 
 __all__ = ["HISTORY_API_VERSION", "IGHistoricalBar", "IGHistoricalSeries", "IGMalformedShape",

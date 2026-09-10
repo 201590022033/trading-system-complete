@@ -38,10 +38,12 @@ but the shared adapter sent `Accept-Version` instead of IG's documented
 `Version` header, making the v3-only prices route fall back to version 1 and
 return HTML 404. The shared header and gateway anchoring are corrected. External
 retrieval then returned DAY 26/1, HOUR 39/6 and MINUTE_5 457/70
-accepted/excluded bars. Exclusions now carry reason counts and optional bounded
-value-free shapes. Last-traded data does not replace incomplete bid/ask without
-real shape evidence. The full safe suite passes 360 tests
-and all 39 protected artifacts are unchanged. Operator reason-count revalidation
+accepted/excluded bars. External diagnostics proved the 70 5-minute exclusions
+were structurally valid records outside the requested range. Range exclusions
+are now counted independently from malformed/incomplete rows and do not cause
+`PARTIAL_MALFORMED`; the requested series remains bounded and market-calendar
+gap completeness remains unclaimed. The full safe suite passes 363 tests and all
+39 protected artifacts are unchanged. Final operator 5-minute revalidation
 remains required.
 
 Next milestone: M13 — Opportunity Ranking [NOT STARTED].

@@ -71,12 +71,24 @@ The importer follows v3 `metadata.pageData` within explicit `max_points`,
 `page_size`, and `max_pages` bounds. It sorts chronologically, deduplicates
 overlapping timestamps while reporting duplicates, and reports
 `PARTIAL_TRUNCATED` if a bound stops retrieval before `totalPages`. Empty and
-partially malformed results remain explicit. Exclusions now include reason
-occurrence counts for missing/null components, missing/invalid UTC timestamp,
-invalid numeric input, OHLC invariant failure, out-of-range record or other.
-One excluded record may contribute more than one reason. Optional
+partially malformed results remain explicit. Accepted in-range bars, records
+outside the requested range, incomplete bars, structurally malformed records
+and duplicates have separate counters. Structural reason occurrences cover
+missing/null components, missing/invalid UTC timestamp, invalid numeric input,
+OHLC invariant failure or other; one malformed record may contribute more than
+one reason. A structurally malformed record with a usable out-of-range timestamp
+is observable in both applicable counters. Optional
 `--malformed-samples 1..5` output contains only timestamp, component presence
 states, volume presence and reasons; it never includes price values or raw rows.
+
+IG may return valid records outside the requested boundaries; the observed API
+response does not establish why. They remain filtered from the canonical series
+and increment `excluded_outside_range`, never `excluded_malformed` on range
+status alone. Range-only exclusions do not create `PARTIAL_MALFORMED`.
+`COMPLETE_REQUESTED_RANGE` means only that response processing was not truncated
+and found no incomplete or structurally malformed rows; it is explicitly scoped
+as `API_RESPONSE_FILTERING_ONLY; MARKET_CALENDAR_UNASSESSED`. It does not claim
+EPIC-specific market-calendar coverage.
 
 `gaps` counts fixed-cadence interval discontinuities and is labeled
 `UNCLASSIFIED_INTERVAL_DISCONTINUITIES`. Without an instrument trading calendar,
@@ -115,11 +127,12 @@ diagnostic format is unchanged.
 
 Mocked tests cover retrieval, resolutions, canonical OHLC, quote preservation,
 derived-mid versioning, UTC/DST handling, naive-time rejection, incomplete bars,
+independent range/malformed classification, requested-range preservation,
 pagination, ordering, overlaps, duplicates, discontinuities, truncation, empty
 and malformed responses, allowance errors, redaction, M8 lineage, factual
 suitability metadata, and disabled execution.
 
-The full safe suite passes 360 tests. All 39 protected research artifacts match
+The full safe suite passes 363 tests. All 39 protected research artifacts match
 their baseline SHA-256 values.
 
 ## External IG Demo evidence and required revalidation
@@ -127,21 +140,18 @@ their baseline SHA-256 values.
 After the version-header repair, the operator obtained non-truncated Brent `$1`
 history: DAY accepted 26 and excluded 1; HOUR accepted 39 and excluded 6;
 MINUTE_5 accepted 457 and excluded 70 over two pages, with remaining allowance
-9401. The old candidate retained only one aggregate malformed counter, so the
-exact causes of those 77 records cannot be reconstructed from that output. The
-similar hourly/5-minute rates are an observation, not proof that transitions or
-any particular component caused them.
+9401. A subsequent external 5-minute diagnostic established that all 70 excluded
+records had complete bid/ask OHLC, valid timestamps and volume; their only reason
+was `outside_requested_range`. They were valid extra response records, not
+malformed bars. The local candidate now represents that distinction correctly.
 
-Re-run the bounded windows to obtain reason counts. At most three safe shapes
-may be requested when component presence needs inspection.
+Re-run the bounded 5-minute window to verify `excluded_outside_range` and the
+corrected completeness classification against IG Demo.
 
 Run from the repository root with existing Demo secrets in the environment:
 
 ```text
-python -m scripts.ig_discovery history "CC.D.LCO.BMU.IP" "DAY" "2026-08-01T00:00:00Z" "2026-09-01T00:00:00Z"
-python -m scripts.ig_discovery history "CC.D.LCO.BMU.IP" "HOUR" "2026-09-01T00:00:00Z" "2026-09-03T00:00:00Z"
 python -m scripts.ig_discovery history "CC.D.LCO.BMU.IP" "MINUTE_5" "2026-09-01T00:00:00Z" "2026-09-03T00:00:00Z"
-python -m scripts.ig_discovery history "CC.D.LCO.BMU.IP" "MINUTE_5" "2026-09-01T00:00:00Z" "2026-09-03T00:00:00Z" --malformed-samples 3
 ```
 
 Confirm non-empty output, chronological and sane UTC timestamps, consistent OHLC,

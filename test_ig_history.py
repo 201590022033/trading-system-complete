@@ -104,6 +104,7 @@ class IGHistoryTests(unittest.TestCase):
             retrieved_at=datetime(2026, 1, 1, 23, 59, tzinfo=timezone.utc))
         self.assertEqual(len(series.bars), 0)
         self.assertEqual(series.excluded_incomplete, 1)
+        self.assertEqual(series.completeness, "PARTIAL_INCOMPLETE")
 
     def test_pagination_order_overlap_duplicates_gaps_and_allowance(self):
         self.payloads = {
@@ -126,8 +127,46 @@ class IGHistoryTests(unittest.TestCase):
     def test_empty_history_is_explicit(self):
         self.payloads[1] = response([])
         series = self.fetch()
-        self.assertEqual(series.completeness, "EMPTY")
+        self.assertEqual(series.completeness, "EMPTY_REQUESTED_RANGE")
         self.assertEqual(series.summary()["bars_received"], 0)
+
+    def test_valid_out_of_range_row_has_independent_range_classification(self):
+        self.payloads[1] = response([
+            price("2025-12-31T23:55:00", 90),
+            price("2026-01-01T00:00:00", 100),
+            price("2026-01-02T00:00:00", 110),
+        ])
+        series = self.fetch()
+        summary = series.summary()
+        self.assertEqual(len(series.bars), 1)
+        self.assertEqual(series.bars[0].canonical.interval_start, self.start)
+        self.assertEqual(series.excluded_outside_range, 2)
+        self.assertEqual(series.excluded_malformed, 0)
+        self.assertNotIn("outside_requested_range", summary["excluded_reasons"])
+        self.assertEqual(series.completeness, "COMPLETE_REQUESTED_RANGE")
+        self.assertEqual(summary["completeness_scope"],
+                         "API_RESPONSE_FILTERING_ONLY; MARKET_CALENDAR_UNASSESSED")
+        self.assertEqual(summary["gap_semantics"], "UNCLASSIFIED_INTERVAL_DISCONTINUITIES")
+
+    def test_malformed_in_range_row_remains_structurally_malformed(self):
+        broken = price("2026-01-01T00:00:00")
+        broken["closePrice"].pop("ask")
+        self.payloads[1] = response([broken])
+        series = self.fetch()
+        self.assertEqual(series.excluded_outside_range, 0)
+        self.assertEqual(series.excluded_malformed, 1)
+        self.assertEqual(series.summary()["excluded_reasons"]["missing_ask_close"], 1)
+        self.assertEqual(series.completeness, "PARTIAL_MALFORMED")
+
+    def test_malformed_out_of_range_row_exposes_both_classifications(self):
+        broken = price("2025-12-31T23:55:00")
+        broken["openPrice"].pop("bid")
+        self.payloads[1] = response([broken])
+        series = self.fetch(diagnostic_sample_limit=1)
+        self.assertEqual(series.excluded_outside_range, 1)
+        self.assertEqual(series.excluded_malformed, 1)
+        self.assertEqual(series.summary()["excluded_reasons"]["missing_bid_open"], 1)
+        self.assertIn("outside_requested_range", series.malformed_samples[0].reasons)
 
     def test_malformed_envelope_and_page_metadata_fail_safely(self):
         for payload in ({}, {"prices": [], "metadata": {}},
