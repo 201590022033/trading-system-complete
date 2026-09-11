@@ -1,5 +1,23 @@
 # Linear Fusion Roadmap
 
+## M29 — IG Demo Order Submission [COMPLETE 2026-09-11]
+
+Added an explicit-invocation, default-disabled IG Demo MARKET adapter requiring
+an exact M28 PASS and M15 approval. It maps only explicitly supported fields,
+locks stable intent identity before one mutation attempt, never retries unknown
+outcomes, and separates acknowledgement from confirmation. No external order,
+LIVE path, GUI control or autonomous orchestration was added. See
+[M29 submission](../execution/M29_IG_DEMO_ORDER_SUBMISSION.md).
+
+M25 external empirical HR11 validation remains pending/inconclusive.
+
+Next unfinished roadmap milestone: M30 — Bounded IG Demo Execution Validation [NOT STARTED].
+
+## M30 — Bounded IG Demo Execution Validation [NOT STARTED]
+
+Requires separate explicit operator authorization for one bounded Demo order;
+LIVE and autonomous execution remain forbidden.
+
 ## M28 — IG Demo Execution Safety Gate [COMPLETE 2026-09-11]
 
 Added immutable context/check/decision contracts and a deterministic IG Demo-only

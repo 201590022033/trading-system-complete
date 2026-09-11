@@ -34,7 +34,7 @@ class ExecutionSafetyCheck:
     check_id:str;status:CheckStatus;mandatory:bool;reason:str
 @dataclass(frozen=True)
 class ExecutionSafetyDecision:
-    decision_id:str;version:str;evaluated_at:datetime;broker:str;environment:str;account_id:str;order_intent_id:str;status:CheckStatus;eligible_for_submission:bool;checks:tuple[ExecutionSafetyCheck,...];blockers:tuple[str,...];warnings:tuple[str,...];provenance:str
+    decision_id:str;version:str;evaluated_at:datetime;broker:str;environment:str;account_id:str;order_intent_id:str;intent_id:str;instrument_id:str;epic:str|None;opportunity_id:str;policy_id:str;risk_evaluation_id:str|None;provenance_versions:tuple[str,...];status:CheckStatus;eligible_for_submission:bool;checks:tuple[ExecutionSafetyCheck,...];blockers:tuple[str,...];warnings:tuple[str,...];provenance:str
     def __post_init__(self):object.__setattr__(self,"evaluated_at",utc(self.evaluated_at))
 
 def evaluate_safety(context:ExecutionSafetyContext,config:ExecutionSafetyConfig,evaluated_at):
@@ -87,6 +87,6 @@ def evaluate_safety(context:ExecutionSafetyContext,config:ExecutionSafetyConfig,
     add("provenance_integrity",CheckStatus.PASS if chain and versions else CheckStatus.FAIL,"opportunity-policy-risk-intent identity/version chain must match")
     blockers=tuple(c.reason for c in checks if c.mandatory and c.status is not CheckStatus.PASS);warning_text=tuple(c.reason for c in checks if not c.mandatory and c.status is not CheckStatus.PASS)
     eligible=not blockers;status=CheckStatus.PASS if eligible else CheckStatus.FAIL if any(c.status is CheckStatus.FAIL for c in checks if c.mandatory) else CheckStatus.UNRESOLVED
-    identity="|".join((context.order_intent_id,evaluated_at.isoformat(),VERSION));return ExecutionSafetyDecision("safety:"+sha256(identity.encode()).hexdigest(),VERSION,evaluated_at,context.broker,context.environment,context.account_id,context.order_intent_id,status,eligible,tuple(checks),blockers,warning_text,"authorization check only; never an order submission")
+    identity="|".join((context.order_intent_id,evaluated_at.isoformat(),VERSION));return ExecutionSafetyDecision("safety:"+sha256(identity.encode()).hexdigest(),VERSION,evaluated_at,context.broker,context.environment,context.account_id,context.order_intent_id,context.intent_id,context.instrument_id,context.epic,context.opportunity_id,context.policy_id,context.risk_evaluation_id,context.provenance_versions,status,eligible,tuple(checks),blockers,warning_text,"authorization check only; never an order submission")
 
 __all__=["CheckStatus","ExecutionSafetyCheck","ExecutionSafetyConfig","ExecutionSafetyContext","ExecutionSafetyDecision","VERSION","evaluate_safety"]

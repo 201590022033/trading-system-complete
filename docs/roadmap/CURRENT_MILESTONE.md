@@ -1,5 +1,18 @@
 # Current Milestone
 
+## M29 — IG Demo Order Submission [COMPLETE 2026-09-11]
+
+Added a backend-only IG Demo MARKET submission adapter gated by exact M28/M15
+identity, explicit flags and human permission, approved size/stop and account.
+Idempotency locks before send; ambiguous outcomes never retry; IG acknowledgement
+and confirmation remain distinct. Capability is implemented but runtime-disabled.
+
+No external Demo order was authorized or sent. No LIVE path, GUI control or
+autonomous orchestration exists. M25 external empirical HR11 validation remains
+pending/inconclusive.
+
+Next unfinished roadmap milestone: M30 — Bounded IG Demo Execution Validation [NOT STARTED].
+
 ## M28 — IG Demo Execution Safety Gate [COMPLETE 2026-09-11]
 
 Added a pure IG Demo prerequisite gate with auditable PASS/FAIL/UNRESOLVED/
