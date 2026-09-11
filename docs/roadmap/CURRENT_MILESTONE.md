@@ -1,5 +1,25 @@
 # Current Milestone
 
+## M18 — Canonical Metrics [COMPLETE 2026-09-11]
+
+Added `canonical-metrics-v1` with expanded MetricContext, immutable MetricResult,
+a definition registry, explicit gross/net expectancy, resolved-outcome hit rate,
+payoff metrics, canonical Sharpe/Sortino, drawdown/duration, volatility,
+position-state turnover, cost decomposition, profit factor, Calmar, exposure and
+separately versioned weighted expectancy. Invalid/unavailable metrics never
+become zero and sample depth remains visible.
+
+HR10's `mean / sample_std * sqrt(n)` remains `LEGACY_TSTAT_LIKE_V1`; frozen
+research was not rewritten. M16 criteria preserve metric versions and M17
+results can carry canonical results append-only. No thresholds, optimization,
+runtime, ranking, policy, risk, broker, execution, or M19 work was added. See
+`docs/research/M18_CANONICAL_METRICS.md`.
+
+The full safe suite passes 442 tests and all 39 protected research artifacts
+remain byte-identical.
+
+Next milestone: M19 — Canonical Opportunity / TradeIntent API [NOT STARTED].
+
 ## M17 — Experiment Registry [COMPLETE 2026-09-11]
 
 Added immutable definition, data-boundary, factorial-design, run, result and

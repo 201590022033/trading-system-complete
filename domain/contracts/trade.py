@@ -145,6 +145,11 @@ class MetricContext:
     aggregation_scope: Optional[str] = None
     is_overlapping: Optional[bool] = None
     risk_free_rate_annualized: Optional[float] = None
+    metric_id: Optional[str] = None
+    metric_version: Optional[str] = None
+    benchmark_id: Optional[str] = None
+    currency: Optional[str] = None
+    pnl_basis: Optional[str] = None
 
     def __post_init__(self) -> None:
         if self.sampling_basis not in {"TRADE_BY_TRADE", "PERIODIC_CALENDAR"}:
@@ -163,6 +168,10 @@ class MetricContext:
             raise ValueError("unsupported metric aggregation scope")
         if self.risk_free_rate_annualized is not None:
             finite(self.risk_free_rate_annualized, "risk_free_rate_annualized")
+        if self.currency is not None and (len(self.currency) != 3 or not self.currency.isupper()):
+            raise ValueError("metric currency must be uppercase ISO-style code")
+        if self.pnl_basis not in {None, "REALIZED", "UNREALIZED", "TOTAL", "NOT_APPLICABLE"}:
+            raise ValueError("unsupported realized/unrealized basis")
 
     def to_dict(self) -> dict[str, Any]:
         return {"sampling_basis": self.sampling_basis, "period_duration": self.period_duration,
@@ -170,4 +179,7 @@ class MetricContext:
                 "return_unit": self.return_unit, "return_basis": self.return_basis,
                 "cost_basis": self.cost_basis, "horizon_id": self.horizon_id,
                 "aggregation_scope": self.aggregation_scope, "is_overlapping": self.is_overlapping,
-                "risk_free_rate_annualized": self.risk_free_rate_annualized}
+                "risk_free_rate_annualized": self.risk_free_rate_annualized,
+                "metric_id": self.metric_id, "metric_version": self.metric_version,
+                "benchmark_id": self.benchmark_id, "currency": self.currency,
+                "pnl_basis": self.pnl_basis}

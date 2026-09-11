@@ -1,4 +1,5 @@
 """Immutable experiment records and append-only scientific registry."""
+from __future__ import annotations
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from enum import Enum
@@ -116,12 +117,15 @@ class ExperimentResult:
     uncertainty: Mapping[str,object]; regime_breakdown: Mapping[str,object]; cost_sensitivity: Mapping[str,object]
     evidence_stage: ExperimentStage; artifacts: tuple[ArtifactReference,...]; negative_evidence: tuple[str,...]
     warnings: tuple[str,...]; data_quality_limitations: tuple[str,...]
+    canonical_metrics: tuple["MetricResult",...] = ()
     def __post_init__(self):
         if not self.result_id or not self.run_id or not self.strategy_target_id or not self.strategy_target_version: raise ValueError("result, run and target identity required")
         object.__setattr__(self,"recorded_at",utc(self.recorded_at,"recorded_at"))
         for name in ("metrics","metric_contexts","sample_counts","uncertainty","regime_breakdown","cost_sensitivity"):
             object.__setattr__(self,name,clean_mapping(getattr(self,name),name))
         if any(not isinstance(value,MetricContext) for value in self.metric_contexts.values()): raise ValueError("every metric context must be canonical")
+        from .metrics import MetricResult
+        if any(not isinstance(value,MetricResult) for value in self.canonical_metrics): raise ValueError("canonical metrics must use MetricResult")
 
 
 @dataclass(frozen=True)

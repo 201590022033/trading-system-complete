@@ -84,6 +84,7 @@ class TargetCriterion:
     required_regimes: tuple[str, ...] = ()
     allowed_specialization: tuple[str, ...] = ()
     rationale: str = ""
+    metric_version: str = "canonical-metrics-v1"
 
     def __post_init__(self):
         if not self.criterion_id or not isinstance(self.context, MetricContext):
@@ -100,6 +101,8 @@ class TargetCriterion:
                     self.context.return_basis not in {"NET", "GROSS"} or
                     self.context.risk_free_rate_annualized is None):
                 raise ValueError("canonical Sharpe threshold requires complete annualization context")
+        if not self.metric_version:
+            raise ValueError("metric version is required")
 
     @property
     def configured(self) -> bool:
@@ -141,6 +144,7 @@ class StrategyTarget:
             "instrument_scope": list(self.instrument_scope), "horizon_scope": list(self.horizon_scope),
             "status": self.status.value, "criteria": [{
                 "criterion_id": c.criterion_id, "metric_id": c.metric_id.value,
+                "metric_version": c.metric_version,
                 "level": c.level.value, "comparison": c.comparison.value,
                 "threshold": c.threshold, "context": c.context.to_dict(),
                 "evidence_stage": c.evidence_stage.value,

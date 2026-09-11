@@ -1,5 +1,19 @@
 # Linear Fusion Roadmap
 
+## M18 — Canonical Metrics [COMPLETE 2026-09-11]
+
+Added context-explicit, versioned research metrics and immutable results with
+visible sample depth and unavailable/invalid states. Expectancy, hit/payoff,
+annualized Sharpe/Sortino, drawdown, volatility, position turnover, costs,
+profit factor, Calmar, exposure and weighted estimates retain distinct units and
+semantics. HR10 sample scaling remains explicitly legacy. M16/M17 can reference
+metric versions/results without rewriting prior evidence. No optimization,
+runtime, broker, execution, or M19 work was added. See
+[M18 Canonical Metrics](../research/M18_CANONICAL_METRICS.md).
+The full safe suite passes 442 tests and 39/39 protected artifacts are unchanged.
+
+Next milestone: M19 — Canonical Opportunity / TradeIntent API [NOT STARTED].
+
 ## M17 — Experiment Registry [COMPLETE 2026-09-11]
 
 Added an immutable, append-only scientific registry boundary covering baseline,
