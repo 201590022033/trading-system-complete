@@ -1,0 +1,27 @@
+{
+  "experiment_id": "M25-HR11-IG-DATA-SOURCE-ONLY",
+  "version": "m25-hr11-real-data-v1",
+  "baseline_commit": "b080f2f0f8f7077f6861426eb4582d4c3033a149",
+  "treatment": "DATA_SOURCE_ONLY",
+  "source": "IG REST /prices/{epic} v3",
+  "data_grade": "RESEARCH_DATA",
+  "instrument_id": "BRENT_IG_CFD_USD1",
+  "epic": "CC.D.LCO.BMU.IP",
+  "timeframe": "5m",
+  "requested_window": null,
+  "external_validation": "NOT RUN — CREDENTIALS UNAVAILABLE",
+  "bars_requested": null,
+  "bars_received": 0,
+  "bars_accepted": 0,
+  "outcome_ready_samples": 0,
+  "evidence_classification": "INSUFFICIENT_EVIDENCE",
+  "metrics": {},
+  "exclusions": {},
+  "experiment_decision": "INCONCLUSIVE",
+  "promotion": "NONE",
+  "warnings": [
+    "No IG credentials were available in the coding workspace",
+    "No factual EPIC-specific session calendar is configured",
+    "No strategy conclusion can be drawn without a real input run"
+  ]
+}

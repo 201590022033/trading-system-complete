@@ -1,5 +1,18 @@
 # Current Milestone
 
+## M25 — HR11 Real-data Validation [COMPLETE 2026-09-11]
+
+Added the registered data-source-only M25 experiment and strict IG Demo 5-minute
+history bridge into frozen HR11 completed-bar contracts. No parameters, features,
+signals, horizons, sessions, costs, evaluation or robustness rules changed.
+
+Local credentials and a factual EPIC session calendar were unavailable, so the
+external run was not performed. The additive artifact truthfully records no
+empirical metrics and an `INSUFFICIENT_EVIDENCE / INCONCLUSIVE` result. This is
+not a zero-trade strategy failure and does not alter prior HR11 history.
+
+Next unfinished roadmap milestone: M26 — Read-only Broker Account and Position State [NOT STARTED].
+
 ## M24 — Real-time Market Streaming [COMPLETE 2026-09-11]
 
 Added canonical data-only IG Demo streaming contracts and normalization using

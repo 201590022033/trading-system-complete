@@ -1,5 +1,21 @@
 # Linear Fusion Roadmap
 
+## M25 — HR11 Real-data Validation [COMPLETE 2026-09-11]
+
+Registered a single-treatment M17 experiment and added a strict M12B-to-HR11
+completed-bar bridge. All strategy logic remains frozen; only IG historical data
+availability may change. Credentials and a factual EPIC session calendar were
+unavailable locally, so external retrieval was not run, no metrics were invented,
+and the result is `INSUFFICIENT_EVIDENCE / INCONCLUSIVE`, not strategy failure.
+See [M25 validation](../research/M25_HR11_REAL_DATA_VALIDATION.md).
+
+Next unfinished roadmap milestone: M26 — Read-only Broker Account and Position State [NOT STARTED].
+
+## M26 — Read-only Broker Account and Position State [NOT STARTED]
+
+Normalize broker-observed account and position state without enabling Demo or
+live dealing. Requires separate authorization.
+
 ## M24 — Real-time Market Streaming [COMPLETE 2026-09-11]
 
 Added canonical read-only subscriptions, raw IG updates and market observations
