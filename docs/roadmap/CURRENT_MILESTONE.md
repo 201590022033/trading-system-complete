@@ -1,5 +1,19 @@
 # Current Milestone
 
+## M30 — Bounded IG Demo Execution Validation [COMPLETE 2026-09-11]
+
+Added a manually invoked, two-phase Demo validation harness. Phase A constructs
+and audits an exact M29 request from an isolated synthetic chain but defaults to
+non-mutation. Phase B requires separate explicit authorization plus factual
+market/account/position preflight, a fresh M27 check and M28 PASS; one opening
+mutation is the maximum and unknown outcomes never retry.
+
+No external Demo order was authorized or sent. No instrument facts were invented,
+no position is auto-closed, and no LIVE, GUI or autonomous execution path exists.
+M25 external empirical HR11 validation remains pending/inconclusive.
+
+Next milestone: UNDEFINED — no post-M30 milestone is currently authorized [NOT STARTED].
+
 ## M29 — IG Demo Order Submission [COMPLETE 2026-09-11]
 
 Added a backend-only IG Demo MARKET submission adapter gated by exact M28/M15

@@ -1,5 +1,20 @@
 # Linear Fusion Roadmap
 
+## M30 — Bounded IG Demo Execution Validation [COMPLETE 2026-09-11]
+
+Added a default-non-mutating two-phase validation harness over the M26–M29
+boundaries. It uses only a clearly labelled synthetic validation chain, requires
+fresh factual preflight and separate explicit permission for Phase B, permits one
+opening mutation, never retries unknown outcomes, separates acknowledgement from
+confirmation, then performs read-only state refresh and M27 reconciliation. No
+close operation, GUI control, LIVE path or autonomous orchestration exists. See
+[M30 validation](../execution/M30_BOUNDED_IG_DEMO_VALIDATION.md).
+
+Phase B was not authorized or run. M25 external empirical HR11 validation remains
+pending/inconclusive.
+
+Next unfinished roadmap milestone: UNDEFINED — no post-M30 milestone is currently authorized.
+
 ## M29 — IG Demo Order Submission [COMPLETE 2026-09-11]
 
 Added an explicit-invocation, default-disabled IG Demo MARKET adapter requiring
@@ -12,11 +27,6 @@ LIVE path, GUI control or autonomous orchestration was added. See
 M25 external empirical HR11 validation remains pending/inconclusive.
 
 Next unfinished roadmap milestone: M30 — Bounded IG Demo Execution Validation [NOT STARTED].
-
-## M30 — Bounded IG Demo Execution Validation [NOT STARTED]
-
-Requires separate explicit operator authorization for one bounded Demo order;
-LIVE and autonomous execution remain forbidden.
 
 ## M28 — IG Demo Execution Safety Gate [COMPLETE 2026-09-11]
 

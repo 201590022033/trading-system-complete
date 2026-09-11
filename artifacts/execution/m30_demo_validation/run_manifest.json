@@ -1,0 +1,23 @@
+{
+  "version": "m30-demo-validation-v1",
+  "phase": "A",
+  "outcome": "DRY_RUN_ONLY",
+  "explicit_external_authorization": false,
+  "external_mutation": "NOT PERFORMED",
+  "environment": "DEMO",
+  "fixture": "M30 DEMO VALIDATION FIXTURE",
+  "instrument": "UNAVAILABLE — FACTUAL PREFLIGHT NOT RUN",
+  "epic": "UNAVAILABLE — FACTUAL PREFLIGHT NOT RUN",
+  "size": null,
+  "stop": null,
+  "safety_decision": null,
+  "submission_reference": null,
+  "confirmation": null,
+  "pre_account": null,
+  "post_account": null,
+  "pre_positions": null,
+  "post_positions": null,
+  "reconciliation": null,
+  "unknown_outcome": false,
+  "warnings": ["Credentials unavailable", "Process-local idempotency", "No auto-close"]
+}
