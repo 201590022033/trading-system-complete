@@ -1,5 +1,25 @@
 # Current Milestone
 
+## M17 — Experiment Registry [COMPLETE 2026-09-11]
+
+Added immutable definition, data-boundary, factorial-design, run, result and
+decision contracts plus an append-only repository protocol/reference
+implementation. Single-treatment attribution is the default; factorial work
+must be explicit. Confirmatory preregistration, exact M16 target versions,
+MetricContext, causal OOS separation, negative evidence, deterministic safe
+configuration hashes and explicit baseline succession are preserved.
+
+HR7–HR11 remain legacy/pre-registry references and were not rewritten. Durable
+SQLite/PostgreSQL adapters are deferred together pending an additive canonical
+migration. No optimization, auto-promotion, baseline mutation, runtime, broker,
+execution, or M18 work was added. See
+`docs/research/M17_EXPERIMENT_REGISTRY.md`.
+
+The full safe suite passes 429 tests and all 39 protected research artifacts
+remain byte-identical.
+
+Next milestone: M18 — Canonical Metrics [NOT STARTED].
+
 ## M16 — StrategyTarget [COMPLETE 2026-09-11]
 
 Added the immutable `strategy-target-v1` declaration and contextual criterion

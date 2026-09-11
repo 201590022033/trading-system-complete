@@ -1,5 +1,20 @@
 # Linear Fusion Roadmap
 
+## M17 — Experiment Registry [COMPLETE 2026-09-11]
+
+Added an immutable, append-only scientific registry boundary covering baseline,
+deficiency, one attributable hypothesis/treatment, explicit controls, M16 target,
+causal data boundaries, reproducible runs, multidimensional results, retained
+negative evidence, governed decisions and explicit baseline lineage. Factorial
+designs must be declared. Historical HR7–HR11 remain legacy/pre-registry and
+unchanged. Persistence adapters await one coordinated SQLite/PostgreSQL additive
+migration. No optimization, promotion, runtime, broker, execution, or M18 work
+was added. See
+[M17 Experiment Registry](../research/M17_EXPERIMENT_REGISTRY.md).
+The full safe suite passes 429 tests and 39/39 protected artifacts are unchanged.
+
+Next milestone: M18 — Canonical Metrics [NOT STARTED].
+
 ## M16 — StrategyTarget [COMPLETE 2026-09-11]
 
 Added versioned, family/horizon-scoped strategy target declarations with exact
