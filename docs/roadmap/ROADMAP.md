@@ -1,5 +1,18 @@
 # Linear Fusion Roadmap
 
+## M20 — Early Read-Only Top-5 GUI [COMPLETE 2026-09-11]
+
+Added an accessible, manually refreshed canonical Top-5 tab over M19. It renders
+research-score semantics, direction, evidence, suitability, blockers and
+backend-provided readiness, with expandable unresolved policy/risk detail.
+Empty/error states do not fabricate or substitute recommendations. Legacy UI is
+preserved and no frontend business logic, execution control, broker action,
+runtime change, or M21 work was added. See
+[M20 Top-5 GUI](../ui/M20_TOP5_GUI.md).
+The full safe suite passes 459 tests and 39/39 protected artifacts are unchanged.
+
+Next milestone: M21 — PaperBroker [NOT STARTED].
+
 ## M19 — Canonical Opportunity / TradeIntent API [COMPLETE 2026-09-11]
 
 Added framework-neutral read-only services and `/api/v1/opportunities` routes

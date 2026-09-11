@@ -1,5 +1,24 @@
 # Current Milestone
 
+## M20 — Early Read-Only Top-5 GUI [COMPLETE 2026-09-11]
+
+Added a dedicated canonical Top-5 dashboard tab consuming M19's read-only API.
+Cards preserve backend rank, score semantics, LONG/SHORT/WATCH/UNKNOWN,
+eligibility, regime, divergence, evidence, suitability, uncertainty, reasons and
+blockers. Expandable details display policy, unresolved stop, risk/null size,
+intent readiness and provenance without calculating business state in the
+browser.
+
+Empty/error states never substitute legacy recommendations. Legacy dashboard
+content remains intact. No production fixtures, aggressive polling, sizing,
+execution controls, broker action, runtime behavior, or M21 work was added. See
+`docs/ui/M20_TOP5_GUI.md`.
+
+The full safe suite passes 459 tests and all 39 protected research artifacts
+remain byte-identical.
+
+Next milestone: M21 — PaperBroker [NOT STARTED].
+
 ## M19 — Canonical Opportunity / TradeIntent API [COMPLETE 2026-09-11]
 
 Added a storage-neutral canonical opportunity application service, explicit

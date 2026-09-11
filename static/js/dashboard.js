@@ -20,6 +20,45 @@ function component(c) {
     Object.entries(d.metrics || {}).map(([key,value]) => kv(key,num(value))).join('') +
     (d.items || []).map(item => `<p>${esc(item.headline)} <small>${esc(item.llm_used ? 'AI' : 'Keywords')}</small></p>`).join('');
 }
+function canonicalList(items, emptyText) {
+  return items?.length ? `<ul>${items.map(item=>`<li>${esc(item)}</li>`).join('')}</ul>` : `<p class="muted">${esc(emptyText)}</p>`;
+}
+function renderCanonicalCard(item) {
+  const regime = item.regime_context || {}, divergence = item.divergence_summary || {}, evidence = item.feature_evidence_summary || {};
+  return `<article class="panel canonical-card" data-opportunity-id="${esc(item.opportunity_id)}">
+    <div class="row"><div><span class="canonical-rank">Rank ${esc(item.rank)}</span><h3>${esc(item.instrument_id)} · ${esc(item.direction)}</h3><span class="canonical-status">${esc(item.eligibility_status)}</span></div><div><div class="canonical-score">${esc(item.ranking_score == null ? 'Not scored' : `${num(item.ranking_score)} / 100`)}</div><small>Opportunity Score</small></div></div>
+    ${kv('Horizon',item.horizon_id)}${kv('Suitability',item.suitability_status)}${kv('Execution suitability',item.execution_suitability)}${kv('Data grade',item.data_grade)}${kv('Regime',regime.trend || regime.availability)}${kv('Divergence',divergence.state)}${kv('Evidence',`${evidence.learned_count ?? '—'} learned · ${evidence.sample_count ?? item.sample_count ?? '—'} samples`)}
+    <h4>Why it ranks</h4>${canonicalList(item.reasons,'No ranking reasons supplied.')}
+    <h4>Uncertainty and blockers</h4>${canonicalList([...(item.uncertainty || []),...(item.blockers || [])],'None reported by the canonical API.')}
+    <details><summary>Policy, risk and provenance</summary><div class="canonical-detail" role="region" aria-label="Policy and risk detail for ${esc(item.instrument_id)}"><p class="muted">Load detail to preserve authoritative upstream state.</p></div></details>
+  </article>`;
+}
+async function canonicalFetch(url) {
+  const response=await fetch(url,{signal:AbortSignal.timeout(15000)}),data=await response.json();
+  if (!response.ok && response.status !== 409) throw Error(data.error?.message || `Canonical service unavailable (${response.status})`);
+  return data;
+}
+async function loadCanonicalDetail(card) {
+  const id=encodeURIComponent(card.dataset.opportunityId),node=card.querySelector('.canonical-detail');
+  node.textContent='Loading policy and risk state…';
+  try {
+    const [policyResult,riskResult,intentResult]=await Promise.allSettled([canonicalFetch(`/api/v1/opportunities/${id}/policy`),canonicalFetch(`/api/v1/opportunities/${id}/risk`),canonicalFetch(`/api/v1/opportunities/${id}/intent`)]);
+    const policy=policyResult.value?.policy,risk=riskResult.value?.risk,intent=intentResult.value?.intent;
+    node.innerHTML=`<h4>TradePolicy</h4>${kv('Direction',policy?.direction)}${kv('Entry timing',policy?.entry?.timing)}${kv('Entry reference',policy?.entry?.reference)}${kv('Stop status',policy?.stop?.status)}${kv('Stop price',policy?.stop?.price == null ? 'Unresolved' : policy.stop.price)}${kv('Target status',policy?.target?.status)}${kv('Time exit',policy?.target?.time_exit)}${kv('Invalidation',policy?.invalidation?.condition)}
+      <h4>Risk</h4>${kv('Risk status',risk?.status || intent?.risk?.status || 'Unavailable')}${kv('Approved size',risk?.approved_position_size == null ? 'Not available' : risk.approved_position_size)}${kv('Approved loss budget',risk?.approved_loss_budget == null ? 'Not available' : risk.approved_loss_budget)}${kv('Intent readiness',intent?.execution_readiness || 'Not available')}${canonicalList([...(risk?.blockers || []),...(risk?.rejection_reasons || []),...(intent?.blockers || [])],'No risk blockers reported.')}
+      <h4>Provenance</h4><pre>${esc(JSON.stringify(intent?.provenance || policy?.provenance || {},null,2))}</pre>`;
+  } catch(error) { node.innerHTML=`<p class="unavailable">Detail unavailable: ${esc(error.message)}</p>`; }
+}
+async function refreshCanonicalOpportunities() {
+  const status=$('#canonical-status'),cards=$('#canonical-cards');status.textContent='Refreshing canonical ranking…';
+  try {
+    const result=await canonicalFetch('/api/v1/opportunities?limit=5'),items=result.opportunities;
+    if (!Array.isArray(items)) throw Error('Malformed canonical response');
+    status.textContent=`${items.length} canonical research opportunit${items.length===1?'y':'ies'} available.`;
+    cards.innerHTML=items.length ? items.map(renderCanonicalCard).join('') : '<div class="panel canonical-empty"><h3>No canonical opportunities available yet.</h3><p class="muted">Canonical ranking data has not yet been populated. Legacy recommendations are not substituted.</p></div>';
+    cards.querySelectorAll('details').forEach(detail=>detail.addEventListener('toggle',()=>{if(detail.open&&!detail.dataset.loaded){detail.dataset.loaded='true';loadCanonicalDetail(detail.closest('.canonical-card'));}}));
+  } catch(error) { status.textContent='Canonical opportunity service is unavailable.';cards.innerHTML=`<div class="panel canonical-empty canonical-error"><h3>Unable to load canonical opportunities.</h3><p class="muted">${esc(error.message)} No recommendation has been substituted.</p></div>`; }
+}
 function render(run) {
   $('#notice').textContent = `Run ${run.run_id} · ${run.overall_state} · ${when(run.completed_at)}`;
   $('#action').textContent = run.decision.action.toUpperCase();
@@ -164,6 +203,7 @@ action('#research-load',async()=>$('#research-result').textContent=JSON.stringif
 action('#refresh-feeds',refreshFeeds);
 action('#refresh-news',refreshNews);
 action('#refresh-opportunities',refreshOpportunities);
+action('#refresh-canonical',refreshCanonicalOpportunities);
 action('#reload-sources',refreshSources);
 action('#import-portfolio',async()=>{ const result=await post('/api/portfolio/csv',{csv:$('#portfolio-csv').value}); $('#portfolio-status').textContent=`Imported ${result.count} position(s) · CSV snapshot only`; renderPortfolio(result.rows); });
 $('#instrument').onchange=selectedChanged;
@@ -181,6 +221,7 @@ $('#auto-refresh').onchange=()=>{if($('#auto-refresh').checked) refreshFeeds();}
   selectedChanged();
   await refreshFeeds();
   await Promise.allSettled([refreshSources(), loadPortfolio()]);
+  await refreshCanonicalOpportunities();
   await refreshOpportunities();
   setInterval(()=>{if($('#auto-refresh').checked && !document.hidden) refreshFeeds();},10000);
 })().catch(error=>{$('#system-pill').textContent='SYSTEM UNAVAILABLE';$('#feed-notice').textContent=error.message;});
