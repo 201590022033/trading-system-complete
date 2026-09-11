@@ -121,7 +121,31 @@ position sizing, portfolio optimization or broker execution was added. The full
 safe suite passes 375 tests and all 39 protected artifacts remain unchanged. See
 `docs/research/M13_OPPORTUNITY_RANKING.md`.
 
-Next milestone: M14 — TradePolicy [NOT STARTED].
+Next milestone: M14 — TradePolicy [COMPLETE].
+
+## M14 — TradePolicy [COMPLETE 2026-09-11]
+
+Added a canonical, non-executable `trade-policy-v1` planning boundary over M13
+`ResearchOpportunity`. It reuses the existing versioned policy enums and
+`CandidateTradePolicy` snapshot, adding explicit unresolved enum states rather
+than forcing numeric geometry. The only evidence-supported directional family
+preserves HR11's causal next-observed-bar-open reference and canonical
+horizon-end exit; audit-only records cover blocked, insufficient and WATCH
+opportunities.
+
+No validated causal stop-distance implementation exists, so stop price/distance
+remain unresolved, target is optional/none, trailing is unsupported and even a
+directional plan is not ready for risk review. Invalidation remains distinct
+from stop loss. Reversal requires exit and separate new-policy review; it never
+auto-flips. Requested risk fraction, loss budget and gearing remain unset and
+unapproved.
+
+No TradeIntent, final sizing, margin/risk approval, portfolio calculation,
+persistence, runtime integration, paper preview, broker order or optimization
+was added. The full safe suite passes 387 tests and all 39 protected artifacts
+remain unchanged. See `docs/research/M14_TRADE_POLICY.md`.
+
+Next milestone: M15 — Risk & Exposure Engine [NOT STARTED].
 
 ## M11 — Contextual Feature Effectiveness Learning [COMPLETE 2026-09-09]
 

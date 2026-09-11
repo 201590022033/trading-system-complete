@@ -73,7 +73,22 @@ superseded by completed M12A and M12B. Unfinished IG streaming, account/position
 state beyond read-only discovery, Demo execution and reconciliation remain
 future work and are not claimed or removed.
 
-Next milestone: M14 — TradePolicy [NOT STARTED].
+Next milestone: M14 — TradePolicy [COMPLETE].
+
+## M14 — TradePolicy [COMPLETE 2026-09-11]
+
+Added a typed, deterministic `trade-policy-v1` research-planning boundary. It
+reuses existing policy contracts and implements only HR11-supported causal
+next-observed-bar entry plus canonical horizon time-exit semantics, alongside a
+non-actionable audit family. Stops remain explicitly unresolved because no
+validated causal distance exists; targets are none, trailing unsupported and
+reversal is exit-first with separate review. Risk requests stay unset and
+unapproved. No TradeIntent, sizing, margin/portfolio risk, persistence, runtime
+connection, broker call or optimization was added. The safe suite passes 387
+tests and 39/39 protected artifacts remain unchanged. See
+[M14 TradePolicy](../research/M14_TRADE_POLICY.md).
+
+Next milestone: M15 — Risk & Exposure Engine [NOT STARTED].
 
 ## M11 — Contextual Feature Effectiveness Learning [COMPLETE 2026-09-09]
 

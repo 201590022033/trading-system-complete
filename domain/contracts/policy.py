@@ -10,6 +10,7 @@ from .market import finite, utc_timestamp
 
 
 class EntryPolicyType(str, Enum):
+    UNRESOLVED = "UNRESOLVED"
     MARKET = "MARKET"
     PULLBACK_LIMIT = "PULLBACK_LIMIT"
     BREAKOUT_STOP = "BREAKOUT_STOP"
@@ -18,6 +19,7 @@ class EntryPolicyType(str, Enum):
 
 
 class StopPolicyType(str, Enum):
+    UNRESOLVED = "UNRESOLVED"
     STRUCTURAL_INVALIDATION = "STRUCTURAL_INVALIDATION"
     ATR_VOLATILITY = "ATR_VOLATILITY"
     FIXED_DISTANCE = "FIXED_DISTANCE"
@@ -26,6 +28,7 @@ class StopPolicyType(str, Enum):
 
 
 class ExitPolicyType(str, Enum):
+    UNRESOLVED = "UNRESOLVED"
     FIXED_TARGET = "FIXED_TARGET"
     RISK_REWARD_TARGET = "RISK_REWARD_TARGET"
     TRAILING = "TRAILING"
