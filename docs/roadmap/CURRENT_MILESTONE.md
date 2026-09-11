@@ -1,5 +1,26 @@
 # Current Milestone
 
+## M21 — PaperBroker [COMPLETE 2026-09-11]
+
+Added the generic BrokerAdapter capability boundary and a network-incapable,
+in-memory, PAPER-only broker. It accepts only broker-neutral canonical intents
+with matching M15 APPROVED/REDUCED risk, fills only from supplied causal prices
+under explicit slippage/cost configuration, retains order/fill/position/account
+state, forbids duplicate intents and silent reversal, and audits cancellation,
+close and reconciliation.
+
+Current unresolved M14/M15 records remain non-executable. Margin stays
+unavailable rather than invented; durable persistence is deferred. M12A/M12B
+already supersede old IG discovery/history placeholders, while IG streaming,
+account synchronization, Demo execution and reconciliation remain unfinished.
+No GUI action, external broker call, runtime switch or later milestone was added.
+See `docs/execution/M21_PAPER_BROKER.md`.
+
+The full safe suite passes 468 tests and all 39 protected research artifacts
+remain byte-identical.
+
+Next unfinished roadmap milestone: M24 — Real-time Market Streaming [NOT STARTED].
+
 ## M20 — Early Read-Only Top-5 GUI [COMPLETE 2026-09-11]
 
 Added a dedicated canonical Top-5 dashboard tab consuming M19's read-only API.

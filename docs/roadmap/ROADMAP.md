@@ -1,5 +1,19 @@
 # Linear Fusion Roadmap
 
+## M21 — PaperBroker [COMPLETE 2026-09-11]
+
+Added a broker-neutral protocol and explicit PAPER-only deterministic simulator
+with M15 risk gating, supplied-price market fills, configured slippage/costs,
+cash/equity/P&L, netted positions, duplicate and reversal protection,
+cancellation, close, reconciliation and append-only audit evidence. Current
+unresolved policies remain non-executable. M12A/M12B supersede old M22/M23 IG
+discovery/history placeholders; remaining IG work begins with streaming/account/
+Demo execution/reconciliation. No GUI or real-broker execution was added. See
+[M21 PaperBroker](../execution/M21_PAPER_BROKER.md).
+The full safe suite passes 468 tests and 39/39 protected artifacts are unchanged.
+
+Next unfinished roadmap milestone: M24 — Real-time Market Streaming [NOT STARTED].
+
 ## M20 — Early Read-Only Top-5 GUI [COMPLETE 2026-09-11]
 
 Added an accessible, manually refreshed canonical Top-5 tab over M19. It renders
