@@ -1,5 +1,17 @@
 # Current Milestone
 
+## M27 — Read-only Broker State Reconciliation [COMPLETE 2026-09-11]
+
+Added a pure immutable comparison boundary for broker and explicitly adapted
+internal snapshots. Exact identifiers, semantic field mappings, unit-aware
+quantity rules, configurable tolerances/skew, freshness and typed discrepancies
+remain auditable. No source is mutated and clean does not authorize trading.
+
+External reconciliation was not run because credentials were unavailable. M25
+external empirical HR11 validation remains pending/inconclusive.
+
+Next unfinished roadmap milestone: M28 — IG Demo Execution Safety Gate [NOT STARTED].
+
 ## M26 — Read-only Broker Account and Position State [COMPLETE 2026-09-11]
 
 Added canonical account/position/snapshot contracts and an IG Demo GET-only

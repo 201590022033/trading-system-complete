@@ -1,5 +1,22 @@
 # Linear Fusion Roadmap
 
+## M27 — Read-only Broker State Reconciliation [COMPLETE 2026-09-11]
+
+Added immutable internal snapshot, comparison, discrepancy and result contracts
+plus a pure deterministic reconciliation service. Exact deal/EPIC/canonical
+matching, explicit units/tolerances, freshness, non-comparable fields and
+unavailable-vs-flat semantics are retained without mutation. See
+[M27 reconciliation](../execution/M27_BROKER_STATE_RECONCILIATION.md).
+
+M25 external empirical HR11 validation remains pending/inconclusive.
+
+Next unfinished roadmap milestone: M28 — IG Demo Execution Safety Gate [NOT STARTED].
+
+## M28 — IG Demo Execution Safety Gate [NOT STARTED]
+
+Any Demo execution work requires a separate explicit mandate and must preserve
+all risk, reconciliation and live-execution prohibitions until approved.
+
 ## M26 — Read-only Broker Account and Position State [COMPLETE 2026-09-11]
 
 Added immutable broker-neutral account, position and snapshot contracts plus an
