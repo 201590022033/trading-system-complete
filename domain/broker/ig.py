@@ -415,8 +415,14 @@ class IGReadOnlyAdapter:
     def capabilities(self):
         return {"broker": self.broker, "environment": self.config.environment, "read_only": True,
                 "authentication": True, "accounts": True, "market_search": True, "market_detail": True,
-                "historical_prices": True, "streaming": True,
-                "order_submission": False, "position_modification": False, "version": VERSION}
+                "historical_prices": True, "streaming": True, "account_state": True, "positions": True,
+                "order_submission": False, "amend": False, "cancel": False, "close": False,
+                "position_modification": False, "version": VERSION}
+
+    def create_state_service(self, mappings=(), **kwargs):
+        from .ig_state import BrokerStateService
+        if self._session is None: raise RuntimeError("IG authentication required")
+        return BrokerStateService(self,mappings,**kwargs)
 
     def create_market_stream(self, mappings, **kwargs):
         from domain.broker.ig_streaming import IGMarketStream

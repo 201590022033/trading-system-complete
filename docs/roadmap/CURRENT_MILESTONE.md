@@ -1,5 +1,18 @@
 # Current Milestone
 
+## M26 — Read-only Broker Account and Position State [COMPLETE 2026-09-11]
+
+Added canonical account/position/snapshot contracts and an IG Demo GET-only
+normalizer. Balance terms, currency, margin unknowns, LONG/SHORT identity,
+EPIC-specific mappings, zero positions, endpoint failure, provenance and
+configurable freshness remain distinct. PaperBroker, legacy portfolio, M15 risk,
+GUI and execution are untouched.
+
+M25 external empirical HR11 validation remains pending/inconclusive until real
+data and factual session/calendar context are supplied.
+
+Next unfinished roadmap milestone: M27 — Read-only Broker State Reconciliation [NOT STARTED].
+
 ## M25 — HR11 Real-data Validation [COMPLETE 2026-09-11]
 
 Added the registered data-source-only M25 experiment and strict IG Demo 5-minute

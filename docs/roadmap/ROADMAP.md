@@ -1,5 +1,24 @@
 # Linear Fusion Roadmap
 
+## M26 — Read-only Broker Account and Position State [COMPLETE 2026-09-11]
+
+Added immutable broker-neutral account, position and snapshot contracts plus an
+IG Demo GET-only service over `/accounts` v1 and `/positions` v2. Broker currency,
+balance terms, EPIC-specific positions, supplied P&L, provenance, unresolved
+mappings, empty-vs-unavailable state and configurable freshness remain explicit.
+PaperBroker, legacy portfolio, risk and execution stay separate. See
+[M26 broker state](../execution/M26_READONLY_BROKER_STATE.md).
+
+M25 external empirical HR11 validation remains pending/inconclusive until real
+data and factual session/calendar context are supplied.
+
+Next unfinished roadmap milestone: M27 — Read-only Broker State Reconciliation [NOT STARTED].
+
+## M27 — Read-only Broker State Reconciliation [NOT STARTED]
+
+Compare canonical internal/PaperBroker and broker-observed snapshots without
+mutating either side or enabling Demo execution. Requires separate authorization.
+
 ## M25 — HR11 Real-data Validation [COMPLETE 2026-09-11]
 
 Registered a single-treatment M17 experiment and added a strict M12B-to-HR11
