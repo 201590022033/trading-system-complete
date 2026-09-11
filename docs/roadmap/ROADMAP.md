@@ -53,7 +53,27 @@ prove long-horizon depth or authorize an HR11 rerun. The safe-suite `.env`
 isolation added through `ai_config.py` is configuration plumbing only; no AI,
 scoring, execution or runtime trading behavior changed.
 
-Next milestone: M13 — Opportunity Ranking [NOT STARTED].
+Next milestone: M13 — Opportunity Ranking [COMPLETE].
+
+## M13 — Opportunity Ranking [COMPLETE 2026-09-11]
+
+Added a typed, deterministic `opportunity-ranking-v1` research layer over M3,
+M9–M12 and factual M12A/M12B inputs. Hard eligibility precedes a transparent,
+configurable comparative score; negative/insufficient evidence, divergence
+conflict, fallback, uncertainty, unknown liquidity, data grade and execution
+unsuitability remain explicit. Top-N is an audit-preserving view. The score is
+not probability, expected return or trade confidence. No persistence, runtime
+integration, optimization, TradePolicy, sizing, portfolio allocation or broker
+execution was added. The safe suite passes 375 tests and 39/39 protected
+artifacts remain unchanged. See
+[M13 Opportunity Ranking](../research/M13_OPPORTUNITY_RANKING.md).
+
+Older roadmap references to future IG discovery and historical ingestion are
+superseded by completed M12A and M12B. Unfinished IG streaming, account/position
+state beyond read-only discovery, Demo execution and reconciliation remain
+future work and are not claimed or removed.
+
+Next milestone: M14 — TradePolicy [NOT STARTED].
 
 ## M11 — Contextual Feature Effectiveness Learning [COMPLETE 2026-09-09]
 

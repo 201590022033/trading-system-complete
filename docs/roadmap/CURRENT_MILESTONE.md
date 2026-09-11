@@ -97,7 +97,31 @@ runtime trading behavior. The coding workspace did not access the operator
 account; Demo data remains `RESEARCH_DATA`, historical allowance and timezone
 limitations remain, and execution stays disabled.
 
-Next milestone: M13 — Opportunity Ranking [NOT STARTED].
+Next milestone: M13 — Opportunity Ranking [COMPLETE].
+
+## M13 — Opportunity Ranking [COMPLETE 2026-09-11]
+
+Added an additive `opportunity-ranking-v1` research boundary consuming canonical
+M3 identity, M9 regime, M10 divergence, M11 effectiveness, M12 suitability and
+factual M12A/M12B broker/data metadata. M12 hard eligibility is applied before
+scoring; blocked, unsupported and insufficient candidates remain auditable but
+unranked. Research-suitable execution-unsuitable candidates may remain labelled
+research opportunities.
+
+The transparent configurable 0–100 score combines suitability, effectiveness
+support, evidence depth, stability, causal directional strength, exact contextual
+regime support, unflattened divergence state and data quality, with separate
+uncertainty and known-cost penalties. It is explicitly a comparative research
+ranking score—not profit probability, trade confidence or expected return.
+Deterministic reasons, blockers, uncertainty and provenance are retained; top-N
+is a view and does not discard lower-ranked or negative evidence.
+
+No persistence, Flask/runtime integration, strategy change, TradePolicy,
+position sizing, portfolio optimization or broker execution was added. The full
+safe suite passes 375 tests and all 39 protected artifacts remain unchanged. See
+`docs/research/M13_OPPORTUNITY_RANKING.md`.
+
+Next milestone: M14 — TradePolicy [NOT STARTED].
 
 ## M11 — Contextual Feature Effectiveness Learning [COMPLETE 2026-09-09]
 
