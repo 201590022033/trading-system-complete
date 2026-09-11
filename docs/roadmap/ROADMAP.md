@@ -1,5 +1,18 @@
 # Linear Fusion Roadmap
 
+## M19 — Canonical Opportunity / TradeIntent API [COMPLETE 2026-09-11]
+
+Added framework-neutral read-only services and `/api/v1/opportunities` routes
+over injected M13–M15 records. Explicit DTOs preserve comparative-score meaning,
+unresolved stops, null risk size, blockers, uncertainty, timestamps and versions.
+Intent previews are non-executable and unresolved prerequisites return 409.
+Legacy endpoints coexist unchanged; no fabricated feed, broker order, runtime
+execution, GUI, or M20 work was added. See
+[M19 Canonical Opportunity API](../api/M19_CANONICAL_OPPORTUNITY_API.md).
+The full safe suite passes 450 tests and 39/39 protected artifacts are unchanged.
+
+Next milestone: M20 — Early Read-Only Top-5 GUI [NOT STARTED].
+
 ## M18 — Canonical Metrics [COMPLETE 2026-09-11]
 
 Added context-explicit, versioned research metrics and immutable results with

@@ -1,5 +1,24 @@
 # Current Milestone
 
+## M19 — Canonical Opportunity / TradeIntent API [COMPLETE 2026-09-11]
+
+Added a storage-neutral canonical opportunity application service, explicit
+serializers, non-executable `trade-intent-preview-v1`, and read-only versioned
+Flask routes for opportunity list/detail, policy, risk and intent state. Top-N
+retains M13 rank and evidence. Ranking score is labelled comparative research,
+never probability. Unresolved M14 stops and null M15 sizes remain visible and
+produce an unresolved 409 intent response.
+
+The default canonical source is empty until supplied real upstream records.
+Legacy routes remain unchanged. No broker-native order fields, PaperBroker/IG
+submission, position mutation, runtime switch, GUI work, or M20 implementation
+was added. See `docs/api/M19_CANONICAL_OPPORTUNITY_API.md`.
+
+The full safe suite passes 450 tests and all 39 protected research artifacts
+remain byte-identical.
+
+Next milestone: M20 — Early Read-Only Top-5 GUI [NOT STARTED].
+
 ## M18 — Canonical Metrics [COMPLETE 2026-09-11]
 
 Added `canonical-metrics-v1` with expanded MetricContext, immutable MetricResult,

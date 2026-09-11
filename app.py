@@ -8,6 +8,8 @@ from operational_intelligence import service
 from dashboard_feeds import feeds
 from market_intelligence.source_registry import SourceRegistry
 from market_intelligence.store import MarketIntelligenceStore
+from application.opportunities import OpportunityService
+from application.opportunities.api import create_blueprint
 
 market_store = MarketIntelligenceStore()
 source_registry = SourceRegistry(market_store)
@@ -22,6 +24,8 @@ portfolio_rows = []
 
 app = Flask(__name__); app.config["SECRET_KEY"] = "local-oi2-session"
 socketio = SocketIO(app, cors_allowed_origins="*")
+canonical_opportunity_service = OpportunityService()
+app.register_blueprint(create_blueprint(canonical_opportunity_service))
 
 @app.teardown_appcontext
 def close_market_store(error=None):
