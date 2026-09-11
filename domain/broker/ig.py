@@ -145,6 +145,7 @@ class IGSession:
     cst: str
     security_token: str
     account_id: str | None = None
+    lightstreamer_endpoint: str | None = None
 
 
 @dataclass(frozen=True)
@@ -337,7 +338,7 @@ class IGReadOnlyAdapter:
         return IGRequestError(200, None, "MALFORMED_RESPONSE", message)
 
     def authenticate(self):
-        _, response_headers = self._request(
+        response, response_headers = self._request(
             "POST", "/session", version=2,
             payload={"identifier": self.config.auth_identifier, "password": self.config.password,
                      "encryptedPassword": False},
@@ -348,7 +349,10 @@ class IGReadOnlyAdapter:
         if not cst or not security:
             raise IGRequestError(200, None, "MALFORMED_RESPONSE",
                                  "IG authentication response omitted session credentials")
-        self._session = IGSession(str(cst), str(security), self.config.account_id)
+        account_id = self.config.account_id or response.get("currentAccountId") or response.get("accountId")
+        endpoint = response.get("lightstreamerEndpoint")
+        self._session = IGSession(str(cst), str(security), account_id,
+                                  str(endpoint) if endpoint else None)
         return {"authenticated": True, "environment": self.config.environment}
 
     def authentication_status(self):
@@ -411,8 +415,16 @@ class IGReadOnlyAdapter:
     def capabilities(self):
         return {"broker": self.broker, "environment": self.config.environment, "read_only": True,
                 "authentication": True, "accounts": True, "market_search": True, "market_detail": True,
-                "historical_prices": True,
+                "historical_prices": True, "streaming": True,
                 "order_submission": False, "position_modification": False, "version": VERSION}
+
+    def create_market_stream(self, mappings, **kwargs):
+        from domain.broker.ig_streaming import IGMarketStream
+        if self.config.environment != "DEMO":
+            raise RuntimeError("IG streaming is restricted to DEMO")
+        if self._session is None:
+            raise RuntimeError("IG authentication required")
+        return IGMarketStream(self, mappings, **kwargs)
 
     def place_order(self, *args, **kwargs):
         raise RuntimeError("IG execution disabled")

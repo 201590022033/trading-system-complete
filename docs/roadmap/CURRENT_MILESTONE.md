@@ -1,5 +1,20 @@
 # Current Milestone
 
+## M24 — Real-time Market Streaming [COMPLETE 2026-09-11]
+
+Added canonical data-only IG Demo streaming contracts and normalization using
+documented Lightstreamer session metadata and PRICE identity. Quotes preserve
+bid/ask, explicit derived mid/spread, source/receipt time, market status,
+ordering, research grade and provenance. Health, staleness, unsubscribe and
+bounded reconnect remain isolated from execution and research orchestration.
+
+No production Lightstreamer transport was externally exercised here. No bars,
+persistence, orders, PaperBroker auto-fill, opportunity, policy, risk or intent
+side effects were added. M12A/M12B superseded old M22/M23; unfinished HR11
+real-data work remains M25.
+
+Next unfinished roadmap milestone: M25 — HR11 Real-data Validation [NOT STARTED].
+
 ## M21 — PaperBroker [COMPLETE 2026-09-11]
 
 Added the generic BrokerAdapter capability boundary and a network-incapable,

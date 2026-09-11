@@ -1,5 +1,25 @@
 # Linear Fusion Roadmap
 
+## M24 — Real-time Market Streaming [COMPLETE 2026-09-11]
+
+Added canonical read-only subscriptions, raw IG updates and market observations
+with preserved bid/ask, versioned mid/spread, UTC/receipt clocks, ordering,
+staleness, health and bounded reconnect/restoration. IG Demo uses the documented
+session-provided Lightstreamer endpoint and PRICE item through an injectable
+transport. No persistence, bar aggregation, orchestration, PaperBroker auto-fill
+or broker order capability was added. See
+[M24 streaming](../market_data/M24_REALTIME_STREAMING.md).
+
+M12A/M12B superseded old M22/M23 discovery/history placeholders. The unfinished
+real-data HR11 validation is explicitly retained as the next milestone:
+
+## M25 — HR11 Real-data Validation [NOT STARTED]
+
+Validate HR11 against factual broker data, calendars and costs under a separate
+authorization. M12B's limited Demo sample did not close this research gap.
+
+Next unfinished roadmap milestone: M25 — HR11 Real-data Validation [NOT STARTED].
+
 ## M21 — PaperBroker [COMPLETE 2026-09-11]
 
 Added a broker-neutral protocol and explicit PAPER-only deterministic simulator
