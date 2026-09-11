@@ -1,5 +1,23 @@
 # Linear Fusion Roadmap
 
+## M28 — IG Demo Execution Safety Gate [COMPLETE 2026-09-11]
+
+Added immutable context/check/decision contracts and a deterministic IG Demo-only
+prerequisite evaluator covering explicit flags/human permission, M14/M15 chain,
+M26 state, M27 reconciliation, exact mapping, market freshness/state, duplicate
+identity, conflicts, kill switch, FX, margin and provenance. It contains no
+transport or broker payload; actual repository state remains ineligible. See
+[M28 safety gate](../execution/M28_IG_DEMO_EXECUTION_SAFETY_GATE.md).
+
+M25 external empirical HR11 validation remains pending/inconclusive.
+
+Next unfinished roadmap milestone: M29 — IG Demo Order Submission [NOT STARTED].
+
+## M29 — IG Demo Order Submission [NOT STARTED]
+
+Any actual Demo submission requires separate explicit authorization and a PASS
+M28 decision. Live execution remains outside scope.
+
 ## M27 — Read-only Broker State Reconciliation [COMPLETE 2026-09-11]
 
 Added immutable internal snapshot, comparison, discrepancy and result contracts

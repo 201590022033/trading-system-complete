@@ -1,5 +1,18 @@
 # Current Milestone
 
+## M28 — IG Demo Execution Safety Gate [COMPLETE 2026-09-11]
+
+Added a pure IG Demo prerequisite gate with auditable PASS/FAIL/UNRESOLVED/
+NOT_CONFIGURED checks. Execution flag and human consent remain explicit, the
+M14/M15 chain and stop must resolve, M26/M27 state must be fresh/clean, and
+mapping, market, duplicate, conflict, kill-switch, FX, margin and provenance
+checks all fail closed. No broker payload, call, route or GUI action exists.
+
+Current adapter capability and M14/M15 state remain non-executable. M25 external
+empirical HR11 validation remains pending/inconclusive.
+
+Next unfinished roadmap milestone: M29 — IG Demo Order Submission [NOT STARTED].
+
 ## M27 — Read-only Broker State Reconciliation [COMPLETE 2026-09-11]
 
 Added a pure immutable comparison boundary for broker and explicitly adapted
