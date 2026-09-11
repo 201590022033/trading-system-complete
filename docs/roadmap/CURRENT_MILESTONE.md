@@ -1,5 +1,25 @@
 # Current Milestone
 
+## M16 — StrategyTarget [COMPLETE 2026-09-11]
+
+Added the immutable `strategy-target-v1` declaration and contextual criterion
+contracts. Hard and soft requirements remain independent, unset thresholds are
+`NOT_CONFIGURED`, and exact metric context plus IS/validation/OOS/walk-forward/
+forward-Demo/live stage identity is required. HR10's historical sample-scaled
+mean/std statistic is preserved as `LEGACY_TSTAT_LIKE_V1`; canonical annualized
+Sharpe requires explicit periodicity, annualization, overlap, return, cost and
+risk-free-rate context.
+
+Target assessment produces only research-review status and can never authorize
+promotion. No thresholds, candidate pass claims, optimization, strategy,
+ranking, TradePolicy, RiskEngine, runtime, broker, execution, or M17 behavior
+was introduced. See `docs/research/M16_STRATEGY_TARGET.md`.
+
+The full safe suite passes 419 tests and all 39 protected research artifacts
+remain byte-identical.
+
+Next milestone: M17 — Experiment Registry [NOT STARTED].
+
 ## M15 — Risk & Exposure Engine [COMPLETE 2026-09-11]
 
 Added the broker-neutral `risk-exposure-v1` final-veto planning boundary over

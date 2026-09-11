@@ -138,6 +138,13 @@ class MetricContext:
     period_duration: str
     trading_calendar: str
     annualization_factor: Optional[float]
+    return_unit: Optional[str] = None
+    return_basis: Optional[str] = None
+    cost_basis: Optional[str] = None
+    horizon_id: Optional[str] = None
+    aggregation_scope: Optional[str] = None
+    is_overlapping: Optional[bool] = None
+    risk_free_rate_annualized: Optional[float] = None
 
     def __post_init__(self) -> None:
         if self.sampling_basis not in {"TRADE_BY_TRADE", "PERIODIC_CALENDAR"}:
@@ -146,7 +153,21 @@ class MetricContext:
             raise ValueError("metric period and calendar are required")
         if self.annualization_factor is not None:
             finite(self.annualization_factor, "annualization_factor", minimum=0.0)
+        if self.return_unit not in {None, "DECIMAL_RETURN", "BASIS_POINTS", "MONETARY", "COUNT", "DAYS", "FRACTION", "BOOLEAN"}:
+            raise ValueError("unsupported metric return unit")
+        if self.return_basis not in {None, "NET", "GROSS", "NOT_APPLICABLE"}:
+            raise ValueError("unsupported net/gross return basis")
+        if self.cost_basis not in {None, "MODELED_BASE", "MODELED_STRESS", "OBSERVED", "ZERO_COST", "NOT_APPLICABLE"}:
+            raise ValueError("unsupported metric cost basis")
+        if self.aggregation_scope not in {None, "PER_TRADE", "STRATEGY", "PORTFOLIO"}:
+            raise ValueError("unsupported metric aggregation scope")
+        if self.risk_free_rate_annualized is not None:
+            finite(self.risk_free_rate_annualized, "risk_free_rate_annualized")
 
     def to_dict(self) -> dict[str, Any]:
         return {"sampling_basis": self.sampling_basis, "period_duration": self.period_duration,
-                "trading_calendar": self.trading_calendar, "annualization_factor": self.annualization_factor}
+                "trading_calendar": self.trading_calendar, "annualization_factor": self.annualization_factor,
+                "return_unit": self.return_unit, "return_basis": self.return_basis,
+                "cost_basis": self.cost_basis, "horizon_id": self.horizon_id,
+                "aggregation_scope": self.aggregation_scope, "is_overlapping": self.is_overlapping,
+                "risk_free_rate_annualized": self.risk_free_rate_annualized}

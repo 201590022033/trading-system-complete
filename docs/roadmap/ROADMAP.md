@@ -1,5 +1,19 @@
 # Linear Fusion Roadmap
 
+## M16 — StrategyTarget [COMPLETE 2026-09-11]
+
+Added versioned, family/horizon-scoped strategy target declarations with exact
+metric and evidence-stage context. Hard failures cannot be averaged away by
+soft successes, and absent thresholds remain unconfigured. HR10's t-stat-like
+sample scaling retains a distinct legacy identity; canonical Sharpe requires
+explicit periodic annualization context. Assessments indicate research review
+readiness only and never promotion. No thresholds, optimization, runtime or
+execution behavior changed. See
+[M16 StrategyTarget](../research/M16_STRATEGY_TARGET.md).
+The full safe suite passes 419 tests and 39/39 protected artifacts are unchanged.
+
+Next milestone: M17 — Experiment Registry [NOT STARTED].
+
 ## M15 — Risk & Exposure Engine [COMPLETE 2026-09-11]
 
 Added an immutable, broker-neutral final-veto risk boundary. It sizes only from
