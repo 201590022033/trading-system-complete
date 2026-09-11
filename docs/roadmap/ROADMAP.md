@@ -1,5 +1,21 @@
 # Linear Fusion Roadmap
 
+## M15 — Risk & Exposure Engine [COMPLETE 2026-09-11]
+
+Added an immutable, broker-neutral final-veto risk boundary. It sizes only from
+explicit monetary loss budget and validated stop distance, then applies
+operator-configured loss, portfolio, notional, gearing, margin, concentration,
+correlation, drawdown and kill-switch constraints. Unset mandatory limits and
+missing account, contract, margin, currency or FX evidence block approval rather
+than becoming permissive defaults. Lot rounding is downward-only and all caps
+remain auditable. Current M14 geometry has no validated stop, so it still yields
+no size. No runtime integration, broker order, execution, optimization or M16
+work was added. See
+[M15 Risk & Exposure Engine](../research/M15_RISK_EXPOSURE_ENGINE.md).
+The full safe suite passes 404 tests and 39/39 protected artifacts are unchanged.
+
+Next milestone: M16 — StrategyTarget [NOT STARTED].
+
 ## M12 — Instrument Selection & Suitability Learning [COMPLETE 2026-09-09]
 
 Added canonical instrument suitability contracts using the existing registry and

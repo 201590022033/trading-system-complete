@@ -1,5 +1,27 @@
 # Current Milestone
 
+## M15 — Risk & Exposure Engine [COMPLETE 2026-09-11]
+
+Added the broker-neutral `risk-exposure-v1` final-veto planning boundary over
+M14 `TradePolicy`. Typed operator limits, point-in-time portfolio state,
+instrument contract metadata, explicit FX conversion, immutable risk evaluation
+and non-executable approved-risk records preserve monetary stopped-loss sizing,
+downward-only lot rounding, margin/gearing constraints, instrument/sector/factual
+correlation exposure, and daily-loss/drawdown/kill-switch controls.
+
+No production limits were invented: every mandatory absent control is
+`NOT_CONFIGURED`. Missing stop, equity, margin, contract, currency or required FX
+evidence produces no size. Current M14 policies therefore remain unresolved and
+cannot become execution-ready. Legacy hard-coded personality sizing was not
+adopted. No runtime integration, broker request, order creation, portfolio
+mutation, optimization, live trading, or M16 implementation was added. See
+`docs/research/M15_RISK_EXPOSURE_ENGINE.md`.
+
+The full safe suite passes 404 tests and all 39 protected research artifacts
+remain byte-identical.
+
+Next milestone: M16 — StrategyTarget [NOT STARTED].
+
 ## M12 — Instrument Selection & Suitability Learning [COMPLETE 2026-09-09]
 
 Added a canonical suitability evaluator around the existing instrument registry
