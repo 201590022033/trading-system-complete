@@ -1,6 +1,14 @@
 # Current Milestone
 
-## Market Intelligence Foundation — ACTIVE 2026-09-16
+## Market AI / News UI — ACTIVE 2026-09-16
+
+The first presentation milestone extends the existing dashboard with a
+functional Market AI workspace, source controls, current narrative/theme and
+watch/investigate panels, provenance read access, and a backend-driven hybrid
+ticker read model. Empty, stale and unavailable states remain explicit. The
+technical decision tree, portfolio redesign, ViewPoint and IG remain deferred.
+
+## Market Intelligence Foundation — COMPLETE 2026-09-16
 
 This milestone extends the existing OI4 `market_intelligence` foundation. It
 adds additive document/analysis/provenance contracts, versioned persistence,

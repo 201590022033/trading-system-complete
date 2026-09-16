@@ -8,6 +8,9 @@ from operational_intelligence import service
 from dashboard_feeds import feeds
 from market_intelligence.source_registry import SourceRegistry
 from market_intelligence.store import MarketIntelligenceStore
+from market_intelligence import TickerSelection
+from datetime import datetime, timezone
+from uuid import uuid4
 from application.opportunities import OpportunityService
 from application.opportunities.api import create_blueprint
 
@@ -54,6 +57,37 @@ def intelligence_sources():
 def intelligence_source_toggle(source_id):
     body = request.get_json(silent=True) or {}
     return jsonify(source=request_source_registry().enable(source_id, bool(body.get("enabled"))).__dict__)
+@app.get("/api/market-intelligence")
+def market_intelligence():
+    store = request_source_registry().store
+    narrative = store.latest_narrative()
+    return jsonify(narrative=narrative.to_dict() if narrative else None,
+                   sources=[s.__dict__ for s in request_source_registry().list_policies()],
+                   selections=[s.__dict__ for s in store.active_ticker_selections()],
+                   state="AVAILABLE" if narrative else "UNAVAILABLE",
+                   live_execution=False)
+@app.post("/api/market-intelligence/pin")
+def pin_intelligence():
+    body = request.get_json(silent=True) or {}
+    symbol, instrument_id = str(body.get("display_symbol", "")).strip(), str(body.get("instrument_id", "")).strip()
+    if not symbol or not instrument_id or len(symbol) > 32 or len(instrument_id) > 64:
+        return jsonify(error="instrument_id and display_symbol are required"), 400
+    store = request_source_registry().store
+    selection = TickerSelection(instrument_id, symbol, True, "User-pinned instrument", None, None,
+                                [], datetime.now(timezone.utc).isoformat())
+    store.save_ticker_selection(selection)
+    return jsonify(selection=selection.__dict__, live_execution=False)
+@app.get("/api/market-intelligence/provenance/<entity_type>/<entity_id>")
+def intelligence_provenance(entity_type, entity_id):
+    if entity_type not in {"document", "theme", "instrument_candidate", "watchlist"}:
+        return jsonify(error="unsupported provenance entity"), 400
+    return jsonify(edges=request_source_registry().store.provenance_for(entity_type, entity_id), live_execution=False)
+@app.get("/api/market-intelligence/ticker")
+def intelligence_ticker():
+    selections = request_source_registry().store.active_ticker_selections()
+    return jsonify(items=[s.__dict__ for s in selections], state="AVAILABLE" if selections else "UNAVAILABLE",
+                   message="No pinned or AI-selected instruments are currently available." if not selections else None,
+                   live_execution=False)
 @app.post("/api/portfolio/csv")
 def portfolio_csv():
     import csv, io

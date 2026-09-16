@@ -159,7 +159,7 @@ async function refreshFeeds() {
   if (feedBusy) return;
   feedBusy = true;
   try {
-    await Promise.allSettled([refreshCharts(),refreshNews(),refreshQuotes()]);
+    await Promise.allSettled([refreshCharts(),refreshNews(),refreshQuotes(),refreshTicker()]);
     $('#feed-notice').textContent = `Checked ${new Date().toLocaleTimeString('en-ZA')} · Price refresh up to 60 seconds; daily history/news up to 5 minutes. See each source's result and timestamp.`;
   } finally { feedBusy = false; }
 }
@@ -184,6 +184,21 @@ async function refreshSources() {
   $('#sources').innerHTML = (result.sources || []).map(s => `<label class="source-row"><input type="checkbox" data-source="${esc(s.source_id)}" ${s.enabled ? 'checked' : ''}> <b>${esc(s.source_name)}</b><small>${esc(s.status)} · ${esc(s.access_mode)} · ${esc(s.url || '')}</small></label>`).join('') || '<p class="muted">No configured sources.</p>';
   document.querySelectorAll('[data-source]').forEach(box => box.onchange = async () => { await post(`/api/market-intelligence/sources/${encodeURIComponent(box.dataset.source)}`, {enabled: box.checked}); });
 }
+function renderIntelligence(data) {
+  const n=data.narrative;
+  $('#intelligence-state').textContent=n ? `Snapshot generated ${when(n.generated_at)} · provider ${n.provider || 'not supplied'}` : 'No current narrative is available; no market intelligence has been substituted.';
+  $('#narrative').innerHTML=n ? `<h3>What is happening?</h3><p>${esc(n.summary)}</p>` : '';
+  $('#themes').innerHTML=n?.themes?.length ? `<h3>Key themes</h3>${n.themes.map(t=>`<article class="theme-card"><b>${esc(t.theme)}</b><span>${esc(t.direction > 0 ? 'Positive' : t.direction < 0 ? 'Negative' : 'Neutral')} · confidence ${esc(t.confidence)} · ${esc(t.expected_horizon)}</span></article>`).join('')}` : '<p class="muted">No structured themes currently available.</p>';
+  const entries=data.selections || n?.candidates || [];
+  $('#ai-watchlist').innerHTML=entries.length ? `<h3>Watch / investigate</h3>${entries.map(x=>`<article class="watch-card"><b>${esc(x.display_symbol || x.instrument_id)}</b><span>${x.pinned ? '📌 Pinned' : '✦ AI-selected'}</span><p>${esc(x.reason || 'No explanation supplied.')}</p><small>${esc(x.theme || 'No theme')} · confidence ${esc(x.confidence)} · review ${esc(when(x.review_at))}</small></article>`).join('')}` : '<p class="muted">No AI watchlist candidates are available.</p>';
+}
+async function refreshIntelligence() { try { renderIntelligence(await api('/api/market-intelligence')); } catch(e) { $('#intelligence-state').textContent=`Market intelligence unavailable: ${e.message}`; } }
+async function refreshTicker() {
+  try { const result=await api('/api/market-intelligence/ticker'); if (!result.items?.length) { $('#quotes').innerHTML='<p class="muted">No pinned or AI-selected market instruments are currently available.</p>'; return; }
+    $('#quotes').innerHTML=result.items.map(i=>`<button class="quote" data-instrument="${esc(i.instrument_id)}"><b>${esc(i.display_symbol)}</b><small>${i.pinned?'📌 Pinned':'✦ AI-selected'} · ${esc(i.reason)}</small><small>Watch / investigate · confidence ${esc(i.confidence)}</small></button>`).join('');
+    document.querySelectorAll('.quote').forEach(card=>card.onclick=()=>{ $('#instrument').value=card.dataset.instrument; selectedChanged(); });
+  } catch(e) { $('#quotes').innerHTML='<p class="muted">Ticker unavailable; no market data has been substituted.</p>'; }
+}
 function renderPortfolio(rows) {
   $('#portfolio-table').innerHTML = rows.length ? `<table><tr>${Object.keys(rows[0]).map(k=>`<th>${esc(k)}</th>`).join('')}</tr>${rows.map(r=>`<tr>${Object.keys(rows[0]).map(k=>`<td>${esc(r[k])}</td>`).join('')}</tr>`).join('')}</table>` : '<p class="muted">No portfolio snapshot loaded.</p>';
 }
@@ -205,6 +220,7 @@ action('#refresh-news',refreshNews);
 action('#refresh-opportunities',refreshOpportunities);
 action('#refresh-canonical',refreshCanonicalOpportunities);
 action('#reload-sources',refreshSources);
+action('#reload-intelligence',refreshIntelligence);
 action('#import-portfolio',async()=>{ const result=await post('/api/portfolio/csv',{csv:$('#portfolio-csv').value}); $('#portfolio-status').textContent=`Imported ${result.count} position(s) · CSV snapshot only`; renderPortfolio(result.rows); });
 $('#instrument').onchange=selectedChanged;
 $('#chart-period').onchange=()=>{selectionVersion++; refreshCharts();};
@@ -220,7 +236,7 @@ $('#auto-refresh').onchange=()=>{if($('#auto-refresh').checked) refreshFeeds();}
   document.querySelectorAll('.quote').forEach(card=>card.onclick=()=>{$('#instrument').value=card.dataset.instrument; selectedChanged();});
   selectedChanged();
   await refreshFeeds();
-  await Promise.allSettled([refreshSources(), loadPortfolio()]);
+  await Promise.allSettled([refreshSources(), refreshIntelligence(), refreshTicker(), loadPortfolio()]);
   await refreshCanonicalOpportunities();
   await refreshOpportunities();
   setInterval(()=>{if($('#auto-refresh').checked && !document.hidden) refreshFeeds();},10000);
