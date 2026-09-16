@@ -5,6 +5,7 @@ from datetime import datetime
 import json
 
 from domain.broker.ig import IGConfig, IGReadOnlyAdapter, IGRequestError
+from ai_config import project_environment
 
 
 def main():
@@ -18,7 +19,7 @@ def main():
     parser.add_argument("--page-size", type=int, default=500)
     parser.add_argument("--malformed-samples", type=int, choices=range(0, 6), default=0)
     args = parser.parse_args()
-    adapter = IGReadOnlyAdapter(IGConfig.from_env())
+    adapter = IGReadOnlyAdapter(IGConfig.from_env(project_environment()))
     if args.command == "status":
         result = adapter.authentication_status()
     else:

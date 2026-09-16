@@ -6,6 +6,7 @@ from urllib.error import URLError
 from urllib.parse import urlparse
 
 from domain.broker.ig import IGConfig, IGReadOnlyAdapter
+from scripts import ig_discovery
 
 
 class IGDiscoveryTests(unittest.TestCase):
@@ -34,6 +35,32 @@ class IGDiscoveryTests(unittest.TestCase):
         self.assertIn("api.ig.com", IGConfig("a", "u", "p", environment="LIVE").base_url)
         with patch.dict(os.environ, {}, clear=True):
             with self.assertRaises(ValueError): IGConfig.from_env()
+
+    def test_discovery_cli_uses_canonical_environment_loader(self):
+        captured = {}
+        class StubConfig:
+            pass
+        class StubAdapter:
+            def __init__(self, config):
+                captured["config"] = config
+            def authentication_status(self):
+                return {"authenticated": False, "environment": "DEMO", "message": "missing"}
+        with patch.object(ig_discovery, "project_environment", return_value={"IG_API_KEY": "key"}) as loader:
+            with patch.object(ig_discovery, "IGConfig", from_env=lambda values: values):
+                with patch.object(ig_discovery, "IGReadOnlyAdapter", StubAdapter):
+                    with patch("sys.argv", ["ig_discovery", "status"]):
+                        with patch("builtins.print") as printer:
+                            ig_discovery.main()
+        loader.assert_called_once_with()
+        self.assertEqual(captured["config"], {"IG_API_KEY": "key"})
+        output = json.dumps(printer.call_args.args[0])
+        self.assertNotIn("key", output)
+
+    def test_canonical_environment_explicit_process_values_take_precedence(self):
+        with patch("ai_config.dotenv_values", return_value={"IG_ENVIRONMENT": "DEMO", "IG_API_KEY": "from-file"}):
+            values = __import__("ai_config").project_environment({"IG_API_KEY": "from-process"})
+        self.assertEqual(values["IG_API_KEY"], "from-process")
+        self.assertEqual(values["IG_ENVIRONMENT"], "DEMO")
 
     def test_explicit_identifier_maps_to_auth_payload_and_not_account_id(self):
         calls = []
