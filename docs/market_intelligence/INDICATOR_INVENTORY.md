@@ -19,6 +19,16 @@ not add or recompute technical mathematics.
 | Candlestick patterns | RESEARCH-ONLY | HR6 deterministic shadow features |
 | Hanging Man | RESEARCH-ONLY | candlestick family; no production action |
 
+## Admission process
+
+New indicators enter as research candidates, receive unit and causality tests,
+are registered with an implementation/version and capability requirements, and
+are evaluated with existing cost-aware walk-forward evidence by instrument,
+horizon, profile and regime. The governance state remains
+`INSUFFICIENT_EVIDENCE`, `CANDIDATE`, `VALIDATED` or `REJECTED` until evidence
+supports a later `PRODUCTION_ELIGIBLE` decision. No UI or LLM can promote a
+feature or alter production weights.
+
 Unavailable indicators are shown as unavailable rather than inferred from
 other values. Technical Intelligence remains an explainability surface and
 does not alter signal, adaptive, regime, risk, or broker behaviour.

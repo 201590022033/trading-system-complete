@@ -125,9 +125,9 @@ def technical_intelligence(instrument):
     result = service.technical(instrument)
     indicators = result.get("data", {}).get("metrics", {}) if result.get("success") else {}
     names = ("rsi", "sma", "breakout", "stochastic", "macd", "bollinger_mean_reversion", "adx_dmi", "ichimoku")
-    rows = [{"name": name, "state": "AVAILABLE" if name in indicators or name in {"sma", "breakout", "stochastic"} else "UNAVAILABLE",
+    rows = [{"name": name, "state": "CURRENTLY_CONTRIBUTING" if name in indicators or name in {"sma", "breakout", "stochastic"} else "RESEARCH_ONLY",
              "value": indicators.get(name), "signal": indicators.get(name + "_signal"),
-             "reason": None if name in indicators or name in {"sma", "breakout", "stochastic"} else "Not present in current operational observation"}
+             "reason": None if name in indicators or name in {"sma", "breakout", "stochastic"} else "Implemented in research path; not admitted to production UI scoring"}
             for name in names]
     return jsonify(instrument=resolve_instrument(instrument).to_dict(), technical=result,
                    indicators=rows, flow=[{"id":"instrument","label":"Instrument","state":"ACTIVE"},
