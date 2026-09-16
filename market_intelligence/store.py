@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import json
 import sqlite3
+from datetime import datetime, timedelta, timezone
 from dataclasses import asdict
 from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional
@@ -17,6 +18,8 @@ from evidence import EvidenceRecord
 from .schemas import (InstrumentCandidate, MarketNarrative, MarketTheme, TickerSelection,
                       MarketIntelligenceSnapshot, ProvenanceEdge, MarketDocumentAnalysis,
                       DocumentFact)
+from shadow_learning import (ObservationRecord, ShadowDecision, OutcomeLabel,
+                             AdaptiveEvidence, JobCheckpoint, LearningStatus)
 
 
 DEFAULT_DB_PATH = "market_intelligence.db"
@@ -41,6 +44,74 @@ class MarketIntelligenceStore:
         if self._connection is not None:
             self._connection.close()
             self._connection = None
+
+    # ------------------------------------------------------------------
+    # Persistent shadow-learning ledgers
+    # ------------------------------------------------------------------
+    def save_observation(self, record: ObservationRecord) -> None:
+        payload = json.dumps(record.to_dict(), sort_keys=True)
+        self._connection.execute("INSERT OR IGNORE INTO observations VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+            (record.observation_id, record.instrument, record.observed_at, record.horizon, payload,
+             record.created_at or record.observed_at, record.source_version, record.pipeline_version))
+        self._connection.commit()
+
+    def save_shadow_decision(self, decision: ShadowDecision) -> None:
+        self._connection.execute("INSERT OR IGNORE INTO shadow_decisions VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+            (decision.decision_id, decision.observation_id, decision.instrument, decision.decided_at,
+             decision.horizon, decision.action, decision.outcome_status, json.dumps(decision.to_dict(), sort_keys=True)))
+        self._connection.commit()
+
+    def save_outcome(self, outcome: OutcomeLabel) -> None:
+        self._connection.execute("INSERT OR IGNORE INTO outcome_labels VALUES (?, ?, ?, ?)",
+            (outcome.outcome_id, outcome.decision_id, outcome.matured_at, json.dumps(outcome.to_dict(), sort_keys=True)))
+        self._connection.execute("UPDATE shadow_decisions SET outcome_status = 'LABELLED' WHERE decision_id = ?", (outcome.decision_id,))
+        self._connection.commit()
+
+    def save_adaptive_evidence(self, evidence: AdaptiveEvidence) -> None:
+        self._connection.execute("INSERT INTO adaptive_evidence VALUES (?, ?, ?, ?) ON CONFLICT(evidence_key) DO UPDATE SET updated_at=excluded.updated_at, payload=excluded.payload",
+            (evidence.evidence_id, f"{evidence.instrument}|{evidence.horizon}|{evidence.regime}|{evidence.profile}", evidence.updated_at, json.dumps(evidence.to_dict(), sort_keys=True)))
+        self._connection.commit()
+
+    def contribute_adaptive_evidence(self, evidence: AdaptiveEvidence, outcome_id: str) -> bool:
+        """Atomically register one outcome's contribution to one shadow cell."""
+        key = f"{evidence.instrument}|{evidence.horizon}|{evidence.regime}|{evidence.profile}"
+        cur = self._connection.execute("INSERT OR IGNORE INTO adaptive_evidence_contributions VALUES (?, ?, ?, ?)",
+            (f"{key}|{outcome_id}", key, outcome_id, evidence.updated_at))
+        if cur.rowcount == 0:
+            return False
+        key_row = self._connection.execute("SELECT payload FROM adaptive_evidence WHERE evidence_key = ?", (key,)).fetchone()
+        if key_row:
+            prior = json.loads(key_row[0])
+            total = int(prior.get("sample_count", 0)) + 1
+            prior["sample_count"] = total
+            prior["wins"] = int(prior.get("wins", 0)) + evidence.wins
+            prior["losses"] = int(prior.get("losses", 0)) + evidence.losses
+            prior["mean_net_return"] = ((prior.get("mean_net_return") or 0.0) * (total - 1) + (evidence.mean_net_return or 0.0)) / total
+            evidence = AdaptiveEvidence(**{**prior, "updated_at": evidence.updated_at})
+        self.save_adaptive_evidence(evidence)
+        return True
+
+    def learning_status(self) -> dict:
+        counts = self.counts()
+        now = datetime.now(timezone.utc)
+        result = {"observations": {}, "shadow_decisions": {}, "labelled_outcomes": {}, "adaptive_updates": {},
+                  "pending_outcomes": counts["pending_outcomes"], "latest_timestamps": {},
+                  "database_backend": "sqlite", "database_state": "AVAILABLE", "worker_status": {"status": "UNKNOWN"}}
+        for label, table, column in (("observations", "observations", "observed_at"), ("shadow_decisions", "shadow_decisions", "decided_at"), ("labelled_outcomes", "outcome_labels", "matured_at"), ("adaptive_updates", "adaptive_evidence", "updated_at")):
+            for name, seconds in (("24h", 86400), ("3d", 259200), ("7d", 604800)):
+                cutoff = (now - timedelta(seconds=seconds)).isoformat()
+                result[label][name] = self._connection.execute(f"SELECT COUNT(*) FROM {table} WHERE {column} >= ?", (cutoff,)).fetchone()[0]
+            result["latest_timestamps"][label] = self._connection.execute(f"SELECT MAX({column}) FROM {table}").fetchone()[0]
+        return result
+
+    def save_job(self, job: JobCheckpoint) -> None:
+        self._connection.execute("INSERT INTO worker_jobs VALUES (?, ?, ?, ?, ?, ?) ON CONFLICT(job_key) DO UPDATE SET status=excluded.status, payload=excluded.payload, last_updated=excluded.last_updated",
+            (job.job_key, job.job_type, job.target_time, job.status, json.dumps(job.to_dict(), sort_keys=True), job.last_updated or job.target_time))
+        self._connection.commit()
+
+    def counts(self) -> dict[str, int]:
+        q = lambda table: self._connection.execute(f"SELECT COUNT(*) FROM {table}").fetchone()[0]
+        return {"observations": q("observations"), "shadow_decisions": q("shadow_decisions"), "labelled_outcomes": q("outcome_labels"), "adaptive_updates": q("adaptive_evidence"), "pending_outcomes": self._connection.execute("SELECT COUNT(*) FROM shadow_decisions WHERE outcome_status='PENDING_OUTCOME'").fetchone()[0]}
 
     def _run_migrations(self) -> None:
         """Run SQL migration files in order and track schema_version."""

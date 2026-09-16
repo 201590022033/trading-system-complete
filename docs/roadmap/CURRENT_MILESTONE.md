@@ -1,5 +1,16 @@
 # Current Milestone
 
+## Persistent Shadow-Learning Foundation — ACTIVE 2026-09-16
+
+This milestone adds a bounded, broker-independent durable shadow loop. It
+persists causal observations, canonical `OperationalIntelligence.analyze()`
+shadow decisions, matured outcomes, and separately governed shadow evidence.
+Duplicate contributions are database-protected; missing outcomes are never
+guessed; production adaptive state is never mutated. Runtime reliability uses
+the shared configured repository. Railway remains one web service, one minimal
+bounded worker, and PostgreSQL; when no work is due, the worker does almost
+nothing. Historical research and broad analysis remain local/on-demand.
+
 ## Technical Intelligence workspace — ACTIVE 2026-09-16
 
 The dashboard now exposes a read-only technical evidence endpoint and a

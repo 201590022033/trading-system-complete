@@ -13,6 +13,7 @@ from datetime import datetime, timezone
 from uuid import uuid4
 from application.opportunities import OpportunityService
 from application.opportunities.api import create_blueprint
+from runtime_persistence import runtime_repository
 
 market_store = MarketIntelligenceStore()
 source_registry = SourceRegistry(market_store)
@@ -30,11 +31,19 @@ socketio = SocketIO(app, cors_allowed_origins="*")
 canonical_opportunity_service = OpportunityService()
 app.register_blueprint(create_blueprint(canonical_opportunity_service))
 
+def application_repository():
+    """Canonical repository selection shared with the bounded worker."""
+    if "application_repository" not in g:
+        g.application_repository = runtime_repository()
+    return g.application_repository
+
 @app.teardown_appcontext
 def close_market_store(error=None):
     store = g.pop("market_store", None)
     if store is not None:
         store.close()
+    repository = g.pop("application_repository", None)
+    if repository is not None: repository.close()
 
 @app.get("/")
 def index(): return render_template("dashboard.html")
@@ -50,6 +59,11 @@ def health():
                    service="oi2", database=database, mode=mode, live_execution=False), (200 if healthy else 503)
 @app.get("/api/system/status")
 def status(): return jsonify(service.status())
+@app.get("/api/learning/status")
+def learning_status():
+    """Read-only persisted shadow-learning counters; never includes secrets."""
+    status = application_repository().learning_status()
+    return jsonify(**status, live_execution=False)
 @app.get("/api/market-intelligence/sources")
 def intelligence_sources():
     return jsonify(sources=[s.__dict__ for s in request_source_registry().list_policies()])

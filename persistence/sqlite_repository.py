@@ -12,6 +12,7 @@ from market_intelligence.source_registry import SourceRegistry as LegacySourceRe
 from market_intelligence.store import MarketIntelligenceStore
 
 from .sql_models import dumps, loads
+from shadow_learning import ObservationRecord, ShadowDecision, OutcomeLabel, AdaptiveEvidence, JobCheckpoint
 
 
 class SQLiteRepository:
@@ -68,6 +69,33 @@ class SQLiteRepository:
     def append_audit_event(self, action: str, entity_type: str | None = None,
                            entity_id: str | None = None, after: dict | None = None) -> None:
         self.store.audit(action, entity_type, entity_id, after=after)
+
+    def save_observation(self, record: ObservationRecord) -> None: self.store.save_observation(record)
+    def save_shadow_decision(self, decision: ShadowDecision) -> None: self.store.save_shadow_decision(decision)
+    def save_outcome(self, outcome: OutcomeLabel) -> None: self.store.save_outcome(outcome)
+    def save_adaptive_evidence(self, evidence: AdaptiveEvidence) -> None: self.store.save_adaptive_evidence(evidence)
+    def contribute_adaptive_evidence(self, evidence: AdaptiveEvidence, outcome_id: str) -> bool: return self.store.contribute_adaptive_evidence(evidence, outcome_id)
+    def learning_status(self) -> dict: return self.store.learning_status()
+    def get_observation(self, observation_id: str) -> dict | None:
+        row = self.store._connection.execute("SELECT payload FROM observations WHERE observation_id=?", (observation_id,)).fetchone()
+        return loads(row[0], None) if row else None
+    def get_shadow_decision(self, decision_id: str) -> dict | None:
+        row = self.store._connection.execute("SELECT payload FROM shadow_decisions WHERE decision_id=?", (decision_id,)).fetchone()
+        return loads(row[0], None) if row else None
+    def get_outcome(self, outcome_id: str) -> dict | None:
+        row = self.store._connection.execute("SELECT payload FROM outcome_labels WHERE outcome_id=?", (outcome_id,)).fetchone()
+        return loads(row[0], None) if row else None
+    def get_job(self, job_key: str) -> dict | None:
+        row = self.store._connection.execute("SELECT payload FROM worker_jobs WHERE job_key=?", (job_key,)).fetchone()
+        return loads(row[0], None) if row else None
+    def save_job(self, job: JobCheckpoint) -> None: self.store.save_job(job)
+    def counts(self) -> dict[str, int]: return self.store.counts()
+    def save_reliability_outcome(self, record: dict) -> None:
+        self.store._connection.execute("INSERT OR IGNORE INTO reliability_outcomes VALUES (?, ?, ?, ?, ?)", (record["reliability_id"], record["source_id"], record["scope_key"], record["horizon"], dumps(record)))
+        self.store._connection.commit()
+    def list_reliability_outcomes(self, source_id: str, scope_key: str, horizon: str) -> list[dict]:
+        rows = self.store._connection.execute("SELECT payload FROM reliability_outcomes WHERE source_id=? AND scope_key=? AND horizon=?", (source_id, scope_key, horizon)).fetchall()
+        return [loads(row[0], {}) for row in rows]
 
     @contextmanager
     def transaction(self) -> Iterator[None]:

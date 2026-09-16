@@ -12,6 +12,7 @@ from typing import Any, Callable, Iterator
 from domain.intelligence.clustering import ClusteredEvent
 from domain.registry.source import CanonicalSourcePolicy, CanonicalSourceRegistry
 from evidence import EvidenceRecord
+from shadow_learning import ObservationRecord, ShadowDecision, OutcomeLabel, AdaptiveEvidence, JobCheckpoint
 
 
 POSTGRES_SCHEMA = """CREATE TABLE IF NOT EXISTS source_policies (
@@ -36,6 +37,15 @@ evidence_ids TEXT NOT NULL, source_ids TEXT NOT NULL, entity_references TEXT NOT
 macro_references TEXT NOT NULL, consensus_direction INTEGER NOT NULL,
 aggregate_strength DOUBLE PRECISION NOT NULL, duplicate_count INTEGER NOT NULL
 )"""
+POSTGRES_SCHEMA += """
+;CREATE TABLE IF NOT EXISTS observations (observation_id TEXT PRIMARY KEY, instrument TEXT NOT NULL, observed_at TEXT NOT NULL, horizon TEXT NOT NULL, payload JSONB NOT NULL, created_at TIMESTAMPTZ NOT NULL, source_version TEXT NOT NULL, pipeline_version TEXT NOT NULL, UNIQUE(instrument, observed_at, horizon, source_version, pipeline_version));
+CREATE TABLE IF NOT EXISTS shadow_decisions (decision_id TEXT PRIMARY KEY, observation_id TEXT UNIQUE NOT NULL, instrument TEXT NOT NULL, decided_at TIMESTAMPTZ NOT NULL, horizon TEXT NOT NULL, action TEXT NOT NULL, outcome_status TEXT NOT NULL, payload JSONB NOT NULL);
+CREATE TABLE IF NOT EXISTS outcome_labels (outcome_id TEXT PRIMARY KEY, decision_id TEXT UNIQUE NOT NULL, matured_at TIMESTAMPTZ NOT NULL, payload JSONB NOT NULL);
+CREATE TABLE IF NOT EXISTS adaptive_evidence (evidence_id TEXT PRIMARY KEY, evidence_key TEXT UNIQUE NOT NULL, updated_at TIMESTAMPTZ NOT NULL, payload JSONB NOT NULL);
+CREATE TABLE IF NOT EXISTS worker_jobs (job_key TEXT PRIMARY KEY, job_type TEXT NOT NULL, target_time TIMESTAMPTZ NOT NULL, status TEXT NOT NULL, payload JSONB NOT NULL, last_updated TIMESTAMPTZ NOT NULL);
+CREATE TABLE IF NOT EXISTS worker_status (worker_id TEXT PRIMARY KEY, status TEXT NOT NULL, payload JSONB NOT NULL, last_updated TIMESTAMPTZ NOT NULL)"""
+POSTGRES_SCHEMA += ";CREATE TABLE IF NOT EXISTS adaptive_evidence_contributions (contribution_id TEXT PRIMARY KEY, evidence_key TEXT NOT NULL, outcome_id TEXT NOT NULL, contributed_at TIMESTAMPTZ NOT NULL, UNIQUE(evidence_key, outcome_id))"
+POSTGRES_SCHEMA += ";CREATE TABLE IF NOT EXISTS reliability_outcomes (reliability_id TEXT PRIMARY KEY, source_id TEXT NOT NULL, scope_key TEXT NOT NULL, horizon TEXT NOT NULL, payload JSONB NOT NULL, UNIQUE(reliability_id))"
 
 
 class PostgresRepository:
@@ -74,6 +84,77 @@ class PostgresRepository:
                 if statement.strip():
                     cursor.execute(statement)
         connection.commit()
+
+    def _insert(self, table: str, conflict: str, columns: tuple[str, ...], values: tuple[Any, ...]) -> None:
+        c = self._require_connection()
+        names = ",".join(columns); marks = ",".join(["%s"] * len(columns))
+        with c.cursor() as cur: cur.execute(f"INSERT INTO {table} ({names}) VALUES ({marks}) ON CONFLICT ({conflict}) DO NOTHING", values)
+        c.commit()
+
+    def save_observation(self, record: ObservationRecord) -> None: self._insert("observations", "observation_id", ("observation_id","instrument","observed_at","horizon","payload","created_at","source_version","pipeline_version"), (record.observation_id,record.instrument,record.observed_at,record.horizon,json.dumps(record.to_dict()),record.created_at or record.observed_at,record.source_version,record.pipeline_version))
+    def save_shadow_decision(self, decision: ShadowDecision) -> None: self._insert("shadow_decisions", "decision_id", ("decision_id","observation_id","instrument","decided_at","horizon","action","outcome_status","payload"), (decision.decision_id,decision.observation_id,decision.instrument,decision.decided_at,decision.horizon,decision.action,decision.outcome_status,json.dumps(decision.to_dict())))
+    def save_outcome(self, outcome: OutcomeLabel) -> None:
+        self._insert("outcome_labels", "outcome_id", ("outcome_id","decision_id","matured_at","payload"), (outcome.outcome_id,outcome.decision_id,outcome.matured_at,json.dumps(outcome.to_dict())))
+        c = self._require_connection()
+        with c.cursor() as cur:
+            cur.execute("UPDATE shadow_decisions SET outcome_status = %s WHERE decision_id = %s", ("LABELLED", outcome.decision_id))
+        c.commit()
+    def save_adaptive_evidence(self, evidence: AdaptiveEvidence) -> None: self._insert("adaptive_evidence", "evidence_id", ("evidence_id","evidence_key","updated_at","payload"), (evidence.evidence_id,f"{evidence.instrument}|{evidence.horizon}|{evidence.regime}|{evidence.profile}",evidence.updated_at,json.dumps(evidence.to_dict())))
+    def save_job(self, job: JobCheckpoint) -> None: self._insert("worker_jobs", "job_key", ("job_key","job_type","target_time","status","payload","last_updated"), (job.job_key,job.job_type,job.target_time,job.status,json.dumps(job.to_dict()),job.last_updated or job.target_time))
+    def contribute_adaptive_evidence(self, evidence: AdaptiveEvidence, outcome_id: str) -> bool:
+        c = self._require_connection(); key = f"{evidence.instrument}|{evidence.horizon}|{evidence.regime}|{evidence.profile}"
+        with c.cursor() as cur:
+            cur.execute("INSERT INTO adaptive_evidence_contributions VALUES (%s,%s,%s,%s) ON CONFLICT (evidence_key,outcome_id) DO NOTHING", (f"{key}|{outcome_id}", key, outcome_id, evidence.updated_at))
+            inserted = cur.rowcount > 0
+        c.commit(); return inserted
+
+    def learning_status(self) -> dict:
+        """Return persisted status using database timestamps only."""
+        c = self._require_connection()
+        result = {"observations": {}, "shadow_decisions": {}, "labelled_outcomes": {}, "adaptive_updates": {}, "pending_outcomes": 0, "latest_timestamps": {}, "database_backend": "postgresql", "database_state": "AVAILABLE", "worker_status": {"status": "UNKNOWN"}}
+        windows = (("24h", "INTERVAL '24 hours'"), ("3d", "INTERVAL '3 days'"), ("7d", "INTERVAL '7 days'"))
+        for label, table, column in (("observations", "observations", "observed_at"), ("shadow_decisions", "shadow_decisions", "decided_at"), ("labelled_outcomes", "outcome_labels", "matured_at"), ("adaptive_updates", "adaptive_evidence", "updated_at")):
+            with c.cursor() as cur:
+                for name, interval in windows:
+                    cur.execute(f"SELECT COUNT(*) FROM {table} WHERE {column} >= NOW() - {interval}")
+                    result[label][name] = cur.fetchone()[0]
+                cur.execute(f"SELECT MAX({column}) FROM {table}")
+                result["latest_timestamps"][label] = cur.fetchone()[0]
+        with c.cursor() as cur:
+            cur.execute("SELECT COUNT(*) FROM shadow_decisions WHERE outcome_status = %s", ("PENDING_OUTCOME",))
+            result["pending_outcomes"] = cur.fetchone()[0]
+        return result
+
+    def _read_payload(self, table: str, key_column: str, value: str) -> dict | None:
+        c = self._require_connection()
+        with c.cursor() as cur:
+            cur.execute(f"SELECT payload FROM {table} WHERE {key_column} = %s", (value,))
+            row = cur.fetchone()
+        if not row: return None
+        payload = row[0]
+        return json.loads(payload) if isinstance(payload, str) else payload
+
+    def get_observation(self, observation_id: str) -> dict | None:
+        return self._read_payload("observations", "observation_id", observation_id)
+    def get_shadow_decision(self, decision_id: str) -> dict | None:
+        c = self._require_connection()
+        with c.cursor() as cur:
+            cur.execute("SELECT payload, outcome_status FROM shadow_decisions WHERE decision_id = %s", (decision_id,)); row = cur.fetchone()
+        if not row: return None
+        result = json.loads(row[0]) if isinstance(row[0], str) else row[0]
+        result["outcome_status"] = row[1]
+        return result
+    def get_outcome(self, outcome_id: str) -> dict | None:
+        return self._read_payload("outcome_labels", "outcome_id", outcome_id)
+    def get_job(self, job_key: str) -> dict | None:
+        return self._read_payload("worker_jobs", "job_key", job_key)
+    def save_reliability_outcome(self, record: dict) -> None:
+        self._insert("reliability_outcomes", "reliability_id", ("reliability_id","source_id","scope_key","horizon","payload"), (record["reliability_id"],record["source_id"],record["scope_key"],record["horizon"],json.dumps(record)))
+    def list_reliability_outcomes(self, source_id: str, scope_key: str, horizon: str) -> list[dict]:
+        c = self._require_connection()
+        with c.cursor() as cur:
+            cur.execute("SELECT payload FROM reliability_outcomes WHERE source_id=%s AND scope_key=%s AND horizon=%s", (source_id, scope_key, horizon)); rows = cur.fetchall()
+        return [json.loads(row[0]) if isinstance(row[0], str) else row[0] for row in rows]
 
     def save_source_policy(self, policy: CanonicalSourcePolicy) -> None:
         connection = self._require_connection()

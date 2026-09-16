@@ -8,6 +8,7 @@ the evidence observation time.
 from __future__ import annotations
 
 import sqlite3
+import os
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
@@ -188,3 +189,47 @@ class ReliabilityStore:
             mean_aligned_return=round(mean_aligned, 8),
             reliability=round(reliability, 6),
         )
+
+
+def runtime_reliability_store(path: str | Path | None = None, repository=None):
+    """Construct durable runtime reliability storage; tests may use ReliabilityStore(':memory:').
+
+    The runtime path is explicit and file-backed locally. Railway applications
+    should provide a repository-backed implementation at composition time;
+    this factory never silently falls back to process memory.
+    """
+    if repository is not None:
+        return RepositoryReliabilityStore(repository)
+    database_url = os.environ.get("DATABASE_URL", "")
+    if database_url.lower().startswith(("postgresql://", "postgres://")):
+        from persistence.repository import get_storage_repository
+        return RepositoryReliabilityStore(get_storage_repository(database_url=database_url))
+    configured = path or os.environ.get("RELIABILITY_DB_PATH") or "reliability.db"
+    if str(configured) == ":memory:":
+        raise ValueError("runtime reliability cannot silently use :memory:")
+    return ReliabilityStore(configured)
+
+
+class RepositoryReliabilityStore:
+    """ReliabilityStore-compatible facade over the shared repository."""
+    def __init__(self, repository): self.repository = repository
+    def close(self):
+        close = getattr(self.repository, "close", None)
+        if close: close()
+    def record_outcome(self, *, evidence_id, source_id, scope_key, horizon, observed_at,
+                       evaluated_at, direction, forward_return):
+        observed = ReliabilityStore._iso(observed_at); evaluated = ReliabilityStore._iso(evaluated_at)
+        if evaluated < observed: raise ValueError("evaluated_at cannot precede observed_at")
+        if direction not in (-1, 0, 1): raise ValueError("direction must be -1, 0 or 1")
+        aligned = direction * float(forward_return)
+        self.repository.save_reliability_outcome({"reliability_id": f"{evidence_id}|{scope_key}|{horizon}", "evidence_id": evidence_id, "source_id": source_id, "scope_key": scope_key, "horizon": horizon, "observed_at": observed, "evaluated_at": evaluated, "direction": direction, "forward_return": float(forward_return), "aligned_return": aligned, "outcome": "win" if aligned > 0 else "loss" if aligned < 0 else "flat"})
+    def summarize(self, source_id, scope_key="global", horizon="5d"):
+        rows = self.repository.list_reliability_outcomes(source_id, scope_key, horizon)
+        samples, wins, losses, flats = len(rows), sum(r["outcome"] == "win" for r in rows), sum(r["outcome"] == "loss" for r in rows), sum(r["outcome"] == "flat" for r in rows)
+        mean = sum(r["aligned_return"] for r in rows) / samples if samples else 0.0
+        return ReliabilitySummary(source_id, scope_key, horizon, samples, wins, losses, flats, wins / samples if samples else 0.0, round(mean, 8), ((wins + 10) / (samples + 20)) if samples else .5)
+
+
+def runtime_repository_reliability(repository):
+    """Use the configured shared repository for runtime reliability."""
+    return RepositoryReliabilityStore(repository)

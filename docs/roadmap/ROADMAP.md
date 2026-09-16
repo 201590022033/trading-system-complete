@@ -1,5 +1,12 @@
 # Linear Fusion Roadmap
 
+## Persistent Shadow-Learning Foundation — ACTIVE 2026-09-16
+
+The current implementation milestone is a durable, incremental shadow-learning
+loop with SQLite local persistence and PostgreSQL runtime parity. It does not
+promote shadow evidence into production adaptive state, invoke brokers, or
+rerun historical research on Railway. See [shadow-learning design](../research/SHADOW_LEARNING.md).
+
 ## M30 — Bounded IG Demo Execution Validation [COMPLETE 2026-09-11]
 
 Added a default-non-mutating two-phase validation harness over the M26–M29
