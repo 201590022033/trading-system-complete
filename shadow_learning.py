@@ -2,6 +2,8 @@
 from dataclasses import dataclass, field, asdict
 from datetime import datetime, timezone
 import math
+import hashlib
+import json
 from typing import Any
 
 def timestamp(value: str) -> datetime:
@@ -24,6 +26,26 @@ def _normalize(record, *names):
 def _finite(value):
     if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value):
         raise ValueError("finite numeric value required")
+
+def stable_id(kind, *parts):
+    encoded=json.dumps(parts,ensure_ascii=True,separators=(",",":"))
+    return kind+":"+hashlib.sha256(encoded.encode("utf-8")).hexdigest()
+
+def canonical_instrument(value):
+    from instrument_registry import resolve_instrument
+    if not isinstance(value,str) or not value.strip():
+        raise ValueError("instrument required")
+    try: return resolve_instrument(value).instrument_id
+    except KeyError: return value.strip().upper()
+
+def evidence_key(evidence, lookup):
+    dimensions=(evidence.instrument,str(evidence.horizon),evidence.regime,evidence.profile)
+    legacy="|".join(dimensions)
+    previous=lookup(legacy)
+    # Preserve identity of valid pre-repair contributions without rewriting data.
+    if previous and tuple(str(previous[n]) for n in ('instrument','horizon','regime','profile'))==dimensions:
+        return legacy
+    return stable_id("cell",*dimensions)
 
 def causal_metadata(value, cutoff):
     """Reject outcome data and future-dated metadata at the observation boundary."""
@@ -55,6 +77,8 @@ class ObservationRecord:
     created_at: str = ""
     def __post_init__(self):
         if not self.instrument or not self.horizon: raise ValueError("instrument and horizon are required")
+        object.__setattr__(self,"instrument",canonical_instrument(self.instrument))
+        object.__setattr__(self,"horizon",str(self.horizon))
         _normalize(self, "observed_at", "created_at")
         for value in (self.market_data, self.production_context, self.research_context):
             causal_metadata(value, timestamp(self.observed_at))
@@ -76,6 +100,8 @@ class ShadowDecision:
     previous_signal: float = 0.0
     provenance: dict[str, Any] = field(default_factory=dict)
     def __post_init__(self):
+        object.__setattr__(self,"instrument",canonical_instrument(self.instrument))
+        object.__setattr__(self,"horizon",str(self.horizon))
         _normalize(self, "decided_at")
         if self.action not in {"BUY", "HOLD", "SELL"}: raise ValueError("invalid action")
         if self.previous_signal not in {-1, 0, 1}: raise ValueError("invalid previous signal")
@@ -130,6 +156,12 @@ class AdaptiveEvidence:
     reliability_state: str
     governance_state: str = "SHADOW_ADAPTIVE_EVIDENCE"
     updated_at: str = ""
+    def __post_init__(self):
+        object.__setattr__(self,"instrument",canonical_instrument(self.instrument))
+        object.__setattr__(self,"horizon",str(self.horizon))
+        _normalize(self,"updated_at")
+        if self.mean_net_return is not None: _finite(self.mean_net_return)
+        if self.governance_state != "SHADOW_ADAPTIVE_EVIDENCE": raise ValueError("shadow governance required")
     def to_dict(self): return asdict(self)
 
 @dataclass(frozen=True)
@@ -144,6 +176,10 @@ class JobCheckpoint:
     retryable: bool = True
     error_category: str | None = None
     last_updated: str = ""
+    def __post_init__(self):
+        _normalize(self,"target_time","last_updated")
+        if self.status not in {"PENDING","RUNNING","COMPLETED","FAILED"} or self.attempt_count < 0:
+            raise ValueError("invalid durable job state")
     def to_dict(self): return asdict(self)
 
 @dataclass(frozen=True)

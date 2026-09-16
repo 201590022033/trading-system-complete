@@ -13,6 +13,7 @@ from domain.intelligence.clustering import ClusteredEvent
 from domain.registry.source import CanonicalSourcePolicy, CanonicalSourceRegistry
 from evidence import EvidenceRecord
 from shadow_learning import ObservationRecord, ShadowDecision, OutcomeLabel, AdaptiveEvidence, JobCheckpoint
+from persistence_transactions import OwnedConnection, atomic
 
 
 POSTGRES_SCHEMA = """CREATE TABLE IF NOT EXISTS source_policies (
@@ -72,6 +73,8 @@ class PostgresRepository:
             except ImportError as exc:
                 raise RuntimeError("psycopg is required for PostgreSQL integration") from exc
             self._connection = psycopg.connect(self.database_url)
+        if not isinstance(self._connection, OwnedConnection):
+            self._connection = OwnedConnection(self._connection)
         return self._connection
 
     def initialize_sql(self) -> str:
@@ -97,33 +100,83 @@ class PostgresRepository:
     def _insert(self, table: str, conflict: str, columns: tuple[str, ...], values: tuple[Any, ...]) -> None:
         c = self._require_connection()
         names = ",".join(columns); marks = ",".join(["%s"] * len(columns))
-        with c.cursor() as cur: cur.execute(f"INSERT INTO {table} ({names}) VALUES ({marks}) ON CONFLICT ({conflict}) DO NOTHING", values)
+        with c.cursor() as cur: cur.execute(f"INSERT INTO {table} ({names}) VALUES ({marks}) ON CONFLICT DO NOTHING", values)
         c.commit()
 
-    def save_observation(self, record: ObservationRecord) -> None: self._insert("observations", "observation_id", ("observation_id","instrument","observed_at","horizon","payload","created_at","source_version","pipeline_version"), (record.observation_id,record.instrument,record.observed_at,record.horizon,json.dumps(record.to_dict()),record.created_at or record.observed_at,record.source_version,record.pipeline_version))
+    @atomic
+    def save_observation(self, record: ObservationRecord) -> None:
+        record = ObservationRecord(**record.to_dict())
+        self._insert("observations", "observation_id", ("observation_id","instrument","observed_at","horizon","payload","created_at","source_version","pipeline_version"), (record.observation_id,record.instrument,record.observed_at,record.horizon,json.dumps(record.to_dict()),record.created_at or record.observed_at,record.source_version,record.pipeline_version))
+        with self._require_connection().cursor() as cur:
+            cur.execute("SELECT payload FROM observations WHERE observation_id=%s OR (instrument=%s AND observed_at=%s AND horizon=%s AND source_version=%s AND pipeline_version=%s)",
+                (record.observation_id,record.instrument,record.observed_at,record.horizon,record.source_version,record.pipeline_version))
+            rows=cur.fetchall()
+        self._assert_identical(rows,record.to_dict())
+
+    @staticmethod
+    def _assert_identical(rows, payload):
+        if len(rows)!=1 or (json.loads(rows[0][0]) if isinstance(rows[0][0],str) else rows[0][0]) != payload:
+            raise ValueError("conflicting immutable ledger record")
+
+    @atomic
     def save_shadow_decision(self, decision: ShadowDecision) -> None:
         from shadow_learning_validation import validate_decision
         validate_decision(self, decision)
         self._insert("shadow_decisions", "decision_id", ("decision_id","observation_id","instrument","decided_at","horizon","action","outcome_status","payload"), (decision.decision_id,decision.observation_id,decision.instrument,decision.decided_at,decision.horizon,decision.action,decision.outcome_status,json.dumps(decision.to_dict())))
+        with self._require_connection().cursor() as cur:
+            cur.execute("SELECT payload FROM shadow_decisions WHERE decision_id=%s OR observation_id=%s",(decision.decision_id,decision.observation_id))
+            self._assert_identical(cur.fetchall(),decision.to_dict())
+    @atomic
     def save_outcome(self, outcome: OutcomeLabel) -> None:
         from shadow_learning_validation import validate_outcome
         validate_outcome(self, outcome)
         self._insert("outcome_labels", "outcome_id", ("outcome_id","decision_id","matured_at","payload"), (outcome.outcome_id,outcome.decision_id,outcome.matured_at,json.dumps(outcome.to_dict())))
         c = self._require_connection()
         with c.cursor() as cur:
+            cur.execute("SELECT payload FROM outcome_labels WHERE outcome_id=%s OR decision_id=%s",(outcome.outcome_id,outcome.decision_id))
+            self._assert_identical(cur.fetchall(),outcome.to_dict())
             status = "OUTCOME_DATA_UNAVAILABLE" if outcome.label == "OUTCOME_DATA_UNAVAILABLE" else "LABELLED"
             cur.execute("UPDATE shadow_decisions SET outcome_status = %s WHERE decision_id = %s", (status, outcome.decision_id))
         c.commit()
-    def save_adaptive_evidence(self, evidence: AdaptiveEvidence) -> None: self._insert("adaptive_evidence", "evidence_id", ("evidence_id","evidence_key","updated_at","payload"), (evidence.evidence_id,f"{evidence.instrument}|{evidence.horizon}|{evidence.regime}|{evidence.profile}",evidence.updated_at,json.dumps(evidence.to_dict())))
-    def save_job(self, job: JobCheckpoint) -> None: self._insert("worker_jobs", "job_key", ("job_key","job_type","target_time","status","payload","last_updated"), (job.job_key,job.job_type,job.target_time,job.status,json.dumps(job.to_dict()),job.last_updated or job.target_time))
+    def save_adaptive_evidence(self, evidence: AdaptiveEvidence) -> None:
+        if not getattr(self,"_contributing",False):
+            raise ValueError("adaptive aggregates require a validated contribution")
+        with self._require_connection().cursor() as cur:
+            cur.execute("UPDATE adaptive_evidence SET updated_at=%s,payload=%s WHERE evidence_key=%s",(evidence.updated_at,json.dumps(evidence.to_dict()),self._evidence_key(evidence)))
+
+    def _evidence_key(self, evidence):
+        from shadow_learning import evidence_key
+        return evidence_key(evidence,lambda key:self._read_payload("adaptive_evidence","evidence_key",key))
+
+    @atomic
+    def save_job(self, job: JobCheckpoint) -> None:
+        with self._require_connection().cursor() as cur:
+            cur.execute("INSERT INTO worker_jobs VALUES (%s,%s,%s,%s,%s,%s) ON CONFLICT(job_key) DO UPDATE SET status=excluded.status,payload=excluded.payload,last_updated=excluded.last_updated",
+                (job.job_key,job.job_type,job.target_time,job.status,json.dumps(job.to_dict()),job.last_updated or job.target_time))
+
+    @atomic
     def contribute_adaptive_evidence(self, evidence: AdaptiveEvidence, outcome_id: str) -> bool:
         from shadow_learning_validation import validate_evidence
         validate_evidence(self, evidence, outcome_id)
-        c = self._require_connection(); key = f"{evidence.instrument}|{evidence.horizon}|{evidence.regime}|{evidence.profile}"
+        from shadow_learning import stable_id
+        c = self._require_connection(); key = self._evidence_key(evidence)
         with c.cursor() as cur:
-            cur.execute("INSERT INTO adaptive_evidence_contributions VALUES (%s,%s,%s,%s) ON CONFLICT (evidence_key,outcome_id) DO NOTHING", (f"{key}|{outcome_id}", key, outcome_id, evidence.updated_at))
+            cur.execute("INSERT INTO adaptive_evidence_contributions VALUES (%s,%s,%s,%s) ON CONFLICT (evidence_key,outcome_id) DO NOTHING", (stable_id("contribution",key,outcome_id), key, outcome_id, evidence.updated_at))
             inserted = cur.rowcount > 0
-        c.commit(); return inserted
+            if not inserted: return False
+            from dataclasses import replace
+            empty=replace(evidence,sample_count=0,wins=0,losses=0,mean_net_return=0.0)
+            cur.execute("INSERT INTO adaptive_evidence VALUES (%s,%s,%s,%s) ON CONFLICT(evidence_key) DO NOTHING",(empty.evidence_id,key,empty.updated_at,json.dumps(empty.to_dict())))
+            cur.execute("SELECT payload FROM adaptive_evidence WHERE evidence_key=%s FOR UPDATE",(key,))
+            row=cur.fetchone()[0]; prior=json.loads(row) if isinstance(row,str) else row
+            count=prior['sample_count']+1
+            merged=AdaptiveEvidence(**{**prior,'sample_count':count,'wins':prior['wins']+evidence.wins,
+                'losses':prior['losses']+evidence.losses,'mean_net_return':(prior['mean_net_return']*(count-1)+evidence.mean_net_return)/count,
+                'updated_at':evidence.updated_at})
+        self._contributing=True
+        try: self.save_adaptive_evidence(merged)
+        finally: self._contributing=False
+        return True
 
     def learning_status(self) -> dict:
         """Return persisted status using database timestamps only."""
@@ -133,7 +186,7 @@ class PostgresRepository:
         for label, table, column in (("observations", "observations", "observed_at"), ("shadow_decisions", "shadow_decisions", "decided_at"), ("labelled_outcomes", "outcome_labels", "matured_at"), ("adaptive_updates", "adaptive_evidence", "updated_at")):
             with c.cursor() as cur:
                 for name, interval in windows:
-                    cur.execute(f"SELECT COUNT(*) FROM {table} WHERE {column} >= NOW() - {interval}")
+                    cur.execute(f"SELECT COUNT(*) FROM {table} WHERE CAST({column} AS TIMESTAMPTZ) >= NOW() - {interval}")
                     result[label][name] = cur.fetchone()[0]
                 cur.execute(f"SELECT MAX({column}) FROM {table}")
                 result["latest_timestamps"][label] = cur.fetchone()[0]
@@ -256,12 +309,8 @@ class PostgresRepository:
     @contextmanager
     def transaction(self) -> Iterator[Any]:
         connection = self._require_connection()
-        try:
+        with connection.transaction():
             yield connection
-            connection.commit()
-        except Exception:
-            connection.rollback()
-            raise
 
     def close(self) -> None:
         if self._connection is not None:

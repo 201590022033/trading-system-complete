@@ -20,6 +20,7 @@ from .schemas import (InstrumentCandidate, MarketNarrative, MarketTheme, TickerS
                       DocumentFact)
 from shadow_learning import (ObservationRecord, ShadowDecision, OutcomeLabel,
                              AdaptiveEvidence, JobCheckpoint, LearningStatus)
+from persistence_transactions import OwnedConnection, atomic
 
 
 DEFAULT_DB_PATH = "market_intelligence.db"
@@ -39,6 +40,10 @@ class MarketIntelligenceStore:
         if self._connection is None:
             self._connection = sqlite3.connect(self.path)
             self._connection.row_factory = sqlite3.Row
+            self._connection = OwnedConnection(self._connection)
+
+    def transaction(self):
+        return self._connection.transaction()
 
     def close(self) -> None:
         if self._connection is not None:
@@ -48,43 +53,60 @@ class MarketIntelligenceStore:
     # ------------------------------------------------------------------
     # Persistent shadow-learning ledgers
     # ------------------------------------------------------------------
+    @atomic
     def save_observation(self, record: ObservationRecord) -> None:
         record = ObservationRecord(**record.to_dict())
         payload = json.dumps(record.to_dict(), sort_keys=True)
         self._connection.execute("INSERT OR IGNORE INTO observations VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
             (record.observation_id, record.instrument, record.observed_at, record.horizon, payload,
              record.created_at or record.observed_at, record.source_version, record.pipeline_version))
+        row = self._connection.execute("SELECT payload FROM observations WHERE observation_id=? OR (instrument=? AND observed_at=? AND horizon=? AND source_version=? AND pipeline_version=?)",
+            (record.observation_id,record.instrument,record.observed_at,record.horizon,record.source_version,record.pipeline_version)).fetchall()
+        if len(row) != 1 or json.loads(row[0][0]) != record.to_dict():
+            raise ValueError("conflicting immutable observation")
         self._connection.commit()
 
+    @atomic
     def save_shadow_decision(self, decision: ShadowDecision) -> None:
         from shadow_learning_validation import validate_decision
         validate_decision(self, decision)
         self._connection.execute("INSERT OR IGNORE INTO shadow_decisions VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
             (decision.decision_id, decision.observation_id, decision.instrument, decision.decided_at,
              decision.horizon, decision.action, decision.outcome_status, json.dumps(decision.to_dict(), sort_keys=True)))
+        row = self._connection.execute("SELECT payload FROM shadow_decisions WHERE decision_id=? OR observation_id=?", (decision.decision_id,decision.observation_id)).fetchall()
+        if len(row) != 1 or json.loads(row[0][0]) != decision.to_dict():
+            raise ValueError("conflicting immutable decision")
         self._connection.commit()
 
+    @atomic
     def save_outcome(self, outcome: OutcomeLabel) -> None:
         from shadow_learning_validation import validate_outcome
         validate_outcome(self, outcome)
         self._connection.execute("INSERT OR IGNORE INTO outcome_labels VALUES (?, ?, ?, ?)",
             (outcome.outcome_id, outcome.decision_id, outcome.matured_at, json.dumps(outcome.to_dict(), sort_keys=True)))
+        row = self._connection.execute("SELECT payload FROM outcome_labels WHERE outcome_id=? OR decision_id=?", (outcome.outcome_id,outcome.decision_id)).fetchall()
+        if len(row) != 1 or json.loads(row[0][0]) != outcome.to_dict():
+            raise ValueError("conflicting immutable outcome")
         status = "OUTCOME_DATA_UNAVAILABLE" if outcome.label == "OUTCOME_DATA_UNAVAILABLE" else "LABELLED"
         self._connection.execute("UPDATE shadow_decisions SET outcome_status = ? WHERE decision_id = ?", (status, outcome.decision_id))
         self._connection.commit()
 
     def save_adaptive_evidence(self, evidence: AdaptiveEvidence) -> None:
+        if not getattr(self, "_contributing", False):
+            raise ValueError("adaptive aggregates require a validated contribution")
         self._connection.execute("INSERT INTO adaptive_evidence VALUES (?, ?, ?, ?) ON CONFLICT(evidence_key) DO UPDATE SET updated_at=excluded.updated_at, payload=excluded.payload",
-            (evidence.evidence_id, f"{evidence.instrument}|{evidence.horizon}|{evidence.regime}|{evidence.profile}", evidence.updated_at, json.dumps(evidence.to_dict(), sort_keys=True)))
+            (evidence.evidence_id, self._evidence_key(evidence), evidence.updated_at, json.dumps(evidence.to_dict(), sort_keys=True)))
         self._connection.commit()
 
+    @atomic
     def contribute_adaptive_evidence(self, evidence: AdaptiveEvidence, outcome_id: str) -> bool:
         """Atomically register one outcome's contribution to one shadow cell."""
         from shadow_learning_validation import validate_evidence
         validate_evidence(self, evidence, outcome_id)
-        key = f"{evidence.instrument}|{evidence.horizon}|{evidence.regime}|{evidence.profile}"
+        from shadow_learning import stable_id
+        key = self._evidence_key(evidence)
         cur = self._connection.execute("INSERT OR IGNORE INTO adaptive_evidence_contributions VALUES (?, ?, ?, ?)",
-            (f"{key}|{outcome_id}", key, outcome_id, evidence.updated_at))
+            (stable_id("contribution",key,outcome_id), key, outcome_id, evidence.updated_at))
         if cur.rowcount == 0:
             return False
         key_row = self._connection.execute("SELECT payload FROM adaptive_evidence WHERE evidence_key = ?", (key,)).fetchone()
@@ -96,8 +118,16 @@ class MarketIntelligenceStore:
             prior["losses"] = int(prior.get("losses", 0)) + evidence.losses
             prior["mean_net_return"] = ((prior.get("mean_net_return") or 0.0) * (total - 1) + (evidence.mean_net_return or 0.0)) / total
             evidence = AdaptiveEvidence(**{**prior, "updated_at": evidence.updated_at})
-        self.save_adaptive_evidence(evidence)
+        self._contributing = True
+        try:
+            self.save_adaptive_evidence(evidence)
+        finally:
+            self._contributing = False
         return True
+
+    def _evidence_key(self, evidence):
+        from shadow_learning import evidence_key
+        return evidence_key(evidence, lambda key: self._ledger_payload("adaptive_evidence","evidence_key",key))
 
     def _ledger_payload(self, table, key, value):
         row = self._connection.execute(f"SELECT payload FROM {table} WHERE {key}=?", (value,)).fetchone()

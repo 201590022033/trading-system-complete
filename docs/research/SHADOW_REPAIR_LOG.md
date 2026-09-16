@@ -36,3 +36,25 @@ The PostgreSQL DB-API fixture emulates insert-side FK enforcement. It does not
 prove native PostgreSQL migration, timestamp or concurrency behavior. Deployment
 remains blocked pending real PostgreSQL validation and the remaining repair
 batches. No protected research artifacts are regenerated.
+
+## Batch 2 — transaction and identity repairs
+
+Explicit repository transactions now own commits; nested operations use DB-API
+savepoints. Outcome+status and contribution+aggregate writes roll back together.
+PostgreSQL contributions lock the aggregate row and update sample/win/loss/net
+statistics. Job updates now persist their state/checkpoints on PostgreSQL.
+Direct writes of unbacked adaptive aggregates are rejected.
+
+Immutable observation/decision/outcome conflicts are errors, not silent data
+replacement. Exact reruns remain idempotent. Instrument aliases and offset
+timestamps normalize; new evidence/contribution IDs use structured hashed
+identities. Matching pre-repair evidence keys are retained without rewriting
+old data. Status timestamp comparisons explicitly cast legacy PostgreSQL TEXT
+timestamps; invalid legacy timestamps require operator review, never guessing.
+
+Failure-injection tests cover marker-before-aggregate and label-before-status,
+outer rollback, nested rollback, retry, and two SQLite connections. The local
+PostgreSQL fixture removes FOR UPDATE and therefore cannot prove PostgreSQL row
+locking. No Docker/postgres/initdb/pg_ctl executable was found on PATH. Native
+PostgreSQL timestamp/DDL/concurrency validation is pending an operator-provided
+disposable local environment; no software was installed or service contacted.

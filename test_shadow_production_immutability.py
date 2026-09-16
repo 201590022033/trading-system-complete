@@ -1,6 +1,7 @@
 import copy
 import tempfile
 import unittest
+from dataclasses import replace
 from pathlib import Path
 
 import adaptive_technical_ensemble as adaptive
@@ -26,7 +27,11 @@ class ProductionImmutabilityTests(unittest.TestCase):
             out = label_decision(decision, now="2026-01-02T00:00:00+00:00", entry_price=100, exit_price=101)
             repo.save_outcome(out); aggregate_evidence(repo, out, instrument="NPN", horizon="1")
             # Research-only data is ledger metadata, not an input to analyze().
-            repo.save_observation(copy.copy(obs).__class__("immutable-r", "NPN", obs.observed_at, "1", obs.market_data, research_context={"different": "research"}, created_at=obs.created_at))
+            changed=replace(obs,observation_id="immutable-r",source_version="research-metadata-variant",research_context={"different":"research"})
+            repo.save_observation(changed)
+            other=production_shadow_decision(service,"NPN",horizon="1",observation=changed,
+                decided_at=changed.observed_at,horizon_context=context)
+            self.assertEqual(decision.production_assessment,other.production_assessment)
             repo.close()
         after = {name: copy.deepcopy(getattr(adaptive, name)) for name in before}
         after_run = service.analyze("NPN", allow_network=False)

@@ -98,14 +98,8 @@ class SQLiteRepository:
 
     @contextmanager
     def transaction(self) -> Iterator[None]:
-        connection = self.store._connection
-        try:
-            connection.execute("BEGIN")
+        with self.store.transaction():
             yield
-            connection.commit()
-        except Exception:
-            connection.rollback()
-            raise
 
     def close(self) -> None:
         self.store.close()

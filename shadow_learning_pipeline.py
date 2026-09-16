@@ -2,7 +2,7 @@
 from datetime import datetime, timezone
 from shadow_learning import OutcomeLabel
 from indicator_effectiveness import signal_outcome
-from shadow_learning import AdaptiveEvidence, timestamp
+from shadow_learning import AdaptiveEvidence, timestamp, stable_id, canonical_instrument
 from intraday_sessions import SessionWindow, validate_sessions
 from intraday_horizons import get_horizon
 from indicator_effectiveness import HORIZONS
@@ -26,7 +26,7 @@ def production_shadow_decision(service, symbol: str, *, horizon: str = "5",
                           as_of=decided_at, observation_context=context)
     decision = run["decision"]
     return ShadowDecision(
-        decision_id=f"decision:{observation_id or symbol}:{decided_at}",
+        decision_id=stable_id("decision",observation_id,symbol,timestamp(decided_at).isoformat(),str(horizon),"characterized-legacy-v1"),
         observation_id=observation_id, instrument=symbol, decided_at=decided_at,
         horizon=horizon, action=str(decision["action"]).upper(),
         production_assessment=decision, horizon_context=horizon_context or {},
@@ -98,11 +98,12 @@ def aggregate_evidence(repository, outcome: OutcomeLabel, *, instrument: str,
     """Contribute one valid label to one shadow evidence cell, once."""
     if outcome.label not in {"WIN", "LOSS"} or outcome.net_return is None:
         return False
+    instrument=canonical_instrument(instrument)
     from shadow_learning_validation import validate_contribution
     validate_contribution(repository, outcome, instrument, horizon)
     now = outcome.matured_at
     evidence = AdaptiveEvidence(
-        evidence_id=f"evidence:{instrument}:{horizon}:{regime}:{profile}",
+        evidence_id=stable_id("evidence",instrument,str(horizon),regime,profile),
         instrument=instrument, horizon=horizon, regime=regime, profile=profile,
         sample_count=1, wins=1 if outcome.label == "WIN" else 0,
         losses=1 if outcome.label == "LOSS" else 0,
