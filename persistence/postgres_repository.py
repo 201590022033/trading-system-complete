@@ -83,6 +83,15 @@ class PostgresRepository:
             for statement in POSTGRES_SCHEMA.split(";"):
                 if statement.strip():
                     cursor.execute(statement)
+            # NOT VALID preserves legacy rows but enforces all new writes.
+            for name, table, column, parent, parent_column in (
+                ("shadow_decision_observation_fk", "shadow_decisions", "observation_id", "observations", "observation_id"),
+                ("shadow_outcome_decision_fk", "outcome_labels", "decision_id", "shadow_decisions", "decision_id"),
+                ("shadow_contribution_outcome_fk", "adaptive_evidence_contributions", "outcome_id", "outcome_labels", "outcome_id"),
+            ):
+                cursor.execute("SELECT 1 FROM pg_constraint WHERE conname=%s AND conrelid=%s::regclass", (name, table))
+                if cursor.fetchone() is None:
+                    cursor.execute(f"ALTER TABLE {table} ADD CONSTRAINT {name} FOREIGN KEY ({column}) REFERENCES {parent} ({parent_column}) NOT VALID")
         connection.commit()
 
     def _insert(self, table: str, conflict: str, columns: tuple[str, ...], values: tuple[Any, ...]) -> None:
@@ -92,16 +101,24 @@ class PostgresRepository:
         c.commit()
 
     def save_observation(self, record: ObservationRecord) -> None: self._insert("observations", "observation_id", ("observation_id","instrument","observed_at","horizon","payload","created_at","source_version","pipeline_version"), (record.observation_id,record.instrument,record.observed_at,record.horizon,json.dumps(record.to_dict()),record.created_at or record.observed_at,record.source_version,record.pipeline_version))
-    def save_shadow_decision(self, decision: ShadowDecision) -> None: self._insert("shadow_decisions", "decision_id", ("decision_id","observation_id","instrument","decided_at","horizon","action","outcome_status","payload"), (decision.decision_id,decision.observation_id,decision.instrument,decision.decided_at,decision.horizon,decision.action,decision.outcome_status,json.dumps(decision.to_dict())))
+    def save_shadow_decision(self, decision: ShadowDecision) -> None:
+        from shadow_learning_validation import validate_decision
+        validate_decision(self, decision)
+        self._insert("shadow_decisions", "decision_id", ("decision_id","observation_id","instrument","decided_at","horizon","action","outcome_status","payload"), (decision.decision_id,decision.observation_id,decision.instrument,decision.decided_at,decision.horizon,decision.action,decision.outcome_status,json.dumps(decision.to_dict())))
     def save_outcome(self, outcome: OutcomeLabel) -> None:
+        from shadow_learning_validation import validate_outcome
+        validate_outcome(self, outcome)
         self._insert("outcome_labels", "outcome_id", ("outcome_id","decision_id","matured_at","payload"), (outcome.outcome_id,outcome.decision_id,outcome.matured_at,json.dumps(outcome.to_dict())))
         c = self._require_connection()
         with c.cursor() as cur:
-            cur.execute("UPDATE shadow_decisions SET outcome_status = %s WHERE decision_id = %s", ("LABELLED", outcome.decision_id))
+            status = "OUTCOME_DATA_UNAVAILABLE" if outcome.label == "OUTCOME_DATA_UNAVAILABLE" else "LABELLED"
+            cur.execute("UPDATE shadow_decisions SET outcome_status = %s WHERE decision_id = %s", (status, outcome.decision_id))
         c.commit()
     def save_adaptive_evidence(self, evidence: AdaptiveEvidence) -> None: self._insert("adaptive_evidence", "evidence_id", ("evidence_id","evidence_key","updated_at","payload"), (evidence.evidence_id,f"{evidence.instrument}|{evidence.horizon}|{evidence.regime}|{evidence.profile}",evidence.updated_at,json.dumps(evidence.to_dict())))
     def save_job(self, job: JobCheckpoint) -> None: self._insert("worker_jobs", "job_key", ("job_key","job_type","target_time","status","payload","last_updated"), (job.job_key,job.job_type,job.target_time,job.status,json.dumps(job.to_dict()),job.last_updated or job.target_time))
     def contribute_adaptive_evidence(self, evidence: AdaptiveEvidence, outcome_id: str) -> bool:
+        from shadow_learning_validation import validate_evidence
+        validate_evidence(self, evidence, outcome_id)
         c = self._require_connection(); key = f"{evidence.instrument}|{evidence.horizon}|{evidence.regime}|{evidence.profile}"
         with c.cursor() as cur:
             cur.execute("INSERT INTO adaptive_evidence_contributions VALUES (%s,%s,%s,%s) ON CONFLICT (evidence_key,outcome_id) DO NOTHING", (f"{key}|{outcome_id}", key, outcome_id, evidence.updated_at))

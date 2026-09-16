@@ -1,11 +1,45 @@
 """Validated, broker-independent contracts for the persistent shadow loop."""
 from dataclasses import dataclass, field, asdict
-from datetime import datetime
+from datetime import datetime, timezone
+import math
 from typing import Any
 
+def timestamp(value: str) -> datetime:
+    if not isinstance(value, str):
+        raise ValueError("timestamp must be an ISO string")
+    parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+    if parsed.tzinfo is None or parsed.utcoffset() is None:
+        raise ValueError("timestamp must include timezone")
+    return parsed.astimezone(timezone.utc)
+
 def _aware(value: str) -> None:
-    if not isinstance(value, str) or not value.endswith(("+00:00", "Z")):
-        raise ValueError("timestamps must be UTC")
+    timestamp(value)
+
+def _normalize(record, *names):
+    for name in names:
+        value = getattr(record, name)
+        if value:
+            object.__setattr__(record, name, timestamp(value).isoformat())
+
+def _finite(value):
+    if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value):
+        raise ValueError("finite numeric value required")
+
+def causal_metadata(value, cutoff):
+    """Reject outcome data and future-dated metadata at the observation boundary."""
+    if isinstance(value, dict):
+        for key, item in value.items():
+            if key in {"exit_price", "forward_return", "net_return", "outcome", "outcome_label"}:
+                raise ValueError("outcome data is not observation context")
+            if key in {"event_time", "available_time", "observed_at", "published_at", "available_at"} and item:
+                if timestamp(item) > cutoff:
+                    raise ValueError("future observation context")
+            causal_metadata(item, cutoff)
+    elif isinstance(value, (list, tuple)):
+        for item in value:
+            causal_metadata(item, cutoff)
+    elif isinstance(value, float):
+        _finite(value)
 
 @dataclass(frozen=True)
 class ObservationRecord:
@@ -21,8 +55,9 @@ class ObservationRecord:
     created_at: str = ""
     def __post_init__(self):
         if not self.instrument or not self.horizon: raise ValueError("instrument and horizon are required")
-        _aware(self.observed_at)
-        if self.created_at: _aware(self.created_at)
+        _normalize(self, "observed_at", "created_at")
+        for value in (self.market_data, self.production_context, self.research_context):
+            causal_metadata(value, timestamp(self.observed_at))
     def to_dict(self): return asdict(self)
 
 @dataclass(frozen=True)
@@ -37,9 +72,16 @@ class ShadowDecision:
     research_context: dict[str, Any] = field(default_factory=dict)
     pipeline_version: str = "unknown"
     outcome_status: str = "PENDING_OUTCOME"
+    horizon_context: dict[str, Any] = field(default_factory=dict)
+    previous_signal: float = 0.0
+    provenance: dict[str, Any] = field(default_factory=dict)
     def __post_init__(self):
-        _aware(self.decided_at)
+        _normalize(self, "decided_at")
         if self.action not in {"BUY", "HOLD", "SELL"}: raise ValueError("invalid action")
+        if self.previous_signal not in {-1, 0, 1}: raise ValueError("invalid previous signal")
+        if self.outcome_status not in {"PENDING_OUTCOME", "LABELLED", "OUTCOME_DATA_UNAVAILABLE"}:
+            raise ValueError("invalid outcome status")
+        causal_metadata(self.research_context, timestamp(self.decided_at))
     def to_dict(self): return asdict(self)
 
 @dataclass(frozen=True)
@@ -48,13 +90,30 @@ class OutcomeLabel:
     decision_id: str
     matured_at: str
     label: str
-    entry_price: float
+    entry_price: float | None
     exit_price: float | None = None
     gross_return: float | None = None
     net_return: float | None = None
     cost_model: str = "existing"
     data_quality: str = "COMPLETE"
-    def __post_init__(self): _aware(self.matured_at)
+    evaluated_at: str = ""
+    entry_at: str = ""
+    exit_at: str = ""
+    entry_available_at: str = ""
+    exit_available_at: str = ""
+    def __post_init__(self):
+        _normalize(self, "matured_at", "evaluated_at", "entry_at", "exit_at", "entry_available_at", "exit_available_at")
+        if self.label not in {"WIN", "LOSS", "HOLD", "OUTCOME_DATA_UNAVAILABLE"}:
+            raise ValueError("unsupported label")
+        for value in (self.entry_price, self.exit_price, self.gross_return, self.net_return):
+            if value is not None: _finite(value)
+        for price in (self.entry_price, self.exit_price):
+            if price is not None and price <= 0: raise ValueError("price must be positive")
+        if self.label != "OUTCOME_DATA_UNAVAILABLE":
+            if self.data_quality != "COMPLETE" or any(v is None for v in (self.entry_price, self.exit_price, self.gross_return, self.net_return)):
+                raise ValueError("label requires complete prices and returns")
+        elif self.gross_return is not None or self.net_return is not None:
+            raise ValueError("unavailable data cannot carry returns")
     def to_dict(self): return asdict(self)
 
 @dataclass(frozen=True)

@@ -5,6 +5,7 @@ from persistence.sqlite_repository import SQLiteRepository
 from shadow_learning import ObservationRecord, ShadowDecision, JobCheckpoint
 from shadow_learning_pipeline import label_decision, aggregate_evidence
 from workers.shadow_learning import ShadowWorker
+from shadow_test_fixtures import decision as ShadowDecision, complete_label as label_decision
 
 class RestartBoundaryTests(unittest.TestCase):
     def setUp(self):
@@ -29,7 +30,7 @@ class RestartBoundaryTests(unittest.TestCase):
         r = self.repo(); r.save_outcome(out); self.assertEqual(r.store.counts()["labelled_outcomes"], 1); r.close()
 
     def test_b3_label_restart_then_evidence_once(self):
-        r = self.repo(); r.save_shadow_decision(self.dec()); out = label_decision(self.dec(), now="2026-01-02T00:00:00+00:00", entry_price=100, exit_price=101); r.save_outcome(out); r.close()
+        r = self.repo(); r.save_observation(self.obs()); r.save_shadow_decision(self.dec()); out = label_decision(self.dec(), now="2026-01-02T00:00:00+00:00", entry_price=100, exit_price=101); r.save_outcome(out); r.close()
         r = self.repo(); self.assertTrue(aggregate_evidence(r, out, instrument="TEST", horizon="1")); r.close()
         r = self.repo(); self.assertFalse(aggregate_evidence(r, out, instrument="TEST", horizon="1")); self.assertEqual(r.store.counts()["adaptive_updates"], 1); r.close()
 

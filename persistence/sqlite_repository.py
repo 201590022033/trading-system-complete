@@ -80,8 +80,7 @@ class SQLiteRepository:
         row = self.store._connection.execute("SELECT payload FROM observations WHERE observation_id=?", (observation_id,)).fetchone()
         return loads(row[0], None) if row else None
     def get_shadow_decision(self, decision_id: str) -> dict | None:
-        row = self.store._connection.execute("SELECT payload FROM shadow_decisions WHERE decision_id=?", (decision_id,)).fetchone()
-        return loads(row[0], None) if row else None
+        return self.store.get_shadow_decision(decision_id)
     def get_outcome(self, outcome_id: str) -> dict | None:
         row = self.store._connection.execute("SELECT payload FROM outcome_labels WHERE outcome_id=?", (outcome_id,)).fetchone()
         return loads(row[0], None) if row else None

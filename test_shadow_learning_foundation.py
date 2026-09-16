@@ -6,6 +6,7 @@ from persistence.sqlite_repository import SQLiteRepository
 from shadow_learning import ObservationRecord, ShadowDecision, OutcomeLabel, AdaptiveEvidence, JobCheckpoint
 from shadow_learning_pipeline import label_decision, aggregate_evidence
 from workers.shadow_learning import ShadowWorker
+from shadow_test_fixtures import decision as ShadowDecision, complete_label as label_decision
 
 
 class ShadowLearningFoundationTests(unittest.TestCase):

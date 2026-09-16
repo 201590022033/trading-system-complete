@@ -66,7 +66,26 @@ class OperationalIntelligence:
                               for key, item in INSTRUMENTS.items()}
         return self._rows
 
-    def market(self, symbol, provider="historical"):
+    def _causal_rows(self, symbol, as_of=None, observation_context=None):
+        """Select inputs, not scores. Missing availability never implies availability."""
+        item = resolve_instrument(symbol)
+        rows = (observation_context["history"] if observation_context is not None
+                else self._load_rows()[item.instrument_id])
+        if as_of is None:
+            return rows
+        from shadow_learning import timestamp
+        cutoff = timestamp(as_of)
+        selected = []
+        for row in rows:
+            if row.get("instrument") not in {item.instrument_id, item.research_symbol}:
+                raise ValueError("cross-instrument observation history")
+            if not row.get("available_time") or not row.get("event_time"):
+                continue
+            if timestamp(row["event_time"]) <= cutoff and timestamp(row["available_time"]) <= cutoff:
+                selected.append(row)
+        return sorted(selected, key=lambda row: timestamp(row["event_time"]))
+
+    def market(self, symbol, provider="historical", *, as_of=None, observation_context=None):
         item = resolve_instrument(symbol)
         now = utcnow().isoformat()
         if provider == "yahoo":
@@ -83,7 +102,7 @@ class OperationalIntelligence:
         if provider != "historical":
             return ComponentResult("market", False, "UNAVAILABLE", provider, None, now,
                                    reason="Unsupported provider").to_dict()
-        rows = self._load_rows()[item.instrument_id]
+        rows = self._causal_rows(symbol, as_of, observation_context)
         if not rows:
             return ComponentResult("market", False, "UNAVAILABLE", str(DATASET), None, now,
                                    reason="No point-in-time history").to_dict()
@@ -94,9 +113,9 @@ class OperationalIntelligence:
                                 "history_count": len(rows), "available_time": last["available_time"],
                                 "feature_version": last["feature_version"]}).to_dict()
 
-    def technical(self, symbol):
+    def technical(self, symbol, *, as_of=None, observation_context=None):
         item = resolve_instrument(symbol); now = utcnow().isoformat()
-        rows = self._load_rows()[item.instrument_id]
+        rows = self._causal_rows(symbol, as_of, observation_context)
         if len(rows) < 20:
             return ComponentResult("technical", False, "INSUFFICIENT_DATA", "HR7 frozen point-in-time dataset",
                                    None, now, reason="At least 20 observations required").to_dict()
@@ -142,9 +161,18 @@ class OperationalIntelligence:
                                snapshot.get("error") or ("News scan in progress" if snapshot["refreshing"] else
                                "See market-wide news stream for macro headlines and publication timestamps")).to_dict()
 
-    def analyze(self, symbol, horizon="swing", provider="historical", allow_network=False):
+    def analyze(self, symbol, horizon="swing", provider="historical", allow_network=False,
+                *, as_of=None, observation_context=None):
         started = utcnow(); item = resolve_instrument(symbol)
-        market = self.market(symbol, provider); technical = self.technical(symbol)
+        if as_of is not None:
+            from shadow_learning import timestamp
+            timestamp(as_of)
+            if provider != "historical" or allow_network:
+                raise ValueError("as-of analysis requires causal historical inputs")
+            market = self.market(symbol, provider, as_of=as_of, observation_context=observation_context)
+            technical = self.technical(symbol, as_of=as_of, observation_context=observation_context)
+        else:
+            market = self.market(symbol, provider); technical = self.technical(symbol)
         news = self.news(symbol, allow_network)
         tech_score = technical.get("data", {}).get("legacy_technical_score", 0.0)
         sentiment = news.get("data", {}).get("sentiment_score", 0.0) if news["success"] else 0.0

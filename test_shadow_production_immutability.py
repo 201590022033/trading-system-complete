@@ -8,6 +8,7 @@ from operational_intelligence import service
 from persistence.sqlite_repository import SQLiteRepository
 from shadow_learning import ObservationRecord
 from shadow_learning_pipeline import production_shadow_decision, label_decision, aggregate_evidence
+from shadow_test_fixtures import decision as fixture_decision, complete_label as label_decision
 
 class ProductionImmutabilityTests(unittest.TestCase):
     def test_complete_shadow_lifecycle_does_not_change_production_state(self):
@@ -19,7 +20,8 @@ class ProductionImmutabilityTests(unittest.TestCase):
             repo = SQLiteRepository(Path(d) / "state.db")
             obs = ObservationRecord("immutable-o", "NPN", "2026-01-01T00:00:00+00:00", "1", {"close": 100}, research_context={"future_indicator": 999}, created_at="2026-01-01T00:00:00+00:00")
             repo.save_observation(obs)
-            decision = production_shadow_decision(service, "NPN", horizon="1", observation_id=obs.observation_id, decided_at=obs.observed_at)
+            context = fixture_decision("d", obs.observation_id, "NPN", obs.observed_at, "1", "HOLD", {}).horizon_context
+            decision = production_shadow_decision(service, "NPN", horizon="1", observation_id=obs.observation_id, decided_at=obs.observed_at, observation=obs, horizon_context=context)
             repo.save_shadow_decision(decision)
             out = label_decision(decision, now="2026-01-02T00:00:00+00:00", entry_price=100, exit_price=101)
             repo.save_outcome(out); aggregate_evidence(repo, out, instrument="NPN", horizon="1")
