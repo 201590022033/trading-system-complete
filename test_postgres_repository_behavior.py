@@ -25,6 +25,17 @@ class _Cursor:
     def __exit__(self, *args): self.cursor.close()
     def close(self): self.cursor.close()
     def execute(self, sql, params=()):
+        if sql.startswith('SELECT pg_advisory_xact_lock'):
+            self.cursor.execute('SELECT 1'); return self
+        # Additive-column translation for local behavior only, not native DDL proof.
+        sql=re.sub(r'--[^\n]*','',sql).strip()
+        add=re.fullmatch(r'ALTER TABLE (\w+) ADD COLUMN IF NOT EXISTS (\w+) (\w+)',sql)
+        if add:
+            table,column,kind=add.groups()
+            columns=[r[1] for r in self.cursor.connection.execute(f'PRAGMA table_info({table})')]
+            if column in columns:
+                self.cursor.execute('SELECT 1'); return self
+            sql=f'ALTER TABLE {table} ADD COLUMN {column} {kind}'
         # This emulates insert-side NOT VALID FK enforcement only; it is NOT
         # evidence of native PostgreSQL DDL, locking or type compatibility.
         if sql.startswith("SELECT 1 FROM pg_constraint"):
@@ -44,6 +55,8 @@ class _Cursor:
     def fetchall(self): return self.cursor.fetchall()
     @property
     def rowcount(self): return self.cursor.rowcount
+    @property
+    def description(self): return self.cursor.description
 
 class PostgresBehaviorTests(unittest.TestCase):
     def setUp(self):

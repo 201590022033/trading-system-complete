@@ -3,6 +3,8 @@
 Handlers are injected by the host; no broker or network work is performed here.
 """
 from datetime import datetime, timezone
+from dataclasses import replace
+from itertools import islice
 from shadow_learning import JobCheckpoint
 from runtime_persistence import runtime_repository
 
@@ -13,40 +15,37 @@ def configured_repository(*, database_url=None, sqlite_path="market_intelligence
     return runtime_repository(database_url=database_url, sqlite_path=sqlite_path)
 
 class ShadowWorker:
-    def __init__(self, repository, worker_id: str, handlers: dict | None = None):
+    def __init__(self, repository, worker_id: str, handlers: dict | None = None, *, max_jobs=1, clock=None, lease_seconds=300):
+        if not 1<=max_jobs<=100: raise ValueError('bounded job limit required')
         self.repository, self.worker_id, self.handlers = repository, worker_id, handlers or {}
+        self.max_jobs,self.lease_seconds=max_jobs,lease_seconds
+        self.clock=clock or (lambda:datetime.now(timezone.utc).isoformat())
 
-    def run_once(self, jobs: list[JobCheckpoint]) -> int:
+    def run_once(self, jobs=None) -> int:
+        now=self.clock()
+        if jobs is not None:
+            for job in islice(jobs,self.max_jobs): self.repository.ensure_job(job)
+        self.repository.recover_jobs(now,limit=self.max_jobs,lease_seconds=self.lease_seconds)
         processed = 0
-        for job in jobs:
-            if job.job_type not in JOB_TYPES or job.status == "COMPLETED":
-                continue
-            now = datetime.now(timezone.utc).isoformat()
-            running = JobCheckpoint(job.job_key, job.job_type, job.target_time, "RUNNING",
-                                    self.worker_id, job.attempt_count + 1, job.checkpoint,
-                                    job.retryable, job.error_category, now)
-            self.repository.save_job(running)
-            try:
-                handler = self.handlers.get(job.job_type)
-                checkpoint = handler(job) if handler else job.checkpoint
-                done = JobCheckpoint(job.job_key, job.job_type, job.target_time, "COMPLETED",
-                                     self.worker_id, running.attempt_count, checkpoint, job.retryable, None,
-                                     datetime.now(timezone.utc).isoformat())
-            except Exception as exc:
-                done = JobCheckpoint(job.job_key, job.job_type, job.target_time, "FAILED",
-                                     self.worker_id, running.attempt_count, job.checkpoint, job.retryable,
-                                     type(exc).__name__, datetime.now(timezone.utc).isoformat())
-            self.repository.save_job(done)
+        for candidate in self.repository.due_jobs(now,self.max_jobs):
+            running=self.repository.claim_job(candidate.job_key,self.worker_id,now)
+            if running is None: continue
+            handler=self.handlers.get(running.job_type)
+            if handler is None or running.job_type not in JOB_TYPES:
+                done=replace(running,status='FAILED',retryable=False,error_category='MISSING_HANDLER',last_updated=self.clock())
+            else:
+                try:
+                    checkpoint=handler(running)
+                    if not isinstance(checkpoint,dict): raise ValueError('checkpoint must be a mapping')
+                    done=replace(running,status='COMPLETED',checkpoint=checkpoint,error_category=None,last_updated=self.clock())
+                except Exception:
+                    done=replace(running,status='FAILED',error_category='HANDLER_FAILED',last_updated=self.clock())
+            self.repository.finish_job(running,done)
             processed += 1
         return processed
 
     def recover_running(self, jobs: list[JobCheckpoint]) -> list[JobCheckpoint]:
         """Make abandoned retryable work visible after a worker restart."""
-        recovered = []
-        for job in jobs:
-            if job.status == "RUNNING" and job.retryable:
-                item = JobCheckpoint(job.job_key, job.job_type, job.target_time, "PENDING",
-                                     None, job.attempt_count, job.checkpoint, True,
-                                     "WORKER_RESTART", datetime.now(timezone.utc).isoformat())
-                self.repository.save_job(item); recovered.append(item)
-        return recovered
+        keys={job.job_key for job in islice(jobs,self.max_jobs)}
+        return self.repository.recover_jobs(self.clock(),limit=self.max_jobs,
+            lease_seconds=self.lease_seconds,keys=keys)

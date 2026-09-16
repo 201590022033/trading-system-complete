@@ -31,7 +31,9 @@ def production_shadow_decision(service, symbol: str, *, horizon: str = "5",
         horizon=horizon, action=str(decision["action"]).upper(),
         production_assessment=decision, horizon_context=horizon_context or {},
         previous_signal=previous_signal,
-        provenance={"as_of": timestamp(decided_at).isoformat(), "components": run["components"],
+        provenance={"as_of": timestamp(decided_at).isoformat(),
+                    "components": {name:{key:value for key,value in component.items() if key!='retrieved_at'}
+                                   for name,component in run["components"].items()},
                     "gates": run["gates"]})
 
 def maturity_target(decision):

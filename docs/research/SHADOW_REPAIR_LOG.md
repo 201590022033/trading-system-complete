@@ -58,3 +58,22 @@ PostgreSQL fixture removes FOR UPDATE and therefore cannot prove PostgreSQL row
 locking. No Docker/postgres/initdb/pg_ctl executable was found on PATH. Native
 PostgreSQL timestamp/DDL/concurrency validation is pending an operator-provided
 disposable local environment; no software was installed or service contacted.
+
+## Batch 3 — composition, bounded worker and migrations
+
+Web source/MI operations now share the selected repository's store; PostgreSQL
+uses the same database through a parameterized MI adapter, not local SQLite.
+Source/evidence serialization remains the established implementation. The actual
+heartbeat entrypoint runs bounded durable jobs and persists heartbeats. Claims
+and completion use persisted state and compare-and-swap; recovery requires lease
+expiry. Missing handlers fail explicitly, with no provider or broker fallback.
+
+Native additive PostgreSQL migrations are versioned/checksummed and run under an
+explicit transaction/advisory lock. The operator command and limitations are in
+`docs/operations/SHADOW_MIGRATION_RUNBOOK.md`. Web import has no database writes.
+SQLite migration initialization is also serialized and atomic: the full-suite
+threaded UI test exposed an executescript/version-registration race, now fixed.
+Decision replay excludes volatile retrieval timestamps from immutable provenance.
+
+No PostgreSQL migration command was run against any external database. Native
+SQL validation remains pending; the emulator cannot establish PostgreSQL locks.

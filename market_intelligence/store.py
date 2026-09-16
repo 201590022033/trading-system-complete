@@ -165,9 +165,10 @@ class MarketIntelligenceStore:
         q = lambda table: self._connection.execute(f"SELECT COUNT(*) FROM {table}").fetchone()[0]
         return {"observations": q("observations"), "shadow_decisions": q("shadow_decisions"), "labelled_outcomes": q("outcome_labels"), "adaptive_updates": q("adaptive_evidence"), "pending_outcomes": self._connection.execute("SELECT COUNT(*) FROM shadow_decisions WHERE outcome_status='PENDING_OUTCOME'").fetchone()[0]}
 
+    @atomic
     def _run_migrations(self) -> None:
         """Run SQL migration files in order and track schema_version."""
-        self._connection.executescript(
+        self._connection.execute(
             f"""
             CREATE TABLE IF NOT EXISTS {SCHEMA_VERSION_TABLE} (
                 version INTEGER PRIMARY KEY,
@@ -187,7 +188,14 @@ class MarketIntelligenceStore:
             if already_applied:
                 continue
             sql = migration_path.read_text(encoding="utf-8")
-            self._connection.executescript(sql)
+            # executescript implicitly commits; execute complete statements in
+            # the owning transaction instead (including complete SQL triggers).
+            statement=''
+            for character in sql:
+                statement+=character
+                if character==';' and sqlite3.complete_statement(statement):
+                    self._connection.execute(statement)
+                    statement=''
             self._connection.execute(
                 f"INSERT INTO {SCHEMA_VERSION_TABLE}(version, applied_at) VALUES (?, datetime('now'))",
                 (version,),

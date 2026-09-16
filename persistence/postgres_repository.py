@@ -7,6 +7,8 @@ fails explicitly when used rather than pretending a live connection exists.
 
 from contextlib import contextmanager
 import json
+import hashlib
+from pathlib import Path
 from typing import Any, Callable, Iterator
 
 from domain.intelligence.clustering import ClusteredEvent
@@ -14,6 +16,7 @@ from domain.registry.source import CanonicalSourcePolicy, CanonicalSourceRegistr
 from evidence import EvidenceRecord
 from shadow_learning import ObservationRecord, ShadowDecision, OutcomeLabel, AdaptiveEvidence, JobCheckpoint
 from persistence_transactions import OwnedConnection, atomic
+from .jobs import DurableJobs
 
 
 POSTGRES_SCHEMA = """CREATE TABLE IF NOT EXISTS source_policies (
@@ -49,7 +52,7 @@ POSTGRES_SCHEMA += ";CREATE TABLE IF NOT EXISTS adaptive_evidence_contributions 
 POSTGRES_SCHEMA += ";CREATE TABLE IF NOT EXISTS reliability_outcomes (reliability_id TEXT PRIMARY KEY, source_id TEXT NOT NULL, scope_key TEXT NOT NULL, horizon TEXT NOT NULL, payload JSONB NOT NULL, UNIQUE(reliability_id))"
 
 
-class PostgresRepository:
+class PostgresRepository(DurableJobs):
     backend = "postgresql"
 
     def __init__(self, database_url: str, connection: Any = None,
@@ -78,14 +81,53 @@ class PostgresRepository:
         return self._connection
 
     def initialize_sql(self) -> str:
-        return POSTGRES_SCHEMA
+        return '\n'.join(path.read_text(encoding='utf-8') for path in self._migration_files())
 
+    @staticmethod
+    def _migration_files():
+        return sorted((Path(__file__).parent/'migrations'/'postgres').glob('*.sql'))
+
+    @property
+    def store(self):
+        if not hasattr(self,'_market_store'):
+            from .postgres_store import market_store
+            self._market_store=market_store(self)
+        return self._market_store
+
+    @property
+    def sources(self):
+        from market_intelligence.source_registry import SourceRegistry
+        return CanonicalSourceRegistry(SourceRegistry(self.store))
+
+    def list_source_policies(self):
+        return self.sources.list_policies()
+
+    def get_evidence(self,evidence_id):
+        return self.store.get_evidence(evidence_id)
+
+    def list_clustered_events(self):
+        # The existing serializer operates only on store rows, not SQLite SQL.
+        from .sqlite_repository import SQLiteRepository
+        return SQLiteRepository.list_clustered_events(self)
+
+    @atomic
     def initialize(self) -> None:
         connection = self._require_connection()
         with connection.cursor() as cursor:
-            for statement in POSTGRES_SCHEMA.split(";"):
-                if statement.strip():
-                    cursor.execute(statement)
+            cursor.execute('SELECT pg_advisory_xact_lock(718492001)')
+            cursor.execute('CREATE TABLE IF NOT EXISTS postgres_schema_migrations (version INTEGER PRIMARY KEY, checksum TEXT NOT NULL, applied_at TIMESTAMPTZ NOT NULL DEFAULT NOW())')
+            for path in self._migration_files():
+                version=int(path.name.split('_')[0])
+                sql=path.read_text(encoding='utf-8')
+                checksum=hashlib.sha256(sql.encode('utf-8')).hexdigest()
+                cursor.execute('SELECT checksum FROM postgres_schema_migrations WHERE version=%s',(version,))
+                applied=cursor.fetchone()
+                if applied:
+                    if applied[0]!=checksum: raise ValueError('applied migration checksum mismatch')
+                    continue
+                for statement in sql.split(';'):
+                    if statement.strip(): cursor.execute(statement)
+                cursor.execute('INSERT INTO postgres_schema_migrations (version,checksum) VALUES (%s,%s)',(version,checksum))
             # NOT VALID preserves legacy rows but enforces all new writes.
             for name, table, column, parent, parent_column in (
                 ("shadow_decision_observation_fk", "shadow_decisions", "observation_id", "observations", "observation_id"),
@@ -227,27 +269,11 @@ class PostgresRepository:
         return [json.loads(row[0]) if isinstance(row[0], str) else row[0] for row in rows]
 
     def save_source_policy(self, policy: CanonicalSourcePolicy) -> None:
-        connection = self._require_connection()
-        legacy = policy.to_legacy()
-        with connection.cursor() as cursor:
-            cursor.execute("""INSERT INTO source_policies
-                (source_id, source_name, source_class, authority_tier, access_mode, status, url, enabled, weight, minimum_poll_seconds, notes)
-                VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
-                ON CONFLICT (source_id) DO UPDATE SET source_name=EXCLUDED.source_name, enabled=EXCLUDED.enabled,
-                weight=EXCLUDED.weight, notes=EXCLUDED.notes, updated_at=NOW()""",
-                (policy.source_id, legacy.source_name, legacy.source_class, legacy.authority_tier,
-                 legacy.access_mode, legacy.status, legacy.url, legacy.enabled, policy.manual_weight,
-                 policy.minimum_poll_seconds, policy.notes))
-        connection.commit()
+        from .sqlite_repository import SQLiteRepository
+        return SQLiteRepository.save_source_policy(self,policy)
 
     def get_source_policy(self, source_id: str) -> dict | None:
-        connection = self._require_connection()
-        with connection.cursor() as cursor:
-            cursor.execute("SELECT source_id, source_name, source_class, authority_tier, access_mode, status, url, enabled, weight, minimum_poll_seconds, notes FROM source_policies WHERE source_id=%s", (source_id,))
-            row = cursor.fetchone()
-        if not row:
-            return None
-        return dict(zip(("source_id", "source_name", "source_class", "authority_tier", "access_mode", "status", "url", "enabled", "weight", "minimum_poll_seconds", "notes"), row))
+        return self.sources.get(source_id)
 
     def save_evidence(self, record: EvidenceRecord) -> None:
         connection = self._require_connection()

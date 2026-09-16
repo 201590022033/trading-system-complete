@@ -13,9 +13,10 @@ from market_intelligence.store import MarketIntelligenceStore
 
 from .sql_models import dumps, loads
 from shadow_learning import ObservationRecord, ShadowDecision, OutcomeLabel, AdaptiveEvidence, JobCheckpoint
+from .jobs import DurableJobs
 
 
-class SQLiteRepository:
+class SQLiteRepository(DurableJobs):
     backend = "sqlite"
 
     def __init__(self, path: str | Path = "market_intelligence.db") -> None:

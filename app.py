@@ -15,15 +15,10 @@ from application.opportunities import OpportunityService
 from application.opportunities.api import create_blueprint
 from runtime_persistence import runtime_repository
 
-market_store = MarketIntelligenceStore()
-source_registry = SourceRegistry(market_store)
-source_registry.seed_defaults()
-market_store.close()
-
 def request_source_registry():
-    if "market_store" not in g:
-        g.market_store = MarketIntelligenceStore()
-    return SourceRegistry(g.market_store)
+    registry=SourceRegistry(application_repository().store)
+    registry.seed_defaults()
+    return registry
 portfolio_rows = []
 
 app = Flask(__name__); app.config["SECRET_KEY"] = "local-oi2-session"
