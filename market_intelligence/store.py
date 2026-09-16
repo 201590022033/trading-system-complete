@@ -14,7 +14,9 @@ from typing import Any, Dict, Iterable, List, Optional
 
 from evidence import EvidenceRecord
 
-from .schemas import InstrumentCandidate, MarketNarrative, MarketTheme, TickerSelection
+from .schemas import (InstrumentCandidate, MarketNarrative, MarketTheme, TickerSelection,
+                      MarketIntelligenceSnapshot, ProvenanceEdge, MarketDocumentAnalysis,
+                      DocumentFact)
 
 
 DEFAULT_DB_PATH = "market_intelligence.db"
@@ -343,3 +345,64 @@ class MarketIntelligenceStore:
             ),
         )
         self._connection.commit()
+
+    def save_provenance_edge(self, edge: ProvenanceEdge) -> None:
+        self._connection.execute(
+            """INSERT OR IGNORE INTO provenance_edges
+            (provenance_id,snapshot_id,from_type,from_id,relationship_type,to_type,to_id,confidence,reason,created_at)
+            VALUES (?,?,?,?,?,?,?,?,?,?)""",
+            (edge.provenance_id, edge.snapshot_id, edge.from_type, edge.from_id,
+             edge.relationship_type, edge.to_type, edge.to_id, edge.confidence,
+             edge.reason, edge.created_at))
+        self._connection.commit()
+
+    def provenance_for(self, entity_type: str, entity_id: str) -> List[Dict[str, Any]]:
+        rows = self._connection.execute(
+            "SELECT * FROM provenance_edges WHERE (from_type=? AND from_id=?) OR (to_type=? AND to_id=?) ORDER BY created_at",
+            (entity_type, entity_id, entity_type, entity_id)).fetchall()
+        return [dict(row) for row in rows]
+
+    def save_analysis(self, analysis: MarketDocumentAnalysis) -> None:
+        self._connection.execute(
+            """INSERT INTO document_analyses
+            (analysis_id,document_id,provider,model,schema_version,prompt_version,content_hash,analysed_at,facts,themes,candidates,uncertainties,contradictions,usage)
+            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
+            (analysis.analysis_id, analysis.document_id, analysis.provider, analysis.model,
+             analysis.schema_version, analysis.prompt_version, analysis.content_hash,
+             analysis.analysed_at, json.dumps([asdict(x) for x in analysis.facts]),
+             json.dumps([asdict(x) if hasattr(x, "__dataclass_fields__") else x for x in analysis.themes]),
+             json.dumps([asdict(x) if hasattr(x, "__dataclass_fields__") else x for x in analysis.candidates]),
+             json.dumps(analysis.uncertainties), json.dumps(analysis.contradictions), json.dumps(analysis.usage)))
+        self._connection.commit()
+
+    def get_analysis(self, analysis_id: str):
+        row=self._connection.execute("SELECT * FROM document_analyses WHERE analysis_id=?",(analysis_id,)).fetchone()
+        if not row: return None
+        data=dict(row)
+        return MarketDocumentAnalysis(data["analysis_id"],data["document_id"],data["provider"],data["model"],data["schema_version"],data["prompt_version"],data["content_hash"],data["analysed_at"],
+            [DocumentFact(**x) for x in json.loads(data["facts"])],json.loads(data["themes"]),json.loads(data["candidates"]),json.loads(data["uncertainties"]),json.loads(data["contradictions"]),json.loads(data["usage"]))
+
+    def cached_analysis(self, document_id, content_hash, provider, model, schema_version, prompt_version):
+        row=self._connection.execute("SELECT analysis_id FROM document_analyses WHERE document_id=? AND content_hash=? AND provider=? AND model=? AND schema_version=? AND prompt_version=?",(document_id,content_hash,provider,model,schema_version,prompt_version)).fetchone()
+        return self.get_analysis(row["analysis_id"]) if row else None
+
+    def save_snapshot(self, snapshot: MarketIntelligenceSnapshot) -> None:
+        self._connection.execute(
+            """INSERT INTO intelligence_snapshots
+            (snapshot_id,generated_at,schema_version,enabled_sources,document_hashes,themes,candidates,selections,provider_metadata,metadata)
+            VALUES (?,?,?,?,?,?,?,?,?,?)""",
+            (snapshot.snapshot_id, snapshot.generated_at, snapshot.schema_version,
+             json.dumps(snapshot.enabled_sources), json.dumps(snapshot.document_hashes),
+             json.dumps([asdict(x) for x in snapshot.themes]), json.dumps([asdict(x) for x in snapshot.candidates]),
+             json.dumps([asdict(x) for x in snapshot.selections]), json.dumps(snapshot.provider_metadata),
+             json.dumps(snapshot.metadata)))
+        self._connection.commit()
+
+    def get_snapshot(self, snapshot_id: str):
+        row=self._connection.execute("SELECT * FROM intelligence_snapshots WHERE snapshot_id=?",(snapshot_id,)).fetchone()
+        if not row:return None
+        data=dict(row)
+        return {"snapshot_id":data["snapshot_id"],"generated_at":data["generated_at"],"schema_version":data["schema_version"],
+                "enabled_sources":json.loads(data["enabled_sources"]),"document_hashes":json.loads(data["document_hashes"]),
+                "themes":json.loads(data["themes"]),"candidates":json.loads(data["candidates"]),"selections":json.loads(data["selections"]),
+                "provider_metadata":json.loads(data["provider_metadata"]),"metadata":json.loads(data["metadata"])}

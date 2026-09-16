@@ -693,3 +693,11 @@ HR11 is committed/pushed; HR12 is NOT STARTED (no files or commits found).
 OI3 remains deferred with the checklist in CURRENT_MILESTONE.md. No research
 work is activated by environment preparation. See `docs/LAPTOP_HANDOFF.md` for
 bootstrap, diagnostics, local-data transfer and exact continuation instructions.
+## Market Intelligence Foundation — ACTIVE 2026-09-16
+
+Extends the existing OI4 foundation with Efficient Group discovery, bounded
+document/PDF processing, structured fact-versus-inference analysis, explicit
+provenance, provider-aware analysis caching, hybrid anti-churn investigation
+watchlists and a research-priority bridge. Focused and broad protected-boundary
+tests pass. External source verification and UI work remain deferred. No signal,
+adaptive, risk, broker, IG, ViewPoint or production UI behaviour changed.

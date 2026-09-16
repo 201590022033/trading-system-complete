@@ -1,5 +1,22 @@
 # Current Milestone
 
+## Market Intelligence Foundation — ACTIVE 2026-09-16
+
+This milestone extends the existing OI4 `market_intelligence` foundation. It
+adds additive document/analysis/provenance contracts, versioned persistence,
+bounded PDF primitives, deterministic Efficient Group discovery fixtures, a
+hybrid investigation watchlist and a research-priority-only bridge. Market AI
+cannot create signals, trades, broker calls, or modify technical/adaptive/risk
+behaviour. IG and ViewPoint remain parked.
+
+Acceptance evidence: migration 0003, fixture-based Efficient Group discovery,
+bounded PDF validation/hash/embedded extraction, structured fact/inference
+contracts, provider/model/schema/prompt-aware analysis caching, durable analysis
+and snapshot/provenance persistence, deterministic hybrid watchlist semantics,
+and canonical-instrument research priority are implemented. Focused and broad
+protected-boundary suites pass; external Efficient Group verification and UI
+remain deliberately deferred.
+
 ## M30 — Bounded IG Demo Execution Validation [COMPLETE 2026-09-11]
 
 Added a manually invoked, two-phase Demo validation harness. Phase A constructs

@@ -11,7 +11,7 @@ from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional
 
 
-SCHEMA_VERSION = "market-intelligence-v1"
+SCHEMA_VERSION = "market-intelligence-v2"
 
 
 def _now() -> str:
@@ -90,3 +90,74 @@ class TickerSelection:
     source_evidence_ids: List[str] = field(default_factory=list)
     selected_at: str = field(default_factory=_now)
     review_at: Optional[str] = None
+
+
+@dataclass(frozen=True)
+class MarketDocument:
+    document_id: str
+    source_id: str
+    title: str
+    author: Optional[str]
+    publication_date: Optional[str]
+    canonical_url: Optional[str]
+    pdf_url: Optional[str]
+    retrieved_at: str
+    content_hash: str
+    extraction_method: str
+    extraction_status: str
+    text_hash: Optional[str] = None
+    processing_status: str = "DISCOVERED"
+    metadata: Dict[str, Any] = field(default_factory=dict)
+
+
+@dataclass(frozen=True)
+class DocumentFact:
+    fact: str
+    source_span: str = ""
+    confidence: float = 1.0
+
+
+@dataclass(frozen=True)
+class MarketDocumentAnalysis:
+    analysis_id: str
+    document_id: str
+    provider: str
+    model: str
+    schema_version: str
+    prompt_version: str
+    content_hash: str
+    analysed_at: str
+    facts: List[DocumentFact] = field(default_factory=list)
+    themes: List[MarketTheme] = field(default_factory=list)
+    candidates: List[InstrumentCandidate] = field(default_factory=list)
+    uncertainties: List[str] = field(default_factory=list)
+    contradictions: List[str] = field(default_factory=list)
+    usage: Dict[str, Any] = field(default_factory=dict)
+
+
+@dataclass(frozen=True)
+class ProvenanceEdge:
+    provenance_id: str
+    from_type: str
+    from_id: str
+    relationship_type: str
+    to_type: str
+    to_id: str
+    snapshot_id: Optional[str] = None
+    confidence: Optional[float] = None
+    reason: str = ""
+    created_at: str = field(default_factory=_now)
+
+
+@dataclass(frozen=True)
+class MarketIntelligenceSnapshot:
+    snapshot_id: str
+    generated_at: str
+    schema_version: str
+    enabled_sources: List[str]
+    document_hashes: List[str]
+    themes: List[MarketTheme] = field(default_factory=list)
+    candidates: List[InstrumentCandidate] = field(default_factory=list)
+    selections: List[TickerSelection] = field(default_factory=list)
+    provider_metadata: Dict[str, Any] = field(default_factory=dict)
+    metadata: Dict[str, Any] = field(default_factory=dict)

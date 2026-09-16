@@ -12,10 +12,17 @@ from .schemas import (
     SCHEMA_VERSION,
     SourceEvidence,
     TickerSelection,
+    DocumentFact, MarketDocument, MarketDocumentAnalysis, MarketIntelligenceSnapshot,
+    ProvenanceEdge,
 )
 from .source_base import MarketSource, SourceFetchResult
 from .source_registry import SourceRegistry
 from .store import MarketIntelligenceStore
+from .efficient_group import EfficientGroupSource
+from .watchlist import select_watchlist
+from .research_priority import InvestigationPriority, build_priorities
+from .cache import AnalysisCache, cache_key
+from .orchestrator import DocumentOrchestrator
 
 __all__ = [
     "InstrumentCandidate",
@@ -28,4 +35,10 @@ __all__ = [
     "SourceFetchResult",
     "SourceRegistry",
     "TickerSelection",
+    "EfficientGroupSource", "select_watchlist",
+    "InvestigationPriority", "build_priorities",
+    "AnalysisCache", "cache_key",
+    "DocumentOrchestrator",
+    "DocumentFact", "MarketDocument", "MarketDocumentAnalysis",
+    "MarketIntelligenceSnapshot", "ProvenanceEdge",
 ]
