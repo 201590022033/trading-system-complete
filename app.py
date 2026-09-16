@@ -120,6 +120,20 @@ def analysis(instrument):
     return respond(lambda: service.analyze(instrument, body.get("horizon","swing"), body.get("provider","historical"), bool(body.get("allow_network",False))))
 @app.post("/api/analysis/<instrument>/technical")
 def technical(instrument): return respond(lambda: service.technical(instrument))
+@app.get("/api/technical-intelligence/<instrument>")
+def technical_intelligence(instrument):
+    result = service.technical(instrument)
+    indicators = result.get("data", {}).get("metrics", {}) if result.get("success") else {}
+    names = ("rsi", "sma", "breakout", "stochastic", "macd", "bollinger_mean_reversion", "adx_dmi", "ichimoku")
+    rows = [{"name": name, "state": "AVAILABLE" if name in indicators or name in {"sma", "breakout", "stochastic"} else "UNAVAILABLE",
+             "value": indicators.get(name), "signal": indicators.get(name + "_signal"),
+             "reason": None if name in indicators or name in {"sma", "breakout", "stochastic"} else "Not present in current operational observation"}
+            for name in names]
+    return jsonify(instrument=resolve_instrument(instrument).to_dict(), technical=result,
+                   indicators=rows, flow=[{"id":"instrument","label":"Instrument","state":"ACTIVE"},
+                                          {"id":"technical","label":"Technical indicators","state":result.get("state")},
+                                          {"id":"assessment","label":"Current assessment","state":"LEGACY BENCHMARK"}],
+                   boundary="RESEARCH_ONLY; NO TRADE", live_execution=False)
 @app.post("/api/analysis/<instrument>/news")
 def news(instrument):
     body=request.get_json(silent=True) or {}

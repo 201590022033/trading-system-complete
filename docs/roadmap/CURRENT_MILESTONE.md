@@ -1,5 +1,14 @@
 # Current Milestone
 
+## Technical Intelligence workspace — ACTIVE 2026-09-16
+
+The dashboard now exposes a read-only technical evidence endpoint and a
+deterministic Technical Intelligence flow surface using the existing
+operational technical state. Indicator availability is explicit, unsupported
+families are not fabricated, and the existing Market AI ticker remains shared.
+See `docs/market_intelligence/INDICATOR_INVENTORY.md`. Technical mathematics,
+adaptive learning, regimes, risk, signals and broker boundaries are unchanged.
+
 ## Market AI / News UI — ACTIVE 2026-09-16
 
 The first presentation milestone extends the existing dashboard with a
