@@ -9,6 +9,17 @@ No Redis, Celery, continuous research runs, extra services or live brokerage.
 
 ## Explicit migration
 
+Before any external deployment, run the local guarded preflight with Railway
+variables supplied by the deployment environment (never commit them):
+
+`.venv\\Scripts\\python.exe -m scripts.deployment_preflight --check-database`
+
+The preflight requires `DATABASE_URL`, `APP_MODE`, `PORT`, `COMMIT_SHA` and
+`WORKER_ID`, refuses `APP_MODE=LIVE`, requires PostgreSQL, requires a clean Git
+tree, and performs only `SELECT 1` against the configured database. It does
+not invoke Railway or apply migrations. It never prints values of any required
+variable.
+
 1. Operator takes and verifies a database backup through the normal authorized
    process. Never paste connection URLs or backup contents into diagnostics.
 2. On an approved database only, set `DATABASE_URL` through secret management.

@@ -3,6 +3,7 @@ import tempfile
 import unittest
 from datetime import datetime, timezone
 from pathlib import Path
+from unittest.mock import patch
 
 from domain.intelligence.clustering import ClusteredEvent
 from domain.registry.source import default_canonical_policies
@@ -69,9 +70,10 @@ class PersistenceRepositoryTests(unittest.TestCase):
 
     def test_postgres_adapter_requires_real_connection(self):
         repository = PostgresRepository("postgresql://localhost/db")
-        with self.assertRaises(RuntimeError):
-            with repository.transaction():
-                pass
+        with patch("psycopg.connect", side_effect=RuntimeError("connection unavailable")):
+            with self.assertRaises(RuntimeError):
+                with repository.transaction():
+                    pass
 
 
 if __name__ == "__main__":
