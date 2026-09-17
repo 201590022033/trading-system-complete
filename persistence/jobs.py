@@ -6,6 +6,25 @@ from shadow_learning import JobCheckpoint, timestamp
 
 
 class DurableJobs:
+    def readiness(self):
+        try:
+            tables=('observations','shadow_decisions','outcome_labels','adaptive_evidence_contributions',
+                    'worker_jobs','worker_status','document_analyses','intelligence_snapshots','reliability_sources')
+            for table in tables:
+                self._job_sql(f'SELECT 1 FROM {table} LIMIT 0',rows=True)
+            return {'backend':self.backend,'state':'AVAILABLE'}
+        except Exception:
+            return {'backend':self.backend,'state':'UNAVAILABLE'}
+
+    def counts(self):
+        result={}
+        for name,table,where in (
+            ('observations','observations','1=1'),('shadow_decisions','shadow_decisions','1=1'),
+            ('labelled_outcomes','shadow_decisions',"outcome_status='LABELLED'"),
+            ('pending_outcomes','shadow_decisions',"outcome_status='PENDING_OUTCOME'"),
+            ('adaptive_updates','adaptive_evidence_contributions','1=1')):
+            result[name]=self._job_sql(f'SELECT COUNT(*) FROM {table} WHERE {where}',rows=True)[0][0]
+        return result
     def _job_sql(self, sql, parameters=(), *, rows=False):
         connection=self.store._connection if self.backend=='sqlite' else self._require_connection()
         cursor=connection.cursor()
@@ -74,3 +93,26 @@ class DurableJobs:
         with self.transaction():
             self._job_sql('INSERT INTO worker_status VALUES (?,?,?,?) ON CONFLICT(worker_id) DO UPDATE SET status=excluded.status,payload=excluded.payload,last_updated=excluded.last_updated',
                 (status['worker_id'],status['status'],json.dumps(status),status['last_heartbeat_at']))
+
+    def save_reliability_source(self, source):
+        with self.transaction():
+            self._job_sql('INSERT INTO reliability_sources VALUES (?,?) ON CONFLICT(source_id) DO UPDATE SET payload=excluded.payload',
+                (source['source_id'],json.dumps(source)))
+
+    def get_reliability_source(self, source_id):
+        rows=self._job_sql('SELECT payload FROM reliability_sources WHERE source_id=?',(source_id,),rows=True)
+        return (json.loads(rows[0][0]) if isinstance(rows[0][0],str) else rows[0][0]) if rows else None
+
+    def find_reliability_outcome(self,evidence_id,scope_key,horizon):
+        from shadow_learning import stable_id
+        rows=self._job_sql('SELECT payload FROM reliability_outcomes WHERE reliability_id IN (?,?)',
+            (stable_id('reliability',evidence_id,scope_key,horizon),'|'.join((evidence_id,scope_key,horizon))),rows=True)
+        for row in rows:
+            data=json.loads(row[0]) if isinstance(row[0],str) else row[0]
+            if (data['evidence_id'],data['scope_key'],data['horizon'])==(evidence_id,scope_key,horizon): return data
+        return None
+
+    def reliability_statistics(self,source_id,scope_key,horizon):
+        outcome="payload->>'outcome'" if self.backend=='postgresql' else "json_extract(payload,'$.outcome')"
+        aligned="CAST(payload->>'aligned_return' AS DOUBLE PRECISION)" if self.backend=='postgresql' else "json_extract(payload,'$.aligned_return')"
+        return self._job_sql(f"SELECT COUNT(*),SUM(CASE WHEN {outcome}='win' THEN 1 ELSE 0 END),SUM(CASE WHEN {outcome}='loss' THEN 1 ELSE 0 END),SUM(CASE WHEN {outcome}='flat' THEN 1 ELSE 0 END),AVG({aligned}) FROM reliability_outcomes WHERE source_id=? AND scope_key=? AND horizon=?",(source_id,scope_key,horizon),rows=True)[0]

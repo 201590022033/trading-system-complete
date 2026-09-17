@@ -220,22 +220,10 @@ class PostgresRepository(DurableJobs):
         finally: self._contributing=False
         return True
 
-    def learning_status(self) -> dict:
+    def learning_status(self, now=None) -> dict:
         """Return persisted status using database timestamps only."""
-        c = self._require_connection()
-        result = {"observations": {}, "shadow_decisions": {}, "labelled_outcomes": {}, "adaptive_updates": {}, "pending_outcomes": 0, "latest_timestamps": {}, "database_backend": "postgresql", "database_state": "AVAILABLE", "worker_status": {"status": "UNKNOWN"}}
-        windows = (("24h", "INTERVAL '24 hours'"), ("3d", "INTERVAL '3 days'"), ("7d", "INTERVAL '7 days'"))
-        for label, table, column in (("observations", "observations", "observed_at"), ("shadow_decisions", "shadow_decisions", "decided_at"), ("labelled_outcomes", "outcome_labels", "matured_at"), ("adaptive_updates", "adaptive_evidence", "updated_at")):
-            with c.cursor() as cur:
-                for name, interval in windows:
-                    cur.execute(f"SELECT COUNT(*) FROM {table} WHERE CAST({column} AS TIMESTAMPTZ) >= NOW() - {interval}")
-                    result[label][name] = cur.fetchone()[0]
-                cur.execute(f"SELECT MAX({column}) FROM {table}")
-                result["latest_timestamps"][label] = cur.fetchone()[0]
-        with c.cursor() as cur:
-            cur.execute("SELECT COUNT(*) FROM shadow_decisions WHERE outcome_status = %s", ("PENDING_OUTCOME",))
-            result["pending_outcomes"] = cur.fetchone()[0]
-        return result
+        from .learning_status import learning_status
+        return learning_status(self,now)
 
     def _read_payload(self, table: str, key_column: str, value: str) -> dict | None:
         c = self._require_connection()

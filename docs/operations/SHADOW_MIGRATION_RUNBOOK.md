@@ -15,7 +15,8 @@ No Redis, Celery, continuous research runs, extra services or live brokerage.
    Do not run the command against Railway as part of this local repair.
 3. Run `.venv\Scripts\python.exe -m scripts.migrate_postgres` (Linux uses the
    environment's `python`). This command does not load `.env` or print the URL.
-4. Check `postgres_schema_migrations`: versions 1 and 2 and their checksums must
+4. Check `postgres_schema_migrations`: every version in `persistence/migrations/postgres`
+   and its checksum must
    exist. Statements and version rows share one transaction and an advisory
    migration lock. On failure the full migration transaction is rolled back;
    fix the cause privately and rerun. Do not edit an applied migration.
@@ -52,6 +53,20 @@ and one heartbeat write, not market collection or LLM work.
 Required process configuration: `DATABASE_URL`, `APP_MODE`, `PORT` (web),
 `COMMIT_SHA`, `WORKER_ID` (worker), and approved provider settings if enabled.
 No IG, Standard Bank or ViewPoint credentials are read by these paths.
+
+Local web/worker/reliability share `SQLITE_DB_PATH` (default
+`market_intelligence.db`). Runtime reliability no longer creates a separate
+`reliability.db` or consults `RELIABILITY_DB_PATH`; existing standalone research
+stores are not deleted or imported. `ReliabilityStore(':memory:')` remains a
+test-only opt-in. `/api/learning/reliability/<source_id>` is a read-only summary.
+
+MI host integration uses `runtime_handlers(repository, mi_provider=approved_provider,
+mi_text_loader=approved_loader)` passed to the bounded runner. The CLI does not
+guess a provider or load arbitrary import paths from jobs/environment. Until
+those approved dependencies are supplied, MI jobs fail closed; idle cycles make
+no provider calls. Each refresh consumes one document (20,000 extracted text
+characters maximum), reuses durable cache, and saves snapshots/provenance. No
+continuous LLM schedule is installed.
 
 ## Validation still required before deployment
 

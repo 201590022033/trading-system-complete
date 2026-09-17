@@ -2,7 +2,7 @@
 from shadow_learning import ObservationRecord, ShadowDecision, OutcomeLabel
 from shadow_learning_pipeline import production_shadow_decision, label_decision, aggregate_evidence
 
-def runtime_handlers(repository):
+def runtime_handlers(repository, *, mi_provider=None, mi_text_loader=None):
     def observation(job):
         record=ObservationRecord(**job.checkpoint['observation'])
         repository.save_observation(record)
@@ -35,5 +35,21 @@ def runtime_handlers(repository):
         aggregate_evidence(repository,result,instrument=decision['instrument'],horizon=decision['horizon'])
         return {'outcome_id':result.outcome_id}
 
+    def intelligence(job):
+        # Provider and text loader are explicit host dependencies. Never choose
+        # or contact an external provider based on an arbitrary job payload.
+        if mi_provider is None or mi_text_loader is None:
+            raise ValueError('approved MI provider and text loader are not configured')
+        from market_intelligence.worker import BoundedMarketIntelligenceRefresh
+        from market_intelligence.orchestrator import DocumentOrchestrator
+        from market_intelligence.source_registry import SourceRegistry
+        from market_intelligence.schemas import MarketDocument
+        runner=BoundedMarketIntelligenceRefresh(SourceRegistry(repository.store),
+            DocumentOrchestrator(repository.store,mi_provider),mi_text_loader,max_documents=1)
+        result=runner.run_once(MarketDocument(**data) for data in job.checkpoint.get('documents',[]))
+        if result['failures']: raise ValueError('MI refresh failed')
+        return result
+
     return {'observation-generation':observation,'shadow-decision-generation':decision,
-            'outcome-labelling':outcome,'adaptive-evidence-update':evidence}
+            'outcome-labelling':outcome,'adaptive-evidence-update':evidence,
+            'market-intelligence-refresh':intelligence}

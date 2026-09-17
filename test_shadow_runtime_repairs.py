@@ -57,7 +57,7 @@ class PostgresCompositionRepairs(unittest.TestCase):
             repo.initialize()
         self.assertEqual(connection.db.execute("SELECT name FROM sqlite_master WHERE type='table'").fetchall(),[])
         repo.initialize()
-        self.assertEqual(connection.db.execute('SELECT COUNT(*) FROM postgres_schema_migrations').fetchone()[0],2)
+        self.assertEqual(connection.db.execute('SELECT COUNT(*) FROM postgres_schema_migrations').fetchone()[0],len(repo._migration_files()))
 
     def test_empty_cycle_does_not_invoke_handlers(self):
         calls=[]

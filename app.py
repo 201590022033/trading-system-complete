@@ -32,6 +32,12 @@ def application_repository():
         g.application_repository = runtime_repository()
     return g.application_repository
 
+def application_reliability():
+    from reliability_store import runtime_repository_reliability
+    if 'application_reliability' not in g:
+        g.application_reliability=runtime_repository_reliability(application_repository())
+    return g.application_reliability
+
 @app.teardown_appcontext
 def close_market_store(error=None):
     store = g.pop("market_store", None)
@@ -50,15 +56,30 @@ def health():
     database = "CONFIGURED_POSTGRES" if database_url.lower().startswith(("postgresql://", "postgres://")) else (
         "MISSING_POSTGRES" if production else "LOCAL_SQLITE")
     healthy = database != "MISSING_POSTGRES"
+    state='UNAVAILABLE'
+    if healthy:
+        try: state=application_repository().readiness()['state']
+        except Exception: state='UNAVAILABLE'
+        healthy=state=='AVAILABLE'
     return jsonify(status="ok" if healthy else "degraded", application="trading-system",
-                   service="oi2", database=database, mode=mode, live_execution=False), (200 if healthy else 503)
+                   service="oi2", database=database, database_state=state, mode=mode, live_execution=False), (200 if healthy else 503)
 @app.get("/api/system/status")
 def status(): return jsonify(service.status())
 @app.get("/api/learning/status")
 def learning_status():
     """Read-only persisted shadow-learning counters; never includes secrets."""
-    status = application_repository().learning_status()
-    return jsonify(**status, live_execution=False)
+    try:
+        status = application_repository().learning_status()
+        return jsonify(**status, live_execution=False)
+    except Exception:
+        return jsonify(database_state='UNAVAILABLE',live_execution=False),503
+@app.get('/api/learning/reliability/<source_id>')
+def learning_reliability(source_id):
+    from dataclasses import asdict
+    try:
+        return jsonify(**asdict(application_reliability().summarize(source_id)),live_execution=False)
+    except Exception:
+        return jsonify(database_state='UNAVAILABLE',live_execution=False),503
 @app.get("/api/market-intelligence/sources")
 def intelligence_sources():
     return jsonify(sources=[s.__dict__ for s in request_source_registry().list_policies()])

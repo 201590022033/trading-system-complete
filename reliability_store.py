@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import sqlite3
 import os
-from dataclasses import dataclass
+from dataclasses import dataclass, asdict
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Dict, Iterable, Optional
@@ -200,14 +200,10 @@ def runtime_reliability_store(path: str | Path | None = None, repository=None):
     """
     if repository is not None:
         return RepositoryReliabilityStore(repository)
-    database_url = os.environ.get("DATABASE_URL", "")
-    if database_url.lower().startswith(("postgresql://", "postgres://")):
-        from persistence.repository import get_storage_repository
-        return RepositoryReliabilityStore(get_storage_repository(database_url=database_url))
-    configured = path or os.environ.get("RELIABILITY_DB_PATH") or "reliability.db"
-    if str(configured) == ":memory:":
+    if str(path) == ":memory:":
         raise ValueError("runtime reliability cannot silently use :memory:")
-    return ReliabilityStore(configured)
+    from runtime_persistence import runtime_repository
+    return RepositoryReliabilityStore(runtime_repository(sqlite_path=path or os.environ.get('SQLITE_DB_PATH','market_intelligence.db')))
 
 
 class RepositoryReliabilityStore:
@@ -222,12 +218,16 @@ class RepositoryReliabilityStore:
         if evaluated < observed: raise ValueError("evaluated_at cannot precede observed_at")
         if direction not in (-1, 0, 1): raise ValueError("direction must be -1, 0 or 1")
         aligned = direction * float(forward_return)
-        self.repository.save_reliability_outcome({"reliability_id": f"{evidence_id}|{scope_key}|{horizon}", "evidence_id": evidence_id, "source_id": source_id, "scope_key": scope_key, "horizon": horizon, "observed_at": observed, "evaluated_at": evaluated, "direction": direction, "forward_return": float(forward_return), "aligned_return": aligned, "outcome": "win" if aligned > 0 else "loss" if aligned < 0 else "flat"})
+        from shadow_learning import stable_id
+        # Preserve old persisted identities only when all tuple dimensions match.
+        if self.repository.find_reliability_outcome(evidence_id,scope_key,horizon): return
+        self.repository.save_reliability_outcome({"reliability_id": stable_id('reliability',evidence_id,scope_key,horizon), "evidence_id": evidence_id, "source_id": source_id, "scope_key": scope_key, "horizon": horizon, "observed_at": observed, "evaluated_at": evaluated, "direction": direction, "forward_return": float(forward_return), "aligned_return": aligned, "outcome": "win" if aligned > 0 else "loss" if aligned < 0 else "flat"})
+    def register_source(self, source):
+        self.repository.save_reliability_source(asdict(source))
     def summarize(self, source_id, scope_key="global", horizon="5d"):
-        rows = self.repository.list_reliability_outcomes(source_id, scope_key, horizon)
-        samples, wins, losses, flats = len(rows), sum(r["outcome"] == "win" for r in rows), sum(r["outcome"] == "loss" for r in rows), sum(r["outcome"] == "flat" for r in rows)
-        mean = sum(r["aligned_return"] for r in rows) / samples if samples else 0.0
-        return ReliabilitySummary(source_id, scope_key, horizon, samples, wins, losses, flats, wins / samples if samples else 0.0, round(mean, 8), ((wins + 10) / (samples + 20)) if samples else .5)
+        samples,wins,losses,flats,mean=self.repository.reliability_statistics(source_id,scope_key,horizon)
+        wins,losses,flats,mean=wins or 0,losses or 0,flats or 0,mean or 0.0
+        return ReliabilitySummary(source_id, scope_key, horizon, samples, wins, losses, flats, round(wins / samples,6) if samples else 0.0, round(mean, 8), round((wins + 10) / (samples + 20),6) if samples else .5)
 
 
 def runtime_repository_reliability(repository):

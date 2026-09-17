@@ -144,17 +144,9 @@ class MarketIntelligenceStore:
         return self._ledger_payload("outcome_labels", "outcome_id", outcome_id)
 
     def learning_status(self) -> dict:
-        counts = self.counts()
-        now = datetime.now(timezone.utc)
-        result = {"observations": {}, "shadow_decisions": {}, "labelled_outcomes": {}, "adaptive_updates": {},
-                  "pending_outcomes": counts["pending_outcomes"], "latest_timestamps": {},
-                  "database_backend": "sqlite", "database_state": "AVAILABLE", "worker_status": {"status": "UNKNOWN"}}
-        for label, table, column in (("observations", "observations", "observed_at"), ("shadow_decisions", "shadow_decisions", "decided_at"), ("labelled_outcomes", "outcome_labels", "matured_at"), ("adaptive_updates", "adaptive_evidence", "updated_at")):
-            for name, seconds in (("24h", 86400), ("3d", 259200), ("7d", 604800)):
-                cutoff = (now - timedelta(seconds=seconds)).isoformat()
-                result[label][name] = self._connection.execute(f"SELECT COUNT(*) FROM {table} WHERE {column} >= ?", (cutoff,)).fetchone()[0]
-            result["latest_timestamps"][label] = self._connection.execute(f"SELECT MAX({column}) FROM {table}").fetchone()[0]
-        return result
+        from persistence.sqlite_repository import SQLiteRepository
+        view=SQLiteRepository.__new__(SQLiteRepository); view.store=self
+        return view.learning_status()
 
     def save_job(self, job: JobCheckpoint) -> None:
         self._connection.execute("INSERT INTO worker_jobs VALUES (?, ?, ?, ?, ?, ?) ON CONFLICT(job_key) DO UPDATE SET status=excluded.status, payload=excluded.payload, last_updated=excluded.last_updated",
@@ -163,7 +155,7 @@ class MarketIntelligenceStore:
 
     def counts(self) -> dict[str, int]:
         q = lambda table: self._connection.execute(f"SELECT COUNT(*) FROM {table}").fetchone()[0]
-        return {"observations": q("observations"), "shadow_decisions": q("shadow_decisions"), "labelled_outcomes": q("outcome_labels"), "adaptive_updates": q("adaptive_evidence"), "pending_outcomes": self._connection.execute("SELECT COUNT(*) FROM shadow_decisions WHERE outcome_status='PENDING_OUTCOME'").fetchone()[0]}
+        return {"observations": q("observations"), "shadow_decisions": q("shadow_decisions"), "labelled_outcomes": self._connection.execute("SELECT COUNT(*) FROM shadow_decisions WHERE outcome_status='LABELLED'").fetchone()[0], "adaptive_updates": q("adaptive_evidence_contributions"), "pending_outcomes": self._connection.execute("SELECT COUNT(*) FROM shadow_decisions WHERE outcome_status='PENDING_OUTCOME'").fetchone()[0]}
 
     @atomic
     def _run_migrations(self) -> None:
@@ -514,7 +506,7 @@ class MarketIntelligenceStore:
             [DocumentFact(**x) for x in json.loads(data["facts"])],json.loads(data["themes"]),json.loads(data["candidates"]),json.loads(data["uncertainties"]),json.loads(data["contradictions"]),json.loads(data["usage"]))
 
     def cached_analysis(self, document_id, content_hash, provider, model, schema_version, prompt_version):
-        row=self._connection.execute("SELECT analysis_id FROM document_analyses WHERE document_id=? AND content_hash=? AND provider=? AND model=? AND schema_version=? AND prompt_version=?",(document_id,content_hash,provider,model,schema_version,prompt_version)).fetchone()
+        row=self._connection.execute("SELECT analysis_id FROM document_analyses WHERE content_hash=? AND provider=? AND model=? AND schema_version=? AND prompt_version=? ORDER BY analysed_at,analysis_id LIMIT 1",(content_hash,provider,model,schema_version,prompt_version)).fetchone()
         return self.get_analysis(row["analysis_id"]) if row else None
 
     def save_snapshot(self, snapshot: MarketIntelligenceSnapshot) -> None:

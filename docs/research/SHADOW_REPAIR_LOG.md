@@ -77,3 +77,32 @@ Decision replay excludes volatile retrieval timestamps from immutable provenance
 
 No PostgreSQL migration command was run against any external database. Native
 SQL validation remains pending; the emulator cannot establish PostgreSQL locks.
+
+## Batch 4 — bounded intelligence, reliability and status
+
+MI consumes only the configured document bound and consults the durable
+content/provider/model/schema/prompt cache before text loading. Document-ID
+changes retain cached analysis and add provenance aliases. Successful processing
+persists a deterministic snapshot and uses the existing watchlist selector;
+replays cannot duplicate snapshots. Nested malformed provider collections and
+nonfinite confidence values are rejected. Audit records contain static error
+categories, never raw provider exception text. Failed refresh jobs remain failed.
+
+The runtime handler accepts an explicitly supplied approved MI provider and text
+loader. No network provider is selected implicitly, and the CLI default fails
+such jobs closed until the host supplies those dependencies. This is an operator
+configuration requirement, not authorization for continuous LLM calls or PDF
+collection. No provider was called externally during validation.
+
+Runtime reliability now uses the configured shared repository locally and on
+PostgreSQL, including source registration. The original hit-rate, mean-return
+and conservative-prior rounding semantics are preserved. Tuple identities are
+collision-safe; summary aggregation stays in SQL. In-memory ReliabilityStore
+remains available for isolated tests. The read-only reliability route and worker
+use the same persistence composition.
+
+LearningStatus excludes future records, counts unavailable outcomes separately,
+uses evaluation timestamps for labels and contribution events for adaptive
+updates, and reads persisted heartbeat timestamps. Safe projections exclude
+arbitrary worker payloads. Health checks schema reachability, not just URL
+presence. Connection/readiness errors produce a safe unavailable response.

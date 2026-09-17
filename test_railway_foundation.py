@@ -29,11 +29,19 @@ class RailwayFoundationTests(unittest.TestCase):
 
     def test_health_recognizes_postgres_without_exposing_url(self):
         secret_url = "postgresql://user:secret@example.test/db"
-        with patch.dict(os.environ, {"APP_MODE": "RAILWAY", "DATABASE_URL": secret_url}, clear=False):
+        with patch.dict(os.environ, {"APP_MODE": "RAILWAY", "DATABASE_URL": secret_url}, clear=False), patch('app.runtime_repository') as factory:
+            factory.return_value.readiness.return_value={'backend':'postgresql','state':'AVAILABLE'}
             response = self.client.get("/health")
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.get_json()["database"], "CONFIGURED_POSTGRES")
         self.assertNotIn("secret", response.get_data(as_text=True))
+
+    def test_configured_but_unavailable_database_is_not_healthy(self):
+        with patch.dict(os.environ,{'APP_MODE':'RAILWAY','DATABASE_URL':'postgresql://synthetic-secret@invalid/db'}), patch('app.runtime_repository') as factory:
+            factory.return_value.readiness.return_value={'backend':'postgresql','state':'UNAVAILABLE'}
+            response=self.client.get('/health')
+        self.assertEqual(response.status_code,503)
+        self.assertNotIn('synthetic-secret',response.get_data(as_text=True))
 
     def test_worker_heartbeat_is_non_sensitive_and_deterministic_shape(self):
         with patch.dict(os.environ, {"APP_MODE": "RESEARCH", "COMMIT_SHA": "test"}, clear=False):

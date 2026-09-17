@@ -103,7 +103,7 @@ def aggregate_evidence(repository, outcome: OutcomeLabel, *, instrument: str,
     instrument=canonical_instrument(instrument)
     from shadow_learning_validation import validate_contribution
     validate_contribution(repository, outcome, instrument, horizon)
-    now = outcome.matured_at
+    now = datetime.now(timezone.utc).isoformat()
     evidence = AdaptiveEvidence(
         evidence_id=stable_id("evidence",instrument,str(horizon),regime,profile),
         instrument=instrument, horizon=horizon, regime=regime, profile=profile,

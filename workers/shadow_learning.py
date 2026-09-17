@@ -18,6 +18,8 @@ class ShadowWorker:
     def __init__(self, repository, worker_id: str, handlers: dict | None = None, *, max_jobs=1, clock=None, lease_seconds=300):
         if not 1<=max_jobs<=100: raise ValueError('bounded job limit required')
         self.repository, self.worker_id, self.handlers = repository, worker_id, handlers or {}
+        from reliability_store import runtime_repository_reliability
+        self.reliability=runtime_repository_reliability(repository)
         self.max_jobs,self.lease_seconds=max_jobs,lease_seconds
         self.clock=clock or (lambda:datetime.now(timezone.utc).isoformat())
 

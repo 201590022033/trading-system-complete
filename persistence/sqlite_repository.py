@@ -76,7 +76,9 @@ class SQLiteRepository(DurableJobs):
     def save_outcome(self, outcome: OutcomeLabel) -> None: self.store.save_outcome(outcome)
     def save_adaptive_evidence(self, evidence: AdaptiveEvidence) -> None: self.store.save_adaptive_evidence(evidence)
     def contribute_adaptive_evidence(self, evidence: AdaptiveEvidence, outcome_id: str) -> bool: return self.store.contribute_adaptive_evidence(evidence, outcome_id)
-    def learning_status(self) -> dict: return self.store.learning_status()
+    def learning_status(self,now=None) -> dict:
+        from .learning_status import learning_status
+        return learning_status(self,now)
     def get_observation(self, observation_id: str) -> dict | None:
         row = self.store._connection.execute("SELECT payload FROM observations WHERE observation_id=?", (observation_id,)).fetchone()
         return loads(row[0], None) if row else None
