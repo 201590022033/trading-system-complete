@@ -1,5 +1,15 @@
 # M7 — Early Railway Foundation Validation
 
+## Current shadow release — 2026-09-17
+
+The operator evidence below applies only to the historical M7 release, not the
+new shadow-learning migrations or runtime. This repair program has not accessed
+or deployed Railway. New deployment remains blocked pending native disposable
+PostgreSQL validation. Architecture stays one web + one bounded worker + one
+PostgreSQL database. `/health` now tests schema reachability, and the worker
+entrypoint executes bounded due jobs rather than merely printing a heartbeat.
+Follow [the current runbook](../operations/SHADOW_MIGRATION_RUNBOOK.md).
+
 ## Status
 
 **COMPLETE — 2026-09-09**

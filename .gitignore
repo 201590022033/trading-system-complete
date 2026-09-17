@@ -1,5 +1,9 @@
 # Secrets
 .env
+.env.*
+!.env.example
+*.pem
+*.key
 
 # Python
 __pycache__/
@@ -35,3 +39,14 @@ analysis/results/hr11-local/
 
 # Generated audit/export artifact
 repomix-output.xml
+
+# Durable runtime state and downloaded documents are not source artifacts.
+*.db
+*.db-*
+*.sqlite*
+*.pdf
+/runtime/
+/.learning-state/
+/.cache/
+/.pytest_cache/
+browser-profiles/

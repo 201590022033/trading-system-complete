@@ -1,5 +1,32 @@
 # Persistent Shadow Learning
 
+## Current repair and deployment status
+
+The implementation was repaired following the independent audit of `ea3f3a7`.
+See [repair details](SHADOW_REPAIR_LOG.md) and the authoritative
+[migration/runbook](../operations/SHADOW_MIGRATION_RUNBOOK.md). Local DB-API
+behavior tests do not establish native PostgreSQL compatibility. Deployment is
+not approved; Railway has not been accessed during repairs.
+
+An observation freezes causal history and research metadata. The canonical
+OperationalIntelligence path receives explicit as-of context; research fields
+never affect its formula. Default shadow horizon is five supplied sessions
+(`5`), not the UI label `swing`. Missing/unsupported session calendars fail
+closed. Price timestamps and availability must match entry and target. The
+existing signal_outcome helper receives raw returns once and previous-position
+turnover; HOLD is labelled separately from active wins/losses.
+
+Ledger contexts are recursively immutable; immutable identity collisions fail
+explicitly. Outcomes require persisted ancestry and canonical arithmetic.
+Contribution markers and aggregate updates share a transaction. Completed jobs
+are authoritative; only expired retryable RUNNING jobs are recovered. One job
+per 30-second cycle is the CLI default, with five attempts maximum.
+
+LearningStatus reports bounded UTC event windows (future records excluded),
+separate unavailable outcomes, actual contribution events and persisted worker
+heartbeat timestamps. Runtime reliability shares this repository and retains
+the existing summary rounding/prior. There is no automatic production promotion.
+
 The runtime loop is incremental and broker-independent:
 
 `market observation → existing production-path shadow decision → pending outcome → matured label → shadow evidence`.

@@ -53,6 +53,10 @@ def causal_metadata(value, cutoff):
         for key, item in value.items():
             if key in {"exit_price", "forward_return", "net_return", "outcome", "outcome_label"}:
                 raise ValueError("outcome data is not observation context")
+            if key in {'close','price'} and item is not None:
+                try: price=float(item)
+                except (TypeError,ValueError): raise ValueError('invalid observation price') from None
+                if not math.isfinite(price) or price<=0: raise ValueError('positive finite observation price required')
             if key in {"event_time", "available_time", "observed_at", "published_at", "available_at"} and item:
                 if timestamp(item) > cutoff:
                     raise ValueError("future observation context")
@@ -62,6 +66,21 @@ def causal_metadata(value, cutoff):
             causal_metadata(item, cutoff)
     elif isinstance(value, float):
         _finite(value)
+
+class FrozenDict(dict):
+    def _immutable(self,*args,**kwargs): raise TypeError('immutable ledger context')
+    __setitem__=__delitem__=clear=pop=popitem=setdefault=update=__ior__=_immutable
+
+def _freeze(value):
+    if isinstance(value,dict): return FrozenDict((key,_freeze(item)) for key,item in value.items())
+    if isinstance(value,(list,tuple)): return tuple(_freeze(item) for item in value)
+    return value
+
+def _freeze_fields(record,*fields):
+    for name in fields: object.__setattr__(record,name,_freeze(getattr(record,name)))
+
+def _payload(record):
+    return json.loads(json.dumps(asdict(record),allow_nan=False))
 
 @dataclass(frozen=True)
 class ObservationRecord:
@@ -82,7 +101,8 @@ class ObservationRecord:
         _normalize(self, "observed_at", "created_at")
         for value in (self.market_data, self.production_context, self.research_context):
             causal_metadata(value, timestamp(self.observed_at))
-    def to_dict(self): return asdict(self)
+        _freeze_fields(self,'market_data','production_context','research_context')
+    def to_dict(self): return _payload(self)
 
 @dataclass(frozen=True)
 class ShadowDecision:
@@ -108,7 +128,8 @@ class ShadowDecision:
         if self.outcome_status not in {"PENDING_OUTCOME", "LABELLED", "OUTCOME_DATA_UNAVAILABLE"}:
             raise ValueError("invalid outcome status")
         causal_metadata(self.research_context, timestamp(self.decided_at))
-    def to_dict(self): return asdict(self)
+        _freeze_fields(self,'production_assessment','research_context','horizon_context','provenance')
+    def to_dict(self): return _payload(self)
 
 @dataclass(frozen=True)
 class OutcomeLabel:
@@ -180,7 +201,8 @@ class JobCheckpoint:
         _normalize(self,"target_time","last_updated")
         if self.status not in {"PENDING","RUNNING","COMPLETED","FAILED"} or self.attempt_count < 0:
             raise ValueError("invalid durable job state")
-    def to_dict(self): return asdict(self)
+        _freeze_fields(self,'checkpoint')
+    def to_dict(self): return _payload(self)
 
 @dataclass(frozen=True)
 class LearningStatus:

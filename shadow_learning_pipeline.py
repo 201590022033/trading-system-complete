@@ -23,7 +23,7 @@ def production_shadow_decision(service, symbol: str, *, horizon: str = "5",
     if not observation_id:
         raise ValueError("observation identity required")
     run = service.analyze(symbol, horizon=horizon, provider="historical", allow_network=False,
-                          as_of=decided_at, observation_context=context)
+                          as_of=decided_at, observation_context=context, retain_run=False)
     decision = run["decision"]
     return ShadowDecision(
         decision_id=stable_id("decision",observation_id,symbol,timestamp(decided_at).isoformat(),str(horizon),"characterized-legacy-v1"),
@@ -96,14 +96,14 @@ def label_decision(decision, *, now: str, entry_price: float | None, exit_price:
                         entry_price, exit_price, gross, net, cost_model, **metadata)
 
 def aggregate_evidence(repository, outcome: OutcomeLabel, *, instrument: str,
-                        horizon: str, regime: str = "UNKNOWN", profile: str = "production") -> bool:
+                        horizon: str, regime: str = "UNKNOWN", profile: str = "production", now=None) -> bool:
     """Contribute one valid label to one shadow evidence cell, once."""
     if outcome.label not in {"WIN", "LOSS"} or outcome.net_return is None:
         return False
     instrument=canonical_instrument(instrument)
     from shadow_learning_validation import validate_contribution
     validate_contribution(repository, outcome, instrument, horizon)
-    now = datetime.now(timezone.utc).isoformat()
+    now = now or datetime.now(timezone.utc).isoformat()
     evidence = AdaptiveEvidence(
         evidence_id=stable_id("evidence",instrument,str(horizon),regime,profile),
         instrument=instrument, horizon=horizon, regime=regime, profile=profile,

@@ -7,8 +7,10 @@ ROOT = Path(__file__).resolve().parent
 
 def project_environment(environ=None):
     source = os.environ if environ is None else environ
-    disabled = str(source.get("PYTHON_DOTENV_DISABLED", "") if environ is not None else os.environ.get("PYTHON_DOTENV_DISABLED", "")).lower()
-    values = {} if disabled in {"1", "true", "yes"} else {
+    # Process-wide opt-out is a safety boundary, including explicit mappings.
+    disabled = any(str(env.get('PYTHON_DOTENV_DISABLED','')).strip().lower() in {'1','true','yes'}
+                   for env in (os.environ,source))
+    values = {} if disabled else {
         k: v for k, v in dotenv_values(ROOT / ".env").items() if v is not None
     }
     values.update(dict(source))

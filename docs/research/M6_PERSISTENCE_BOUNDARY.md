@@ -1,5 +1,19 @@
 # M6 persistence boundary
 
+## Current extension — 2026-09-17
+
+The historical M6 inventory below predates persistent shadow learning. Current
+web MI, worker, ledger, LearningStatus and runtime reliability share the selected
+repository. SQLite remains local; PostgreSQL uses native versioned migrations
+and a narrow parameterized adapter reusing MI serialization. Explicit nested
+transactions own commits, and SQLite write scopes reserve the writer before
+read/modify/write operations. The separate in-memory ReliabilityStore is for
+isolated research/tests, not runtime composition.
+
+See [migration/runbook](../operations/SHADOW_MIGRATION_RUNBOOK.md). Native
+PostgreSQL locking/type/upgrade tests remain pending. The local SQLite-emulated
+DB-API contract is not evidence of native PostgreSQL validation.
+
 ## Existing state inventory
 
 SQLite currently stores market-intelligence source policies, evidence records,

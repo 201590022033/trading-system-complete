@@ -46,7 +46,7 @@ class _Cursor:
             table, name, column, parent, parent_column = fk.groups()
             self.cursor.execute(f"CREATE TRIGGER {name} BEFORE INSERT ON {table} WHEN NOT EXISTS (SELECT 1 FROM {parent} WHERE {parent_column}=NEW.{column}) BEGIN SELECT RAISE(ABORT,'missing ledger parent'); END")
             return self
-        sql = sql.replace("%s", "?").replace("JSONB", "TEXT").replace("TIMESTAMPTZ", "TEXT").replace("BIGSERIAL", "INTEGER").replace(" FOR UPDATE", "")
+        sql = sql.replace("%s", "?").replace('::jsonb','').replace("JSONB", "TEXT").replace("TIMESTAMPTZ", "TEXT").replace("BIGSERIAL", "INTEGER").replace(" FOR UPDATE", "")
         sql = re.sub(r"NOW\(\) - INTERVAL '([0-9]+) hours'", r"datetime('now','-\1 hours')", sql)
         sql = re.sub(r"NOW\(\) - INTERVAL '([0-9]+) days'", r"datetime('now','-\1 days')", sql)
         sql = sql.replace("NOW()", "CURRENT_TIMESTAMP")

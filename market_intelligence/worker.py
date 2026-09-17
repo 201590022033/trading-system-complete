@@ -26,8 +26,8 @@ class BoundedMarketIntelligenceRefresh:
                 if hasattr(self.orchestrator,'store'):
                     self._publish(document,result)
                 processed.append(result)
-            except Exception as exc:
-                failures.append({"document_id": document.document_id, "category": type(exc).__name__})
+            except Exception:
+                failures.append({"document_id": document.document_id, "category": 'PROVIDER_OR_VALIDATION_FAILURE'})
         return {"processed": len(processed), "failures": failures, "bounded": True}
 
     def _publish(self,document,analysis):

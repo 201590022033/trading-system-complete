@@ -2,7 +2,7 @@
 from shadow_learning import ObservationRecord, ShadowDecision, OutcomeLabel
 from shadow_learning_pipeline import production_shadow_decision, label_decision, aggregate_evidence
 
-def runtime_handlers(repository, *, mi_provider=None, mi_text_loader=None):
+def runtime_handlers(repository, *, mi_provider=None, mi_text_loader=None, clock=None):
     def observation(job):
         record=ObservationRecord(**job.checkpoint['observation'])
         repository.save_observation(record)
@@ -32,7 +32,7 @@ def runtime_handlers(repository, *, mi_provider=None, mi_text_loader=None):
         if data is None: raise ValueError('outcome missing')
         result=OutcomeLabel(**data)
         decision=repository.get_shadow_decision(result.decision_id)
-        aggregate_evidence(repository,result,instrument=decision['instrument'],horizon=decision['horizon'])
+        aggregate_evidence(repository,result,instrument=decision['instrument'],horizon=decision['horizon'],now=clock() if clock else None)
         return {'outcome_id':result.outcome_id}
 
     def intelligence(job):

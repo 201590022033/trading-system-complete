@@ -9,7 +9,10 @@ class DurableJobs:
     def readiness(self):
         try:
             tables=('observations','shadow_decisions','outcome_labels','adaptive_evidence_contributions',
-                    'worker_jobs','worker_status','document_analyses','intelligence_snapshots','reliability_sources')
+                    'adaptive_evidence','worker_jobs','worker_status','document_analyses',
+                    'intelligence_snapshots','reliability_sources','reliability_outcomes',
+                    'source_policies','evidence_records','audit_log','clustered_events',
+                    'documents','documents_v2','market_narratives','ticker_selections','provenance_edges')
             for table in tables:
                 self._job_sql(f'SELECT 1 FROM {table} LIMIT 0',rows=True)
             return {'backend':self.backend,'state':'AVAILABLE'}

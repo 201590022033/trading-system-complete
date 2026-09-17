@@ -82,6 +82,9 @@ class OperationalIntelligence:
             if not row.get("available_time") or not row.get("event_time"):
                 continue
             if timestamp(row["event_time"]) <= cutoff and timestamp(row["available_time"]) <= cutoff:
+                from math import isfinite
+                price=float(row['close'])
+                if not isfinite(price) or price<=0: raise ValueError('invalid causal price')
                 selected.append(row)
         return sorted(selected, key=lambda row: timestamp(row["event_time"]))
 
@@ -162,7 +165,7 @@ class OperationalIntelligence:
                                "See market-wide news stream for macro headlines and publication timestamps")).to_dict()
 
     def analyze(self, symbol, horizon="swing", provider="historical", allow_network=False,
-                *, as_of=None, observation_context=None):
+                *, as_of=None, observation_context=None, retain_run=True):
         started = utcnow(); item = resolve_instrument(symbol)
         if as_of is not None:
             from shadow_learning import timestamp
@@ -190,7 +193,8 @@ class OperationalIntelligence:
             "HISTORICAL" if states == {"HISTORICAL"} else "MIXED")
         run = AnalysisRun(uuid.uuid4().hex, item.to_dict(), horizon, started.isoformat(), utcnow().isoformat(),
                           {"market": market, "technical": technical, "news": news}, decision, gates, overall)
-        self.runs[run.run_id] = run
+        if retain_run:
+            self.runs[run.run_id] = run
         return run.to_dict()
 
     def scan(self, horizon="swing"):

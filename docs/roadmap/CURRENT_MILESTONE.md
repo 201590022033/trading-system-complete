@@ -2,6 +2,20 @@
 
 ## Persistent Shadow-Learning Foundation — ACTIVE 2026-09-16
 
+### Forensic repair checkpoint — 2026-09-17
+
+Local repair batches cover causal inputs/horizons/costs, transactional ledgers,
+runtime composition and migrations, bounded MI/reliability/status, and acceptance
+hardening. No push or deployment is authorized. Native PostgreSQL validation is
+still pending a disposable local PostgreSQL environment; the SQLite DB-API
+fixture is not native PostgreSQL proof. MI network providers remain explicit
+approved host dependencies, never selected or called implicitly. See the
+[repair log](../research/SHADOW_REPAIR_LOG.md) and
+[migration runbook](../operations/SHADOW_MIGRATION_RUNBOOK.md).
+
+This is the only active milestone. Sections below are historical checkpoints,
+not concurrent work authorizations. No production signal or adaptive promotion.
+
 This milestone adds a bounded, broker-independent durable shadow loop. It
 persists causal observations, canonical `OperationalIntelligence.analyze()`
 shadow decisions, matured outcomes, and separately governed shadow evidence.
@@ -11,7 +25,7 @@ the shared configured repository. Railway remains one web service, one minimal
 bounded worker, and PostgreSQL; when no work is due, the worker does almost
 nothing. Historical research and broad analysis remain local/on-demand.
 
-## Technical Intelligence workspace — ACTIVE 2026-09-16
+## Technical Intelligence workspace — HISTORICAL CHECKPOINT 2026-09-16
 
 The dashboard now exposes a read-only technical evidence endpoint and a
 deterministic Technical Intelligence flow surface using the existing
@@ -20,7 +34,7 @@ families are not fabricated, and the existing Market AI ticker remains shared.
 See `docs/market_intelligence/INDICATOR_INVENTORY.md`. Technical mathematics,
 adaptive learning, regimes, risk, signals and broker boundaries are unchanged.
 
-## Market AI / News UI — ACTIVE 2026-09-16
+## Market AI / News UI — HISTORICAL CHECKPOINT 2026-09-16
 
 The first presentation milestone extends the existing dashboard with a
 functional Market AI workspace, source controls, current narrative/theme and

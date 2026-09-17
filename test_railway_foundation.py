@@ -1,5 +1,7 @@
 import os
 import unittest
+import tempfile
+from pathlib import Path
 from unittest.mock import patch
 
 from app import app
@@ -8,6 +10,9 @@ from workers.heartbeat import heartbeat
 
 class RailwayFoundationTests(unittest.TestCase):
     def setUp(self):
+        directory=tempfile.TemporaryDirectory(); self.addCleanup(directory.cleanup)
+        environment=patch.dict(os.environ,{'SQLITE_DB_PATH':str(Path(directory.name)/'health.db')})
+        environment.start(); self.addCleanup(environment.stop)
         self.client = app.test_client()
 
     def test_health_local_mode_is_structured_and_safe(self):

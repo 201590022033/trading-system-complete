@@ -57,7 +57,7 @@ class IGDiscoveryTests(unittest.TestCase):
         self.assertNotIn("key", output)
 
     def test_canonical_environment_explicit_process_values_take_precedence(self):
-        with patch("ai_config.dotenv_values", return_value={"IG_ENVIRONMENT": "DEMO", "IG_API_KEY": "from-file"}):
+        with patch.dict(os.environ,{"PYTHON_DOTENV_DISABLED":"0"}), patch("ai_config.dotenv_values", return_value={"IG_ENVIRONMENT": "DEMO", "IG_API_KEY": "from-file"}):
             values = __import__("ai_config").project_environment({"IG_API_KEY": "from-process"})
         self.assertEqual(values["IG_API_KEY"], "from-process")
         self.assertEqual(values["IG_ENVIRONMENT"], "DEMO")

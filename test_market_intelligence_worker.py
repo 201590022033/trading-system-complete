@@ -29,5 +29,5 @@ class MarketIntelligenceWorkerTests(unittest.TestCase):
         o = Orchestrator()
         o.analyse = lambda *args, **kwargs: (_ for _ in ()).throw(ValueError("invalid"))
         result = BoundedMarketIntelligenceRefresh(Registry(), o, lambda _: "text").run_once([Document()])
-        self.assertEqual(result["processed"], 0); self.assertEqual(result["failures"][0]["category"], "ValueError")
+        self.assertEqual(result["processed"], 0); self.assertEqual(result["failures"][0]["category"], "PROVIDER_OR_VALIDATION_FAILURE")
 if __name__ == "__main__": unittest.main()

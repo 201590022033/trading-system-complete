@@ -65,6 +65,12 @@ class BoundedRuntimeSafety(unittest.TestCase):
         rows=self.repo.store._connection.execute('SELECT after_json FROM audit_log').fetchall()
         self.assertNotIn('SYNTHETIC_SECRET_SENTINEL',str([tuple(r) for r in rows]))
 
+    def test_exception_class_names_are_not_a_diagnostic_channel(self):
+        unsafe=type('SYNTHETIC_SECRET_SENTINEL',(Exception,),{})
+        runner=BoundedMarketIntelligenceRefresh(Registry(),DocumentOrchestrator(self.repo.store,Provider()),
+            lambda d:(_ for _ in ()).throw(unsafe()))
+        self.assertNotIn('SYNTHETIC_SECRET_SENTINEL',str(runner.run_once([document()])))
+
     def test_reliability_exact_rounding_and_source_contract(self):
         original=ReliabilityStore(':memory:'); self.addCleanup(original.close)
         shared=RepositoryReliabilityStore(self.repo)

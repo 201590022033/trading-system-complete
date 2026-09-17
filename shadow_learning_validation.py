@@ -59,6 +59,8 @@ def validate_evidence(repository, evidence, outcome_id):
         raise ValueError("persisted outcome required")
     outcome = OutcomeLabel(**stored)
     validate_contribution(repository, outcome, evidence.instrument, evidence.horizon)
+    if not evidence.updated_at or not timestamp(outcome.evaluated_at)<=timestamp(evidence.updated_at)<=datetime.now(timezone.utc):
+        raise ValueError('contribution timestamp must follow a valid evaluated outcome')
     if (evidence.sample_count != 1 or evidence.wins != int(outcome.label == "WIN")
             or evidence.losses != int(outcome.label == "LOSS")
             or evidence.mean_net_return != outcome.net_return

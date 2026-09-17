@@ -2,6 +2,11 @@
 
 ## Persistent Shadow-Learning Foundation — ACTIVE 2026-09-16
 
+2026-09-17: forensic repairs are local-only checkpoints. Deployment remains
+blocked pending native PostgreSQL migration/locking validation; no Railway or
+broker validation was attempted. No subsequent milestone is started. See
+[repair evidence](../research/SHADOW_REPAIR_LOG.md).
+
 The current implementation milestone is a durable, incremental shadow-learning
 loop with SQLite local persistence and PostgreSQL runtime parity. It does not
 promote shadow evidence into production adaptive state, invoke brokers, or
@@ -700,7 +705,7 @@ HR11 is committed/pushed; HR12 is NOT STARTED (no files or commits found).
 OI3 remains deferred with the checklist in CURRENT_MILESTONE.md. No research
 work is activated by environment preparation. See `docs/LAPTOP_HANDOFF.md` for
 bootstrap, diagnostics, local-data transfer and exact continuation instructions.
-## Market Intelligence Foundation — ACTIVE 2026-09-16
+## Market Intelligence Foundation — HISTORICAL CHECKPOINT 2026-09-16
 
 Extends the existing OI4 foundation with Efficient Group discovery, bounded
 document/PDF processing, structured fact-versus-inference analysis, explicit
