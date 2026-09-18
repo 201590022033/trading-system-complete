@@ -1,9 +1,9 @@
 # Shadow runtime migration and operator validation
 
 Status: local repair validation complete. Native PostgreSQL 18 validation passed
-on the disposable local database at `127.0.0.1:5433`. Railway has **not** been
-accessed or deployed. External deployment still requires an authorized backup,
-secret configuration, and operator approval.
+on the disposable local database at `127.0.0.1:5433`. Railway deployment is
+operator-authorized without a paid-plan backup; this is an explicit accepted
+loss-of-rollback risk. Secret configuration and migration remain guarded.
 
 Architecture: one web service, one bounded worker, one PostgreSQL database.
 No Redis, Celery, continuous research runs, extra services or live brokerage.
@@ -21,13 +21,11 @@ tree, and performs only `SELECT 1` against the configured database. It does
 not invoke Railway or apply migrations. It never prints values of any required
 variable.
 
-1. Operator takes and verifies a database backup through the normal authorized
-   process. Never paste connection URLs or backup contents into diagnostics.
-2. On an approved database only, set `DATABASE_URL` through secret management.
+1. On the explicitly approved database, set `DATABASE_URL` through secret management.
    Do not run the command against Railway as part of this local repair.
-3. Run `.venv\Scripts\python.exe -m scripts.migrate_postgres` (Linux uses the
+2. Run `.venv\Scripts\python.exe -m scripts.migrate_postgres` (Linux uses the
    environment's `python`). This command does not load `.env` or print the URL.
-4. Check `postgres_schema_migrations`: every version in `persistence/migrations/postgres`
+3. Check `postgres_schema_migrations`: every version in `persistence/migrations/postgres`
    and its checksum must
    exist. Statements and version rows share one transaction and an advisory
    migration lock. On failure the full migration transaction is rolled back;
