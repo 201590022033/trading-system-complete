@@ -202,6 +202,14 @@ async function refreshTicker() {
 function renderPortfolio(rows) {
   $('#portfolio-table').innerHTML = rows.length ? `<table><tr>${Object.keys(rows[0]).map(k=>`<th>${esc(k)}</th>`).join('')}</tr>${rows.map(r=>`<tr>${Object.keys(rows[0]).map(k=>`<td>${esc(r[k])}</td>`).join('')}</tr>`).join('')}</table>` : '<p class="muted">No portfolio snapshot loaded.</p>';
 }
+function renderLearningStatus(data) {
+  const windows = ['24h','3d','7d'];
+  const metric = (name,label) => `<div class="learning-metric"><b>${esc(label)}</b>${windows.map(w=>`<span>${esc(w)}: ${esc(data[name]?.[w] ?? 0)}</span>`).join('')}</div>`;
+  const latest = Object.entries(data.latest_timestamps || {}).map(([name,value])=>`<div class="kv"><span>${esc(name.replaceAll('_',' '))}</span><span>${esc(value || '—')}</span></div>`).join('');
+  const worker = data.worker_status || {};
+  $('#learning-status').innerHTML = `<div class="learning-grid">${metric('observations','Observations')}${metric('shadow_decisions','Shadow decisions')}${metric('labelled_outcomes','Labelled outcomes')}${metric('adaptive_updates','Adaptive updates')}</div><div class="kv"><span>Pending outcomes</span><span>${esc(data.pending_outcomes ?? 0)}</span></div><div class="kv"><span>Worker</span><span>${esc(worker.status || 'UNKNOWN')}</span></div><div class="kv"><span>Database</span><span>${esc(data.database_backend || 'UNKNOWN')} · ${esc(data.database_state || 'UNKNOWN')}</span></div><details><summary>Latest timestamps</summary>${latest || '<p class="muted">No persisted events yet.</p>'}</details>`;
+}
+async function refreshLearningStatus() { try { renderLearningStatus(await api('/api/learning/status')); } catch(e) { $('#learning-status').textContent=`Learning status unavailable: ${e.message}`; } }
 async function loadPortfolio() { const result = await api('/api/portfolio'); renderPortfolio(result.rows || []); }
 document.querySelectorAll('nav button').forEach(button=>button.onclick=()=>{
   document.querySelectorAll('.tab').forEach(tab=>tab.classList.remove('active'));
@@ -222,6 +230,7 @@ action('#refresh-canonical',refreshCanonicalOpportunities);
 action('#load-technical-intelligence',async()=>{ const r=await api(`/api/technical-intelligence/${encodeURIComponent($('#instrument').value)}`); $('#technical-flow').innerHTML=r.flow.map(n=>`<div class="flow-node"><b>${esc(n.label)}</b><span>${esc(n.state)}</span></div>`).join(''); $('#indicator-inventory').innerHTML=`<h3>Indicators</h3><table><tr><th>Indicator</th><th>State</th><th>Value</th><th>Signal</th><th>Reason</th></tr>${r.indicators.map(i=>`<tr><td>${esc(i.name)}</td><td>${esc(i.state)}</td><td>${esc(i.value)}</td><td>${esc(i.signal)}</td><td>${esc(i.reason || '')}</td></tr>`).join('')}</table>`; });
 action('#reload-sources',refreshSources);
 action('#reload-intelligence',refreshIntelligence);
+action('#refresh-learning-status',refreshLearningStatus);
 action('#import-portfolio',async()=>{ const result=await post('/api/portfolio/csv',{csv:$('#portfolio-csv').value}); $('#portfolio-status').textContent=`Imported ${result.count} position(s) · CSV snapshot only`; renderPortfolio(result.rows); });
 $('#instrument').onchange=selectedChanged;
 $('#chart-period').onchange=()=>{selectionVersion++; refreshCharts();};
@@ -237,7 +246,7 @@ $('#auto-refresh').onchange=()=>{if($('#auto-refresh').checked) refreshFeeds();}
   document.querySelectorAll('.quote').forEach(card=>card.onclick=()=>{$('#instrument').value=card.dataset.instrument; selectedChanged();});
   selectedChanged();
   await refreshFeeds();
-  await Promise.allSettled([refreshSources(), refreshIntelligence(), refreshTicker(), loadPortfolio()]);
+  await Promise.allSettled([refreshSources(), refreshIntelligence(), refreshTicker(), loadPortfolio(), refreshLearningStatus()]);
   await refreshCanonicalOpportunities();
   await refreshOpportunities();
   setInterval(()=>{if($('#auto-refresh').checked && !document.hidden) refreshFeeds();},10000);
