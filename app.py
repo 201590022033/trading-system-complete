@@ -96,6 +96,42 @@ def market_intelligence():
                    selections=[s.__dict__ for s in store.active_ticker_selections()],
                    state="AVAILABLE" if narrative else "UNAVAILABLE",
                    live_execution=False)
+@app.post("/api/market-intelligence/refresh")
+def refresh_market_intelligence():
+    """Run one bounded, read-only public-news intelligence refresh."""
+    from market_intelligence.schemas import MarketNarrative, MarketTheme
+
+    result = feeds.news()
+    report = result.get("data") or {}
+    if not report:
+        return jsonify(state="LOADING", message="Public sources are still being fetched; retry shortly.",
+                       live_execution=False), 202
+
+    generated_at = datetime.now(timezone.utc).isoformat()
+    themes = []
+    for name, value in (report.get("macro") or {}).items():
+        mentions = int(value.get("mentions") or 0)
+        if not mentions:
+            continue
+        score = float(value.get("score") or 0)
+        themes.append(MarketTheme(
+            theme=name, direction=1 if score > 0 else -1 if score < 0 else 0,
+            confidence=min(1.0, mentions / 5.0), expected_horizon="CURRENT_PUBLIC_NEWS",
+            generated_at=generated_at,
+        ))
+    narrative = MarketNarrative(
+        narrative_id=f"public-news:{uuid4().hex}", generated_at=generated_at,
+        model="deterministic-keyword-summary", provider="public-news-feed",
+        schema_version="market-intelligence-v2",
+        summary=("Current public-news themes are available for investigation. "
+                 "This is research context, not a recommendation or trading signal."),
+        themes=themes, candidates=[],
+        enabled_sources=list((report.get("sources") or {}).keys()),
+        metadata={"analysis_method": report.get("analysis_method"), "research_only": True},
+    )
+    store = request_source_registry().store
+    store.save_narrative(narrative)
+    return jsonify(narrative=narrative.to_dict(), state="AVAILABLE", live_execution=False)
 @app.post("/api/market-intelligence/pin")
 def pin_intelligence():
     body = request.get_json(silent=True) or {}
@@ -133,6 +169,10 @@ def portfolio_csv():
     return jsonify(rows=portfolio_rows, count=len(rows), state="IMPORTED_CSV", live_execution=False)
 @app.get("/api/portfolio")
 def portfolio(): return jsonify(rows=portfolio_rows, state="IMPORTED_CSV" if portfolio_rows else "NOT_LOADED", live_execution=False)
+@app.get("/api/account/status")
+def account_status():
+    from account_dashboard import safe_status
+    return jsonify({**safe_status(), "live_execution": False})
 @app.get("/api/instruments")
 def instruments(): return jsonify(instruments=instrument_list())
 @app.get("/api/feed/market/<instrument>")

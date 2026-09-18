@@ -118,8 +118,9 @@ async function refreshCharts() {
   clearTimeout(chartPoll);
   const symbol = $('#instrument').value, period = $('#chart-period').value, version = selectionVersion;
   let pending = false;
-  if (!symbol) return;
-  await Promise.allSettled([['#stock-chart',symbol],['#index-chart','JSE']].map(async ([target,id])=>{
+  const requests = [['#index-chart','JSE']];
+  if (symbol) requests.unshift(['#stock-chart',symbol]);
+  await Promise.allSettled(requests.map(async ([target,id])=>{
     try {
       const result = await api(`/api/feed/market/${id}?period=${period}`);
       pending ||= result.refreshing;
@@ -143,7 +144,15 @@ async function refreshOpportunities() {
   try {
     const result = await api('/api/opportunities'), data = result.data || {};
     $('#opportunity-status').textContent = `${result.state} · scanned ${data.scanned || 0} of ${data.universe_size || 0} · ${data.method || ''} · ${when(result.last_success)}`;
-    $('#opportunities').innerHTML = (data.opportunities || []).length ? `<table><tr><th>Share</th><th>Combined</th><th>20d</th><th>RSI</th><th>News</th><th>Evidence</th></tr>${data.opportunities.map(row=>`<tr><td><b>${esc(row.symbol)}</b><br><small>${esc(row.name)}</small></td><td>${esc(num(row.combined_score))}</td><td>${esc(num(row.momentum_20d_pct))}%</td><td>${esc(num(row.rsi_14))}</td><td>${esc(row.news_mentions || 0)} mentions</td><td>${esc(row.state)}<br><small>${esc((row.evidence || []).join(' · '))}</small></td></tr>`).join('')}</table>` : '<p class="muted">No current candidates with sufficient public data.</p>';
+    $('#opportunities').innerHTML = (data.opportunities || []).length ? `<table><tr><th>Share</th><th>Combined</th><th>20d</th><th>RSI</th><th>News</th><th>Evidence</th><th>Research view</th></tr>${data.opportunities.map(row=>`<tr><td><b>${esc(row.symbol)}</b><br><small>${esc(row.name)}</small></td><td>${esc(num(row.combined_score))}</td><td>${esc(num(row.momentum_20d_pct))}%</td><td>${esc(num(row.rsi_14))}</td><td>${esc(row.news_mentions || 0)} mentions</td><td>${esc(row.state)}<br><small>${esc((row.evidence || []).join(' · '))}</small></td><td><button class="investigate-opportunity" data-instrument="${esc(row.symbol)}">View technical detail</button></td></tr>`).join('')}</table>` : '<p class="muted">No current candidates with sufficient public data.</p>';
+    document.querySelectorAll('.investigate-opportunity').forEach(button=>button.onclick=()=>{
+      const instrument=button.dataset.instrument;
+      $('#instrument').value=instruments.some(item=>item.instrument_id === instrument) ? instrument : '';
+      selectedChanged();
+      document.querySelectorAll('.tab').forEach(tab=>tab.classList.remove('active'));
+      $('#technical-view').classList.add('active');
+      $('#technical-view').scrollIntoView({behavior:'smooth',block:'start'});
+    });
   } catch (error) { $('#opportunity-status').textContent = `Discovery failed: ${error.message}`; }
 }
 async function refreshQuotes() {
@@ -165,7 +174,19 @@ async function refreshFeeds() {
 }
 function selectedChanged() {
   selectionVersion++;
-  $('#chart-title').textContent = `${$('#instrument').value} · Price history`;
+  const selected = $('#instrument').value;
+  $('#chart-title').textContent = selected ? `${selected} · Price history` : 'Price history';
+  if (!selected) {
+    $('#stock-chart').innerHTML = '<div class="chart-empty">Select an instrument to load price history.<br><button id="choose-instrument" type="button">Choose instrument</button></div>';
+    $('#choose-instrument').onclick=()=>{
+      document.querySelectorAll('.tab').forEach(tab=>tab.classList.remove('active'));
+      $('#technical-view').classList.add('active');
+      $('#technical-view').scrollIntoView({behavior:'smooth',block:'start'});
+      setTimeout(()=>$('#instrument').focus(),250);
+    };
+    document.querySelectorAll('.quote').forEach(q=>q.classList.remove('selected'));
+    return;
+  }
   $('#stock-chart').innerHTML = '<div class="chart-empty">Loading selected chart…</div>';
   document.querySelectorAll('.quote').forEach(q=>q.classList.toggle('selected',q.dataset.instrument === $('#instrument').value));
   refreshCharts();
@@ -188,11 +209,17 @@ function renderIntelligence(data) {
   const n=data.narrative;
   $('#intelligence-state').textContent=n ? `Snapshot generated ${when(n.generated_at)} · provider ${n.provider || 'not supplied'}` : 'No current narrative is available; no market intelligence has been substituted.';
   $('#narrative').innerHTML=n ? `<h3>What is happening?</h3><p>${esc(n.summary)}</p>` : '';
-  $('#themes').innerHTML=n?.themes?.length ? `<h3>Key themes</h3>${n.themes.map(t=>`<article class="theme-card"><b>${esc(t.theme)}</b><span>${esc(t.direction > 0 ? 'Positive' : t.direction < 0 ? 'Negative' : 'Neutral')} · confidence ${esc(t.confidence)} · ${esc(t.expected_horizon)}</span></article>`).join('')}` : '<p class="muted">No structured themes currently available.</p>';
+  $('#themes').innerHTML=n?.themes?.length ? `<h3>Key themes</h3>${n.themes.map(t=>`<article class="theme-card"><b>${esc(t.theme)}</b><span>${esc(t.direction > 0 ? 'Positive' : t.direction < 0 ? 'Negative' : 'Neutral')} · evidence coverage ${esc(t.confidence)} / 1.0 · ${esc(t.expected_horizon)}</span></article>`).join('')}` : '<p class="muted">No structured themes currently available.</p>';
   const entries=data.selections || n?.candidates || [];
   $('#ai-watchlist').innerHTML=entries.length ? `<h3>Watch / investigate</h3>${entries.map(x=>`<article class="watch-card"><b>${esc(x.display_symbol || x.instrument_id)}</b><span>${x.pinned ? '📌 Pinned' : '✦ AI-selected'}</span><p>${esc(x.reason || 'No explanation supplied.')}</p><small>${esc(x.theme || 'No theme')} · confidence ${esc(x.confidence)} · review ${esc(when(x.review_at))}</small></article>`).join('')}` : '<p class="muted">No AI watchlist candidates are available.</p>';
 }
-async function refreshIntelligence() { try { renderIntelligence(await api('/api/market-intelligence')); } catch(e) { $('#intelligence-state').textContent=`Market intelligence unavailable: ${e.message}`; } }
+async function refreshIntelligence() {
+  try {
+    const refreshed=await api('/api/market-intelligence/refresh',{method:'POST'});
+    if (refreshed.state === 'LOADING') { $('#intelligence-state').textContent=refreshed.message; return; }
+    renderIntelligence(refreshed);
+  } catch(e) { $('#intelligence-state').textContent=`Market intelligence unavailable: ${e.message}`; }
+}
 async function refreshTicker() {
   try { const result=await api('/api/market-intelligence/ticker'); if (!result.items?.length) { $('#quotes').innerHTML='<p class="muted">No pinned or AI-selected market instruments are currently available.</p>'; return; }
     $('#quotes').innerHTML=result.items.map(i=>`<button class="quote" data-instrument="${esc(i.instrument_id)}"><b>${esc(i.display_symbol)}</b><small>${i.pinned?'📌 Pinned':'✦ AI-selected'} · ${esc(i.reason)}</small><small>Watch / investigate · confidence ${esc(i.confidence)}</small></button>`).join('');
@@ -211,9 +238,26 @@ function renderLearningStatus(data) {
 }
 async function refreshLearningStatus() { try { renderLearningStatus(await api('/api/learning/status')); } catch(e) { $('#learning-status').textContent=`Learning status unavailable: ${e.message}`; } }
 async function loadPortfolio() { const result = await api('/api/portfolio'); renderPortfolio(result.rows || []); }
+function ensureAccountPanel() {
+  if ($('#account-status') || !$('#portfolio')) return;
+  const panel=document.createElement('div'); panel.className='panel'; panel.innerHTML='<div class="row"><div><h2>Broker account status</h2><p class="muted">Read-only IG DEMO account and positions. No orders or position changes are available.</p></div><button id="refresh-account-status">Refresh broker status</button></div><div id="account-status" role="status">Broker status is not loaded.</div>';
+  $('#portfolio').prepend(panel);
+}
+function renderAccountStatus(data) {
+  if (data.state !== 'AVAILABLE') { $('#account-status').innerHTML=`<p class="muted">${esc(data.reason || data.error?.message || 'Broker status unavailable.')}</p><p class="muted">No account or position values have been substituted.</p>`; return; }
+  const a=data.account||{}; const rows=(data.positions||[]).map(p=>`<tr><td>${esc(p.instrument_id || p.epic)}</td><td>${esc(p.direction)}</td><td>${esc(p.quantity)}</td><td>${esc(p.current_level ?? '—')}</td><td>${esc(p.unrealized_pnl ?? '—')} ${esc(p.pnl_currency || '')}</td></tr>`).join('');
+  $('#account-status').innerHTML=`<div class="kv"><span>Environment</span><span>${esc(data.environment)} · ${esc(data.freshness)}</span></div><div class="kv"><span>Account</span><span>${esc(a.account_name || a.account_id)}</span></div><div class="kv"><span>Available funds</span><span>${esc(a.available_funds ?? '—')} ${esc(a.account_currency || '')}</span></div><div class="kv"><span>Balance</span><span>${esc(a.balance ?? '—')} ${esc(a.account_currency || '')}</span></div><h3>Open positions (${esc(data.position_count)})</h3>${rows?`<table><tr><th>Instrument</th><th>Direction</th><th>Size</th><th>Current</th><th>Unrealised P&amp;L</th></tr>${rows}</table>`:'<p class="muted">No open positions returned.</p>'}<p class="muted">Retrieved ${esc(data.retrieved_at)} · read-only · live execution disabled</p>`;
+}
+async function refreshAccountStatus() { try { renderAccountStatus(await api('/api/account/status')); } catch(e) { $('#account-status').textContent=`Account status unavailable: ${e.message}`; } }
 document.querySelectorAll('nav button').forEach(button=>button.onclick=()=>{
   document.querySelectorAll('.tab').forEach(tab=>tab.classList.remove('active'));
-  $('#'+button.dataset.tab).classList.add('active');
+  document.querySelectorAll('nav button').forEach(item=>{
+    item.classList.toggle('active',item === button);
+    item.setAttribute('aria-current',item === button ? 'page' : 'false');
+  });
+  const tab=$('#'+button.dataset.tab);
+  tab.classList.add('active');
+  tab.scrollIntoView({behavior:'smooth',block:'start'});
 });
 action('#run',async()=>render(await post(`/api/analysis/${$('#instrument').value}`,{horizon:$('#horizon').value,provider:$('#provider').value,allow_network:true})));
 action('#technical',async()=>$('#technical-result').innerHTML=component(await post(`/api/analysis/${$('#instrument').value}/technical`)));
@@ -231,6 +275,8 @@ action('#load-technical-intelligence',async()=>{ const r=await api(`/api/technic
 action('#reload-sources',refreshSources);
 action('#reload-intelligence',refreshIntelligence);
 action('#refresh-learning-status',refreshLearningStatus);
+ensureAccountPanel();
+action('#refresh-account-status',refreshAccountStatus);
 action('#import-portfolio',async()=>{ const result=await post('/api/portfolio/csv',{csv:$('#portfolio-csv').value}); $('#portfolio-status').textContent=`Imported ${result.count} position(s) · CSV snapshot only`; renderPortfolio(result.rows); });
 $('#instrument').onchange=selectedChanged;
 $('#chart-period').onchange=()=>{selectionVersion++; refreshCharts();};
@@ -241,12 +287,12 @@ $('#auto-refresh').onchange=()=>{if($('#auto-refresh').checked) refreshFeeds();}
   instruments=universe.instruments;
   $('#system-pill').textContent='PUBLIC FEEDS · RESEARCH ONLY';
   $('#system-result').textContent=JSON.stringify(status,null,2);
-  $('#instrument').innerHTML=instruments.map(i=>`<option value="${i.instrument_id}">${esc(i.display_symbol)} · ${esc(i.name)}</option>`).join('');
+  $('#instrument').innerHTML='<option value="">Select an instrument</option>'+instruments.map(i=>`<option value="${i.instrument_id}">${esc(i.display_symbol)} · ${esc(i.name)}</option>`).join('');
   $('#quotes').innerHTML=instruments.map(i=>`<button class="quote" id="quote-${i.instrument_id}" data-instrument="${i.instrument_id}">${esc(i.display_symbol)}<strong>Connecting…</strong></button>`).join('');
   document.querySelectorAll('.quote').forEach(card=>card.onclick=()=>{$('#instrument').value=card.dataset.instrument; selectedChanged();});
   selectedChanged();
   await refreshFeeds();
-  await Promise.allSettled([refreshSources(), refreshIntelligence(), refreshTicker(), loadPortfolio(), refreshLearningStatus()]);
+  await Promise.allSettled([refreshSources(), refreshIntelligence(), refreshTicker(), loadPortfolio(), refreshLearningStatus(), refreshAccountStatus()]);
   await refreshCanonicalOpportunities();
   await refreshOpportunities();
   setInterval(()=>{if($('#auto-refresh').checked && !document.hidden) refreshFeeds();},10000);
