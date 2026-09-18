@@ -77,6 +77,22 @@ class DashboardFeeds:
                 result["data_state"] = "STALE_OR_MARKET_CLOSED"
         return result
 
+    def public_chart(self, symbol, period="3mo"):
+        """Curated public cash-share chart; no operational or broker mapping."""
+        from application.opportunities.public_research import public_share_catalog
+        if symbol not in public_share_catalog():
+            raise ValueError("unknown public share")
+        if period not in {"1d", "1mo", "3mo", "1y"}:
+            raise ValueError("Choose 1d, 1mo, 3mo or 1y")
+        yahoo_symbol = public_share_catalog()[symbol]["yahoo_symbol"]
+        def load():
+            from jse_adapter import YahooFinanceFetcher
+            return (self._chart_fetcher or YahooFinanceFetcher()).get_chart(yahoo_symbol, period)
+        result = self._snapshot((yahoo_symbol, period), 60 if period == "1d" else 300, load)
+        result.update(source="Yahoo Finance", symbol=symbol, provider_symbol=yahoo_symbol,
+                      data_state="DELAYED_PUBLIC", note="Public cash-share bars may be delayed. Research only.")
+        return result
+
     def news(self):
         def load():
             from sentiment_analyzer import MacroSentimentScanner

@@ -2,6 +2,15 @@
 
 ## Persistent Shadow-Learning Foundation — ACTIVE 2026-09-16
 
+### Public-share research UI checkpoint — 2026-09-18
+
+The dashboard's fixed-six selection was expanded to the curated 18-share public
+catalog without changing the six-share operational benchmark. A bounded
+on-demand refresh now builds dated M11 effectiveness, M12 suitability and M10
+divergence evidence for M13 canonical ranking. Only ranked shares reach the
+read-only Top 5; incomplete/unavailable candidates are reported separately.
+The result remains in process memory until refresh/restart. See ADR 0022.
+
 ### Forensic repair checkpoint — 2026-09-17
 
 Local repair batches cover causal inputs/horizons/costs, transactional ledgers,

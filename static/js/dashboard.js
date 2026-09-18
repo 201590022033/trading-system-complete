@@ -4,6 +4,7 @@ const num = v => Number.isFinite(v) ? v.toLocaleString('en-ZA', {maximumFraction
 const when = v => v ? (Number.isNaN(Date.parse(v)) ? v : new Date(v).toLocaleString('en-ZA')) : 'Not supplied';
 let instruments = [], newsSnapshot = null, feedBusy = false, selectionVersion = 0;
 let chartPoll = null, newsPoll = null;
+let canonicalPoll = null, canonicalPollAttempts = 0;
 async function api(url, options = {}) {
   const response = await fetch(url, {...options, signal: AbortSignal.timeout(15000)});
   const data = await response.json();
@@ -25,21 +26,32 @@ function canonicalList(items, emptyText) {
 }
 function renderCanonicalCard(item) {
   const regime = item.regime_context || {}, divergence = item.divergence_summary || {}, evidence = item.feature_evidence_summary || {};
-  return `<article class="panel canonical-card" data-opportunity-id="${esc(item.opportunity_id)}">
-    <div class="row"><div><span class="canonical-rank">Rank ${esc(item.rank)}</span><h3>${esc(item.instrument_id)} · ${esc(item.direction)}</h3><span class="canonical-status">${esc(item.eligibility_status)}</span></div><div><div class="canonical-score">${esc(item.ranking_score == null ? 'Not scored' : `${num(item.ranking_score)} / 100`)}</div><small>Opportunity Score</small></div></div>
-    ${kv('Horizon',item.horizon_id)}${kv('Suitability',item.suitability_status)}${kv('Execution suitability',item.execution_suitability)}${kv('Data grade',item.data_grade)}${kv('Regime',regime.trend || regime.availability)}${kv('Divergence',divergence.state)}${kv('Evidence',`${evidence.learned_count ?? '—'} learned · ${evidence.sample_count ?? item.sample_count ?? '—'} samples`)}
-    <h4>Why it ranks</h4>${canonicalList(item.reasons,'No ranking reasons supplied.')}
+  const components=item.ranking_components || {};
+  const share = instruments.find(i=>i.yahoo_symbol === item.provenance?.data_symbol);
+  const researchOnly=item.execution_suitability === 'RESEARCH-ONLY';
+  return `<article class="panel canonical-card" data-opportunity-id="${esc(item.opportunity_id)}" data-research-only="${researchOnly}">
+    <div class="row"><div><span class="canonical-rank">Rank ${esc(item.rank)}</span><h3>${esc(share?.name || item.instrument_id)} · ${esc(share?.display_symbol || item.instrument_id)}</h3><span class="canonical-status">${esc(item.eligibility_status)} ${researchOnly?'FOR RESEARCH':''}</span></div><div><div class="canonical-score">${esc(item.ranking_score == null ? 'Not scored' : `${num(item.ranking_score)} / 100`)}</div><small>Comparative research score</small></div></div>
+    ${kv('Research direction',item.direction)}${kv('Horizon',item.horizon_id)}${kv('Suitability',item.suitability_status)}${kv('Execution suitability',item.execution_suitability)}${kv('Data grade',item.data_grade)}${kv('Regime',regime.trend || regime.availability)}${kv('Divergence',divergence.state)}${kv('Evidence',`${evidence.learned_count ?? '—'} learned · ${evidence.sample_count ?? item.sample_count ?? '—'} samples`)}
+    ${kv('Last usable session',item.provenance?.last_usable_session)}${kv('Data source',item.provenance?.data_symbol)}
+    <h4>Why it ranks</h4>${kv('Suitability input',components.suitability == null ? 'Unavailable' : `${num(components.suitability * 100)} / 100`)}${kv('Historical effectiveness support',components.effectiveness_support == null ? 'Unavailable' : `${num(components.effectiveness_support * 100)} / 100`)}${kv('Evidence depth input',components.evidence_depth == null ? 'Unavailable' : `${num(components.evidence_depth * 100)} / 100`)}${kv('Direction agreement input',components.directional_strength == null ? 'Unavailable' : `${num(components.directional_strength * 100)} / 100`)}<small class="muted">These are comparative ranking inputs, not probabilities of profit. Costs use a disclosed ${esc(item.provenance?.cost_assumption_bps ?? 'unknown')} bps research assumption.</small>${canonicalList(item.reasons,'No ranking reasons supplied.')}
     <h4>Uncertainty and blockers</h4>${canonicalList([...(item.uncertainty || []),...(item.blockers || [])],'None reported by the canonical API.')}
-    <details><summary>Policy, risk and provenance</summary><div class="canonical-detail" role="region" aria-label="Policy and risk detail for ${esc(item.instrument_id)}"><p class="muted">Load detail to preserve authoritative upstream state.</p></div></details>
+    <details><summary>${researchOnly?'Research provenance and trading boundary':'Policy, risk and provenance'}</summary><div class="canonical-detail" role="region" aria-label="Research detail for ${esc(item.instrument_id)}"><p class="muted">Open to inspect the authoritative record.</p></div></details>
   </article>`;
 }
-async function canonicalFetch(url) {
-  const response=await fetch(url,{signal:AbortSignal.timeout(15000)}),data=await response.json();
+async function canonicalFetch(url, options={}) {
+  const response=await fetch(url,{...options,signal:AbortSignal.timeout(15000)}),data=await response.json();
   if (!response.ok && response.status !== 409) throw Error(data.error?.message || `Canonical service unavailable (${response.status})`);
   return data;
 }
 async function loadCanonicalDetail(card) {
   const id=encodeURIComponent(card.dataset.opportunityId),node=card.querySelector('.canonical-detail');
+  if (card.dataset.researchOnly === 'true') {
+    try {
+      const item=(await canonicalFetch(`/api/v1/opportunities/${id}`)).opportunity;
+      node.innerHTML=`<p class="muted">Public-data research only. No trade policy, risk approval, broker mapping or order has been produced.</p><h4>Source and lineage</h4><pre>${esc(JSON.stringify(item.provenance || {},null,2))}</pre>${kv('Research pipeline version',item.provenance?.research_pipeline)}${kv('Last evaluated',when(item.evaluated_at))}`;
+    } catch(error) { node.innerHTML=`<p class="unavailable">Research detail unavailable: ${esc(error.message)}</p>`; }
+    return;
+  }
   node.textContent='Loading policy and risk state…';
   try {
     const [policyResult,riskResult,intentResult]=await Promise.allSettled([canonicalFetch(`/api/v1/opportunities/${id}/policy`),canonicalFetch(`/api/v1/opportunities/${id}/risk`),canonicalFetch(`/api/v1/opportunities/${id}/intent`)]);
@@ -49,13 +61,19 @@ async function loadCanonicalDetail(card) {
       <h4>Provenance</h4><pre>${esc(JSON.stringify(intent?.provenance || policy?.provenance || {},null,2))}</pre>`;
   } catch(error) { node.innerHTML=`<p class="unavailable">Detail unavailable: ${esc(error.message)}</p>`; }
 }
-async function refreshCanonicalOpportunities() {
+async function refreshCanonicalOpportunities(trigger=false) {
   const status=$('#canonical-status'),cards=$('#canonical-cards');status.textContent='Refreshing canonical ranking…';
   try {
+    if (trigger) {
+      clearTimeout(canonicalPoll); canonicalPollAttempts=0;
+      await canonicalFetch('/api/v1/opportunities/refresh',{method:'POST'});
+    }
     const result=await canonicalFetch('/api/v1/opportunities?limit=5'),items=result.opportunities;
     if (!Array.isArray(items)) throw Error('Malformed canonical response');
-    status.textContent=`${items.length} canonical research opportunit${items.length===1?'y':'ies'} available.`;
-    cards.innerHTML=items.length ? items.map(renderCanonicalCard).join('') : '<div class="panel canonical-empty"><h3>No canonical opportunities available yet.</h3><p class="muted">Canonical ranking data has not yet been populated. Legacy recommendations are not substituted.</p></div>';
+    const refresh=result.refresh || {};
+    status.textContent=refresh.running ? 'Checking the curated public-share universe and matured evidence…' : `${items.length} canonical research opportunit${items.length===1?'y':'ies'} available · ${refresh.scanned || 0} shares checked · ${refresh.unranked || 0} lacked enough evidence · ${(refresh.unavailable || []).length} data unavailable.`;
+    cards.innerHTML=items.length ? items.map(renderCanonicalCard).join('') : `<div class="panel canonical-empty"><h3>${refresh.running ? 'Research refresh in progress.' : 'No canonical opportunities available yet.'}</h3><p class="muted">${refresh.running ? 'Checking dated public price history and matured research outcomes.' : 'No share passed the current evidence gate. Legacy recommendations are not substituted.'}</p></div>`;
+    if (refresh.running && canonicalPollAttempts++ < 40) canonicalPoll=setTimeout(()=>refreshCanonicalOpportunities(),3000);
     cards.querySelectorAll('details').forEach(detail=>detail.addEventListener('toggle',()=>{if(detail.open&&!detail.dataset.loaded){detail.dataset.loaded='true';loadCanonicalDetail(detail.closest('.canonical-card'));}}));
   } catch(error) { status.textContent='Canonical opportunity service is unavailable.';cards.innerHTML=`<div class="panel canonical-empty canonical-error"><h3>Unable to load canonical opportunities.</h3><p class="muted">${esc(error.message)} No recommendation has been substituted.</p></div>`; }
 }
@@ -144,20 +162,20 @@ async function refreshOpportunities() {
   try {
     const result = await api('/api/opportunities'), data = result.data || {};
     $('#opportunity-status').textContent = `${result.state} · scanned ${data.scanned || 0} of ${data.universe_size || 0} · ${data.method || ''} · ${when(result.last_success)}`;
-    $('#opportunities').innerHTML = (data.opportunities || []).length ? `<table><tr><th>Share</th><th>Combined</th><th>20d</th><th>RSI</th><th>News</th><th>Evidence</th><th>Research view</th></tr>${data.opportunities.map(row=>`<tr><td><b>${esc(row.symbol)}</b><br><small>${esc(row.name)}</small></td><td>${esc(num(row.combined_score))}</td><td>${esc(num(row.momentum_20d_pct))}%</td><td>${esc(num(row.rsi_14))}</td><td>${esc(row.news_mentions || 0)} mentions</td><td>${esc(row.state)}<br><small>${esc((row.evidence || []).join(' · '))}</small></td><td><button class="investigate-opportunity" data-instrument="${esc(row.symbol)}">View technical detail</button></td></tr>`).join('')}</table>` : '<p class="muted">No current candidates with sufficient public data.</p>';
+    $('#opportunities').innerHTML = (data.opportunities || []).length ? `<table><tr><th>Share</th><th>Combined</th><th>20d</th><th>RSI</th><th>News</th><th>Evidence</th><th>Research view</th></tr>${data.opportunities.map(row=>`<tr><td><b>${esc(row.symbol)}</b><br><small>${esc(row.name)}</small></td><td>${esc(num(row.combined_score))}</td><td>${esc(num(row.momentum_20d_pct))}%</td><td>${esc(num(row.rsi_14))}</td><td>${esc(row.news_mentions || 0)} mentions</td><td>${esc(row.state)}<br><small>${esc((row.evidence || []).join(' · '))}</small></td><td><button class="investigate-opportunity" data-instrument="${esc(row.symbol)}">View share research</button></td></tr>`).join('')}</table>` : '<p class="muted">No current candidates with sufficient public data.</p>';
     document.querySelectorAll('.investigate-opportunity').forEach(button=>button.onclick=()=>{
       const instrument=button.dataset.instrument;
       $('#instrument').value=instruments.some(item=>item.instrument_id === instrument) ? instrument : '';
       selectedChanged();
-      document.querySelectorAll('.tab').forEach(tab=>tab.classList.remove('active'));
-      $('#technical-view').classList.add('active');
-      $('#technical-view').scrollIntoView({behavior:'smooth',block:'start'});
+      document.querySelector('.chart-panel').scrollIntoView({behavior:'smooth',block:'start'});
     });
   } catch (error) { $('#opportunity-status').textContent = `Discovery failed: ${error.message}`; }
 }
 async function refreshQuotes() {
+  if (!$('#quotes .quote')) return;
   await Promise.allSettled(instruments.map(async item=>{
     const card = $(`#quote-${item.instrument_id}`);
+    if (!card) return;
     try {
       const result = await api(`/api/feed/market/${item.instrument_id}?period=1d`), data = result.data;
       card.innerHTML = `${esc(item.display_symbol)}<strong>${esc(num(data?.price))} <small>${esc(data?.currency || '')}</small></strong><small>${esc(result.state)} · ${esc(result.data_state)}</small><small>${esc(data ? when(data.source_timestamp) : result.error || 'Fetching…')}</small>`;
@@ -175,14 +193,16 @@ async function refreshFeeds() {
 function selectedChanged() {
   selectionVersion++;
   const selected = $('#instrument').value;
+  const item=instruments.find(i=>i.instrument_id===selected);
+  if ($('#chart-instrument')) $('#chart-instrument').value=selected;
+  const supported=!!item?.capabilities?.operational_analysis;
+  for (const control of ['#run','#technical','#load-technical-intelligence']) $(control).disabled=!!selected && !supported;
+  if (selected && !supported) $('#notice').textContent='Public share chart available. Full operational technical analysis is currently supported for the historical benchmark shares only.';
   $('#chart-title').textContent = selected ? `${selected} · Price history` : 'Price history';
   if (!selected) {
     $('#stock-chart').innerHTML = '<div class="chart-empty">Select an instrument to load price history.<br><button id="choose-instrument" type="button">Choose instrument</button></div>';
     $('#choose-instrument').onclick=()=>{
-      document.querySelectorAll('.tab').forEach(tab=>tab.classList.remove('active'));
-      $('#technical-view').classList.add('active');
-      $('#technical-view').scrollIntoView({behavior:'smooth',block:'start'});
-      setTimeout(()=>$('#instrument').focus(),250);
+      $('#chart-instrument').focus();
     };
     document.querySelectorAll('.quote').forEach(q=>q.classList.remove('selected'));
     return;
@@ -222,8 +242,12 @@ async function refreshIntelligence() {
 }
 async function refreshTicker() {
   try { const result=await api('/api/market-intelligence/ticker'); if (!result.items?.length) { $('#quotes').innerHTML='<p class="muted">No pinned or AI-selected market instruments are currently available.</p>'; return; }
-    $('#quotes').innerHTML=result.items.map(i=>`<button class="quote" data-instrument="${esc(i.instrument_id)}"><b>${esc(i.display_symbol)}</b><small>${i.pinned?'📌 Pinned':'✦ AI-selected'} · ${esc(i.reason)}</small><small>Watch / investigate · confidence ${esc(i.confidence)}</small></button>`).join('');
-    document.querySelectorAll('.quote').forEach(card=>card.onclick=()=>{ $('#instrument').value=card.dataset.instrument; selectedChanged(); });
+    $('#quotes').innerHTML=result.items.map(i=>{
+      const mapped=instruments.find(item=>item.instrument_id===i.instrument_id || item.display_symbol===i.display_symbol || item.yahoo_symbol===i.instrument_id);
+      const contents=`<b>${esc(i.display_symbol || i.instrument_id)}</b><small>${i.pinned?'📌 Pinned':'✦ AI-selected'} · ${esc(i.reason)}</small><small>${mapped?'View public share chart':'Chart mapping not verified'} · confidence ${esc(i.confidence)}</small>`;
+      return mapped?`<button class="quote" data-instrument="${esc(mapped.instrument_id)}">${contents}</button>`:`<div class="quote">${contents}</div>`;
+    }).join('');
+    document.querySelectorAll('button.quote').forEach(card=>card.onclick=()=>{ $('#instrument').value=card.dataset.instrument; selectedChanged(); });
   } catch(e) { $('#quotes').innerHTML='<p class="muted">Ticker unavailable; no market data has been substituted.</p>'; }
 }
 function renderPortfolio(rows) {
@@ -242,6 +266,17 @@ function ensureAccountPanel() {
   if ($('#account-status') || !$('#portfolio')) return;
   const panel=document.createElement('div'); panel.className='panel'; panel.innerHTML='<div class="row"><div><h2>Broker account status</h2><p class="muted">Read-only IG DEMO account and positions. No orders or position changes are available.</p></div><button id="refresh-account-status">Refresh broker status</button></div><div id="account-status" role="status">Broker status is not loaded.</div>';
   $('#portfolio').prepend(panel);
+}
+function ensureChartInstrumentControl() {
+  const title=$('#chart-title');
+  if (!title || $('#chart-instrument')) return;
+  const label=document.createElement('label');
+  label.textContent='Share to chart';
+  const select=document.createElement('select');
+  select.id='chart-instrument';
+  select.onchange=()=>{ $('#instrument').value=select.value; selectedChanged(); };
+  label.appendChild(select);
+  title.parentElement.insertBefore(label,title.nextSibling);
 }
 function renderAccountStatus(data) {
   if (data.state !== 'AVAILABLE') { $('#account-status').innerHTML=`<p class="muted">${esc(data.reason || data.error?.message || 'Broker status unavailable.')}</p><p class="muted">No account or position values have been substituted.</p>`; return; }
@@ -270,12 +305,13 @@ action('#research-load',async()=>$('#research-result').textContent=JSON.stringif
 action('#refresh-feeds',refreshFeeds);
 action('#refresh-news',refreshNews);
 action('#refresh-opportunities',refreshOpportunities);
-action('#refresh-canonical',refreshCanonicalOpportunities);
+action('#refresh-canonical',()=>refreshCanonicalOpportunities(true));
 action('#load-technical-intelligence',async()=>{ const r=await api(`/api/technical-intelligence/${encodeURIComponent($('#instrument').value)}`); $('#technical-flow').innerHTML=r.flow.map(n=>`<div class="flow-node"><b>${esc(n.label)}</b><span>${esc(n.state)}</span></div>`).join(''); $('#indicator-inventory').innerHTML=`<h3>Indicators</h3><table><tr><th>Indicator</th><th>State</th><th>Value</th><th>Signal</th><th>Reason</th></tr>${r.indicators.map(i=>`<tr><td>${esc(i.name)}</td><td>${esc(i.state)}</td><td>${esc(i.value)}</td><td>${esc(i.signal)}</td><td>${esc(i.reason || '')}</td></tr>`).join('')}</table>`; });
 action('#reload-sources',refreshSources);
 action('#reload-intelligence',refreshIntelligence);
 action('#refresh-learning-status',refreshLearningStatus);
 ensureAccountPanel();
+ensureChartInstrumentControl();
 action('#refresh-account-status',refreshAccountStatus);
 action('#import-portfolio',async()=>{ const result=await post('/api/portfolio/csv',{csv:$('#portfolio-csv').value}); $('#portfolio-status').textContent=`Imported ${result.count} position(s) · CSV snapshot only`; renderPortfolio(result.rows); });
 $('#instrument').onchange=selectedChanged;
@@ -283,17 +319,16 @@ $('#chart-period').onchange=()=>{selectionVersion++; refreshCharts();};
 $('#news-filter').onchange=()=>{if(newsSnapshot) showNews(newsSnapshot);};
 $('#auto-refresh').onchange=()=>{if($('#auto-refresh').checked) refreshFeeds();};
 (async()=>{
-  const [status,universe]=await Promise.all([api('/api/system/status'),api('/api/instruments')]);
+  const [status,universe]=await Promise.all([api('/api/system/status'),api('/api/public-shares')]);
   instruments=universe.instruments;
   $('#system-pill').textContent='PUBLIC FEEDS · RESEARCH ONLY';
   $('#system-result').textContent=JSON.stringify(status,null,2);
   $('#instrument').innerHTML='<option value="">Select an instrument</option>'+instruments.map(i=>`<option value="${i.instrument_id}">${esc(i.display_symbol)} · ${esc(i.name)}</option>`).join('');
-  $('#quotes').innerHTML=instruments.map(i=>`<button class="quote" id="quote-${i.instrument_id}" data-instrument="${i.instrument_id}">${esc(i.display_symbol)}<strong>Connecting…</strong></button>`).join('');
-  document.querySelectorAll('.quote').forEach(card=>card.onclick=()=>{$('#instrument').value=card.dataset.instrument; selectedChanged();});
+  $('#chart-instrument').innerHTML=$('#instrument').innerHTML;
+  $('#quotes').innerHTML='<p class="muted">Select a public share in the chart controls, or use a validated AI/pinned watchlist selection when available.</p>';
   selectedChanged();
   await refreshFeeds();
   await Promise.allSettled([refreshSources(), refreshIntelligence(), refreshTicker(), loadPortfolio(), refreshLearningStatus(), refreshAccountStatus()]);
-  await refreshCanonicalOpportunities();
-  await refreshOpportunities();
+  await refreshCanonicalOpportunities(true);
   setInterval(()=>{if($('#auto-refresh').checked && !document.hidden) refreshFeeds();},10000);
 })().catch(error=>{$('#system-pill').textContent='SYSTEM UNAVAILABLE';$('#feed-notice').textContent=error.message;});

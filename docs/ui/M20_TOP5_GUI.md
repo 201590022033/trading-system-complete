@@ -38,3 +38,15 @@ requested nor displayed.
 Legacy discovery, analysis, portfolio, system, and disabled broker-handoff UI
 remain present. M20 adds no fixture to production, periodic canonical polling,
 runtime decision logic, order construction, broker action, or M21 work.
+
+## 2026-09-18 public research refresh extension
+
+The later dashboard extension adds an explicit on-demand refresh of the curated
+public cash-share universe. It computes matured, cost-labelled research evidence
+through M11/M12/M10 and orders qualifying results with the existing M13 ranker.
+The default screen may start this bounded refresh once; a five-minute cooldown
+prevents repeated scans. The selector includes all curated shares, but the
+operational technical analyser remains limited to its supported benchmark
+subset. The read-only chart works for the wider catalog. The ranking is held in
+web-process memory and must refresh after restart. No LLM text can canonize an
+unverified ticker. See ADR 0022.

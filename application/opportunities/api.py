@@ -3,14 +3,19 @@ from flask import Blueprint,jsonify,request
 from .service import serialize_opportunity,serialize_policy,serialize_risk
 
 def error(code,message,status):return jsonify(error={'code':code,'message':message,'http_status':status}),status
-def create_blueprint(service):
+def create_blueprint(service, refresh=None):
  bp=Blueprint('canonical_opportunities',__name__)
+ @bp.post('/api/v1/opportunities/refresh')
+ def refresh_listing():
+  if refresh is None:return error('REFRESH_UNAVAILABLE','research refresh is not configured',503)
+  return jsonify(**refresh.trigger(),live_execution=False),202
  @bp.get('/api/v1/opportunities')
  def listing():
   raw=request.args.get('limit');
   try: limit=int(raw) if raw is not None else None;items=service.list_opportunities(limit)
   except ValueError as exc:return error('INVALID_REQUEST',str(exc),422)
-  return jsonify(opportunities=[serialize_opportunity(x) for x in items],count=len(items),score_semantics='comparative research score; not probability of profit')
+  metadata=refresh.status() if refresh is not None else {'state':'NOT_CONFIGURED'}
+  return jsonify(opportunities=[serialize_opportunity(x) for x in items],count=len(items),score_semantics='comparative research score; not probability of profit',refresh=metadata,live_execution=False)
  @bp.get('/api/v1/opportunities/<oid>')
  def detail(oid):
   try:return jsonify(opportunity=serialize_opportunity(service.get_opportunity(oid)))

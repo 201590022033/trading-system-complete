@@ -13,6 +13,8 @@ from datetime import datetime, timezone
 from uuid import uuid4
 from application.opportunities import OpportunityService
 from application.opportunities.api import create_blueprint
+from application.opportunities.refresh import OpportunityRefresh
+from application.opportunities.public_research import public_share_catalog, public_share_list
 from runtime_persistence import runtime_repository
 
 def request_source_registry():
@@ -24,7 +26,8 @@ portfolio_rows = []
 app = Flask(__name__); app.config["SECRET_KEY"] = "local-oi2-session"
 socketio = SocketIO(app, cors_allowed_origins="*")
 canonical_opportunity_service = OpportunityService()
-app.register_blueprint(create_blueprint(canonical_opportunity_service))
+canonical_opportunity_refresh = OpportunityRefresh(canonical_opportunity_service)
+app.register_blueprint(create_blueprint(canonical_opportunity_service, canonical_opportunity_refresh))
 
 def application_repository():
     """Canonical repository selection shared with the bounded worker."""
@@ -175,8 +178,12 @@ def account_status():
     return jsonify({**safe_status(), "live_execution": False})
 @app.get("/api/instruments")
 def instruments(): return jsonify(instruments=instrument_list())
+@app.get("/api/public-shares")
+def public_shares(): return jsonify(instruments=public_share_list(),state="CURATED_PUBLIC_CASH_SHARES",live_execution=False)
 @app.get("/api/feed/market/<instrument>")
 def market_feed(instrument):
+    if instrument in public_share_catalog() and instrument not in {item["instrument_id"] for item in instrument_list()}:
+        return respond(lambda: feeds.public_chart(instrument, request.args.get("period", "3mo")))
     return respond(lambda: feeds.chart(instrument, request.args.get("period", "3mo")))
 @app.get("/api/feed/news")
 def news_feed(): return jsonify(feeds.news())

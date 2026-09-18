@@ -21,3 +21,8 @@ disabled extensions remain disabled. No broker contract values were inferred.
 The opportunity scanner's 18-key public discovery universe maps the six known
 operational aliases. The remaining discovery tickers are intentionally reported
 as unresolved by `discovery_mapping`; scanner ranking and output are unchanged.
+
+The 2026-09-18 public research refresh creates separate, research-only typed
+cash-share identities for curated catalog entries that are not in this frozen
+registry. It validates public Yahoo/JSE symbol, currency, daily bars and dates
+before ranking. It does not add these identities to production or broker mapping.

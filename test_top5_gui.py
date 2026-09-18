@@ -14,10 +14,14 @@ class TopFiveGuiTests(unittest.TestCase):
  def test_fetches_canonical_top_five_and_manual_refresh(self):
   self.assertIn("canonicalFetch('/api/v1/opportunities?limit=5')",self.js);self.assertIn("action('#refresh-canonical'",self.js)
  def test_score_is_not_probability(self):
-  self.assertIn('Opportunity Score',self.js);self.assertIn('Comparative research score — not probability of profit.',self.panel);self.assertNotIn("ranking_score *",self.js);self.assertNotIn("ranking_score/",self.js)
+  self.assertIn('Comparative research score</small>',self.js);self.assertIn('Comparative research score — not probability of profit.',self.panel);self.assertNotIn("ranking_score *",self.js);self.assertNotIn("ranking_score/",self.js)
  def test_all_direction_states_are_rendered_from_api_without_translation(self):
-  self.assertIn('${esc(item.direction)}',self.js)
+  self.assertIn("kv('Research direction',item.direction)",self.js)
   for state in ('LONG','SHORT','WATCH','UNKNOWN'):self.assertNotIn(f"item.direction==='{state}'",self.js)
+ def test_research_only_cards_show_provenance_without_requesting_trade_state(self):
+  self.assertIn("card.dataset.researchOnly === 'true'",self.js)
+  self.assertIn('No trade policy, risk approval, broker mapping or order has been produced.',self.js)
+  self.assertIn('Research provenance and trading boundary',self.js)
  def test_blockers_unresolved_stop_and_null_size_are_visible(self):
   self.assertIn('item.blockers',self.js);self.assertIn("policy?.stop?.status",self.js);self.assertIn("'Unresolved'",self.js);self.assertIn("'Not available'",self.js)
  def test_empty_and_error_states_do_not_substitute_legacy(self):

@@ -2,6 +2,12 @@
 
 ## Persistent Shadow-Learning Foundation — ACTIVE 2026-09-16
 
+2026-09-18 UI/research checkpoint: the public cash-share selector and on-demand
+canonical Top 5 refresh now span the curated `JSE_TICKERS` universe, with each
+share's current data validated before ranking. The six
+operational shares remain a benchmark subset. See ADR 0022; automatic catalog
+expansion beyond verified mappings and durable ranking snapshots are future work.
+
 2026-09-17: forensic repairs are local-only checkpoints. Deployment remains
 blocked pending native PostgreSQL migration/locking validation; no Railway or
 broker validation was attempted. No subsequent milestone is started. See
