@@ -6,10 +6,11 @@
 
 Local repair batches cover causal inputs/horizons/costs, transactional ledgers,
 runtime composition and migrations, bounded MI/reliability/status, and acceptance
-hardening. No push or deployment is authorized. Native PostgreSQL validation is
-still pending a disposable local PostgreSQL environment; the SQLite DB-API
-fixture is not native PostgreSQL proof. MI network providers remain explicit
-approved host dependencies, never selected or called implicitly. See the
+hardening. Native PostgreSQL validation passed locally on PostgreSQL 18 at
+127.0.0.1:5433, including native write/read, rollback, separate-process verify,
+and repeatable migrations. No Railway deployment has occurred. MI network
+providers remain explicit approved host dependencies, never selected or called
+implicitly. See the
 [repair log](../research/SHADOW_REPAIR_LOG.md) and
 [migration runbook](../operations/SHADOW_MIGRATION_RUNBOOK.md).
 

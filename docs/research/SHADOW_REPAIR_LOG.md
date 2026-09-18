@@ -159,15 +159,15 @@ bytes. All 54 protected entries pass; 15 require CRLF normalization only.
 | 14 | FIXED | Bounded UTC status windows, event counts, safe worker/readiness state. |
 | 15 | FIXED | Tracked additive atomic migrations and explicit operator runbook. |
 | 16 | TEST-GAP-CLOSED | Actual state/artifact fingerprints with perturbation control. |
-| 17 | PENDING | Local behavioral/composition/crash/concurrency tests pass; native PostgreSQL types/locks/migration races still require a disposable local server. |
+| 17 | LOCALLY VERIFIED | PostgreSQL 18 at 127.0.0.1:5433 passed native write/read, rollback, separate-process verification, and repeatable migrations. Railway/native production concurrency validation remains an external deployment prerequisite. |
 | 18 | FIXED | Global dotenv opt-out documented and tested with mocked secrets only. |
 | 19 | FIXED | Git/Docker secret/runtime exclusions; protected artifacts unchanged. |
 
-No Docker/PostgreSQL tools were available on PATH or in the standard Windows
-installation locations. No packages, services or infrastructure were installed.
-Native validation and approved MI provider/loader host configuration remain
-deployment prerequisites. Historical M7 Railway evidence does not validate this
-new release. Nothing was deployed or pushed by this repair program.
+PostgreSQL 17 and 18 are installed locally; PostgreSQL 18 listens on port 5433.
+Native local validation passed without changing project credentials or Railway.
+Approved MI provider/loader host configuration remains a deployment prerequisite.
+Historical M7 Railway evidence does not validate this new release. Nothing was
+deployed by this repair program.
 
 ## Final local verification — 2026-09-17
 
@@ -181,9 +181,10 @@ new release. Nothing was deployed or pushed by this repair program.
   covered **58 changed files**; no secret/runtime DB/PDF/broker artifacts added.
 - `.env` remains ignored and untracked. Broker implementations, production
   scoring/regime/risk/cost/slippage math and protected research outputs unchanged.
-- No Railway access/deployment, external PostgreSQL, external IG authentication,
-  Standard Bank/ViewPoint interaction, broker action or push occurred.
+- No Railway access/deployment, external IG authentication, Standard
+  Bank/ViewPoint interaction, or broker action occurred. Native PostgreSQL
+  validation used only the local server on port 5433.
 
-The initial remote-tracking checkpoint remains `ea3f3a7`; remote state was not
-queried over the network. Native PostgreSQL verification remains the explicit
-external prerequisite, not a claimed PASS from the DB-API fixture.
+The initial remote-tracking checkpoint remains `ea3f3a7`. Native PostgreSQL
+verification is now locally complete; Railway migration/deployment and its
+external health/restart checks remain intentionally unperformed.
