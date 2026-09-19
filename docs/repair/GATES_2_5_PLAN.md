@@ -55,3 +55,24 @@ Aggression scales requested risk by 0.5/0.75/1.0 and cannot enlarge a hard limit
 The example capital, costs and fully funded unit contract are simulation
 assumptions; no real broker cash, margin or liquidity is inferred. Tests cover
 caps, depleted cash, missing volume, daily losses and the kill switch.
+
+Gate 5: the existing PaperBroker now restores durable checkpoints. One account
+transaction closes observed positions, saves net outcomes, consumes causal M11
+strategy effectiveness, ranks through M13, evaluates earlier proposals through
+M14/M15 and commits fills, account state and ranking together. The configured
+web API and both opportunity displays read that committed ranking, without the
+retired scanner or in-memory fallback. Pause blocks entries, not risk-reducing
+exits. Policy and durable fill record IDs are account-scoped.
+
+Acceptance: focused paper/storage/causality tests pass on SQLite and the
+PostgreSQL behavioral fixture. Native PostgreSQL 18 in a disposable loopback-only
+cluster passes additive migration, competing exactly-once entry, failed-cycle
+rollback, outcome, re-migration and separate-process recovery. Repeated native
+validation exposed a cross-account exit-fill ID collision; account-scoped record
+IDs and a two-account close regression correct it. No existing DB was migrated.
+
+Full safe suite: 664 tests passed with sockets and dotenv disabled. All 54
+protected artifacts match their manifest/baseline. JavaScript syntax and diff
+whitespace checks pass. Provider probes, paid AI, live broker calls, remote
+deployment and profitability tests were not run. See PAPER_LOOP_RUNBOOK.md for
+activation steps and exact remaining scope boundaries.

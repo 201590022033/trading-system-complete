@@ -1,4 +1,4 @@
-"""Infrastructure-only worker heartbeat; no market, source, or broker work."""
+"""Bounded durable worker heartbeat; configured paper work never calls live brokers."""
 
 from datetime import datetime, timezone
 import json
@@ -14,16 +14,25 @@ def heartbeat(worker_id: str | None = None) -> dict[str, str]:
             "mode": os.environ.get("APP_MODE", "DEVELOPMENT").upper(), "version": os.environ.get("COMMIT_SHA", "unknown")}
 
 
-def run(interval_seconds: float = 30.0, *, cycles=None, repository=None, handlers=None) -> None:
+def run(interval_seconds: float = 30.0, *, cycles=None, repository=None, handlers=None, scheduler=None) -> None:
     from workers.shadow_learning import ShadowWorker, configured_repository
     from workers.runtime import runtime_handlers
     owned=repository is None
     repository=repository or configured_repository()
     worker_id = os.environ.get("WORKER_ID", uuid.uuid4().hex)
-    worker=ShadowWorker(repository,worker_id,handlers if handlers is not None else runtime_handlers(repository))
-    count=0
     try:
+        selected = handlers if handlers is not None else runtime_handlers(repository)
+        if handlers is None:
+            from application.opportunities.paper_host import configured_paper, compose_paper_worker
+            config = configured_paper()
+            if config:
+                scheduler, handler = compose_paper_worker(repository, config)
+                selected["paper-cycle"] = handler
+        worker=ShadowWorker(repository,worker_id,selected)
+        count=0
         while cycles is None or count<cycles:
+            if scheduler is not None:
+                scheduler.enqueue(datetime.now(timezone.utc).isoformat())
             processed=worker.run_once()
             status={**heartbeat(worker_id),'processed':processed}
             repository.save_worker_status(status)

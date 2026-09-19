@@ -43,9 +43,26 @@ def canonical_refresh_runner():
                                        learned_evidence=learned)
     finally:
         repository.close()
-canonical_opportunity_refresh = OpportunityRefresh(canonical_opportunity_service,
-                                                    runner=canonical_refresh_runner)
+from application.opportunities.paper_host import (
+    configured_paper, DurablePaperOpportunities, PaperRefreshStatus, paper_status,
+)
+paper_config = configured_paper()
+if paper_config:
+    canonical_opportunity_service = DurablePaperOpportunities(runtime_repository, paper_config)
+    canonical_opportunity_refresh = PaperRefreshStatus(runtime_repository, paper_config)
+else:
+    canonical_opportunity_refresh = OpportunityRefresh(canonical_opportunity_service,
+                                                      runner=canonical_refresh_runner)
 app.register_blueprint(create_blueprint(canonical_opportunity_service, canonical_opportunity_refresh))
+
+@app.get("/api/paper/status")
+def paper_account_status():
+    if paper_config is None:
+        return jsonify(state="NOT_CONFIGURED", mode="PAPER", live_execution=False)
+    try:
+        return jsonify(paper_status(application_repository(), paper_config))
+    except Exception:
+        return jsonify(state="UNAVAILABLE", mode="PAPER", live_execution=False), 503
 
 def application_repository():
     """Canonical repository selection shared with the bounded worker."""
@@ -208,8 +225,11 @@ def news_feed(): return jsonify(feeds.news())
 @app.get("/api/opportunities")
 def opportunities():
     """Compatibility read model backed only by the canonical M13 service."""
-    items = canonical_opportunity_service.list_opportunities(limit=10)
-    status = canonical_opportunity_refresh.status()
+    try:
+        items = canonical_opportunity_service.list_opportunities(limit=10)
+        status = canonical_opportunity_refresh.status()
+    except Exception:
+        return jsonify(state="UNAVAILABLE", canonical=True, live_execution=False), 503
     return jsonify(state="AVAILABLE" if items else "INSUFFICIENT_EVIDENCE",
                    data={"opportunities": [serialize_opportunity(item) for item in items],
                          "scanned": status["scanned"],

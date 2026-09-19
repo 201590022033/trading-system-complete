@@ -5,6 +5,11 @@ from .service import serialize_opportunity,serialize_policy,serialize_risk
 def error(code,message,status):return jsonify(error={'code':code,'message':message,'http_status':status}),status
 def create_blueprint(service, refresh=None):
  bp=Blueprint('canonical_opportunities',__name__)
+ @bp.errorhandler(Exception)
+ def unavailable(exc):
+  from werkzeug.exceptions import HTTPException
+  if isinstance(exc,HTTPException):return exc
+  return error('CANONICAL_UNAVAILABLE','canonical repository unavailable; no fallback data supplied',503)
  @bp.post('/api/v1/opportunities/refresh')
  def refresh_listing():
   if refresh is None:return error('REFRESH_UNAVAILABLE','research refresh is not configured',503)

@@ -1,13 +1,13 @@
 import unittest
 from datetime import timedelta
 from dataclasses import replace
-from test_opportunity_ranking import OpportunityRankingTests
+import test_opportunity_ranking
 from domain.policy.paper_geometry import resolve_paper_policy
 
 
 class PaperGeometryTests(unittest.TestCase):
     def setUp(self):
-        helper = OpportunityRankingTests()
+        helper = test_opportunity_ranking.OpportunityRankingTests()
         helper.setUp()
         self.o = helper.rank_one()
         self.now = helper.now + timedelta(days=1)

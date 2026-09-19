@@ -1,6 +1,14 @@
 # Linear Fusion Roadmap
 
-## Persistent Shadow-Learning Foundation — ACTIVE 2026-09-16
+## Canonical paper-loop repair — COMPLETE LOCALLY 2026-09-19
+
+Gates 2–5 are implemented for the explicit daily-close, fully funded ZAR PAPER
+model, with Gate 1 corrections. See ADR 0024 and docs/repair/PAPER_LOOP_RUNBOOK.md.
+Local native PostgreSQL acceptance now passes. Remote deployment, broader broker
+scope and profitability validation are not claimed. Older notes below describe
+historical checkpoints, not additional active milestones.
+
+## Persistent Shadow-Learning Foundation — historical 2026-09-16
 
 2026-09-18 UI/research checkpoint: the public cash-share selector and on-demand
 canonical Top 5 refresh now span the curated `JSE_TICKERS` universe, with each

@@ -114,15 +114,14 @@ def candidate_from_chart(key, chart, *, evaluated_at, news_report=None, learned_
     if chart.get("symbol") != data["yahoo_symbol"] or chart.get("interval") != "1d" or chart.get("currency") != "ZAR":
         raise ValueError("public daily chart identity, interval or currency mismatch")
     rows = chart.get("bars") or []
-    if len(rows) > 400:
-        rows = rows[-400:]
+    rows = [row for row in rows if _available_at(row["timestamp"]) <= evaluated_at]
     bars = [(row["timestamp"], float(row["close"])) for row in rows]
     if any(not isfinite(close) or close <= 0 for _, close in bars):
         raise ValueError("invalid public close")
     clocks = [_available_at(stamp) for stamp, _ in bars]
     if any(left >= right for left, right in zip(clocks, clocks[1:])):
         raise ValueError("daily bars must have unique increasing dates")
-    available = [(clock, close) for clock, (_, close) in zip(clocks, bars) if clock <= evaluated_at]
+    available = [(clock, close) for clock, (_, close) in zip(clocks, bars)][-400:]
     if not available or evaluated_at - available[-1][0] > timedelta(days=7):
         raise ValueError("public chart is stale or unavailable")
     clocks, closes = zip(*available)
@@ -151,7 +150,10 @@ def candidate_from_chart(key, chart, *, evaluated_at, news_report=None, learned_
                                           clocks[-1], instrument_id=canonical.instrument_id,
                                           horizon_id="1d", category="technical"))
     matching = tuple(x for x in paper_outcomes if x.instrument_id == canonical.instrument_id
-                     and x.horizon_id == "1d" and x.feature_id == "paper_strategy")
+                     and x.horizon_id == "1d" and x.feature_id == "paper_strategy"
+                     and x.feature_version == "canonical-paper-loop-v1"
+                     and x.available_time <= x.evaluated_at < evaluated_at
+                     and x.outcome_maturity <= evaluated_at)
     if matching:
         evidence.append(learner.estimate(
             matching, feature_id="paper_strategy", evaluated_at=evaluated_at,
@@ -164,6 +166,13 @@ def candidate_from_chart(key, chart, *, evaluated_at, news_report=None, learned_
     )
     from .evidence import news_context
     news = news_context(news_report, key, evaluated_at)
+    if news["state"] == "AVAILABLE":
+        from shadow_learning import timestamp
+        score = sum(item["score"] for item in news["items"]) / len(news["items"])
+        signals.append(SignalEvidence("causal_public_sentiment", "evidence-v1",
+                       1 if score > 0 else -1 if score < 0 else 0,
+                       max(timestamp(item["available_at"]) for item in news["items"]),
+                       score, canonical.instrument_id, "1d", "sentiment"))
     input_evidence = {
         "technical": {
             "features": ("momentum_20d", "rsi_14"),
@@ -178,6 +187,16 @@ def candidate_from_chart(key, chart, *, evaluated_at, news_report=None, learned_
             "reason": "NO_PERSISTED_SHADOW_EVIDENCE",
         })),
     }
+    if matching:
+        learned = effectiveness[-1]
+        input_evidence["learned_effectiveness"] = {
+            "state": learned.status, "feature_id": learned.feature_id,
+            "feature_family": "strategy", "configuration_version": learned.configuration_version,
+            "evaluated_at": learned.evaluated_at.isoformat(),
+            "matured_through": learned.matured_through.isoformat() if learned.matured_through else None,
+            "sample_count": learned.sample_count, "outcome_ids": list(learned.lineage),
+            "expected_return_net": learned.expected_return_net,
+            "source": "DURABLE_PAPER_OUTCOMES", "governance": "RESEARCH_ONLY"}
     suitability = evaluate_suitability(
         research, "1d", evaluated_at,
         data=SuitabilityEvidence("AVAILABLE", DataGrade.RESEARCH, "Yahoo public daily bars",
@@ -188,7 +207,7 @@ def candidate_from_chart(key, chart, *, evaluated_at, news_report=None, learned_
             "catalog": "jse_adapter.JSE_TICKERS", "data_symbol": data["yahoo_symbol"],
             "last_usable_session": (clocks[-1] - timedelta(days=1)).date().isoformat(),
             "research_pipeline": VERSION, "cost_assumption_bps": COST_BPS})
-    divergence = summarize(signals, evaluated_at, DivergenceConfig(2, 1),
+    divergence = summarize(signals, evaluated_at, DivergenceConfig(max(2, len(signals)), 1),
                            instrument_id=canonical.instrument_id, horizon_id="1d")
     return OpportunityCandidate(canonical, suitability, divergence, effectiveness,
                                 regime, DataGrade.RESEARCH.value,

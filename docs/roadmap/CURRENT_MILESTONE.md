@@ -1,11 +1,16 @@
 # Current Milestone
 
-## Canonical paper-loop repair — ACTIVE 2026-09-19
+## Canonical paper-loop repair — COMPLETE LOCALLY 2026-09-19
 
-User authorized Gates 2–5. See docs/repair/GATES_2_5_PLAN.md. The earlier Gate 1
-completion claim is under correction: context-only learned inputs did not affect
-ranking and the old discovery display had not been migrated. Existing foundation
-checkpoints below are historical; this is the only active milestone.
+User authorized Gates 2–5. See docs/repair/GATES_2_5_PLAN.md and ADR 0024.
+The earlier Gate 1 claim is corrected: causal paper strategy outcomes now affect
+M11/M13, and both displays consume the canonical ranking. Gates 2–5 connect the
+bounded daily-close ZAR cash-share paper model, including durable scheduling,
+M14 geometry, M15 cash/risk/aggression caps and restartable PaperBroker outcomes.
+664 safe tests, native PostgreSQL acceptance and all 54 protected artifacts pass.
+No live execution, deployment or profitability claim. Runtime configuration and
+broader portfolio/instrument scope remain as documented in PAPER_LOOP_RUNBOOK.md.
+No milestone is ACTIVE; all checkpoint notes below are historical.
 
 ### Public-share research UI checkpoint — 2026-09-18
 

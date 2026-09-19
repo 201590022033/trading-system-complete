@@ -23,7 +23,7 @@ def size_paper_policy(policy, *, now, broker, book, config, peak_equity,
         raise ValueError("paper equity/cash exhausted")
     # Round-trip costs reduce risk allowance; all JSE shares share a conservative
     # exposure bucket. It is a constraint assumption, not estimated correlation.
-    unreal_loss = sum(max(0., -p.unrealized_pnl) for p in broker.get_positions())
+    unreal_loss = sum(max(0., -p.unrealized_pnl) for p in broker.get_positions()) + config.commission_per_fill*len(book)
     portfolio = PortfolioRiskState(
         stable_id("paper-portfolio", config.account_id, now.isoformat(), account.available_cash, gross),
         now, config.currency, account.equity, account.available_cash,

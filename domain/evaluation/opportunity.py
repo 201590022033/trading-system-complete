@@ -147,6 +147,7 @@ class ResearchOpportunity:
             raise ValueError("only scored opportunities may have positive ranks")
         for name in ("divergence_summary", "regime_context", "ranking_components", "provenance"):
             object.__setattr__(self, name, MappingProxyType(dict(getattr(self, name))))
+        object.__setattr__(self, "input_evidence", causal_input_evidence(self.input_evidence, self.evaluated_at))
 
     def to_dict(self):
         return {

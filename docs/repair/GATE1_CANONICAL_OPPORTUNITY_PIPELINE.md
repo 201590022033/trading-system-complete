@@ -2,6 +2,11 @@
 
 Status: implemented locally, paper/shadow-only, 2026-09-19.
 
+Correction/continuation: ADR 0024 and GATES_2_5_PLAN.md supersede this checkpoint's
+completion claim. Provenance alone did not wire learned evidence into ranking;
+the later repair supplies causal strategy outcomes and migrates the remaining
+discovery display. Legacy aggregates remain context, not fabricated skill.
+
 ## Repair objective
 
 There must be one authoritative opportunity path:

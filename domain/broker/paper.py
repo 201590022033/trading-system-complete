@@ -121,6 +121,41 @@ class PaperBroker:
  def get_account(self):
   unreal=sum(p.unrealized_pnl for p in self._positions.values());equity=self.cash+sum((1 if p.state is PositionState.LONG else -1)*p.quantity*(p.last_mark or p.average_entry_price) for p in self._positions.values());return PaperAccount('PAPER','PAPER',self.config.currency,self.starting_cash,self.cash,equity,self.realized,unreal,None,len(self._positions),sum(o.state is OrderState.PENDING for o in self._orders.values()))
  def audit_trail(self):return tuple(self._audit)
+ def snapshot(self):
+  """Serialize the complete simulator ledger for an atomic repository checkpoint."""
+  from dataclasses import asdict
+  import json
+  payload={'version':VERSION,'mode':'PAPER','config':asdict(self.config),
+           'starting_cash':self.starting_cash,'cash':self.cash,'realized':self.realized,
+           'orders':[asdict(x) for x in self._orders.values()],
+           'fills':[asdict(x) for x in self._fills],
+           'positions':[asdict(x) for x in self._positions.values()],
+           'audit':[asdict(x) for x in self._audit], 'marks':dict(self._marks)}
+  return json.loads(json.dumps(payload,default=lambda x:x.isoformat(),allow_nan=False))
+ @classmethod
+ def restore(cls,payload):
+  if payload.get('version')!=VERSION or payload.get('mode')!='PAPER':
+   raise PaperBrokerError('unsupported paper checkpoint')
+  b=cls(payload['starting_cash'],PaperExecutionConfig(**payload['config']))
+  b.cash=payload['cash'];b.realized=payload['realized'];b._marks=dict(payload['marks'])
+  def read(cls,row,clocks=(),enums=None,tuples=()):
+   row=dict(row)
+   for key in clocks:row[key]=datetime.fromisoformat(row[key])
+   for key,kind in (enums or {}).items():row[key]=kind(row[key])
+   for key in tuples:row[key]=tuple(row[key])
+   return cls(**row)
+  for row in payload['orders']:
+   order=read(PaperOrder,row,('created_at','updated_at'),{'state':OrderState});b._orders[order.order_id]=order
+  b._fills=[read(PaperFill,x,('filled_at',)) for x in payload['fills']]
+  for row in payload['positions']:
+   p=read(PaperPosition,row,('opened_at',),{'state':PositionState},('originating_order_ids','fill_ids'));b._positions[p.instrument_id]=p
+  b._audit=[read(AuditEvent,x,('recorded_at',)) for x in payload['audit']]
+  if not isfinite(b.cash) or not isfinite(b.realized):
+   raise PaperBrokerError('invalid paper monetary checkpoint')
+  expected=b.starting_cash+sum(f.net_cash_effect for f in b._fills)
+  if abs(expected-b.cash)>1e-7:
+   raise PaperBrokerError('paper checkpoint cash mismatch')
+  return b
  def fills(self):return tuple(self._fills)
  def reconcile(self,at=None):
   d=[]

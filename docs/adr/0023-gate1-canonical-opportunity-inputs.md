@@ -2,6 +2,9 @@
 
 Status: accepted locally, 2026-09-19.
 
+Correction: ADR 0024 completes the causal learned-ranking and durable worker/UI
+connections. This checkpoint's provenance bundle alone was not a closed loop.
+
 The canonical M13 ResearchOpportunity now carries an immutable factual input
 bundle alongside its existing ranked components. This reconciles the existing
 public-share refresh with the repository's causal regime, news/macro and

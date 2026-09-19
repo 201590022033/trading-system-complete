@@ -2,6 +2,16 @@
 
 This document describes the uploaded repository, not an aspirational redesign.
 
+## 2026-09-19 canonical paper-loop repair
+
+`application/opportunities/paper_loop.py` now connects existing M11/M12/M13,
+paper M14 geometry, M15 sizing and PaperBroker through one locked durable account
+transaction. `workers/paper_loop.py` freezes inputs and schedules bounded jobs.
+Additive paper_accounts/paper_records migrations support SQLite and PostgreSQL.
+Configured web processes read committed rankings through paper_host; no scanner
+fallback. The unconfigured mode remains on-demand research only. See ADR 0024
+and docs/repair/PAPER_LOOP_RUNBOOK.md for causal clocks and exact model limits.
+
 ## Existing core modules
 
 ### `jse_adapter.py`

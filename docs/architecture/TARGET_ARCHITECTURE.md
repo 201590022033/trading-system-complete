@@ -1,5 +1,10 @@
 # Target Architecture — Evolutionary Adaptive Intelligence Layer
 
+2026-09-19: the bounded canonical PAPER vertical slice is implemented (ADR 0024).
+It does not promote adaptive production weights, provide live execution or solve
+cross-broker capital allocation. Target capabilities below remain aspirational
+unless explicitly documented in the current architecture and repair runbook.
+
 ## Design principle
 Insert context and learning **around the current pipeline**. Keep the existing governance system as the decision consumer.
 

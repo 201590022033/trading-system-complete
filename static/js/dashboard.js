@@ -158,18 +158,22 @@ async function refreshNews() {
   catch (error) { $('#news-status').textContent = `News refresh failed: ${error.message}. Previously displayed items may be stale.`; }
 }
 async function refreshOpportunities() {
-  $('#opportunity-status').textContent = 'Scanning broad public universe and combining available evidence…';
+  $('#opportunity-status').textContent = 'Loading canonical research ranking…';
   try {
-    const result = await api('/api/opportunities'), data = result.data || {};
-    $('#opportunity-status').textContent = `${result.state} · scanned ${data.scanned || 0} of ${data.universe_size || 0} · ${data.method || ''} · ${when(result.last_success)}`;
-    $('#opportunities').innerHTML = (data.opportunities || []).length ? `<table><tr><th>Share</th><th>Combined</th><th>20d</th><th>RSI</th><th>News</th><th>Evidence</th><th>Research view</th></tr>${data.opportunities.map(row=>`<tr><td><b>${esc(row.symbol)}</b><br><small>${esc(row.name)}</small></td><td>${esc(num(row.combined_score))}</td><td>${esc(num(row.momentum_20d_pct))}%</td><td>${esc(num(row.rsi_14))}</td><td>${esc(row.news_mentions || 0)} mentions</td><td>${esc(row.state)}<br><small>${esc((row.evidence || []).join(' · '))}</small></td><td><button class="investigate-opportunity" data-instrument="${esc(row.symbol)}">View share research</button></td></tr>`).join('')}</table>` : '<p class="muted">No current candidates with sufficient public data.</p>';
-    document.querySelectorAll('.investigate-opportunity').forEach(button=>button.onclick=()=>{
-      const instrument=button.dataset.instrument;
-      $('#instrument').value=instruments.some(item=>item.instrument_id === instrument) ? instrument : '';
-      selectedChanged();
-      document.querySelector('.chart-panel').scrollIntoView({behavior:'smooth',block:'start'});
-    });
-  } catch (error) { $('#opportunity-status').textContent = `Discovery failed: ${error.message}`; }
+    const result = await canonicalFetch('/api/v1/opportunities?limit=5');
+    $('#opportunity-status').textContent = (result.refresh?.state || 'UNAVAILABLE') + ' · canonical research ranking';
+    const container = $('#opportunities');
+    container.replaceChildren();
+    for (const item of result.opportunities) {
+      const row = document.createElement('p');
+      row.textContent = 'Rank ' + item.rank + ' · ' + item.instrument_id + ' · Research score ' + num(item.ranking_score) + ' · ' + item.direction + ' · ' + item.evidence_status;
+      container.appendChild(row);
+    }
+    if (!result.opportunities.length) container.textContent = 'No canonical opportunities available. No legacy data substituted.';
+  } catch (error) {
+    $('#opportunities').replaceChildren();
+    $('#opportunity-status').textContent = 'Canonical ranking unavailable.';
+  }
 }
 async function refreshQuotes() {
   if (!$('#quotes .quote')) return;

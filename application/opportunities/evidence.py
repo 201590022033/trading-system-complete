@@ -34,23 +34,35 @@ def news_context(report, key, cutoff):
         available = timestamp(report["available_at"])
         if available > cutoff or (cutoff - available).total_seconds() > 86400:
             return unavailable
-        items = []
+        items, seen, macro = [], set(), []
         for item in report.get("items", ())[:100]:
             published = timestamp(item["timestamp"])
-            if published > available or not item.get("source"):
+            observed = timestamp(item.get("available_at") or report["available_at"])
+            if not published <= observed <= available or not item.get("source"):
                 continue
+            if (cutoff-observed).total_seconds() > 86400:
+                continue
+            from shadow_learning import stable_id
+            identity = item.get("evidence_id") or stable_id("news", item["source"], item.get("url"), item["timestamp"])
+            if identity in seen:
+                continue
+            seen.add(identity)
+            if item.get("macro_assets"):
+                macro.append({"evidence_id": identity, "assets": item["macro_assets"],
+                              "available_at": observed.isoformat(), "source": item["source"],
+                              "state": "CONTEXT_ONLY_NO_VALIDATED_DIRECTION_MAPPING"})
             if not any(a.get("name") == key for a in item.get("assets", ())):
                 continue
             score = float(item["score"])
             if not isfinite(score) or not -1 <= score <= 1:
                 continue
-            items.append({"source": item["source"], "url": item.get("url"),
+            items.append({"evidence_id": identity, "source": item["source"], "url": item.get("url"),
                           "published_at": published.isoformat(),
-                          "available_at": available.isoformat(), "score": score,
+                          "available_at": observed.isoformat(), "score": score,
                           "analysis_kind": "OPINION_NOT_VERIFIED_FACT",
                           "method": "LLM" if item.get("llm_used") else "KEYWORD"})
         return {"state": "AVAILABLE" if items else "UNAVAILABLE",
                 "available_at": available.isoformat(), "items": items,
-                "macro": "UNAVAILABLE_NO_VALIDATED_ASSET_MAPPING"}
+                "macro": macro or "UNAVAILABLE_NO_VALIDATED_ASSET_MAPPING"}
     except (KeyError, TypeError, ValueError):
         return unavailable
