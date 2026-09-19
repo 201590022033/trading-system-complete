@@ -1,7 +1,9 @@
 # Running the repaired PAPER loop
 
-The implementation is opt-in and has not been deployed or left running. This is
-an engineering acceptance milestone, not evidence of a profitable strategy.
+The implementation is opt-in. Railway activation was authorized on 2026-09-19:
+the production database was backed up and migrated, and both services configured
+with `/app/config/paper.railway.json`. Deployment acceptance must verify actual
+worker cycles, not merely this configuration. This is not evidence of profitability.
 
 ## Configure and start
 
@@ -18,8 +20,8 @@ PostgreSQL database never falls back to SQLite.
 
 For an operator-approved PostgreSQL target, explicitly run additive migrations
 before startup: `python -m scripts.migrate_postgres`. Web/worker startup does not
-migrate PostgreSQL. This repair only migrated a disposable local test cluster,
-not the existing local service or a remote database.
+migrate PostgreSQL. The authorized Railway migration was applied explicitly after
+a custom-format backup on the Postgres persistent volume.
 
 One bounded worker tick: `python -m scripts.run_paper --config config/paper.example.json`
 
@@ -59,7 +61,8 @@ the saved account and frozen jobs, not a reset balance.
   one-session outcomes reach the existing M11 learner; 30 observations are needed
   for its learned cell. Delayed exits are not mislabeled one-day samples.
 - News consumes already persisted, policy-enabled evidence from existing
-  collectors. This worker does not schedule new collectors or activate sources.
+  collectors. PAPER_NEWS_ENABLED=1 enables bounded ingestion of the existing
+  Moneyweb/SENS collector in the worker; first availability is never refreshed.
   Sentiment is labelled opinion; macro tags remain context, not invented risk.
 - Legacy operational analysis, shadow learning and market-intelligence screens
   remain separate diagnostics. They cannot substitute an alternate Top-5 ranker.
@@ -74,10 +77,16 @@ acceptance is separate: `python -m scripts.validate_paper_postgres --url ...`,
 restricted to an explicitly disposable localhost paper_validator database. It
 tests migrations, competing account transactions, rollback and process recovery.
 
-Before deployment, an operator still needs to choose simulation parameters,
-provision/migrate the intended database, configure both processes and supervise
-initial public-data sessions. Remote-host migration/deployment, long-duration
-soak/load testing and profitability/walk-forward validation are not performed.
+The Railway configuration uses R100,000 simulated capital and conservative risk.
+The Portfolio & demo workspace reads the durable ledger. PAPER_CONTROL_TOKEN on
+the web service unlocks authenticated aggression, pause/resume and enqueue-only
+check controls. Retrieve the key privately from Railway variables; never publish
+it in source, URLs or logs. These controls cannot enable real-money execution.
+IG read diagnostics are enabled in DEMO mode, but require IG_API_KEY,
+IG_IDENTIFIER (or IG_USERNAME), and IG_PASSWORD. No credential means no connection.
+Cloud AI credentials and a concrete IG streaming transport remain prerequisites
+for those separate capabilities. Long-duration soak/load testing and
+profitability/walk-forward validation are not performed.
 Audit records and broker checkpoint history grow with fills; archival/compaction
 is not supplied. Portfolio scope is one independently funded paper account per
 configuration, not consolidated cross-broker capital or automatic cash transfers.

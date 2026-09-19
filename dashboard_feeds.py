@@ -105,7 +105,21 @@ class DashboardFeeds:
                     self._entries["news"]["data"] = data
 
             report = self._scanner.scan(moneyweb_limit=20, sens_limit=15, on_progress=publish)
-            return self._news_report(report)
+            data = self._news_report(report)
+            if __import__('os').environ.get('PAPER_NEWS_ENABLED') == '1':
+                from runtime_persistence import runtime_repository
+                from application.opportunities.news_ingestion import persist_news_report
+                repository = None
+                try:
+                    repository = runtime_repository()
+                    data['persisted_items'] = persist_news_report(repository, data)
+                    data['persistence_state'] = 'AVAILABLE'
+                except Exception:
+                    data['persistence_state'] = 'UNAVAILABLE'
+                finally:
+                    if repository is not None:
+                        repository.close()
+            return data
 
         result = self._snapshot("news", 300, load)
         result.update(source="Moneyweb / SENS / configured NewsAPI", data_state="PUBLIC_NEWS")

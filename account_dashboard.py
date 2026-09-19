@@ -17,9 +17,16 @@ def unavailable(reason="IG read-only account status is disabled"):
     return {"state":"UNAVAILABLE","broker":"IG","environment":"DEMO","reason":reason,"accounts":(),"positions":(),"live_execution":False}
 
 def read_only_ig_status(environ=None):
-    env=os.environ if environ is None else environ
-    if env.get("IG_ACCOUNT_STATUS_ENABLED","").strip().upper() not in {"1","TRUE","YES"}: return unavailable()
+    env=project_environment(os.environ if environ is None else environ)
+    if env.get("IG_ACCOUNT_STATUS_ENABLED", "auto").strip().upper() in {"0", "FALSE", "NO"}:
+        return unavailable("IG account status explicitly paused in configuration")
     if env.get("IG_ENVIRONMENT", "DEMO").strip().upper() != "DEMO": return unavailable("IG account dashboard is restricted to DEMO")
+    missing = [name for name in ('IG_API_KEY', 'IG_PASSWORD') if not env.get(name)]
+    if not (env.get('IG_IDENTIFIER') or env.get('IG_USERNAME')):
+        missing.append('IG_IDENTIFIER')
+    if missing:
+        return {**unavailable("IG demo credentials are missing from this deployed service"),
+                "connection_state": "CREDENTIALS_MISSING", "required_settings": missing}
     config=IGConfig.from_env(project_environment(env))
     if config.environment != "DEMO": return unavailable("IG account dashboard is restricted to DEMO")
     adapter=IGReadOnlyAdapter(config); adapter.authenticate(); accounts=adapter.get_accounts()

@@ -20,7 +20,7 @@ class TopFiveGuiTests(unittest.TestCase):
   for state in ('LONG','SHORT','WATCH','UNKNOWN'):self.assertNotIn(f"item.direction==='{state}'",self.js)
  def test_research_only_cards_show_provenance_without_requesting_trade_state(self):
   self.assertIn("card.dataset.researchOnly === 'true'",self.js)
-  self.assertIn('No trade policy, risk approval, broker mapping or order has been produced.',self.js)
+  self.assertIn('The Portfolio workspace shows any separate paper policy, risk decision and fill',self.js)
   self.assertIn('Research provenance and trading boundary',self.js)
  def test_blockers_unresolved_stop_and_null_size_are_visible(self):
   self.assertIn('item.blockers',self.js);self.assertIn("policy?.stop?.status",self.js);self.assertIn("'Unresolved'",self.js);self.assertIn("'Not available'",self.js)

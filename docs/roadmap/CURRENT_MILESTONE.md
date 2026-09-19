@@ -1,5 +1,11 @@
 # Current Milestone
 
+## Operational demo workspace — ACTIVE 2026-09-19
+
+User explicitly authorized deployment activation, IG demo integration, portfolio
+redesign and aggression controls after the deployed audit. ADR 0025 supersedes
+the earlier local-completion interpretation. This is the sole active milestone.
+
 ## Canonical paper-loop repair — COMPLETE LOCALLY 2026-09-19
 
 User authorized Gates 2–5. See docs/repair/GATES_2_5_PLAN.md and ADR 0024.
@@ -10,7 +16,7 @@ M14 geometry, M15 cash/risk/aggression caps and restartable PaperBroker outcomes
 664 safe tests, native PostgreSQL acceptance and all 54 protected artifacts pass.
 No live execution, deployment or profitability claim. Runtime configuration and
 broader portfolio/instrument scope remain as documented in PAPER_LOOP_RUNBOOK.md.
-No milestone is ACTIVE; all checkpoint notes below are historical.
+All checkpoint notes below are historical; the operational milestone above is active.
 
 ### Public-share research UI checkpoint — 2026-09-18
 

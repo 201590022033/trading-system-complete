@@ -27,7 +27,9 @@ def request_source_registry():
     return registry
 portfolio_rows = []
 
-app = Flask(__name__); app.config["SECRET_KEY"] = "local-oi2-session"
+app = Flask(__name__); app.config["SECRET_KEY"] = os.environ.get("PAPER_CONTROL_TOKEN") or "local-oi2-session"
+app.config.update(SESSION_COOKIE_HTTPONLY=True, SESSION_COOKIE_SAMESITE='Strict',
+                  SESSION_COOKIE_SECURE=bool(os.environ.get('RAILWAY_ENVIRONMENT_ID')))
 socketio = SocketIO(app, cors_allowed_origins="*")
 canonical_opportunity_service = OpportunityService()
 def canonical_refresh_runner():
@@ -54,13 +56,15 @@ else:
     canonical_opportunity_refresh = OpportunityRefresh(canonical_opportunity_service,
                                                       runner=canonical_refresh_runner)
 app.register_blueprint(create_blueprint(canonical_opportunity_service, canonical_opportunity_refresh))
+from application.opportunities.operator_api import create_operator_blueprint, has_access
+app.register_blueprint(create_operator_blueprint(runtime_repository, paper_config))
 
 @app.get("/api/paper/status")
 def paper_account_status():
     if paper_config is None:
         return jsonify(state="NOT_CONFIGURED", mode="PAPER", live_execution=False)
     try:
-        return jsonify(paper_status(application_repository(), paper_config))
+        return jsonify(**paper_status(application_repository(), paper_config), control_access=has_access())
     except Exception:
         return jsonify(state="UNAVAILABLE", mode="PAPER", live_execution=False), 503
 

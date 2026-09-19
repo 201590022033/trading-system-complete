@@ -11,7 +11,7 @@ def heartbeat(worker_id: str | None = None) -> dict[str, str]:
     now = datetime.now(timezone.utc).isoformat()
     return {"worker_id": worker_id or os.environ.get("WORKER_ID", uuid.uuid4().hex),
             "started_at": now, "last_heartbeat_at": now, "status": "RUNNING",
-            "mode": os.environ.get("APP_MODE", "DEVELOPMENT").upper(), "version": os.environ.get("COMMIT_SHA", "unknown")}
+            "mode": os.environ.get("APP_MODE", "DEVELOPMENT").upper(), "version": os.environ.get("RAILWAY_GIT_COMMIT_SHA") or os.environ.get("COMMIT_SHA", "unknown")}
 
 
 def run(interval_seconds: float = 30.0, *, cycles=None, repository=None, handlers=None, scheduler=None) -> None:

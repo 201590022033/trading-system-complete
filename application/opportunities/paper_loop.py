@@ -103,6 +103,10 @@ class PaperLoop:
             prior = self.repository.paper_record(rid)
             if prior is not None:
                 return prior
+            from .paper_controls import controls_for
+            controls = controls_for(state, self.config)
+            paused = paused or controls["paused"]
+            effective_config = replace(self.config, aggression=controls["aggression"])
             if state["last_evaluated_at"] and timestamp(state["last_evaluated_at"]) >= now:
                 raise ValueError("paper cycles must advance causally")
             charts = frozen["input"].get("charts", {})
@@ -181,6 +185,7 @@ class PaperLoop:
                     continue
                 bar_at, price, volume = values[-1]
                 if bar_at <= original.evaluated_at:
+                    blocked.append({"instrument_id": instrument, "reason": "WAITING_FOR_NEXT_COMPLETE_SESSION"})
                     continue
                 latest = current.get(instrument)
                 if not latest or latest.eligibility_status != "ELIGIBLE" or latest.direction != original.direction:
@@ -202,7 +207,7 @@ class PaperLoop:
                     policy = replace(policy, policy_id=stable_id("paper-policy", self.config.account_id, policy.policy_id))
                     sector = public_share_catalog()[key].get("sector", "UNCLASSIFIED")
                     policy, risk = size_paper_policy(
-                        policy, now=now, broker=broker, book=book, config=self.config,
+                        policy, now=now, broker=broker, book=book, config=effective_config,
                         peak_equity=state["peak_equity"], daily_loss=state["daily_loss"],
                         volume=float(volume) if volume is not None else None, sector=sector, paused=paused)
                 except (ValueError, TypeError):
@@ -262,6 +267,7 @@ class PaperLoop:
             state.update(broker=broker.snapshot(), ranking_record_id=ranking_id,
                          last_evaluated_at=now.isoformat(), status="PAUSED" if paused else "AVAILABLE")
             result = {"mode": "PAPER", "live_execution": False, "evaluated_at": now.isoformat(),
+                      "controls": controls,
                       "opened": opened, "closed": closed, "blocked": blocked, "unavailable": unavailable,
                       "outcome_count": len(outcomes), "account": asdict(broker.get_account()),
                       "ranking_record_id": ranking_id}

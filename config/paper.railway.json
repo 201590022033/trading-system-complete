@@ -1,0 +1,31 @@
+{
+  "account_id": "railway-paper-zar-v1",
+  "mode": "PAPER",
+  "starting_cash": 100000,
+  "currency": "ZAR",
+  "universe": ["NPN", "SASOL", "BHP", "IMPJ", "SHPJ", "TFMJ", "ABSPJ", "JDIJ", "AGL", "BTI", "CFR", "FSR", "GFI", "KIO", "MTN", "NED", "REM", "VOD"],
+  "slippage_per_unit": 0.1,
+  "commission_per_fill": 5.0,
+  "risk_fraction": 0.005,
+  "aggression": "conservative",
+  "max_volume_fraction": 0.001,
+  "interval_seconds": 300,
+  "max_price_age_seconds": 86400,
+  "max_holding_seconds": 604800,
+  "reward_multiple": 2.0,
+  "limits": {
+    "limits_id": "railway-paper-conservative-v1",
+    "effective_at": "2026-01-01T00:00:00+00:00",
+    "max_risk_per_trade_fraction": 0.01,
+    "max_daily_loss_monetary": 1000,
+    "max_portfolio_open_risk_fraction": 0.03,
+    "max_notional_exposure_fraction": 0.9,
+    "max_gearing": 1.0,
+    "max_margin_utilization_fraction": 0.9,
+    "max_instrument_exposure_fraction": 0.2,
+    "max_sector_exposure_fraction": 0.4,
+    "max_correlated_exposure_fraction": 0.8,
+    "max_drawdown_fraction": 0.1,
+    "emergency_trading_pause": false
+  }
+}

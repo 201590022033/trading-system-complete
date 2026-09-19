@@ -48,7 +48,7 @@ async function loadCanonicalDetail(card) {
   if (card.dataset.researchOnly === 'true') {
     try {
       const item=(await canonicalFetch(`/api/v1/opportunities/${id}`)).opportunity;
-      node.innerHTML=`<p class="muted">Public-data research only. No trade policy, risk approval, broker mapping or order has been produced.</p><h4>Source and lineage</h4><pre>${esc(JSON.stringify(item.provenance || {},null,2))}</pre>${kv('Research pipeline version',item.provenance?.research_pipeline)}${kv('Last evaluated',when(item.evaluated_at))}`;
+      node.innerHTML=`<p class="muted">This is a research ranking. The Portfolio workspace shows any separate paper policy, risk decision and fill produced from an earlier proposal.</p><h4>Source and lineage</h4><pre>${esc(JSON.stringify(item.provenance || {},null,2))}</pre><h4>Input evidence</h4><pre>${esc(JSON.stringify(item.input_evidence || {},null,2))}</pre>${kv('Research pipeline version',item.provenance?.research_pipeline)}${kv('Last evaluated',when(item.evaluated_at))}`;
     } catch(error) { node.innerHTML=`<p class="unavailable">Research detail unavailable: ${esc(error.message)}</p>`; }
     return;
   }
@@ -296,6 +296,7 @@ document.querySelectorAll('nav button').forEach(button=>button.onclick=()=>{
   });
   const tab=$('#'+button.dataset.tab);
   tab.classList.add('active');
+  document.body.classList.toggle('portfolio-view',button.dataset.tab==='portfolio');
   tab.scrollIntoView({behavior:'smooth',block:'start'});
 });
 action('#run',async()=>render(await post(`/api/analysis/${$('#instrument').value}`,{horizon:$('#horizon').value,provider:$('#provider').value,allow_network:true})));
@@ -316,6 +317,8 @@ action('#reload-intelligence',refreshIntelligence);
 action('#refresh-learning-status',refreshLearningStatus);
 ensureAccountPanel();
 ensureChartInstrumentControl();
+document.body.classList.add('portfolio-view');
+document.querySelector('nav button[data-tab="portfolio"]').classList.add('active');
 action('#refresh-account-status',refreshAccountStatus);
 action('#import-portfolio',async()=>{ const result=await post('/api/portfolio/csv',{csv:$('#portfolio-csv').value}); $('#portfolio-status').textContent=`Imported ${result.count} position(s) · CSV snapshot only`; renderPortfolio(result.rows); });
 $('#instrument').onchange=selectedChanged;
@@ -325,7 +328,7 @@ $('#auto-refresh').onchange=()=>{if($('#auto-refresh').checked) refreshFeeds();}
 (async()=>{
   const [status,universe]=await Promise.all([api('/api/system/status'),api('/api/public-shares')]);
   instruments=universe.instruments;
-  $('#system-pill').textContent='PUBLIC FEEDS · RESEARCH ONLY';
+  $('#system-pill').textContent='DEMO & PAPER · NOT LIVE MONEY';
   $('#system-result').textContent=JSON.stringify(status,null,2);
   $('#instrument').innerHTML='<option value="">Select an instrument</option>'+instruments.map(i=>`<option value="${i.instrument_id}">${esc(i.display_symbol)} · ${esc(i.name)}</option>`).join('');
   $('#chart-instrument').innerHTML=$('#instrument').innerHTML;
