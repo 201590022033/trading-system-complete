@@ -65,6 +65,9 @@ class OperationalPortfolioTests(unittest.TestCase):
               'url':'https://www.moneyweb.co.za/fixture','llm_used':True,
               'analysis_provider':'fixture-provider','analysis_model':'fixture-model'}
         self.assertEqual(persist_news_report(self.repo,{'items':[item]},observed_at=T.isoformat()),1)
+        with patch('application.opportunities.paper_host.datetime') as clock:
+            clock.now.return_value = T
+            self.assertEqual(paper_status(self.repo,self.config)['learning']['persisted_news_records'],1)
         self.assertEqual(persist_news_report(self.repo,{'items':[item]},observed_at=(T+timedelta(hours=1)).isoformat()),0)
         before=persisted_news(self.repo,T-timedelta(seconds=1))
         self.assertFalse(before['items'])

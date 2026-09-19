@@ -2,6 +2,18 @@
 
 This document describes the uploaded repository, not an aspirational redesign.
 
+## 2026-09-19 operational deployment
+
+Railway web and worker now share the migrated PostgreSQL paper account and
+`config/paper.railway.json`. The Portfolio & demo workspace reads equity,
+positions, pending proposals, fills, outcomes and learning from that ledger.
+Authenticated aggression/pause controls are persisted and audited separately
+from immutable account assumptions. Existing collector analyses are persisted
+with first-availability clocks and deduplicated versions, then consumed causally
+by the canonical worker. IG demo diagnostics are enabled but actual credentials
+are absent; no concrete IG streaming transport is connected. Legacy shadow
+counters are explicitly separate from paper-outcome effectiveness learning.
+
 ## 2026-09-19 canonical paper-loop repair
 
 `application/opportunities/paper_loop.py` now connects existing M11/M12/M13,

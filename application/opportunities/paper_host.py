@@ -169,7 +169,9 @@ def paper_status(repository, config):
                  "rank": row["opportunity"]["rank"], "evaluated_at": row["opportunity"]["evaluated_at"],
                  "state": "PAUSED" if controls["paused"] else "SHORT_BORROW_UNAVAILABLE" if row["opportunity"]["direction"] == "SHORT" else "WAITING_FOR_NEXT_COMPLETE_SESSION"}
                 for row in state["pending"]]
-    evidence_count = repository._job_sql("SELECT COUNT(*) FROM evidence_records", rows=True)[0][0]
+    evidence_count = repository._job_sql(
+        "SELECT COUNT(*) FROM evidence_records WHERE parser_version=? AND ingested_at<=?",
+        ("persisted-public-analysis-v1", cutoff), rows=True)[0][0]
     return {"state": "STALE" if stale else state["status"], "mode": "PAPER", "live_execution": False,
             "account_id": config.account_id, "last_evaluated_at": state["last_evaluated_at"],
             "controls": controls, "effective_risk_fraction": config.risk_fraction * AGGRESSION[controls["aggression"]],

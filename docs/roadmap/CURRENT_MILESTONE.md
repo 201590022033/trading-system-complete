@@ -6,6 +6,15 @@ User explicitly authorized deployment activation, IG demo integration, portfolio
 redesign and aggression controls after the deployed audit. ADR 0025 supersedes
 the earlier local-completion interpretation. This is the sole active milestone.
 
+Deployed checkpoint: web and worker successfully deployed 825ac27; PostgreSQL
+contains completed paper jobs, rankings, audited controls and ten newly persisted
+Moneyweb analyses. Deployed cookie/Bearer authentication, aggression changes,
+pause/resume and queue requests passed; conservative/unpaused defaults restored.
+668 safe tests and all 54 protected artifacts pass. Portfolio browser and Top-5
+worker provenance verified. No market-session fill or production learned cell
+is claimed. IG credentials, cloud AI configuration and concrete IG streaming
+remain unconnected; this broader milestone is not complete.
+
 ## Canonical paper-loop repair — COMPLETE LOCALLY 2026-09-19
 
 User authorized Gates 2–5. See docs/repair/GATES_2_5_PLAN.md and ADR 0024.
