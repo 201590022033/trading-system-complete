@@ -60,6 +60,7 @@ class OpportunityCandidate:
     regime: MarketRegime | None
     data_grade: str
     broker_mapping: IGMapping | None = None
+    input_evidence: Mapping[str, object] = field(default_factory=dict)
 
     def __post_init__(self):
         if not isinstance(self.instrument, CanonicalInstrument):
@@ -124,6 +125,7 @@ class ResearchOpportunity:
     effectiveness_version: str | None
     ranking_version: str
     provenance: Mapping[str, object] = field(default_factory=dict)
+    input_evidence: Mapping[str, object] = field(default_factory=dict)
 
     def __post_init__(self):
         if self.evaluated_at.tzinfo is None or self.evaluated_at.utcoffset() is None:
@@ -178,6 +180,7 @@ class ResearchOpportunity:
             "effectiveness_version": self.effectiveness_version,
             "ranking_version": self.ranking_version,
             "provenance": dict(self.provenance),
+            "input_evidence": dict(self.input_evidence),
         }
 
 
@@ -375,6 +378,10 @@ class OpportunityRanker:
             {"instrument_registry_version": "canonical-instrument-registry-v1",
              "divergence_configuration_version": getattr(divergence, "configuration_version", None),
              "broker_mapping_version": getattr(mapping, "version", None)},
+            input_evidence={key: value for key, value in candidate.input_evidence.items()
+                            if not isinstance(value, Mapping) or
+                            value.get("evaluated_at") is None or
+                            value.get("evaluated_at") <= evaluated_at.isoformat()},
         )
 
     def rank(self, candidates, *, evaluated_at, top_n=5):

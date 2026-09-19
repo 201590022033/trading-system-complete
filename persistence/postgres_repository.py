@@ -246,6 +246,12 @@ class PostgresRepository(DurableJobs):
         return result
     def get_outcome(self, outcome_id: str) -> dict | None:
         return self._read_payload("outcome_labels", "outcome_id", outcome_id)
+    def list_adaptive_evidence(self) -> list[dict]:
+        c = self._require_connection()
+        with c.cursor() as cur:
+            cur.execute("SELECT payload FROM adaptive_evidence ORDER BY updated_at, evidence_key")
+            rows = cur.fetchall()
+        return [json.loads(row[0]) if isinstance(row[0], str) else row[0] for row in rows]
     def get_job(self, job_key: str) -> dict | None:
         return self._read_payload("worker_jobs", "job_key", job_key)
     def save_reliability_outcome(self, record: dict) -> None:

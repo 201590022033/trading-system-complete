@@ -11,6 +11,18 @@ divergence evidence for M13 canonical ranking. Only ranked shares reach the
 read-only Top 5; incomplete/unavailable candidates are reported separately.
 The result remains in process memory until refresh/restart. See ADR 0022.
 
+### Gate 1 canonical opportunity pipeline — COMPLETE LOCALLY 2026-09-19
+
+The canonical M13 path now retains technical, causal regime, factual news/macro
+and persisted-learning input evidence on each ResearchOpportunity. The legacy
+70/30 scanner no longer supplies /api/opportunities; that compatibility route
+reads the canonical service, while the Top 5 UI continues to use the canonical
+v1 API. Missing evidence remains unavailable and future learned context cannot
+enter an earlier evaluation. See the Gate 1 repair plan and ADR 0023.
+
+Gates 2–5 remain disconnected: autonomous scheduling/outcomes, trade geometry,
+portfolio/aggression sizing, and PaperBroker closed-loop orchestration.
+
 ### Forensic repair checkpoint — 2026-09-17
 
 Local repair batches cover causal inputs/horizons/costs, transactional ledgers,

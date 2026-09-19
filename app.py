@@ -13,8 +13,12 @@ from datetime import datetime, timezone
 from uuid import uuid4
 from application.opportunities import OpportunityService
 from application.opportunities.api import create_blueprint
+from application.opportunities.service import serialize_opportunity
 from application.opportunities.refresh import OpportunityRefresh
-from application.opportunities.public_research import public_share_catalog, public_share_list
+from application.opportunities.public_research import (
+    public_share_catalog, public_share_list, persisted_shadow_evidence,
+    refresh_public_research,
+)
 from runtime_persistence import runtime_repository
 
 def request_source_registry():
@@ -26,7 +30,19 @@ portfolio_rows = []
 app = Flask(__name__); app.config["SECRET_KEY"] = "local-oi2-session"
 socketio = SocketIO(app, cors_allowed_origins="*")
 canonical_opportunity_service = OpportunityService()
-canonical_opportunity_refresh = OpportunityRefresh(canonical_opportunity_service)
+def canonical_refresh_runner():
+    evaluated_at = datetime.now(timezone.utc)
+    repository = runtime_repository()
+    try:
+        news_snapshot = feeds.news()
+        news_report = news_snapshot.get("data") if news_snapshot.get("state") in {"AVAILABLE", "PARTIAL", "STALE"} else None
+        learned = persisted_shadow_evidence(repository, evaluated_at=evaluated_at)
+        return refresh_public_research(evaluated_at=evaluated_at, news_report=news_report,
+                                       learned_evidence=learned)
+    finally:
+        repository.close()
+canonical_opportunity_refresh = OpportunityRefresh(canonical_opportunity_service,
+                                                    runner=canonical_refresh_runner)
 app.register_blueprint(create_blueprint(canonical_opportunity_service, canonical_opportunity_refresh))
 
 def application_repository():
@@ -188,7 +204,16 @@ def market_feed(instrument):
 @app.get("/api/feed/news")
 def news_feed(): return jsonify(feeds.news())
 @app.get("/api/opportunities")
-def opportunities(): return jsonify(feeds.opportunities())
+def opportunities():
+    """Compatibility read model backed only by the canonical M13 service."""
+    items = canonical_opportunity_service.list_opportunities(limit=10)
+    status = canonical_opportunity_refresh.status()
+    return jsonify(state="AVAILABLE" if items else "INSUFFICIENT_EVIDENCE",
+                   data={"opportunities": [serialize_opportunity(item) for item in items],
+                         "scanned": status["scanned"],
+                         "method": "canonical M13 research ranking",
+                         "execution_enabled": False},
+                   canonical=True, live_execution=False)
 @app.get("/api/market/<instrument>")
 def market(instrument): return respond(lambda: service.market(instrument, request.args.get("provider", "historical")))
 @app.post("/api/analysis/<instrument>")

@@ -129,6 +129,12 @@ class MarketIntelligenceStore:
         from shadow_learning import evidence_key
         return evidence_key(evidence, lambda key: self._ledger_payload("adaptive_evidence","evidence_key",key))
 
+    def list_adaptive_evidence(self):
+        rows = self._connection.execute(
+            "SELECT payload FROM adaptive_evidence ORDER BY updated_at, evidence_key"
+        ).fetchall()
+        return [json.loads(row[0]) for row in rows]
+
     def _ledger_payload(self, table, key, value):
         row = self._connection.execute(f"SELECT payload FROM {table} WHERE {key}=?", (value,)).fetchone()
         return json.loads(row[0]) if row else None

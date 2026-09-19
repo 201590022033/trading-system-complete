@@ -13,6 +13,7 @@ from domain.evaluation.effectiveness import ContextualEffectivenessLearner, Feat
 from domain.evaluation.opportunity import OpportunityCandidate, rank_opportunities
 from domain.evaluation.suitability import CostEvidence, LiquidityEvidence, SuitabilityEvidence, evaluate_suitability
 from domain.features.divergence import DivergenceConfig, SignalEvidence, summarize
+from domain.features.regime import RegimeParameters, classify_candidate
 from domain.registry.instrument import CanonicalInstrument, DEFAULT_INSTRUMENT_REGISTRY, GovernanceState
 from indicator_effectiveness import signal_outcome
 from intraday_instruments import DataGrade, InstrumentDefinition
@@ -20,6 +21,22 @@ from jse_adapter import JSE_TICKERS, YahooFinanceFetcher
 
 VERSION = "public-cash-research-v1"
 COST_BPS = 10.0  # Declared research assumption: 5 spread + 2 fees + 3 slippage.
+
+
+def persisted_shadow_evidence(repository, *, evaluated_at):
+    """Return only matured persisted shadow aggregates keyed by canonical ID."""
+    from shadow_learning import timestamp
+    result = {}
+    for item in repository.list_adaptive_evidence():
+        try:
+            updated = timestamp(item.get("updated_at", ""))
+        except (TypeError, ValueError):
+            continue
+        if updated > evaluated_at:
+            continue
+        instrument = str(item.get("instrument", "")).upper()
+        result[instrument] = {**item, "state": "PERSISTED_MATURED"}
+    return result
 
 
 def public_share_catalog():
@@ -81,7 +98,7 @@ def _signal(closes, feature):
     return 1 if value is not None and value < 30 else -1 if value is not None and value > 70 else 0
 
 
-def candidate_from_chart(key, chart, *, evaluated_at):
+def candidate_from_chart(key, chart, *, evaluated_at, news_report=None, learned_evidence=None):
     catalog = public_share_catalog()
     if key not in catalog:
         raise ValueError("share is outside the curated public catalog")
@@ -126,6 +143,32 @@ def candidate_from_chart(key, chart, *, evaluated_at):
                                           clocks[-1], instrument_id=canonical.instrument_id,
                                           horizon_id="1d", category="technical"))
     effectiveness = tuple(evidence)
+    regime = classify_candidate(
+        closes, evaluated_at, RegimeParameters(.02, .025, .008),
+        available_times=clocks,
+        macro_risk=((news_report or {}).get("macro_risk") or "UNKNOWN"),
+    )
+    ticker_news = ((news_report or {}).get("tickers") or {}).get(key)
+    macro = (news_report or {}).get("macro") or {}
+    input_evidence = {
+        "technical": {
+            "features": ("momentum_20d", "rsi_14"),
+            "last_available_at": clocks[-1].isoformat(),
+            "momentum_20d_signal": _signal(closes, "momentum_20d"),
+            "rsi_14_signal": _signal(closes, "rsi_14"),
+        },
+        "regime": regime.to_dict(),
+        "news_macro": {
+            "state": "AVAILABLE" if ticker_news or macro else "UNAVAILABLE",
+            "ticker": ticker_news,
+            "macro": macro,
+            "evaluated_at": evaluated_at.isoformat(),
+        },
+        "learned_effectiveness": dict((learned_evidence or {}).get(canonical.instrument_id, {
+            "state": "UNAVAILABLE",
+            "reason": "NO_PERSISTED_SHADOW_EVIDENCE",
+        })),
+    }
     suitability = evaluate_suitability(
         research, "1d", evaluated_at,
         data=SuitabilityEvidence("AVAILABLE", DataGrade.RESEARCH, "Yahoo public daily bars",
@@ -139,7 +182,8 @@ def candidate_from_chart(key, chart, *, evaluated_at):
     divergence = summarize(signals, evaluated_at, DivergenceConfig(2, 1),
                            instrument_id=canonical.instrument_id, horizon_id="1d")
     return OpportunityCandidate(canonical, suitability, divergence, effectiveness,
-                                None, DataGrade.RESEARCH.value)
+                                regime, DataGrade.RESEARCH.value,
+                                input_evidence=input_evidence)
 
 
 @dataclass(frozen=True)
@@ -149,7 +193,8 @@ class RefreshResult:
     scanned: int
 
 
-def refresh_public_research(*, fetcher=None, evaluated_at=None, universe=None, max_workers=4):
+def refresh_public_research(*, fetcher=None, evaluated_at=None, universe=None, max_workers=4,
+                            news_report=None, learned_evidence=None):
     """One bounded on-demand pass. Failed shares never become ranked records."""
     evaluated_at = evaluated_at or datetime.now(timezone.utc)
     catalog = public_share_catalog()
@@ -159,7 +204,8 @@ def refresh_public_research(*, fetcher=None, evaluated_at=None, universe=None, m
 
     def load(key):
         return candidate_from_chart(key, fetcher.get_chart(catalog[key]["yahoo_symbol"], "1y"),
-                                    evaluated_at=evaluated_at)
+                                    evaluated_at=evaluated_at, news_report=news_report,
+                                    learned_evidence=learned_evidence)
 
     with ThreadPoolExecutor(max_workers=max_workers, thread_name_prefix="public-research") as pool:
         futures = {pool.submit(load, key): key for key in keys}

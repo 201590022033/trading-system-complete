@@ -1,4 +1,5 @@
 import unittest
+from unittest.mock import patch
 from dataclasses import replace
 from domain.risk import RiskEvaluation,RiskStatus
 from application.opportunities.service import OpportunityService,serialize_opportunity
@@ -35,5 +36,15 @@ class CanonicalOpportunityApiTests(unittest.TestCase):
   self.assertIn('/api/opportunities',{rule.rule for rule in app.url_map.iter_rules()})
   self.assertFalse(hasattr(canonical_opportunity_service,'submit_order'))
   with self.assertRaises(LiveExecutionDisabled):PaperExecutionProvider().submit_order({})
+
+ def test_compatibility_endpoint_cannot_call_legacy_scanner(self):
+  canonical_opportunity_service.replace_records((self.o1,),(),())
+  with patch('app.feeds.opportunities', side_effect=AssertionError('legacy scanner used')):
+   response=self.client.get('/api/opportunities')
+  self.assertEqual(response.status_code,200)
+  body=response.get_json()
+  self.assertTrue(body['canonical'])
+  self.assertEqual(body['data']['method'],'canonical M13 research ranking')
+  self.assertEqual(body['data']['opportunities'][0]['opportunity_id'],'opp-1')
 
 if __name__=='__main__':unittest.main()

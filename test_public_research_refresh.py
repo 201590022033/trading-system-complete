@@ -61,6 +61,27 @@ class PublicResearchRefreshTests(unittest.TestCase):
         self.assertTrue(all(item.provenance["cost_assumption_bps"] == 10 for item in ranked))
         self.assertTrue(all(item.provenance["data_symbol"].endswith(".JO") for item in ranked))
         self.assertTrue(all(item.sample_count >= 30 for item in ranked))
+        self.assertTrue(all(item.input_evidence["regime"]["availability"] == "AVAILABLE"
+                            for item in ranked))
+        self.assertTrue(all(item.input_evidence["news_macro"]["state"] == "UNAVAILABLE"
+                            for item in ranked))
+
+    def test_canonical_record_carries_only_causal_learned_input(self):
+        instrument_id = "EQ_ZAR_TFMJ"
+        past = {"state": "OBSERVED", "evaluated_at": "2026-09-17T12:00:00+00:00",
+                "sample_count": 4}
+        future = {"state": "OBSERVED", "evaluated_at": "2026-09-19T12:00:00+00:00",
+                  "sample_count": 999}
+        result = refresh_public_research(
+            fetcher=FakeFetcher(), evaluated_at=NOW, universe=("TFMJ",),
+            learned_evidence={instrument_id: past})
+        record = result.opportunities[0]
+        self.assertEqual(record.input_evidence["learned_effectiveness"]["sample_count"], 4)
+        result = refresh_public_research(
+            fetcher=FakeFetcher(), evaluated_at=NOW, universe=("TFMJ",),
+            learned_evidence={instrument_id: future})
+        record = result.opportunities[0]
+        self.assertNotIn("learned_effectiveness", record.input_evidence)
 
     def test_stale_identity_mismatch_and_short_history_cannot_rank(self):
         symbol = public_share_catalog()["TFMJ"]["yahoo_symbol"]

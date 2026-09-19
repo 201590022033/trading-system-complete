@@ -87,6 +87,8 @@ class SQLiteRepository(DurableJobs):
     def get_outcome(self, outcome_id: str) -> dict | None:
         row = self.store._connection.execute("SELECT payload FROM outcome_labels WHERE outcome_id=?", (outcome_id,)).fetchone()
         return loads(row[0], None) if row else None
+    def list_adaptive_evidence(self) -> list[dict]:
+        return self.store.list_adaptive_evidence()
     def get_job(self, job_key: str) -> dict | None:
         row = self.store._connection.execute("SELECT payload FROM worker_jobs WHERE job_key=?", (job_key,)).fetchone()
         return loads(row[0], None) if row else None
