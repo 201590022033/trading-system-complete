@@ -37,3 +37,13 @@ Runtime: provide a bounded CLI and heartbeat composition plus a documented paper
 configuration. Configuration is explicit simulation capital/assumptions, not a
 claim about a real account or executable liquidity. Missing runtime dependencies
 must yield a visible unavailable state. No deployment or push before verification.
+
+Gate 2 foundation: transactional account checkpoints, immutable inputs/outcomes,
+bounded indexed reads and idempotent scheduled jobs pass both SQLite and the
+PostgreSQL behavioral fixture. Complete outcome processing awaits Gate 5.
+
+Gate 3: paper-close-structure-v1 resolves entry on a later complete observation,
+preceding 20-close structural stop, configured 2R target, one observed-session
+exit and maximum elapsed-time expiry. This is a disclosed paper execution model,
+not an optimized strategy or an intrabar stop guarantee. Focused policy/risk
+regressions pass. No production/default M14 policy behavior changed.
