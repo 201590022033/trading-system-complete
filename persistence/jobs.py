@@ -3,9 +3,10 @@ import json
 from dataclasses import replace
 from datetime import timedelta
 from shadow_learning import JobCheckpoint, timestamp
+from .paper_ledger import PaperLedger
 
 
-class DurableJobs:
+class DurableJobs(PaperLedger):
     def readiness(self):
         try:
             tables=('observations','shadow_decisions','outcome_labels','adaptive_evidence_contributions',

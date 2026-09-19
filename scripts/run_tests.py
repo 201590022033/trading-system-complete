@@ -4,6 +4,7 @@ import argparse
 import os
 import sys
 import unittest
+import socket
 
 ROOT = Path(__file__).resolve().parents[1]
 EXCLUDED = {'test_cloud', 'test_ost_login', 'test_reddit', 'test_sentiment', 'test_llm_sentiment'}
@@ -20,6 +21,12 @@ def main():
     args = parser.parse_args()
     os.chdir(ROOT)
     os.environ['PYTHON_DOTENV_DISABLED'] = '1'
+    # Test imports must not probe broker, LLM or market services.
+    def offline(*args, **kwargs):
+        raise OSError('external sockets disabled by safe test runner')
+    socket.socket.connect = offline
+    socket.socket.connect_ex = offline
+    socket.create_connection = offline
     sys.dont_write_bytecode = True
     sys.path.insert(0, str(ROOT))
     suite = unittest.defaultTestLoader.loadTestsFromNames(test_modules(args.focused))

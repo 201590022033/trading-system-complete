@@ -131,7 +131,7 @@ class MarketIntelligenceStore:
 
     def list_adaptive_evidence(self):
         rows = self._connection.execute(
-            "SELECT payload FROM adaptive_evidence ORDER BY updated_at, evidence_key"
+            "SELECT payload FROM adaptive_evidence ORDER BY updated_at DESC, evidence_key LIMIT 400"
         ).fetchall()
         return [json.loads(row[0]) for row in rows]
 

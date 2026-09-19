@@ -1,6 +1,11 @@
 # Current Milestone
 
-## Persistent Shadow-Learning Foundation — ACTIVE 2026-09-16
+## Canonical paper-loop repair — ACTIVE 2026-09-19
+
+User authorized Gates 2–5. See docs/repair/GATES_2_5_PLAN.md. The earlier Gate 1
+completion claim is under correction: context-only learned inputs did not affect
+ranking and the old discovery display had not been migrated. Existing foundation
+checkpoints below are historical; this is the only active milestone.
 
 ### Public-share research UI checkpoint — 2026-09-18
 

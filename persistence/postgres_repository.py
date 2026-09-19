@@ -249,7 +249,7 @@ class PostgresRepository(DurableJobs):
     def list_adaptive_evidence(self) -> list[dict]:
         c = self._require_connection()
         with c.cursor() as cur:
-            cur.execute("SELECT payload FROM adaptive_evidence ORDER BY updated_at, evidence_key")
+            cur.execute("SELECT payload FROM adaptive_evidence ORDER BY updated_at DESC, evidence_key LIMIT 400")
             rows = cur.fetchall()
         return [json.loads(row[0]) if isinstance(row[0], str) else row[0] for row in rows]
     def get_job(self, job_key: str) -> dict | None:

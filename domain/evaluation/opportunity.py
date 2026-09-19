@@ -18,6 +18,12 @@ VERSION = "opportunity-ranking-v1"
 SCORE_SEMANTICS = "COMPARATIVE_RESEARCH_RANKING_SCORE_NOT_A_PROBABILITY_OR_EXPECTED_RETURN"
 
 
+def causal_input_evidence(bundle, cutoff):
+    # Shared adapter validates nested clocks using UTC instants, not lexical ISO ordering.
+    from application.opportunities.evidence import causal_bundle
+    return causal_bundle(bundle, cutoff)
+
+
 @dataclass(frozen=True)
 class RankingConfig:
     """Declared defaults; these weights were not fitted to historical returns."""
@@ -254,6 +260,7 @@ class OpportunityRanker:
 
         effectiveness = tuple(item for item in candidate.effectiveness
                               if item.evaluated_at <= evaluated_at
+                              and (item.matured_through is None or item.matured_through <= evaluated_at)
                               and item.instrument_id == suitability.instrument_id
                               and item.horizon_id == suitability.horizon_id)
         divergence = candidate.divergence
@@ -378,10 +385,7 @@ class OpportunityRanker:
             {"instrument_registry_version": "canonical-instrument-registry-v1",
              "divergence_configuration_version": getattr(divergence, "configuration_version", None),
              "broker_mapping_version": getattr(mapping, "version", None)},
-            input_evidence={key: value for key, value in candidate.input_evidence.items()
-                            if not isinstance(value, Mapping) or
-                            value.get("evaluated_at") is None or
-                            value.get("evaluated_at") <= evaluated_at.isoformat()},
+            input_evidence=causal_input_evidence(candidate.input_evidence, evaluated_at),
         )
 
     def rank(self, candidates, *, evaluated_at, top_n=5):

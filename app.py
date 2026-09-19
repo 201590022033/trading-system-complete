@@ -35,7 +35,9 @@ def canonical_refresh_runner():
     repository = runtime_repository()
     try:
         news_snapshot = feeds.news()
-        news_report = news_snapshot.get("data") if news_snapshot.get("state") in {"AVAILABLE", "PARTIAL", "STALE"} else None
+        news_report = ({**news_snapshot["data"], "available_at": news_snapshot["last_success"]}
+                       if news_snapshot.get("state") in {"AVAILABLE", "PARTIAL"}
+                       and news_snapshot.get("data") and news_snapshot.get("last_success") else None)
         learned = persisted_shadow_evidence(repository, evaluated_at=evaluated_at)
         return refresh_public_research(evaluated_at=evaluated_at, news_report=news_report,
                                        learned_evidence=learned)

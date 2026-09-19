@@ -24,7 +24,7 @@ COST_BPS = 10.0  # Declared research assumption: 5 spread + 2 fees + 3 slippage.
 
 
 def persisted_shadow_evidence(repository, *, evaluated_at):
-    """Return only matured persisted shadow aggregates keyed by canonical ID."""
+    """Read current causal legacy shadow context, never relabel it as feature skill."""
     from shadow_learning import timestamp
     result = {}
     for item in repository.list_adaptive_evidence():
@@ -34,8 +34,15 @@ def persisted_shadow_evidence(repository, *, evaluated_at):
             continue
         if updated > evaluated_at:
             continue
-        instrument = str(item.get("instrument", "")).upper()
-        result[instrument] = {**item, "state": "PERSISTED_MATURED"}
+        if item.get("governance_state") != "SHADOW_ADAPTIVE_EVIDENCE":
+            continue
+        try:
+            instrument = DEFAULT_INSTRUMENT_REGISTRY.resolve(item["instrument"]).instrument_id
+        except (KeyError, TypeError):
+            continue
+        cell = {name: item.get(name) for name in ("evidence_id", "horizon", "regime", "profile",
+                "sample_count", "mean_net_return", "governance_state", "updated_at")}
+        result.setdefault(instrument, {"state": "LEGACY_SHADOW_CONTEXT_ONLY", "cells": []})["cells"].append(cell)
     return result
 
 
@@ -98,7 +105,8 @@ def _signal(closes, feature):
     return 1 if value is not None and value < 30 else -1 if value is not None and value > 70 else 0
 
 
-def candidate_from_chart(key, chart, *, evaluated_at, news_report=None, learned_evidence=None):
+def candidate_from_chart(key, chart, *, evaluated_at, news_report=None, learned_evidence=None,
+                         paper_outcomes=()):
     catalog = public_share_catalog()
     if key not in catalog:
         raise ValueError("share is outside the curated public catalog")
@@ -142,28 +150,29 @@ def candidate_from_chart(key, chart, *, evaluated_at, news_report=None, learned_
             signals.append(SignalEvidence(feature, VERSION, _signal(closes, feature),
                                           clocks[-1], instrument_id=canonical.instrument_id,
                                           horizon_id="1d", category="technical"))
+    matching = tuple(x for x in paper_outcomes if x.instrument_id == canonical.instrument_id
+                     and x.horizon_id == "1d" and x.feature_id == "paper_strategy")
+    if matching:
+        evidence.append(learner.estimate(
+            matching, feature_id="paper_strategy", evaluated_at=evaluated_at,
+            instrument_id=canonical.instrument_id, horizon_id="1d"))
     effectiveness = tuple(evidence)
     regime = classify_candidate(
         closes, evaluated_at, RegimeParameters(.02, .025, .008),
         available_times=clocks,
-        macro_risk=((news_report or {}).get("macro_risk") or "UNKNOWN"),
+        macro_risk="UNKNOWN",
     )
-    ticker_news = ((news_report or {}).get("tickers") or {}).get(key)
-    macro = (news_report or {}).get("macro") or {}
+    from .evidence import news_context
+    news = news_context(news_report, key, evaluated_at)
     input_evidence = {
         "technical": {
             "features": ("momentum_20d", "rsi_14"),
             "last_available_at": clocks[-1].isoformat(),
-            "momentum_20d_signal": _signal(closes, "momentum_20d"),
+            "momentum_20d_signal": _signal(closes, "momentum_20d") if len(closes) >= 21 else None,
             "rsi_14_signal": _signal(closes, "rsi_14"),
         },
         "regime": regime.to_dict(),
-        "news_macro": {
-            "state": "AVAILABLE" if ticker_news or macro else "UNAVAILABLE",
-            "ticker": ticker_news,
-            "macro": macro,
-            "evaluated_at": evaluated_at.isoformat(),
-        },
+        "news_macro": news,
         "learned_effectiveness": dict((learned_evidence or {}).get(canonical.instrument_id, {
             "state": "UNAVAILABLE",
             "reason": "NO_PERSISTED_SHADOW_EVIDENCE",
@@ -194,7 +203,7 @@ class RefreshResult:
 
 
 def refresh_public_research(*, fetcher=None, evaluated_at=None, universe=None, max_workers=4,
-                            news_report=None, learned_evidence=None):
+                            news_report=None, learned_evidence=None, paper_outcomes=()):
     """One bounded on-demand pass. Failed shares never become ranked records."""
     evaluated_at = evaluated_at or datetime.now(timezone.utc)
     catalog = public_share_catalog()
@@ -205,7 +214,7 @@ def refresh_public_research(*, fetcher=None, evaluated_at=None, universe=None, m
     def load(key):
         return candidate_from_chart(key, fetcher.get_chart(catalog[key]["yahoo_symbol"], "1y"),
                                     evaluated_at=evaluated_at, news_report=news_report,
-                                    learned_evidence=learned_evidence)
+                                    learned_evidence=learned_evidence, paper_outcomes=paper_outcomes)
 
     with ThreadPoolExecutor(max_workers=max_workers, thread_name_prefix="public-research") as pool:
         futures = {pool.submit(load, key): key for key in keys}
