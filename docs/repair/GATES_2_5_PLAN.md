@@ -47,3 +47,11 @@ preceding 20-close structural stop, configured 2R target, one observed-session
 exit and maximum elapsed-time expiry. This is a disclosed paper execution model,
 not an optimized strategy or an intrabar stop guarantee. Focused policy/risk
 regressions pass. No production/default M14 policy behavior changed.
+
+Gate 4: explicit PAPER configuration feeds M15 from the paper ledger. The
+adapter applies whole-share rounding, cash with closing-fee reserves, observed
+volume participation, round-trip costs and daily-loss headroom after M15 approval.
+Aggression scales requested risk by 0.5/0.75/1.0 and cannot enlarge a hard limit.
+The example capital, costs and fully funded unit contract are simulation
+assumptions; no real broker cash, margin or liquidity is inferred. Tests cover
+caps, depleted cash, missing volume, daily losses and the kill switch.
