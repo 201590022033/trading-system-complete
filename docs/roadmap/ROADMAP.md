@@ -1,5 +1,15 @@
 # Linear Fusion Roadmap
 
+## IG operational checkpoint — 2026-09-19
+
+The Operational demo workspace remains the sole active milestone. Verified IG
+DEMO credentials are configured in Railway; deployed account/position reads
+succeed. The current PRICE transport passed a bounded local subscription and
+stale snapshot check. Continuous ingestion, canonical CFD ranking/risk and
+external order validation remain incomplete. See
+[reassessment](../repair/IG_OPERATIONAL_REASSESSMENT.md). Historical component
+completion headings below do not claim those operational connections.
+
 ## Canonical paper-loop repair — COMPLETE LOCALLY 2026-09-19
 
 Gates 2–5 are implemented for the explicit daily-close, fully funded ZAR PAPER

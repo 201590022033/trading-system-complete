@@ -20,7 +20,7 @@ def _utc(value, name):
 @dataclass(frozen=True)
 class MarketStreamSubscription:
     subscription_id: str; instrument_id: str; execution_symbol: str; broker: str; epic: str
-    fields: tuple[str,...] = ("BID","OFFER","MARKET_STATE","UPDATE_TIME")
+    fields: tuple[str,...] = ("BIDPRICE1","ASKPRICE1","TIMESTAMP","DLG_FLAG","DELAY")
     def __post_init__(self):
         if not all((self.subscription_id,self.instrument_id,self.execution_symbol,self.broker,self.epic)):
             raise ValueError("resolved canonical instrument mapping required")
@@ -37,6 +37,7 @@ class CanonicalMarketObservation:
     bid: float|None; ask: float|None; mid: float|None; last: float|None; spread: float|None
     market_status: str|None; data_grade: str; stale: bool; ordering_state: OrderingState
     source_sequence: str|None; provenance: str; source_version: str=STREAM_VERSION
+    delayed: bool|None=None
     def __post_init__(self):
         object.__setattr__(self,"received_at",_utc(self.received_at,"received_at"))
         if self.source_timestamp is not None: object.__setattr__(self,"source_timestamp",_utc(self.source_timestamp,"source_timestamp"))

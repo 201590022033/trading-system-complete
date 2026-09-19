@@ -12,8 +12,11 @@ Moneyweb analyses. Deployed cookie/Bearer authentication, aggression changes,
 pause/resume and queue requests passed; conservative/unpaused defaults restored.
 668 safe tests and all 54 protected artifacts pass. Portfolio browser and Top-5
 worker provenance verified. No market-session fill or production learned cell
-is claimed. IG credentials, cloud AI configuration and concrete IG streaming
-remain unconnected; this broader milestone is not complete.
+is claimed. IG credentials are now configured in Railway and deployed DEMO
+account reads pass. A concrete PRICE transport passed bounded local
+subscription/snapshot validation; continuous worker ingestion remains
+disconnected. Cloud AI remains unconfigured; this broader milestone is not
+complete. See docs/repair/IG_OPERATIONAL_REASSESSMENT.md for revised gates.
 
 ## Canonical paper-loop repair — COMPLETE LOCALLY 2026-09-19
 

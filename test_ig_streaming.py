@@ -40,7 +40,7 @@ class IGStreamingTests(unittest.TestCase):
         with self.assertRaises(ValueError): self.stream.subscribe(mapping(environment="LIVE"))
     def test_subscription_uses_official_price_item_and_fields(self):
         self.stream.connect(); call=self.transport.calls[1]
-        self.assertEqual(call[1],"PRICE:ACC:CC.D.LCO.BMU.IP"); self.assertIn("BID",call[2]); self.assertIn("OFFER",call[2])
+        self.assertEqual(call[1],"PRICE:ACC:CC.D.LCO.BMU.IP"); self.assertIn("BIDPRICE1",call[2]); self.assertIn("ASKPRICE1",call[2])
     def test_source_prices_mid_spread_status_and_provenance(self):
         obs=self.stream.receive(self.raw(sequence="7")); self.assertEqual((obs.bid,obs.ask,obs.mid,obs.spread),(75,76,75.5,1)); self.assertEqual(obs.market_status,"TRADEABLE"); self.assertIn(MID_RULE,obs.provenance); self.assertEqual(obs.data_grade,"RESEARCH_DATA")
     def test_utc_and_receipt_time_are_distinct(self):
@@ -52,7 +52,22 @@ class IGStreamingTests(unittest.TestCase):
         old=self.raw({"BID":74,"OFFER":75,"UTM":(NOW-timedelta(seconds=1)).timestamp()*1000},NOW+timedelta(seconds=2),"0"); self.assertEqual(self.stream.receive(old).ordering_state,OrderingState.OUT_OF_ORDER)
     def test_stale_quote_and_health_states(self):
         obs=self.stream.receive(self.raw({"BID":1,"OFFER":2,"UTM":(NOW-timedelta(seconds=31)).timestamp()*1000},NOW)); self.assertTrue(obs.stale)
-        self.assertEqual(self.stream.health(NOW).status,StreamStatus.DISCONNECTED); self.stream.connect(); self.assertEqual(self.stream.health(NOW).status,StreamStatus.LIVE); self.assertEqual(self.stream.health(NOW+timedelta(seconds=31)).status,StreamStatus.STALE)
+        self.assertEqual(self.stream.health(NOW).status,StreamStatus.DISCONNECTED); self.stream.connect(); self.assertEqual(self.stream.health(NOW).status,StreamStatus.STALE); self.assertEqual(self.stream.health(NOW+timedelta(seconds=31)).status,StreamStatus.STALE)
+
+    def test_price_channel_fields_and_clock_are_current(self):
+        self.assertEqual(self.sub.fields,('BIDPRICE1','ASKPRICE1','TIMESTAMP','DLG_FLAG','DELAY'))
+        obs=self.stream.receive(self.raw({'BIDPRICE1':'75','ASKPRICE1':'76','TIMESTAMP':NOW.timestamp()*1000,'DLG_FLAG':'EDIT','DELAY':'1'}))
+        self.assertEqual(obs.source_timestamp,NOW)
+        self.assertEqual(obs.market_status,'EDIT')
+        self.assertTrue(obs.delayed)
+        self.stream.connect()
+        self.assertEqual(self.stream.health(NOW).status,StreamStatus.STALE)
+
+    def test_missing_transport_and_future_clock_fail_closed(self):
+        with self.assertRaisesRegex(RuntimeError,'transport'):
+            IGMarketStream(adapter(),[mapping()]).connect()
+        with self.assertRaisesRegex(ValueError,'future'):
+            self.stream.receive(self.raw({'BIDPRICE1':75,'ASKPRICE1':76,'TIMESTAMP':(NOW+timedelta(seconds=1)).timestamp()*1000}))
     def test_disconnect_reconnect_restore_and_bounded_attempts(self):
         self.stream.connect(); self.stream.connection_lost(); self.assertEqual(self.stream.health().status,StreamStatus.RECONNECTING); self.assertTrue(self.stream.reconnect()); self.assertGreaterEqual(len([c for c in self.transport.calls if c[0]=="subscribe"]),2)
         failing=IGMarketStream(adapter(),[mapping()],transport=Transport(True),max_reconnect_attempts=1); self.assertFalse(failing.reconnect()); self.assertFalse(failing.reconnect()); self.assertEqual(failing.health().status,StreamStatus.DISCONNECTED)

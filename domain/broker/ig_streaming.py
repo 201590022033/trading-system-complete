@@ -6,7 +6,7 @@ from domain.broker.ig import IGMapping, sanitize_text
 from domain.market_data.streaming import (CanonicalMarketObservation, MarketStreamSubscription,
     OrderingState, RawMarketUpdate, StreamHealth, StreamStatus)
 
-IG_STREAM_VERSION="ig-lightstreamer-price-v1"
+IG_STREAM_VERSION="ig-lightstreamer-price-v2"
 MID_RULE="ig-bid-ask-mid-v1"
 
 def _number(value):
@@ -34,7 +34,7 @@ class IGMarketStream:
         sub=MarketStreamSubscription(sid,mapping.canonical_instrument_id,mapping.epic,"IG",mapping.epic)
         if sid not in self._subscriptions:
             self._subscriptions[sid]=sub
-            if self._connected and self.transport: self.transport.subscribe(self.item_name(sub),sub.fields,self.receive)
+            if self._connected and self.transport: self._subscribe_transport(sub)
         return sub
 
     @property
@@ -49,10 +49,16 @@ class IGMarketStream:
         session=self.adapter._session
         if not session or not session.lightstreamer_endpoint or not session.account_id:
             raise RuntimeError("IG session omitted Lightstreamer connection metadata")
-        if self.transport:
-            self.transport.connect(session.lightstreamer_endpoint,session.account_id,f"CST-{session.cst}|XST-{session.security_token}")
-            for sub in self._subscriptions.values(): self.transport.subscribe(self.item_name(sub),sub.fields,self.receive)
+        if self.transport is None:
+            raise RuntimeError("IG stream transport is not configured")
+        self.transport.connect(session.lightstreamer_endpoint,session.account_id,f"CST-{session.cst}|XST-{session.security_token}")
+        for sub in self._subscriptions.values(): self._subscribe_transport(sub)
         self._connected=True; self._reconnecting=False; self._error=None
+
+    def _subscribe_transport(self, sub):
+        def accept(values, received_at):
+            return self.receive(RawMarketUpdate(sub.subscription_id, sub.epic, values, received_at))
+        self.transport.subscribe(self.item_name(sub),sub.fields,accept)
 
     def unsubscribe(self, subscription_id):
         sub=self._subscriptions.pop(subscription_id)
@@ -82,27 +88,34 @@ class IGMarketStream:
         bid=_number(raw.values.get("BID") if "BID" in raw.values else raw.values.get("BIDPRICE1")); ask=_number(raw.values.get("OFFER") if "OFFER" in raw.values else raw.values.get("ASKPRICE1"))
         if (bid is None)!=(ask is None) or bid is None: raise ValueError("complete bid/ask quote required")
         if bid>ask: raise ValueError("crossed quote")
-        source_time=raw.values.get("UTM")
+        source_time=raw.values.get("TIMESTAMP", raw.values.get("UTM"))
         if source_time not in (None,""):
             try: source_time=datetime.fromtimestamp(float(source_time)/1000,tz=timezone.utc)
             except (ValueError,TypeError,OverflowError): raise ValueError("invalid source timestamp") from None
-            basis="IG_UTM_EPOCH_MS"
+            if source_time > raw.received_at: raise ValueError("future source timestamp")
+            basis="IG_TIMESTAMP_EPOCH_MS" if "TIMESTAMP" in raw.values else "IG_UTM_EPOCH_MS"
         else: source_time=None; basis="RECEIPT_TIME_ONLY"
-        previous=self._last.get(sub.subscription_id); fingerprint=(source_time,bid,ask,raw.values.get("LTP"),raw.values.get("MARKET_STATE"),raw.source_sequence)
+        market_state=raw.values.get("DLG_FLAG", raw.values.get("MARKET_STATE"))
+        delayed=raw.values.get("DELAY")
+        if delayed not in (None,"") and str(delayed) not in ('0','1'): raise ValueError('invalid delay flag')
+        delayed=None if delayed in (None,"") else str(delayed)=="1"
+        previous=self._last.get(sub.subscription_id); fingerprint=(source_time,bid,ask,raw.values.get("LTP"),market_state,raw.source_sequence)
         if previous and previous[0]==fingerprint: ordering=OrderingState.DUPLICATE
         elif previous and source_time and previous[1] and source_time<previous[1]: ordering=OrderingState.OUT_OF_ORDER
         elif previous and fingerprint[1:5]==previous[0][1:5]: ordering=OrderingState.REPEATED
         elif previous: ordering=OrderingState.IN_ORDER
         else: ordering=OrderingState.FIRST if raw.source_sequence else OrderingState.SOURCE_SEQUENCE_UNAVAILABLE
-        stale=(raw.received_at-(source_time or raw.received_at))>self.stale_after
-        obs=CanonicalMarketObservation(sub.instrument_id,sub.execution_symbol,"IG",sub.epic,sub.subscription_id,source_time,raw.received_at,basis,bid,ask,(bid+ask)/2,_number(raw.values.get("LTP")),ask-bid,raw.values.get("MARKET_STATE"),"RESEARCH_DATA",stale,ordering,raw.source_sequence,f"IG Demo Lightstreamer Pricing; mid={MID_RULE}",IG_STREAM_VERSION)
+        stale=source_time is None or (raw.received_at-source_time)>self.stale_after
+        obs=CanonicalMarketObservation(sub.instrument_id,sub.execution_symbol,"IG",sub.epic,sub.subscription_id,source_time,raw.received_at,basis,bid,ask,(bid+ask)/2,_number(raw.values.get("LTP")),ask-bid,market_state,"RESEARCH_DATA",stale,ordering,raw.source_sequence,f"IG Demo Lightstreamer Pricing; mid={MID_RULE}",IG_STREAM_VERSION,delayed)
         if ordering not in {OrderingState.DUPLICATE,OrderingState.OUT_OF_ORDER}: self._last[sub.subscription_id]=(fingerprint,source_time)
-        self._last_valid=raw.received_at
+        if not stale and delayed is not True and ordering not in {OrderingState.DUPLICATE,OrderingState.OUT_OF_ORDER}:
+            self._last_valid=source_time
         return obs
 
     def health(self, now=None):
         now=now or self.clock(); stale=bool(self._last_valid and now-self._last_valid>self.stale_after)
-        status=(StreamStatus.RECONNECTING if self._reconnecting else StreamStatus.DISCONNECTED if not self._connected else StreamStatus.STALE if stale else StreamStatus.LIVE)
-        return StreamHealth(status,self._connected,self._last_message,self._last_valid,len(self._subscriptions),self._error,self._attempts)
+        connected=self._connected and getattr(self.transport,'connected',True)
+        status=(StreamStatus.RECONNECTING if self._reconnecting else StreamStatus.DISCONNECTED if not connected else StreamStatus.STALE if stale or self._last_valid is None else StreamStatus.LIVE)
+        return StreamHealth(status,connected,self._last_message,self._last_valid,len(self._subscriptions),getattr(self.transport,'error',None) or self._error,self._attempts)
 
 __all__=["IGMarketStream","IG_STREAM_VERSION","MID_RULE"]
