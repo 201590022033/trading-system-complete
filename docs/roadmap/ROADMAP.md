@@ -1,5 +1,10 @@
 # Linear Fusion Roadmap
 
+2026-09-20: account cash aggregation and manual demo journal are an extension
+of the existing ACTIVE operational workspace, not a new parallel milestone.
+See ADR 0026. Standard Bank integration, IG automatic dealing and promotion of
+manual outcomes into canonical strategy learning are not claimed.
+
 ## IG operational checkpoint — 2026-09-19
 
 The Operational demo workspace remains the sole active milestone. Verified IG

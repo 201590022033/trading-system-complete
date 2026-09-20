@@ -58,6 +58,8 @@ else:
 app.register_blueprint(create_blueprint(canonical_opportunity_service, canonical_opportunity_refresh))
 from application.opportunities.operator_api import create_operator_blueprint, has_access
 app.register_blueprint(create_operator_blueprint(runtime_repository, paper_config))
+from connected_portfolio_api import create_connected_blueprint
+app.register_blueprint(create_connected_blueprint(runtime_repository))
 
 @app.get("/api/paper/status")
 def paper_account_status():
@@ -213,8 +215,8 @@ def portfolio_csv():
 def portfolio(): return jsonify(rows=portfolio_rows, state="IMPORTED_CSV" if portfolio_rows else "NOT_LOADED", live_execution=False)
 @app.get("/api/account/status")
 def account_status():
-    from account_dashboard import safe_status
-    return jsonify({**safe_status(), "live_execution": False})
+    from connected_accounts import cached_ig_status
+    return jsonify({**cached_ig_status(), "live_execution": False})
 @app.get("/api/instruments")
 def instruments(): return jsonify(instruments=instrument_list())
 @app.get("/api/public-shares")

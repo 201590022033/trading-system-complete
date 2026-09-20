@@ -3,10 +3,12 @@ from __future__ import annotations
 import os
 from datetime import datetime
 from enum import Enum
+from dataclasses import asdict, is_dataclass
 from ai_config import project_environment
 from domain.broker.ig import IGConfig, IGReadOnlyAdapter, IGRequestError
 
 def _json(value):
+    if is_dataclass(value): return _json(asdict(value))
     if isinstance(value, Enum): return value.value
     if isinstance(value, datetime): return value.isoformat()
     if isinstance(value, dict): return {key: _json(item) for key, item in value.items()}
@@ -33,8 +35,10 @@ def read_only_ig_status(environ=None):
     account_id=config.account_id or (adapter._session.account_id if adapter._session else None)
     if not account_id and accounts: account_id=next((item.account_id for item in accounts if item.preferred), accounts[0].account_id)
     if not account_id: return unavailable("No IG DEMO account was returned")
-    snapshot=adapter.create_state_service(stale_after_seconds=300).get_broker_snapshot(account_id)
-    return _json({"state":"AVAILABLE","broker":"IG","environment":"DEMO","account":snapshot.account,"positions":snapshot.positions,"position_count":snapshot.position_count,"freshness":snapshot.freshness,"retrieved_at":snapshot.retrieved_at,"live_execution":False})
+    state_service=adapter.create_state_service(stale_after_seconds=300)
+    snapshot=state_service.get_broker_snapshot(account_id)
+    normalized_accounts=state_service.get_accounts()
+    return _json({"state":"AVAILABLE","broker":"IG","environment":"DEMO","account":snapshot.account,"accounts":normalized_accounts,"positions":snapshot.positions,"position_count":snapshot.position_count,"freshness":snapshot.freshness,"retrieved_at":snapshot.retrieved_at,"live_execution":False})
 
 def safe_status(environ=None):
     try: return read_only_ig_status(environ)

@@ -2,6 +2,13 @@
 
 ## Operational demo workspace — ACTIVE 2026-09-19
 
+2026-09-20 connected-cash/manual-journal extension (ADR 0026): replaces the
+headline simulator seed with broker-reported available funds and dated display
+FX, adds per-account tabs and authenticated self-reported trade entry/closure.
+The original simulator remains separate. Manual outcome review is durable and
+causal but is not canonical strategy learning. See
+`docs/repair/CONNECTED_CASH_JOURNAL.md` for workflow and precise limits.
+
 User explicitly authorized deployment activation, IG demo integration, portfolio
 redesign and aggression controls after the deployed audit. ADR 0025 supersedes
 the earlier local-completion interpretation. This is the sole active milestone.

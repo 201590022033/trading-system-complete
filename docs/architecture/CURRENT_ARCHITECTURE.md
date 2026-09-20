@@ -2,6 +2,19 @@
 
 This document describes the uploaded repository, not an aspirational redesign.
 
+## 2026-09-20 connected cash and manual journal
+
+`connected_accounts.py` aggregates normalized broker available funds by currency
+and environment. It reuses IG read-only snapshots (60-second cache) and the
+existing Yahoo chart source for dated, indicative USD/ZAR display conversion.
+`connected_portfolio_api.py` exposes account tabs and authenticated manual journal
+routes. `manual_demo_journal.py` reuses durable paper tables with an isolated
+namespace and record kinds, not strategy outcomes. No journal mutation alters
+broker funds, simulator cash, M13 weights or external orders. The dashboard
+headline excludes the internal simulator. See ADR 0026 and the connected-cash
+runbook. IG credentials are configured in Railway; the old absence statement
+below is historical. Continuous streaming remains disconnected.
+
 ## 2026-09-19 operational deployment
 
 Railway web and worker now share the migrated PostgreSQL paper account and

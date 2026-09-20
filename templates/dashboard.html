@@ -1,4 +1,4 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>JSE Operational Intelligence</title><link rel="stylesheet" href="{{ url_for('static',filename='css/dashboard.css') }}"></head><body>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>JSE Operational Intelligence</title><link rel="stylesheet" href="{{ url_for('static',filename='css/dashboard.css') }}"><link rel="stylesheet" href="{{ url_for('static',filename='css/accounts.css') }}"><script defer src="{{ url_for('static',filename='js/accounts.js') }}"></script></head><body>
 <header><div><span class="eyebrow">MARKET INTELLIGENCE · DEMO & PAPER</span><h1>JSE Operational Intelligence</h1></div><div id="system-pill" class="pill">DEMO · NOT LIVE MONEY</div></header>
 <nav aria-label="Dashboard sections"><button data-tab="portfolio">Portfolio & demo</button><button data-tab="canonical-opportunities">Canonical Top 5</button><button data-tab="market-ai">Market AI / News</button><button data-tab="technical-view">Technical Intelligence</button><button data-tab="system">System</button></nav><main>
 <div id="market-overview">
@@ -18,7 +18,31 @@
 <article class="panel"><h2>Technical evidence flow</h2><p class="muted">Deterministic read-only view of actual operational state. No LLM explanations or trading actions.</p><div id="technical-flow"></div><div id="indicator-inventory"></div></article>
 <article class="panel"><div class="row"><h3>30 confidence gates</h3><span id="gate-summary"></span></div><div id="gates" class="gates"></div></article><article class="panel broker"><h3>Manual broker handoff</h3><p>No admitted strategy exists; no order endpoint is connected.</p><button disabled>COPY TRADE DETAILS</button><button disabled>CONFIRM IN BROKER</button></article></section>
 <section id="portfolio" class="tab active" aria-labelledby="portfolio-title">
- <div class="portfolio-heading row"><div><span class="eyebrow">YOUR DEMO WORKSPACE</span><h2 id="portfolio-title">Portfolio overview</h2><p class="muted">Follow capital, decisions and what the system is learning.</p></div><div class="refresh-controls"><span class="pill" id="paper-state">Connecting</span><button id="refresh-paper">Refresh portfolio</button></div></div>
+ <div class="portfolio-heading row"><div><span class="eyebrow">YOUR CONNECTED ACCOUNTS</span><h2 id="portfolio-title">Cash & trade journal</h2><p class="muted">Combined available funds above. Individual accounts and your recorded trades below.</p></div><button id="refresh-connected">Refresh accounts</button></div>
+ <div id="connected-totals" class="portfolio-metrics" aria-live="polite">Reading connected balances…</div>
+ <p class="muted">Demo and real-money totals stay separate. Rand conversions are indicative, not funds transferred between accounts. The internal simulator is excluded.</p>
+ <div id="connected-tabs" class="paper-actions" role="tablist" aria-label="Connected accounts"></div>
+ <article class="panel" id="connected-account" role="tabpanel"><div id="connected-detail"></div></article>
+ <details id="paper-unlock" class="panel"><summary>Unlock trade journal & simulator controls</summary><p class="muted">Use PAPER_CONTROL_TOKEN from your Railway web service variables—not your IG password.</p><form id="paper-login"><label>Portfolio access key<input id="paper-key" type="password" autocomplete="current-password" required></label><button type="submit">Unlock</button></form></details>
+ <div id="paper-control-status" role="status"></div>
+ <section class="panel" id="manual-journal"><h3>Your account-linked demo trades</h3><p class="muted">Place your demo trade yourself in the broker, then record exactly what you did here. Recording never submits an order or deducts cash again. Your own ideas are welcome.</p><div id="journal-status" role="status"></div>
+ <form id="journal-entry" class="journal-form">
+ <label>Instrument / IG EPIC<input name="instrument" required maxlength="100"></label>
+ <label>Direction<select name="direction"><option>LONG</option><option>SHORT</option></select></label>
+ <label>Quantity / contract size as traded<input name="quantity" type="number" min="0.00000001" step="any" required></label>
+ <label>Entry price<input name="entry_price" type="number" min="0.00000001" step="any" required></label>
+ <label>Actual entry time (your local time)<input name="opened_at" type="datetime-local" required></label>
+ <label>Idea source<select name="idea_source"><option value="MY_IDEA">My own idea</option><option value="APP_INSPIRED">App-inspired (not verified attribution)</option></select></label>
+ <label>Initial stop price (optional)<input name="stop_price" type="number" min="0.00000001" step="any"></label>
+ <label>Initial target price (optional)<input name="target_price" type="number" min="0.00000001" step="any"></label>
+ <label>Planned loss at stop, in account currency (optional)<input name="planned_risk" type="number" min="0.00000001" step="any"></label>
+ <label>Broker deal reference (optional)<input name="broker_reference" maxlength="100"></label>
+ <label class="journal-wide">Why you took this trade / your plan<textarea name="notes" maxlength="2000" rows="3"></textarea></label>
+ <button type="submit">Record demo trade</button></form>
+ <div id="journal-review" class="table-scroll"></div>
+ <form id="journal-close" class="journal-form" hidden><h4 class="journal-wide">Record actual outcome</h4><input name="trade_id" type="hidden"><label>Exit price<input name="exit_price" type="number" min="0.00000001" step="any" required></label><label>Actual exit time (your local time)<input name="closed_at" type="datetime-local" required></label><label>Net P&L after ALL costs, in account currency<input name="net_pnl" type="number" step="any" required></label><label class="journal-wide">What happened / lessons<textarea name="notes" maxlength="2000" rows="3"></textarea></label><button type="submit">Save closed outcome</button><button type="button" id="cancel-journal-close">Cancel</button></form>
+ <p class="muted">Reviews use your reported net result and planned risk. A profitable trade is not automatically a good decision. Retrospective notes are not proof of a plan known in advance. This journal builds your review history; it does not retrain the AI or change automated strategy weights.</p></section>
+ <details class="panel" id="internal-simulator"><summary>Internal strategy simulator — separate test capital, excluded from your cash total</summary><div class="row"><span class="pill" id="paper-state">Connecting</span><button id="refresh-paper">Refresh simulator</button></div>
  <div id="paper-status" class="portfolio-notice" role="status">Reading the saved paper account…</div>
  <div id="paper-metrics" class="portfolio-metrics" aria-label="Paper account metrics"></div>
  <div class="portfolio-layout">
@@ -29,12 +53,13 @@
    <article class="panel"><h3>Trade activity</h3><div id="paper-fills" class="table-scroll"></div><h3>Closed trade outcomes</h3><div id="paper-outcomes" class="table-scroll"></div></article>
   </div>
   <aside class="portfolio-sidebar">
-   <article class="panel risk-panel"><span class="eyebrow">YOUR RISK PREFERENCE</span><h3>Aggression</h3><p class="muted">Changes the risk requested for new paper trades. Account limits still apply.</p><label for="paper-aggression">Risk profile <output id="aggression-label">Conservative</output></label><input id="paper-aggression" type="range" min="0" max="2" step="1" value="0" disabled><div class="slider-labels"><span>Conservative</span><span>Balanced</span><span>Aggressive</span></div><div id="paper-risk-budget"></div><div class="paper-actions"><button id="save-aggression" disabled>Apply risk profile</button><button id="pause-paper" disabled>Pause entries</button><button id="run-paper-cycle" disabled>Check opportunities now</button></div><div id="paper-control-status" role="status"></div><details id="paper-unlock"><summary>Unlock portfolio controls</summary><p class="muted">Use the portfolio access key stored in your Railway web service. This protects your demo settings on this public URL.</p><form id="paper-login"><label>Portfolio access key<input id="paper-key" type="password" autocomplete="current-password" required></label><button type="submit">Unlock</button></form></details></article>
+   <article class="panel risk-panel"><span class="eyebrow">SIMULATOR RISK PREFERENCE</span><h3>Aggression</h3><p class="muted">Changes risk for new internal simulated trades only. It does not size your manually recorded IG trades.</p><label for="paper-aggression">Risk profile <output id="aggression-label">Conservative</output></label><input id="paper-aggression" type="range" min="0" max="2" step="1" value="0" disabled><div class="slider-labels"><span>Conservative</span><span>Balanced</span><span>Aggressive</span></div><div id="paper-risk-budget"></div><div class="paper-actions"><button id="save-aggression" disabled>Apply risk profile</button><button id="pause-paper" disabled>Pause entries</button><button id="run-paper-cycle" disabled>Check opportunities now</button></div></article>
    <article class="panel"><span class="eyebrow">EVIDENCE, NOT GUESSWORK</span><h3>Learning progress</h3><div id="paper-learning"></div></article>
    <article class="panel"><div class="row"><h3>IG demo connection</h3><button id="refresh-account-status">Refresh</button></div><div id="account-status" role="status">Checking account access…</div><p class="muted">IG demo balances are separate from the internal paper simulation.</p></article>
    <article class="panel"><h3>Execution model</h3><div id="paper-model"></div></article>
   </aside>
  </div>
+ </details>
  <details class="panel"><summary>Import an external portfolio snapshot</summary><p class="muted">Optional CSV reference. These rows do not change your paper balance or IG positions.</p><label>Portfolio CSV<textarea id="portfolio-csv" rows="4" placeholder="instrument,quantity,average_price,current_price,unrealised_pnl&#10;SOL,100,180.00,186.40,640.00"></textarea></label><button id="import-portfolio">Import snapshot</button><span id="portfolio-status" class="muted"></span><div id="portfolio-table" class="table-scroll"></div></details>
  <div id="portfolio-opportunities"></div>
 </section>

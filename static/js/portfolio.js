@@ -33,7 +33,7 @@ function renderPaper(data) {
   $('#paper-risk-budget').innerHTML=kv('Risk requested per trade',data.effective_risk_fraction==null?'—':num(data.effective_risk_fraction*100)+'%')+kv('Hard per-trade limit',data.risk_limits?.max_risk_per_trade_fraction==null?'—':num(data.risk_limits.max_risk_per_trade_fraction*100)+'%');
   for(const id of ['#paper-aggression','#save-aggression','#pause-paper','#run-paper-cycle']) $(id).disabled=!data.control_access || !account;
   $('#pause-paper').textContent=controls.paused?'Resume entries':'Pause entries';
-  $('#paper-unlock').hidden=!!data.control_access;
+  // Shared unlock visibility is controlled by the connected-account workspace.
   const learning=data.learning || {};
   $('#paper-learning').innerHTML=kv('Closed outcomes',data.totals?.outcome || 0)+kv('Mature one-session outcomes',learning.eligible_outcomes || 0)+kv('Persisted news evidence',learning.persisted_news_records ?? '—')+`<p class="muted">${esc(sentence(learning.state || 'Waiting for worker'))}. ${esc(learning.minimum_samples || 30)} mature samples per instrument are required for learned strategy evidence.</p>`+Object.entries(learning.outcomes_by_instrument || {}).map(([key,n])=>`<label class="learning-progress">${esc(key)} · ${n} / ${learning.minimum_samples}<progress value="${n}" max="${learning.minimum_samples}"></progress></label>`).join('')+'<p class="muted">This measures strategy effectiveness. News AI performs analysis; it does not retrain its model weights.</p>';
   $('#paper-model').innerHTML=kv('Model',data.model || 'Not configured')+kv('Price source',data.data_provider || '—')+kv('Commission per fill',money(data.commission_per_fill))+kv('Slippage per share',money(data.slippage_per_unit))+`<p class="muted">Entries require a later completed market session. Checking again does not invent a new price or bypass a risk limit.</p>`;
@@ -53,6 +53,6 @@ $('#paper-aggression').oninput=()=>{$('#aggression-label').textContent=sentence(
 $('#save-aggression').onclick=()=>paperAction('/api/paper/controls',{aggression:riskProfiles[Number($('#paper-aggression').value)]});
 $('#pause-paper').onclick=()=>paperAction('/api/paper/controls',{paused:!paperSnapshot?.controls?.paused});
 $('#run-paper-cycle').onclick=()=>paperAction('/api/paper/cycle',{});
-$('#paper-login').onsubmit=async e=>{e.preventDefault();try{await post('/api/paper/session',{key:$('#paper-key').value});$('#paper-key').value='';$('#paper-control-status').textContent='Portfolio controls unlocked.';await refreshPaper();}catch(error){$('#paper-control-status').textContent=error.message;}};
+$('#paper-login').onsubmit=async e=>{e.preventDefault();try{await post('/api/paper/session',{key:$('#paper-key').value});$('#paper-key').value='';$('#paper-control-status').textContent='Journal and portfolio controls unlocked.';window.dispatchEvent(new Event('portfolio-auth-changed'));await refreshPaper();}catch(error){$('#paper-control-status').textContent=error.message;}};
 refreshPaper();
 setInterval(()=>{if(!document.hidden)refreshPaper();},30000);
