@@ -5,6 +5,10 @@ of the existing ACTIVE operational workspace, not a new parallel milestone.
 See ADR 0026. Standard Bank integration, IG automatic dealing and promotion of
 manual outcomes into canonical strategy learning are not claimed.
 
+2026-09-20: Ollama Cloud is configured on the Railway web/worker services and a
+bounded analysis smoke check returned attributed AI output. Moonshot remains
+unconfigured; this optional provider result does not change production scoring.
+
 ## IG operational checkpoint — 2026-09-19
 
 The Operational demo workspace remains the sole active milestone. Verified IG

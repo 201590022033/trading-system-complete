@@ -13,6 +13,12 @@ User explicitly authorized deployment activation, IG demo integration, portfolio
 redesign and aggression controls after the deployed audit. ADR 0025 supersedes
 the earlier local-completion interpretation. This is the sole active milestone.
 
+2026-09-20 Ollama Cloud verification: the Railway web and worker services now
+carry the configured cloud model and secret through Railway variables. A bounded
+single-instrument analysis returned `llm_used=true` with `AI + keyword fallback`;
+Moonshot remains deliberately unconfigured. This satisfies the optional AI
+provider smoke check but does not alter ranking, risk, execution or promotion.
+
 Deployed checkpoint: web and worker successfully deployed 825ac27; PostgreSQL
 contains completed paper jobs, rankings, audited controls and ten newly persisted
 Moneyweb analyses. Deployed cookie/Bearer authentication, aggression changes,
