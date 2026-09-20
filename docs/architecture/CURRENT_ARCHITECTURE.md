@@ -2,6 +2,13 @@
 
 This document describes the uploaded repository, not an aspirational redesign.
 
+The dashboard's one-day chart view uses completed 30-minute public bars for
+swing review. This display contract is separate from the canonical public
+ranking and ZAR paper loop, which use daily completed closes (`1d`). The HR11
+`intraday_30m` contracts remain research-only until verified JSE history,
+session calendars and cost metadata are supplied; no intraday display bar can
+enter the daily ranking implicitly.
+
 ## 2026-09-20 connected cash and manual journal
 
 `connected_accounts.py` aggregates normalized broker available funds by currency

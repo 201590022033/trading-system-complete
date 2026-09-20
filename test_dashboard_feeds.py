@@ -91,12 +91,13 @@ class FeedTests(unittest.TestCase):
         stock.history.return_value = pd.DataFrame({'Close':[12345,12400], 'Volume':[10,20]},
             index=pd.to_datetime(['2026-09-03','2026-09-04'],utc=True))
         stock.get_history_metadata.return_value = {'currency':'ZAc'}
-        result = YahooFinanceFetcher().get_chart('SOL.JO')
+        result = YahooFinanceFetcher().get_chart('SOL.JO', '1d')
+        self.assertEqual(stock.history.call_args_list[0].kwargs['interval'], '30m')
         self.assertEqual(result['currency'],'ZAR')
         self.assertEqual(result['price'],124)
         self.assertTrue(result['bars'][0]['timestamp'].startswith('2026-09-03'))
         stock.get_history_metadata.return_value = {}
-        result = YahooFinanceFetcher().get_chart('SOL.JO')
+        result = YahooFinanceFetcher().get_chart('SOL.JO', '1d')
         self.assertEqual(result['price'],12400)
         self.assertEqual(result['currency'],'UNKNOWN')
 

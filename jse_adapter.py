@@ -168,7 +168,11 @@ class YahooFinanceFetcher(PriceFetcher):
             raise ValueError("Unsupported chart period")
         symbol = JSE_TICKERS.get(ticker, {}).get("yahoo_symbol", ticker)
         stock = yf.Ticker(symbol)
-        interval = "5m" if period == "1d" else "1d"
+        # The one-day operational chart is the swing-review view. Keep its
+        # public bars at the declared 30-minute decision window; the canonical
+        # ranking/paper path remains daily until a verified JSE 30-minute source
+        # is admitted separately.
+        interval = "30m" if period == "1d" else "1d"
         frame = stock.history(period=period, interval=interval, auto_adjust=False,
                               actions=False, timeout=10)
         if frame.empty:
