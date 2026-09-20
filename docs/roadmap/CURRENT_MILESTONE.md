@@ -25,6 +25,12 @@ loop remain explicitly daily-close (`1d`) until an authorized, verified JSE
 30-minute source and session/cost contract are available. HR11 `intraday_30m`
 remains research-only and cannot silently feed the daily production path.
 
+2026-09-20 M25 data probe: the authenticated IG Demo history endpoint returned
+165 complete `MINUTE_30` derived-mid Brent bars with zero malformed, incomplete,
+or duplicate rows and no truncation. Twelve interval discontinuities remain
+unclassified because an EPIC-specific session calendar is not yet verified; the
+bars remain research-only and were not persisted or evaluated.
+
 Deployed checkpoint: web and worker successfully deployed 825ac27; PostgreSQL
 contains completed paper jobs, rankings, audited controls and ten newly persisted
 Moneyweb analyses. Deployed cookie/Bearer authentication, aggression changes,

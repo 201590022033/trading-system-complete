@@ -23,6 +23,18 @@ component-complete headings do not establish deployed end-to-end acceptance.
 4. Verify safe tests, commit/push, and verify the deployed account view. Update
    roadmap and report exact remaining runtime/research/execution connections.
 
+## 30-minute history probe — 2026-09-20
+
+Using the authenticated Railway Demo environment, a bounded read-only
+`MINUTE_30` request for `CC.D.LCO.BMU.IP` from 2026-09-15 through 2026-09-19
+returned 165 derived-mid research bars in one page. The response contained zero
+malformed, incomplete or duplicate records, 12 valid out-of-range exclusions,
+and no truncation. The source timestamps span 2026-09-15T00:00Z through
+2026-09-18T16:00Z. This proves source availability and 30-minute normalization,
+not research admissibility: the API still reports 12 unclassified discontinuities
+and no factual EPIC-specific session calendar was supplied. No bars were
+persisted, evaluated, or connected to ranking, paper fills, risk, or execution.
+
 ## Reopened acceptance gates
 
 | Boundary | Verified now | Still required |
