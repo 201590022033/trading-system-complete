@@ -40,6 +40,13 @@ An authenticated Version 4 lookup likewise omitted `openingHours` and returned
 an empty currency code; this is an upstream response limitation, not only a
 Version 3 adapter-normalization issue.
 
+The read-only indicative-costs endpoint accepted a bounded one-unit BUY probe
+and returned USD instrument currency, ZAR converted notional `622.191153`,
+opening/closing spread `0.1475581886496`, zero opening/closing commission and
+FX fee, overnight funding `-0.7836692434023048`, and daily FX fee
+`0.0077591014198248`. This is indicative broker evidence only; it is not an
+order and does not replace a versioned historical cost schedule.
+
 Deployed checkpoint: web and worker successfully deployed 825ac27; PostgreSQL
 contains completed paper jobs, rankings, audited controls and ten newly persisted
 Moneyweb analyses. Deployed cookie/Bearer authentication, aggression changes,

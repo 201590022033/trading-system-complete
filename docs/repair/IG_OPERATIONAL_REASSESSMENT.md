@@ -45,6 +45,15 @@ An additional authenticated Version 4 market lookup also omitted `openingHours`
 and returned an empty currency code, so the absence is not limited to the
 adapter's Version 3 normalization.
 
+The read-only IG indicative-costs endpoint also accepted a bounded one-unit BUY
+probe using the observed quote and `dealCurrencyCode=ZAR`. It returned instrument
+currency `USD`, notional `10019.6`, ZAR notional `622.191153`, opening and
+closing spread `0.1475581886496`, opening and closing commission `0`, opening
+and closing FX fee `0`, overnight funding `-0.7836692434023048`, and daily FX
+fee `0.0077591014198248`. This is a broker indicative quote, not an order or a
+historical cost schedule; it remains research evidence until its assumptions,
+validity, and session context are versioned.
+
 ## Reopened acceptance gates
 
 | Boundary | Verified now | Still required |
