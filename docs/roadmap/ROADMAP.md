@@ -10,8 +10,9 @@ manual outcomes into canonical strategy learning are not claimed.
 The Operational demo workspace remains the sole active milestone. Verified IG
 DEMO credentials are configured in Railway; deployed account/position reads
 succeed. The current PRICE transport passed a bounded local subscription and
-stale snapshot check. Continuous ingestion, canonical CFD ranking/risk and
-external order validation remain incomplete. See
+stale snapshot check, and its bounded ingestion worker is implemented behind
+an explicit environment gate. Continuous deployed ingestion, canonical CFD
+ranking/risk and external order validation remain incomplete. See
 [reassessment](../repair/IG_OPERATIONAL_REASSESSMENT.md). Historical component
 completion headings below do not claim those operational connections.
 

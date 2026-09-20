@@ -12,8 +12,9 @@ routes. `manual_demo_journal.py` reuses durable paper tables with an isolated
 namespace and record kinds, not strategy outcomes. No journal mutation alters
 broker funds, simulator cash, M13 weights or external orders. The dashboard
 headline excludes the internal simulator. See ADR 0026 and the connected-cash
-runbook. IG credentials are configured in Railway; the old absence statement
-below is historical. Continuous streaming remains disconnected.
+runbook. IG credentials are configured in Railway. The bounded streaming worker
+is implemented but remains disabled unless its explicit environment gate is set;
+no deployed ledger observation is claimed here.
 
 ## 2026-09-19 operational deployment
 
@@ -23,8 +24,9 @@ positions, pending proposals, fills, outcomes and learning from that ledger.
 Authenticated aggression/pause controls are persisted and audited separately
 from immutable account assumptions. Existing collector analyses are persisted
 with first-availability clocks and deduplicated versions, then consumed causally
-by the canonical worker. IG demo diagnostics are enabled but actual credentials
-are absent; no concrete IG streaming transport is connected. Legacy shadow
+by the canonical worker. IG demo diagnostics and the read-only transport are
+implemented; worker activation remains explicitly gated and no deployed stream
+is claimed. Legacy shadow
 counters are explicitly separate from paper-outcome effectiveness learning.
 
 ## 2026-09-19 canonical paper-loop repair

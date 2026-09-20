@@ -44,9 +44,11 @@ No autonomous IG orders, live-money capability or adaptive promotion is enabled.
 The bounded local validation received an IG PRICE snapshot at 13:37 UTC on
 2026-09-19. Its source timestamp was 2026-09-18T22:50:22.489Z. Connection and
 subscription succeeded; health correctly remained STALE. The broker reported
-EDITS_ONLY/EDIT, and no order was submitted. The new transport is not yet
-composed into the Railway worker or connected to ranking/learning. Deployment
-of this code alone does not activate continuous streaming.
+EDITS_ONLY/EDIT, and no order was submitted. The new transport is now composed
+into the bounded Railway worker, but activation still requires the explicit
+`IG_STREAM_ENABLED=1` and `IG_STREAM_INSTRUMENTS` variables. Until an enabled
+deployment produces fresh ledger observations, this is implementation evidence,
+not proof of a live market feed or a ranking/learning connection.
 
 The history probe's seven returned UTC timestamps were 04:00–10:00 for the
 requested 12:00–18:00 range. No timezone correction has been guessed or applied.

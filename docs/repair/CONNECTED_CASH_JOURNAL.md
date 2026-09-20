@@ -38,7 +38,7 @@ IG CFDs to M14/M15, continuous IG streaming, automatic broker reconciliation,
 or canonical learning promotion. Other providers need factual read-only adapters
 before they can contribute. No real-money order path is enabled.
 
-Validation before deployment: full offline suite 678 tests; 54 protected artifacts;
+Validation before deployment: full offline suite 688 tests; 54 protected artifacts;
 JavaScript syntax; local browser entry/closure, account switching and disabled
 unconnected account; actual read-only IG DEMO USD20,100 and dated FX retrieval.
 No synthetic journal trade was created in production.
