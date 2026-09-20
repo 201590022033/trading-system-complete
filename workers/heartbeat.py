@@ -14,7 +14,7 @@ def heartbeat(worker_id: str | None = None) -> dict[str, str]:
             "mode": os.environ.get("APP_MODE", "DEVELOPMENT").upper(), "version": os.environ.get("RAILWAY_GIT_COMMIT_SHA") or os.environ.get("COMMIT_SHA", "unknown")}
 
 
-def run(interval_seconds: float = 30.0, *, cycles=None, repository=None, handlers=None, scheduler=None) -> None:
+def run(interval_seconds: float = 30.0, *, cycles=None, repository=None, handlers=None, schedulers=None) -> None:
     from workers.shadow_learning import ShadowWorker, configured_repository
     from workers.runtime import runtime_handlers
     owned=repository is None
@@ -22,17 +22,25 @@ def run(interval_seconds: float = 30.0, *, cycles=None, repository=None, handler
     worker_id = os.environ.get("WORKER_ID", uuid.uuid4().hex)
     try:
         selected = handlers if handlers is not None else runtime_handlers(repository)
+        scheduler_list = list(schedulers) if schedulers is not None else []
         if handlers is None:
             from application.opportunities.paper_host import configured_paper, compose_paper_worker
             config = configured_paper()
             if config:
                 scheduler, handler = compose_paper_worker(repository, config)
                 selected["paper-cycle"] = handler
+                scheduler_list.append(scheduler)
+            from workers.ig_streaming import compose_ig_stream_worker
+            scheduler, handler = compose_ig_stream_worker(repository)
+            if scheduler is not None:
+                selected["ig-stream-ingestion"] = handler
+                scheduler_list.append(scheduler)
         worker=ShadowWorker(repository,worker_id,selected)
         count=0
         while cycles is None or count<cycles:
-            if scheduler is not None:
-                scheduler.enqueue(datetime.now(timezone.utc).isoformat())
+            now = datetime.now(timezone.utc).isoformat()
+            for scheduler in scheduler_list:
+                scheduler.enqueue(now)
             processed=worker.run_once()
             status={**heartbeat(worker_id),'processed':processed}
             repository.save_worker_status(status)

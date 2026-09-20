@@ -9,7 +9,8 @@ from shadow_learning import JobCheckpoint
 from runtime_persistence import runtime_repository
 
 JOB_TYPES = ("market-data-update", "market-intelligence-refresh", "observation-generation",
-             "shadow-decision-generation", "outcome-labelling", "adaptive-evidence-update", "paper-cycle")
+             "shadow-decision-generation", "outcome-labelling", "adaptive-evidence-update", "paper-cycle",
+             "ig-stream-ingestion")
 
 def configured_repository(*, database_url=None, sqlite_path=None):
     return runtime_repository(database_url=database_url, sqlite_path=sqlite_path)

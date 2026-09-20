@@ -50,6 +50,15 @@ def runtime_handlers(repository, *, mi_provider=None, mi_text_loader=None, clock
         if result['failures']: raise ValueError('MI refresh failed')
         return result
 
+    def ig_stream(job):
+        from workers.ig_streaming import IGStreamIngestionConfig, IGStreamIngestion
+        config = IGStreamIngestionConfig.from_env()
+        if not config.enabled:
+            return {'status': 'DISABLED', 'observations': 0, 'error': None, 'live_execution': False}
+        ingestion = IGStreamIngestion(repository, config, clock=clock)
+        return ingestion.run_once()
+
     return {'observation-generation':observation,'shadow-decision-generation':decision,
             'outcome-labelling':outcome,'adaptive-evidence-update':evidence,
-            'market-intelligence-refresh':intelligence}
+            'market-intelligence-refresh':intelligence,
+            'ig-stream-ingestion':ig_stream}

@@ -21,9 +21,14 @@ pause/resume and queue requests passed; conservative/unpaused defaults restored.
 worker provenance verified. No market-session fill or production learned cell
 is claimed. IG credentials are now configured in Railway and deployed DEMO
 account reads pass. A concrete PRICE transport passed bounded local
-subscription/snapshot validation; continuous worker ingestion remains
-disconnected. Cloud AI remains unconfigured; this broader milestone is not
-complete. See docs/repair/IG_OPERATIONAL_REASSESSMENT.md for revised gates.
+subscription/snapshot validation. Durable IG streaming ingestion is now wired
+into the worker (`workers/ig_streaming.py`) and persists observations to the
+shadow-learning ledger; it remains disabled by default and requires
+`IG_STREAM_ENABLED=1` and `IG_STREAM_INSTRUMENTS` in Railway. The public-share
+intent preview gate was repaired so cash-share opportunities without an IG EPIC
+can reach `READY_FOR_PREVIEW` while staying non-executable. Cloud AI remains
+unconfigured; this broader milestone is not complete. See
+docs/repair/IG_OPERATIONAL_REASSESSMENT.md for revised gates.
 
 ## Canonical paper-loop repair — COMPLETE LOCALLY 2026-09-19
 

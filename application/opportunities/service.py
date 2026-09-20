@@ -50,7 +50,9 @@ class OpportunityService:
   blockers=list(o.blockers)+list(p.blockers)+(list(r.blockers)+list(r.rejection_reasons) if r else ['RISK_EVALUATION_UNAVAILABLE'])
   if o.eligibility_status=='BLOCKED' or p.status=='BLOCKED' or (r and r.status in {RiskStatus.BLOCKED,RiskStatus.REJECTED}):ready='BLOCKED'
   elif p.stop_price is None or p.stop_distance is None or (r and r.status is RiskStatus.UNRESOLVED):ready='UNRESOLVED'
-  elif r and r.status in {RiskStatus.APPROVED,RiskStatus.REDUCED} and o.execution_suitability=='EXECUTION-SUITABLE' and o.ig_epic:ready='READY_FOR_PREVIEW'
+  elif r and r.status in {RiskStatus.APPROVED,RiskStatus.REDUCED} and o.execution_suitability=='EXECUTION-SUITABLE' and (o.ig_epic or o.broker is None):ready='READY_FOR_PREVIEW'
   else:ready='NOT_READY'
+  if ready=='READY_FOR_PREVIEW' and o.broker is None:
+   blockers.append('CASH_SHARE_BROKER_MAPPING_UNAVAILABLE_RESEARCH_ONLY')
   identity=f'{o.opportunity_id}|{p.policy_id}|{r.evaluation_id if r else "NONE"}|{VERSION}'
   return TradeIntentPreview('intent-preview:'+sha256(identity.encode()).hexdigest(),VERSION,created_at,o.opportunity_id,p.policy_id,r.evaluation_id if r else None,o.instrument_id,o.horizon_id,o.broker,o.ig_epic,p.direction,p.entry_reference,p.entry_timing,'UNRESOLVED' if p.entry_price is None else 'AVAILABLE','UNRESOLVED' if p.stop_price is None else 'AVAILABLE',p.stop_reference,r.status.value if r else 'NOT_EVALUATED',r.approved_loss_budget if r else None,r.approved_position_size if r else None,'NONE' if not p.target_levels else 'AVAILABLE',p.time_exit_at,p.invalidation_condition,ready,tuple(dict.fromkeys(blockers)),{'opportunity_version':o.opportunity_version,'policy_version':p.policy_version,'risk_version':r.risk_version if r else None,'instrument_mapping_version':o.provenance.get('instrument_registry_version')})

@@ -14,6 +14,8 @@ component-complete headings do not establish deployed end-to-end acceptance.
    point; distinguish connection, subscription, fresh quotes and delayed data.
    Missing transport, future timestamps and subscription errors must not appear
    as a working price feed. Add offline regressions before external validation.
+   **Done:** `workers/ig_streaming.py` composes the existing transport into the
+   bounded worker and persists observations to the shadow-learning ledger.
 3. Record factual history and market eligibility. The known Brent product
    CC.D.LCO.BMU.IP currently reports EDITS_ONLY, not TRADEABLE. A six-hour
    HOUR history request returned seven out-of-range records and zero accepted
@@ -27,7 +29,7 @@ component-complete headings do not establish deployed end-to-end acceptance.
 | --- | --- | --- |
 | M12A / M26 | Local and Railway DEMO authentication, enabled USD CFD account, zero positions | Rate-bounded production polling and account-change handling |
 | M12B / M25 | History endpoint responds | Usable requested-range bars, factual calendar/costs, frozen HR11 evaluation |
-| M24 | Concrete transport authenticated, subscription acknowledged, Brent snapshot received in bounded local validation | Fresh open-market quote validation and durable runtime ingestion |
+| M24 | Concrete transport authenticated, subscription acknowledged, Brent snapshot received in bounded local validation; durable worker ingestion implemented with offline tests | Fresh open-market quote validation in deployed worker and observation ledger review |
 | Gates 1–5 | Deployed daily ZAR paper loop and canonical Top 5 | Real subsequent-session fills/outcomes and mature learning evidence |
 | M14 / M15 with IG | Cash-share geometry/risk exists | CFD units, USD/FX, margin and actual account exposure mapping |
 | M27–M30 | Component tests and bounded harness | Independent internal IG ledger, factual reconciliation and all order preflight checks |
