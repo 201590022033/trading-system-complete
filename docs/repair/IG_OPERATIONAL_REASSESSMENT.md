@@ -53,6 +53,8 @@ and closing FX fee `0`, overnight funding `-0.7836692434023048`, and daily FX
 fee `0.0077591014198248`. This is a broker indicative quote, not an order or a
 historical cost schedule; it remains research evidence until its assumptions,
 validity, and session context are versioned.
+The machine-readable record is
+[`ig_30m_indicative_cost_probe_2026-09-20.json`](../../artifacts/research/m25_hr11_real_data/ig_30m_indicative_cost_probe_2026-09-20.json).
 
 ## Reopened acceptance gates
 

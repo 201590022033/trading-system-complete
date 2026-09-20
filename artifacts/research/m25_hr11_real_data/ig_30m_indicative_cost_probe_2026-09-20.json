@@ -1,0 +1,44 @@
+{
+  "artifact_version": "ig-indicative-cost-probe-v1",
+  "captured_at": "2026-09-20",
+  "environment": "DEMO",
+  "source": "IG REST /indicativecostsandcharges/open v1",
+  "epic": "CC.D.LCO.BMU.IP",
+  "instrument": "Oil - Brent Crude ($1)",
+  "timeframe": "30m",
+  "data_grade": "RESEARCH_DATA",
+  "request": {
+    "direction": "BUY",
+    "size": 1.0,
+    "bid": 10014.8,
+    "ask": 10019.6,
+    "price_level": 10019.6,
+    "deal_currency_code": "ZAR",
+    "guaranteed_stop": false
+  },
+  "response": {
+    "currency_code_iso": "USD",
+    "notional_value": 10019.6,
+    "notional_value_in_user_currency": 622.1911530264448,
+    "opening_spread": 0.1475581886496,
+    "closing_spread": 0.1475581886496,
+    "opening_commission": 0.0,
+    "closing_commission": 0.0,
+    "opening_fx_fee": 0.0,
+    "closing_fx_fee": 0.0,
+    "overnight_funding_fee": -0.7836692434023048,
+    "daily_running_fx_fee": 0.0077591014198248,
+    "opening_iftt": null,
+    "closing_iftt": null
+  },
+  "admission": {
+    "decision": "BLOCKED",
+    "session_calendar": null,
+    "historical_cost_schedule": null,
+    "reason": "Indicative broker quote lacks a verified EPIC session calendar and does not establish a versioned historical cost schedule.",
+    "connected_to_ranking": false,
+    "connected_to_paper_fills": false,
+    "connected_to_risk": false,
+    "connected_to_execution": false
+  }
+}

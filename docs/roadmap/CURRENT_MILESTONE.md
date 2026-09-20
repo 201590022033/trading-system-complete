@@ -46,6 +46,8 @@ opening/closing spread `0.1475581886496`, zero opening/closing commission and
 FX fee, overnight funding `-0.7836692434023048`, and daily FX fee
 `0.0077591014198248`. This is indicative broker evidence only; it is not an
 order and does not replace a versioned historical cost schedule.
+The evidence is preserved in
+`artifacts/research/m25_hr11_real_data/ig_30m_indicative_cost_probe_2026-09-20.json`.
 
 Deployed checkpoint: web and worker successfully deployed 825ac27; PostgreSQL
 contains completed paper jobs, rankings, audited controls and ten newly persisted
