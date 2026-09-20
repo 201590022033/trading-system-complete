@@ -35,6 +35,13 @@ not research admissibility: the API still reports 12 unclassified discontinuitie
 and no factual EPIC-specific session calendar was supplied. No bars were
 persisted, evaluated, or connected to ranking, paper fills, risk, or execution.
 
+The same read-only metadata lookup identified the EPIC as `Oil - Brent Crude
+($1)` and returned bid `10014.8`, offer `10019.6`, tick size `1.0`, lot size
+`1.0`, minimum deal size `1.0`, and margin factor `1.5`. The observed 4.8-point
+quote is evidence only; `trading_hours` was empty and currency was unavailable,
+so no commission, slippage, financing, or currency-aware cost schedule can be
+admitted from this response.
+
 ## Reopened acceptance gates
 
 | Boundary | Verified now | Still required |

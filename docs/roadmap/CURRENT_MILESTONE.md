@@ -31,6 +31,12 @@ or duplicate rows and no truncation. Twelve interval discontinuities remain
 unclassified because an EPIC-specific session calendar is not yet verified; the
 bars remain research-only and were not persisted or evaluated.
 
+The corresponding IG market metadata returned bid `10014.8`, offer `10019.6`,
+tick size `1.0`, lot size `1.0`, minimum deal size `1.0`, and margin factor
+`1.5`, but `trading_hours` was empty and currency was unavailable. The observed
+4.8-point quote is retained as evidence only; commission, slippage, financing,
+and currency-aware cost admission remain blocked.
+
 Deployed checkpoint: web and worker successfully deployed 825ac27; PostgreSQL
 contains completed paper jobs, rankings, audited controls and ten newly persisted
 Moneyweb analyses. Deployed cookie/Bearer authentication, aggression changes,
