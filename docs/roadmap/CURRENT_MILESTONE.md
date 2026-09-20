@@ -36,6 +36,9 @@ tick size `1.0`, lot size `1.0`, minimum deal size `1.0`, and margin factor
 `1.5`, but `trading_hours` was empty and currency was unavailable. The observed
 4.8-point quote is retained as evidence only; commission, slippage, financing,
 and currency-aware cost admission remain blocked.
+An authenticated Version 4 lookup likewise omitted `openingHours` and returned
+an empty currency code; this is an upstream response limitation, not only a
+Version 3 adapter-normalization issue.
 
 Deployed checkpoint: web and worker successfully deployed 825ac27; PostgreSQL
 contains completed paper jobs, rankings, audited controls and ten newly persisted

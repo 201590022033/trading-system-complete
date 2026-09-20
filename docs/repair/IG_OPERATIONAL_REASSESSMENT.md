@@ -41,6 +41,9 @@ The same read-only metadata lookup identified the EPIC as `Oil - Brent Crude
 quote is evidence only; `trading_hours` was empty and currency was unavailable,
 so no commission, slippage, financing, or currency-aware cost schedule can be
 admitted from this response.
+An additional authenticated Version 4 market lookup also omitted `openingHours`
+and returned an empty currency code, so the absence is not limited to the
+adapter's Version 3 normalization.
 
 ## Reopened acceptance gates
 
