@@ -43,6 +43,10 @@ class IGStreamIngestion:
         self.clock = clock or (lambda: datetime.now(timezone.utc))
         self.transport_factory = transport_factory or self._default_transport
         self.adapter_factory = adapter_factory or self._default_adapter
+        # Lightstreamer may deliver PRICE callbacks concurrently. PostgreSQL
+        # repositories use one connection per worker, so serialize immutable
+        # observation writes and keep transaction/savepoint ownership intact.
+        self._save_lock = threading.Lock()
         self._last_health = {"status": "NOT_STARTED", "observations": 0, "error": None,
                              "live_execution": False}
 
@@ -119,8 +123,9 @@ class IGStreamIngestion:
 
         def on_observation(value):
             record = self._to_observation_record(value)
-            self.repository.save_observation(record)
-            observations.append(record.observation_id)
+            with self._save_lock:
+                self.repository.save_observation(record)
+                observations.append(record.observation_id)
 
         timer = None
         try:
