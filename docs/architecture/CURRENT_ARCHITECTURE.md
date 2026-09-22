@@ -23,6 +23,14 @@ runbook. IG credentials are configured in Railway. The bounded streaming worker
 is implemented but remains disabled unless its explicit environment gate is set;
 no deployed ledger observation is claimed here.
 
+The 2026-09-22 UI extension prints a single canonical opportunity as a
+research-only paper worksheet and can prefill the existing manual journal with
+instrument, LONG/SHORT direction and unverified app-inspired attribution. It
+does not persist a proposed order or infer actual entry, quantity, stop, target,
+risk or outcome. The default Windows dashboard task uses an explicitly
+localhost-only PostgreSQL URL for runtime parity; SQLite remains an explicitly
+named isolated option, and no Railway database is cloned or attached.
+
 ## 2026-09-19 operational deployment
 
 Railway web and worker now share the migrated PostgreSQL paper account and

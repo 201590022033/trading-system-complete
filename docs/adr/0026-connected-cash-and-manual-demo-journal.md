@@ -19,6 +19,10 @@ Implement in order:
    a clearly labelled collapsed diagnostic section, outside cash totals.
 4. Test restart durability, causal visibility, validation, isolation and UI;
    run safe suite and protected artifacts, commit, then verify deployment.
+5. A later presentation-only extension may print a canonical research worksheet
+   and hand its identity/direction into the same journal form. It must leave all
+   actual execution facts blank, preserve App-inspired as unverified attribution,
+   and create no proposed-order persistence or broker action.
 
 Manual trades are self-reported observations, not broker-verified fills. Capture
 the chosen account, exact instrument, direction, quantity, entry time/price,

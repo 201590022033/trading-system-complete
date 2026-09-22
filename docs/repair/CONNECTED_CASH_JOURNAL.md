@@ -16,6 +16,10 @@ Implementation: ADR 0026, within the Operational demo workspace milestone.
    side, actual entry time/price, initial stop/target, planned monetary loss,
    broker reference and rationale. Select My own idea or App-inspired. The latter
    is not verified linkage to a historical recommendation.
+   A canonical opportunity may first be printed as a paper worksheet. Its
+   **Capture actual trade** action pre-fills only the canonical instrument,
+   LONG/SHORT direction, App-inspired label and attribution note. All actual
+   broker fields remain blank until you report what you really did.
 5. After closing it yourself in the broker, choose **Record outcome**. Supply
    actual exit time/price and net P&L AFTER ALL COSTS in the account currency.
    Contract multipliers and FX are not guessed from price changes.
@@ -37,6 +41,12 @@ its aggression slider affects only that simulator. This change does not wire
 IG CFDs to M14/M15, continuous IG streaming, automatic broker reconciliation,
 or canonical learning promotion. Other providers need factual read-only adapters
 before they can contribute. No real-money order path is enabled.
+
+The printed worksheet is browser-local and is not a durable trade or approval.
+It shows the comparative score, evidence date, suitability, uncertainty and
+blockers, and includes blank entry/outcome sections. Printing does not unlock
+the journal, reserve cash, invoke the broker or establish that a plan was acted
+on. WATCH/UNKNOWN research directions cannot prefill a journal trade.
 
 Validation before deployment: full offline suite 688 tests; 54 protected artifacts;
 JavaScript syntax; local browser entry/closure, account switching and disabled

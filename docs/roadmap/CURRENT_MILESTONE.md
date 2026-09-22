@@ -1,5 +1,25 @@
 # Current Milestone
 
+## 2026-09-22 local parity and paper worksheet checkpoint
+
+The default VS Code dashboard task now loads an explicitly localhost-only
+PostgreSQL URL from the ignored `.env.local`, while a separately named SQLite
+task remains available for isolated work. The local `trading` database on port
+5433 was migrated and the dashboard health contract reports
+`CONFIGURED_POSTGRES / AVAILABLE / SHADOW`. This is database-engine parity, not
+a copy of Railway production data.
+
+Canonical opportunity cards now provide a print-only, research-labelled paper
+trade worksheet plus a `Capture actual trade` handoff into the existing
+authenticated manual demo journal. The printout preserves ranking, provenance,
+uncertainty and blockers while leaving actual broker, quantity, price, time,
+stop, target, risk and outcome fields for the operator. Journal prefill carries
+only instrument, LONG/SHORT direction, `APP_INSPIRED` and attribution notes;
+actual execution facts remain user-entered. Neither action submits an order,
+changes broker cash or makes the record canonical learning evidence.
+Validation passes 692 safe offline tests, compilation of 208 Python files,
+JavaScript syntax checks and all 54 protected artifacts.
+
 ## Operational demo workspace — ACTIVE 2026-09-19
 
 2026-09-20 connected-cash/manual-journal extension (ADR 0026): replaces the

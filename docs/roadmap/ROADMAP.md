@@ -1,5 +1,11 @@
 # Linear Fusion Roadmap
 
+2026-09-22: the active operational workspace adds localhost PostgreSQL
+development parity and a printable canonical paper-trade worksheet with an
+explicit handoff to the isolated manual demo journal. Railway data is not copied
+locally, actual trade facts are never invented, and no broker execution or
+canonical-learning promotion is introduced.
+
 2026-09-20: account cash aggregation and manual demo journal are an extension
 of the existing ACTIVE operational workspace, not a new parallel milestone.
 See ADR 0026. Standard Bank integration, IG automatic dealing and promotion of

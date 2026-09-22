@@ -59,6 +59,17 @@ function journalPayload(form,numeric,time) {
   body[time]=new Date(body[time]).toISOString();
   return body;
 }
+function prefillPaperTrade(detail) {
+  if(!detail || !['LONG','SHORT'].includes(detail.direction))return;
+  const form=$('#journal-entry');
+  form.reset();entryId=crypto.randomUUID();
+  form.elements.instrument.value=detail.instrument || '';
+  form.elements.direction.value=detail.direction;
+  form.elements.idea_source.value='APP_INSPIRED';
+  form.elements.notes.value=detail.notes || '';
+  $('#journal-status').textContent='Worksheet loaded. After placing the DEMO trade yourself, enter the actual quantity, price, time, stop, target, risk and broker reference before saving.';
+  form.scrollIntoView({behavior:'smooth',block:'center'});
+}
 $('#journal-entry').onsubmit=async e=>{
   e.preventDefault();const button=e.target.querySelector('button[type=submit]');button.disabled=true;
   try{
@@ -80,5 +91,6 @@ $('#journal-close').onsubmit=async e=>{
 $('#cancel-journal-close').onclick=()=>$('#journal-close').hidden=true;
 $('#refresh-connected').onclick=refreshConnected;
 window.addEventListener('portfolio-auth-changed',refreshConnected);
+window.addEventListener('paper-trade-prefill',event=>prefillPaperTrade(event.detail));
 refreshConnected();
 setInterval(()=>{if(!document.hidden)refreshConnected();},60000);

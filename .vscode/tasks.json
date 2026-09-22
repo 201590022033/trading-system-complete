@@ -74,6 +74,24 @@
     {
       "label": "Start dashboard",
       "type": "process",
+      "command": "powershell.exe",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "${workspaceFolder}/scripts/start_local_postgres.ps1",
+        "-PythonPath",
+        "${command:python.interpreterPath}"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Start dashboard (isolated SQLite)",
+      "type": "process",
       "command": "${command:python.interpreterPath}",
       "args": [
         "app.py"

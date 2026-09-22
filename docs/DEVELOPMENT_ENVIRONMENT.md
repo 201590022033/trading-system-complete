@@ -72,9 +72,13 @@ User-specific themes, tool paths, agent settings and accounts were not copied.
 
 Tasks cover environment check, constrained dependency install, focused/full safe
 tests, compile validation, dashboard start, separate HR11 local reports and an
-optional local Ollama check. They use the selected Python interpreter. Start
-Dashboard binds `127.0.0.1:5000`; visit `/`, not just `/health` (which returns health
-status). Existing Linux `scripts/start_dashboard.sh` remains available.
+optional local Ollama check. They use the selected Python interpreter. On
+Windows, **Start dashboard** loads the ignored `.env.local`, refuses any
+non-local PostgreSQL host, and binds `127.0.0.1:5000`; run additive migrations
+first with `python -m scripts.migrate_postgres`. **Start dashboard (isolated
+SQLite)** retains the dependency-free fallback. Visit `/`, not just `/health`
+(which returns health status). Existing Linux `scripts/start_dashboard.sh`
+remains available.
 
 ## Tests, providers and optional software
 
