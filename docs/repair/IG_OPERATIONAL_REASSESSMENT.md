@@ -3,6 +3,12 @@
 Active milestone remains Operational demo workspace (ADR 0025). Historical
 component-complete headings do not establish deployed end-to-end acceptance.
 
+2026-09-22 runtime repair: a deployed worker crash exposed concurrent use of one
+PostgreSQL connection by the Lightstreamer callback and main job-finalization
+thread. Streaming observations now use a dedicated bounded repository; shutdown
+drains an active write, rejects later callbacks and closes that connection.
+Focused regression coverage includes a deliberately late callback. See ADR 0027.
+
 ## Ordered implementation and acceptance
 
 1. Configure verified credentials only in Railway private variables. Verify

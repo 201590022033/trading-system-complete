@@ -1,5 +1,10 @@
 # Linear Fusion Roadmap
 
+2026-09-22: the active operational workspace isolates IG streaming observation
+writes onto a dedicated bounded PostgreSQL connection after the deployed worker
+hit an interleaved-savepoint crash. Main-thread job state retains its own
+connection; late callbacks are rejected after disconnect. See ADR 0027.
+
 2026-09-22: the active operational workspace adds localhost PostgreSQL
 development parity and a printable canonical paper-trade worksheet with an
 explicit handoff to the isolated manual demo journal. Railway data is not copied

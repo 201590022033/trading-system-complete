@@ -2,6 +2,16 @@
 
 This document describes the uploaded repository, not an aspirational redesign.
 
+## 2026-09-22 streaming transaction isolation
+
+An enabled IG streaming job uses a dedicated PostgreSQL repository for SDK
+callback observation writes. The worker's primary repository is reserved for
+scheduling, durable job transitions and heartbeat state. Disconnect drains an
+active callback under the writer lock, stops accepting later callbacks and
+closes the bounded writer connection. This prevents cross-thread savepoint
+interleaving while preserving immutable observation identity and read-only IG
+behavior. See ADR 0027.
+
 The dashboard's one-day chart view uses completed 30-minute public bars for
 swing review. This display contract is separate from the canonical public
 ranking and ZAR paper loop, which use daily completed closes (`1d`). The HR11

@@ -1,5 +1,17 @@
 # Current Milestone
 
+## 2026-09-22 Railway worker crash prevention
+
+The 2026-09-22 worker crash was traced to a shared PostgreSQL connection used
+concurrently by a Lightstreamer callback and main-thread job finalization. A
+dedicated, bounded PostgreSQL observation repository now isolates callback
+transactions from scheduler/job/heartbeat transactions. Disconnect drains the
+active callback, rejects later callbacks and closes the writer deterministically.
+See ADR 0027. Focused streaming and transaction validation passes 35 tests; no
+ranking, risk, execution or live-trading behavior changes.
+The complete safe suite passes 693 tests and all 54 protected artifacts remain
+unchanged.
+
 ## 2026-09-22 local parity and paper worksheet checkpoint
 
 The default VS Code dashboard task now loads an explicitly localhost-only

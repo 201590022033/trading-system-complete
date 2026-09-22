@@ -37,12 +37,14 @@ class IGStreamIngestionConfig:
 class IGStreamIngestion:
     """Bounded, read-only ingestion of IG Demo PRICE updates into the observation ledger."""
 
-    def __init__(self, repository, config, *, clock=None, transport_factory=None, adapter_factory=None):
+    def __init__(self, repository, config, *, clock=None, transport_factory=None, adapter_factory=None,
+                 observation_repository_factory=None):
         self.repository = repository
         self.config = config
         self.clock = clock or (lambda: datetime.now(timezone.utc))
         self.transport_factory = transport_factory or self._default_transport
         self.adapter_factory = adapter_factory or self._default_adapter
+        self.observation_repository_factory = observation_repository_factory
         # Lightstreamer may deliver PRICE callbacks concurrently. PostgreSQL
         # repositories use one connection per worker, so serialize immutable
         # observation writes and keep transaction/savepoint ownership intact.
@@ -120,11 +122,26 @@ class IGStreamIngestion:
         observations = []
         stream = None
         event = stop_event or threading.Event()
+        accepting_observations = True
+        observation_repository = self.repository
+        owns_observation_repository = False
+        if self.repository.backend == "postgresql":
+            if self.observation_repository_factory is not None:
+                observation_repository = self.observation_repository_factory()
+            else:
+                from runtime_persistence import runtime_repository
+                observation_repository = runtime_repository(database_url=self.repository.database_url)
+            if observation_repository is self.repository:
+                raise ValueError("PostgreSQL stream observations require a dedicated repository")
+            owns_observation_repository = True
 
         def on_observation(value):
+            nonlocal accepting_observations
             record = self._to_observation_record(value)
             with self._save_lock:
-                self.repository.save_observation(record)
+                if not accepting_observations:
+                    return
+                observation_repository.save_observation(record)
                 observations.append(record.observation_id)
 
         timer = None
@@ -174,6 +191,14 @@ class IGStreamIngestion:
                     stream.disconnect()
                 except Exception:
                     pass
+            # Disconnect may return while an SDK callback is still unwinding.
+            # Holding the same lock drains an active save, rejects every later
+            # callback, and only then closes the dedicated PostgreSQL writer.
+            with self._save_lock:
+                accepting_observations = False
+                self._last_health["observations"] = len(observations)
+                if owns_observation_repository:
+                    observation_repository.close()
         return self._last_health
 
     def health(self):

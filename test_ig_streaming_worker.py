@@ -185,6 +185,74 @@ class IGStreamingWorkerTests(unittest.TestCase):
         self.assertEqual(data["market_data"]["mid"], 76.5)
         self.assertEqual(data["research_context"]["broker"], "IG")
 
+    def test_postgres_callbacks_use_dedicated_repository_and_reject_late_update(self):
+        class MainRepository:
+            backend = "postgresql"
+            database_url = "postgresql://fixture"
+
+            def save_observation(self, record):
+                raise AssertionError("stream callback reused the worker connection")
+
+        class WriterRepository:
+            def __init__(self):
+                self.records = []
+                self.closed = False
+
+            def save_observation(self, record):
+                if self.closed:
+                    raise AssertionError("late callback wrote after repository close")
+                self.records.append(record)
+
+            def close(self):
+                self.closed = True
+
+        release_late = threading.Event()
+        late_done = threading.Event()
+        late_errors = []
+        values = sample_values(timestamp_ms=str(int((NOW - timedelta(seconds=2)).timestamp() * 1000)))
+
+        class LateCallbackTransport(FakeLightstreamerTransport):
+            def disconnect(self):
+                callbacks = list(self._callbacks.values())
+
+                def deliver_late():
+                    release_late.wait(2)
+                    try:
+                        obs = callbacks[0](values, NOW)
+                        self.on_observation(obs)
+                    except Exception as exc:
+                        late_errors.append(exc)
+                    finally:
+                        late_done.set()
+
+                threading.Thread(target=deliver_late, daemon=True).start()
+                super().disconnect()
+
+        writer = WriterRepository()
+        config = IGStreamIngestionConfig.from_env({
+            "IG_STREAM_ENABLED": "1",
+            "IG_STREAM_INSTRUMENTS": "BRENT:CC.D.LCO.BMU.IP",
+            "IG_STREAM_RUN_SECONDS": "1",
+        })
+        ingestion = IGStreamIngestion(
+            MainRepository(), config, clock=lambda: NOW,
+            adapter_factory=FakeIGAdapter,
+            transport_factory=lambda on_observation: LateCallbackTransport(
+                on_observation=on_observation,
+                observations=[values],
+                clock=lambda: NOW,
+            ),
+            observation_repository_factory=lambda: writer,
+        )
+        health = ingestion.run_once(stop_event=threading.Event())
+        self.assertEqual(health["observations"], 1)
+        self.assertTrue(writer.closed)
+
+        release_late.set()
+        self.assertTrue(late_done.wait(2))
+        self.assertFalse(late_errors)
+        self.assertEqual(len(writer.records), 1)
+
     def test_run_once_fail_closed_on_auth_error(self):
         repo = self.repo()
         env = {"IG_STREAM_ENABLED": "1", "IG_STREAM_INSTRUMENTS": "BRENT:CC.D.LCO.BMU.IP",
