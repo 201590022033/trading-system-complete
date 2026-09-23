@@ -6,7 +6,8 @@ from time import sleep
 from flask import Flask
 from application.opportunities.api import create_blueprint
 from application.opportunities.public_research import (
-    candidate_from_chart, public_share_catalog, public_share_list, refresh_public_research,
+    candidate_from_chart, public_instrument_classes, public_share_catalog, public_share_list,
+    refresh_public_research,
 )
 from application.opportunities.refresh import OpportunityRefresh
 from application.opportunities.service import OpportunityService
@@ -44,10 +45,25 @@ class PublicResearchRefreshTests(unittest.TestCase):
         self.assertIn("TFMJ", shares)
         self.assertEqual(shares["TFMJ"]["display_symbol"], "TFG")
         self.assertFalse(shares["TFMJ"]["capabilities"]["operational_analysis"])
+        self.assertTrue(shares["TFMJ"]["capabilities"]["automatic_technical_screen"])
+        self.assertEqual(shares["TFMJ"]["instrument_type"], "cash_equity")
         self.assertTrue(shares["SASOL"]["capabilities"]["operational_analysis"])
         response = app.test_client().get("/api/public-shares")
         self.assertEqual(response.status_code, 200)
-        self.assertFalse(response.get_json()["live_execution"])
+        body = response.get_json()
+        self.assertFalse(body["live_execution"])
+        classes = {item["class_id"]: item for item in body["classes"]}
+        self.assertEqual(classes["cash_equity"]["state"], "AVAILABLE")
+        self.assertEqual(classes["cash_equity"]["instrument_count"], len(shares))
+        self.assertEqual(classes["index_etf"]["state"], "NOT_CONFIGURED")
+        self.assertEqual(classes["cfd"]["state"], "BLOCKED_CONTRACT_EVIDENCE")
+        self.assertEqual(classes["ssf"]["state"], "BLOCKED_CONTRACT_EVIDENCE")
+
+    def test_unavailable_instrument_classes_explain_their_evidence_gates(self):
+        classes = {item["class_id"]: item for item in public_instrument_classes()}
+        self.assertIn("liquidity", classes["index_etf"]["reason"])
+        self.assertIn("financing", classes["cfd"]["reason"])
+        self.assertIn("expiry", classes["ssf"]["reason"])
 
     def test_new_share_can_rank_with_matured_evidence_and_source_lineage(self):
         result = refresh_public_research(fetcher=FakeFetcher(), evaluated_at=NOW,

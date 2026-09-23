@@ -1,5 +1,11 @@
 # Linear Fusion Roadmap
 
+2026-09-23: the active operational workspace now presents the canonical
+research flow in screen-first order and exposes instrument-class admission
+states. JSE cash shares remain the only configured universe; ETFs are explicit
+future configuration and CFDs/SSFs stay blocked on verified contract and cost
+evidence. See ADR 0028.
+
 2026-09-22: the active operational workspace isolates IG streaming observation
 writes onto a dedicated bounded PostgreSQL connection after the deployed worker
 hit an interleaved-savepoint crash. Main-thread job state retains its own

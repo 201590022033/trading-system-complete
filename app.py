@@ -16,7 +16,7 @@ from application.opportunities.api import create_blueprint
 from application.opportunities.service import serialize_opportunity
 from application.opportunities.refresh import OpportunityRefresh
 from application.opportunities.public_research import (
-    public_share_catalog, public_share_list, persisted_shadow_evidence,
+    public_instrument_classes, public_share_catalog, public_share_list, persisted_shadow_evidence,
     refresh_public_research,
 )
 from runtime_persistence import runtime_repository
@@ -220,7 +220,9 @@ def account_status():
 @app.get("/api/instruments")
 def instruments(): return jsonify(instruments=instrument_list())
 @app.get("/api/public-shares")
-def public_shares(): return jsonify(instruments=public_share_list(),state="CURATED_PUBLIC_CASH_SHARES",live_execution=False)
+def public_shares():
+    return jsonify(instruments=public_share_list(), classes=public_instrument_classes(),
+                   state="CURATED_PUBLIC_CASH_SHARES", live_execution=False)
 @app.get("/api/feed/market/<instrument>")
 def market_feed(instrument):
     if instrument in public_share_catalog() and instrument not in {item["instrument_id"] for item in instrument_list()}:

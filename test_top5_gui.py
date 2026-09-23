@@ -13,6 +13,13 @@ class TopFiveGuiTests(unittest.TestCase):
   app.config['TESTING']=True;response=app.test_client().get('/');self.assertEqual(response.status_code,200);self.assertIn(b'Canonical Top 5',response.data);self.assertIn('aria-live="polite"',self.panel);self.assertIn('aria-label=',self.panel)
  def test_fetches_canonical_top_five_and_manual_refresh(self):
   self.assertIn("canonicalFetch('/api/v1/opportunities?limit=5')",self.js);self.assertIn("action('#refresh-canonical'",self.js)
+ def test_workflow_screens_before_trade_geometry_and_exposes_asset_class_gates(self):
+  for text in ('Choose universe','Automatic screen','Ranked shortlist','Deep analysis','Geometry &amp; risk size','Paper ticket'):
+   self.assertIn(text,self.panel)
+  self.assertIn('canonical-asset-class',self.panel)
+  self.assertIn('Why are ETFs, CFDs and SSFs unavailable?',self.panel)
+  self.assertIn('data-review-technical',self.js)
+  self.assertIn("canonicalFetch('/api/v1/opportunities')",self.js)
  def test_score_is_not_probability(self):
   self.assertIn('Comparative research score</small>',self.js);self.assertIn('Comparative research score — not probability of profit.',self.panel);self.assertNotIn("ranking_score *",self.js);self.assertNotIn("ranking_score/",self.js)
  def test_all_direction_states_are_rendered_from_api_without_translation(self):

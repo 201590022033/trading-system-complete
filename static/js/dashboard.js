@@ -2,7 +2,7 @@ const $ = s => document.querySelector(s);
 const esc = v => String(v ?? '—').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const num = v => Number.isFinite(v) ? v.toLocaleString('en-ZA', {maximumFractionDigits:2}) : '—';
 const when = v => v ? (Number.isNaN(Date.parse(v)) ? v : new Date(v).toLocaleString('en-ZA')) : 'Not supplied';
-let instruments = [], newsSnapshot = null, feedBusy = false, selectionVersion = 0;
+let instruments = [], instrumentClasses = [], canonicalRecords = [], newsSnapshot = null, feedBusy = false, selectionVersion = 0;
 let chartPoll = null, newsPoll = null;
 let canonicalPoll = null, canonicalPollAttempts = 0;
 async function api(url, options = {}) {
@@ -50,6 +50,53 @@ function capturePaperTrade(item) {
     notes:`App-inspired paper worksheet ${item.opportunity_id}; ${share?.display_symbol || item.instrument_id}; rank ${item.rank}; comparative score ${item.ranking_score ?? 'unavailable'}; evaluated ${item.evaluated_at}. Verify all broker fields and record only the actual trade.`
   }}));
 }
+function opportunityShare(item) {
+  return instruments.find(i=>i.yahoo_symbol===item?.provenance?.data_symbol);
+}
+function renderAutomaticTechnicalScreen(item, share) {
+  const target=$('#canonical-technical-screen'),title=$('#canonical-screen-title');
+  title.textContent=`${share.name} · ${share.display_symbol}`;
+  if (!item) {
+    target.innerHTML='<p class="muted">No current canonical screening record is available for this instrument. Run the universe screen from Canonical Top 5, then return here. No legacy result has been substituted.</p>';
+    return;
+  }
+  const technical=item.input_evidence?.technical || {},regime=item.input_evidence?.regime || {};
+  const evidence=item.feature_evidence_summary || {};
+  target.innerHTML=`<div class="canonical-screen-grid">
+    ${kv('Screen order','Universe-wide before ranking')}${kv('Daily horizon',item.horizon_id)}
+    ${kv('Momentum 20-day signal',technical.momentum_20d_signal == null?'Unavailable':technical.momentum_20d_signal)}${kv('RSI 14 signal',technical.rsi_14_signal == null?'Unavailable':technical.rsi_14_signal)}
+    ${kv('Momentum interpretation',technical.momentum_20d_signal === 1?'Positive / LONG evidence':technical.momentum_20d_signal === -1?'Negative / SHORT evidence':technical.momentum_20d_signal === 0?'Neutral evidence':'Unavailable')}
+    ${kv('RSI interpretation',technical.rsi_14_signal === 1?'Oversold / LONG evidence':technical.rsi_14_signal === -1?'Overbought / SHORT evidence':technical.rsi_14_signal === 0?'Neutral evidence':'Unavailable')}
+    ${kv('Regime',regime.trend || regime.availability || 'Unavailable')}${kv('Volatility regime',regime.volatility || 'Unavailable')}
+    ${kv('Evidence samples',evidence.sample_count ?? item.sample_count ?? 'Unavailable')}${kv('Last available technical bar',when(technical.last_available_at))}
+    ${kv('Canonical direction',item.direction)}${kv('Rank',item.rank == null?'Outside current Top 5':item.rank)}
+    ${kv('Comparative score',item.ranking_score == null?'Not ranked':`${num(item.ranking_score)} / 100`)}${kv('Suitability',item.suitability_status)}
+  </div><p class="muted">This is the lightweight automatic canonical screen used before ranking. The legacy six-share benchmark below is separate and is not substituted for unsupported shares. Entry, stop, target and position size remain downstream steps.</p>`;
+}
+async function loadAutomaticTechnicalScreen(instrumentId) {
+  const share=instruments.find(i=>i.instrument_id===instrumentId),target=$('#canonical-technical-screen');
+  if (!share) { $('#canonical-screen-title').textContent='Select an instrument'; target.innerHTML='<p class="muted">Choose a cash share or use “Review technical screen” on a Top 5 card.</p>'; return; }
+  let item=canonicalRecords.find(row=>row.provenance?.data_symbol===share.yahoo_symbol);
+  if (!item) {
+    target.innerHTML='<p class="muted">Reading the latest automatic screening record…</p>';
+    try {
+      const result=await canonicalFetch('/api/v1/opportunities');
+      canonicalRecords=result.opportunities || [];
+      item=canonicalRecords.find(row=>row.provenance?.data_symbol===share.yahoo_symbol);
+    } catch (error) {
+      target.innerHTML=`<p class="unavailable">Canonical screen unavailable: ${esc(error.message)}</p>`;
+      return;
+    }
+  }
+  if ($('#instrument').value===instrumentId) renderAutomaticTechnicalScreen(item,share);
+}
+function reviewTechnicalScreen(item) {
+  const share=opportunityShare(item);
+  if (!share) return;
+  $('#instrument').value=share.instrument_id;
+  document.querySelector('nav button[data-tab="technical-view"]').click();
+  selectedChanged();
+}
 function renderCanonicalCard(item) {
   const regime = item.regime_context || {}, divergence = item.divergence_summary || {}, evidence = item.feature_evidence_summary || {};
   const components=item.ranking_components || {};
@@ -61,7 +108,7 @@ function renderCanonicalCard(item) {
     ${kv('Last usable session',item.provenance?.last_usable_session)}${kv('Data source',item.provenance?.data_symbol)}
     <h4>Why it ranks</h4>${kv('Suitability input',components.suitability == null ? 'Unavailable' : `${num(components.suitability * 100)} / 100`)}${kv('Historical effectiveness support',components.effectiveness_support == null ? 'Unavailable' : `${num(components.effectiveness_support * 100)} / 100`)}${kv('Evidence depth input',components.evidence_depth == null ? 'Unavailable' : `${num(components.evidence_depth * 100)} / 100`)}${kv('Direction agreement input',components.directional_strength == null ? 'Unavailable' : `${num(components.directional_strength * 100)} / 100`)}<small class="muted">These are comparative ranking inputs, not probabilities of profit. Costs use a disclosed ${esc(item.provenance?.cost_assumption_bps ?? 'unknown')} bps research assumption.</small>${canonicalList(item.reasons,'No ranking reasons supplied.')}
     <h4>Uncertainty and blockers</h4>${canonicalList([...(item.uncertainty || []),...(item.blockers || [])],'None reported by the canonical API.')}
-    <div class="paper-trade-actions"><button type="button" data-print-paper-trade>Print paper-trade worksheet</button><button type="button" data-capture-paper-trade ${['LONG','SHORT'].includes(item.direction)?'':'disabled'}>Capture actual trade</button></div><small class="muted">Printing or pre-filling does not submit an order. Record only what you actually trade in a demo account.</small>
+    <div class="paper-trade-actions"><button type="button" data-review-technical>Review technical screen</button><button type="button" data-print-paper-trade>Print paper-trade worksheet</button><button type="button" data-capture-paper-trade ${['LONG','SHORT'].includes(item.direction)?'':'disabled'}>Capture actual trade</button></div><small class="muted">Technical review comes before trade geometry and sizing. Printing or pre-filling does not submit an order.</small>
     <details><summary>${researchOnly?'Research provenance and trading boundary':'Policy, risk and provenance'}</summary><div class="canonical-detail" role="region" aria-label="Research detail for ${esc(item.instrument_id)}"><p class="muted">Open to inspect the authoritative record.</p></div></details>
   </article>`;
 }
@@ -95,13 +142,15 @@ async function refreshCanonicalOpportunities(trigger=false) {
       clearTimeout(canonicalPoll); canonicalPollAttempts=0;
       await canonicalFetch('/api/v1/opportunities/refresh',{method:'POST'});
     }
-    const result=await canonicalFetch('/api/v1/opportunities?limit=5'),items=result.opportunities;
+    const [result,allResult]=await Promise.all([canonicalFetch('/api/v1/opportunities?limit=5'),canonicalFetch('/api/v1/opportunities')]),items=result.opportunities;
+    canonicalRecords=allResult.opportunities || [];
     if (!Array.isArray(items)) throw Error('Malformed canonical response');
     const refresh=result.refresh || {};
     status.textContent=refresh.running ? 'Checking the curated public-share universe and matured evidence…' : `${items.length} canonical research opportunit${items.length===1?'y':'ies'} available · ${refresh.scanned || 0} shares checked · ${refresh.unranked || 0} lacked enough evidence · ${(refresh.unavailable || []).length} data unavailable.`;
     cards.innerHTML=items.length ? items.map(renderCanonicalCard).join('') : `<div class="panel canonical-empty"><h3>${refresh.running ? 'Research refresh in progress.' : 'No canonical opportunities available yet.'}</h3><p class="muted">${refresh.running ? 'Checking dated public price history and matured research outcomes.' : 'No share passed the current evidence gate. Legacy recommendations are not substituted.'}</p></div>`;
     cards.querySelectorAll('.canonical-card').forEach((card,index)=>{
       const item=items[index];
+      card.querySelector('[data-review-technical]').onclick=()=>reviewTechnicalScreen(item);
       card.querySelector('[data-print-paper-trade]').onclick=()=>printPaperTrade(item);
       const capture=card.querySelector('[data-capture-paper-trade]');
       if(!capture.disabled)capture.onclick=()=>capturePaperTrade(item);
@@ -234,7 +283,8 @@ function selectedChanged() {
   if ($('#chart-instrument')) $('#chart-instrument').value=selected;
   const supported=!!item?.capabilities?.operational_analysis;
   for (const control of ['#run','#technical','#load-technical-intelligence']) $(control).disabled=!!selected && !supported;
-  if (selected && !supported) $('#notice').textContent='Public share chart available. Full operational technical analysis is currently supported for the historical benchmark shares only.';
+  $('#notice').textContent=!selected ? 'Select an instrument to inspect the automatic canonical screen. Legacy full analysis remains a separate six-share historical benchmark.' : supported ? 'Automatic canonical screen shown first. This share also has the separate legacy full benchmark available below.' : 'Automatic canonical screen shown first. The separate legacy full benchmark is unavailable for this share and has not been substituted.';
+  loadAutomaticTechnicalScreen(selected);
   $('#chart-title').textContent = selected ? `${selected} · Price history` : 'Price history';
   if (!selected) {
     $('#stock-chart').innerHTML = '<div class="chart-empty">Select an instrument to load price history.<br><button id="choose-instrument" type="button">Choose instrument</button></div>';
@@ -361,9 +411,14 @@ $('#auto-refresh').onchange=()=>{if($('#auto-refresh').checked) refreshFeeds();}
 (async()=>{
   const [status,universe]=await Promise.all([api('/api/system/status'),api('/api/public-shares')]);
   instruments=universe.instruments;
+  instrumentClasses=universe.classes || [];
   $('#system-pill').textContent='DEMO & PAPER · NOT LIVE MONEY';
   $('#system-result').textContent=JSON.stringify(status,null,2);
   $('#instrument').innerHTML='<option value="">Select an instrument</option>'+instruments.map(i=>`<option value="${i.instrument_id}">${esc(i.display_symbol)} · ${esc(i.name)}</option>`).join('');
+  $('#canonical-asset-class').innerHTML=instrumentClasses.map(item=>`<option value="${esc(item.class_id)}" ${item.state==='AVAILABLE'?'':'disabled'}>${esc(item.label)} · ${esc(item.state.replaceAll('_',' '))}</option>`).join('');
+  const activeClass=instrumentClasses.find(item=>item.state==='AVAILABLE');
+  $('#asset-class-status').textContent=activeClass ? `${activeClass.instrument_count} instruments · ${activeClass.reason} ETFs, CFDs and SSFs remain visible here with their evidence gates.` : 'No instrument class is currently available.';
+  $('#asset-class-boundaries').innerHTML=instrumentClasses.filter(item=>item.state!=='AVAILABLE').map(item=>kv(`${item.label} · ${item.state.replaceAll('_',' ')}`,item.reason)).join('');
   $('#chart-instrument').innerHTML=$('#instrument').innerHTML;
   $('#quotes').innerHTML='<p class="muted">Select a public share in the chart controls, or use a validated AI/pinned watchlist selection when available.</p>';
   selectedChanged();

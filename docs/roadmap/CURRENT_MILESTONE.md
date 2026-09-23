@@ -1,5 +1,20 @@
 # Current Milestone
 
+## 2026-09-23 screen-first research workflow
+
+The dashboard now reflects the canonical pipeline's actual ordering: choose an
+admitted universe, automatically screen all eligible instruments, rank the
+shortlist, review candidate technical evidence, and only then proceed to trade
+geometry, risk sizing and an optional paper worksheet. Top 5 cards link directly
+to the automatic technical evidence used by the ranking. The separate legacy
+full-analysis controls remain explicitly labelled as a six-share benchmark.
+
+The public-universe contract exposes JSE cash shares as available, index ETFs as
+not configured, and CFDs/SSFs as blocked until their asset-specific identity,
+cost, contract, margin/session and lifecycle evidence is verified. No new
+instrument, ranking behavior, risk rule or execution path is introduced. See
+ADR 0028.
+
 ## 2026-09-22 Railway worker crash prevention
 
 The 2026-09-22 worker crash was traced to a shared PostgreSQL connection used

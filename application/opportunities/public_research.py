@@ -57,9 +57,30 @@ def public_share_catalog():
 def public_share_list():
     return [{"instrument_id": key, "display_symbol": data["yahoo_symbol"].removesuffix(".JO"), "name": data["name"],
              "sector": data.get("sector", "unspecified"), "yahoo_symbol": data["yahoo_symbol"],
-             "capabilities": {"public_chart": True, "operational_analysis": _legacy(key),
+             "asset_class": "equity", "instrument_type": "cash_equity",
+             "capabilities": {"public_chart": True, "automatic_technical_screen": True,
+                              "legacy_full_analysis": _legacy(key),
+                              "operational_analysis": _legacy(key),
                               "broker_execution": False}}
             for key, data in public_share_catalog().items()]
+
+
+def public_instrument_classes():
+    """UI-facing scope with unavailable classes kept explicit, never invented."""
+    return [
+        {"class_id": "cash_equity", "label": "JSE cash shares", "state": "AVAILABLE",
+         "instrument_count": len(public_share_catalog()),
+         "reason": "Curated public daily-chart universe with canonical technical screening."},
+        {"class_id": "index_etf", "label": "JSE index ETFs", "state": "NOT_CONFIGURED",
+         "instrument_count": 0,
+         "reason": "No verified ETF identities, liquidity profiles and cost evidence are registered yet."},
+        {"class_id": "cfd", "label": "CFDs", "state": "BLOCKED_CONTRACT_EVIDENCE",
+         "instrument_count": 0,
+         "reason": "Contract size, spread, financing, margin, currency, session and broker mapping must be verified first."},
+        {"class_id": "ssf", "label": "Single-stock futures (SSFs)", "state": "BLOCKED_CONTRACT_EVIDENCE",
+         "instrument_count": 0,
+         "reason": "Multiplier, tick value, margin, expiry, roll and session evidence must be verified first."},
+    ]
 
 
 def _legacy(key):
