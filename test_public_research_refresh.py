@@ -43,6 +43,9 @@ class PublicResearchRefreshTests(unittest.TestCase):
         self.assertGreaterEqual(len(public_share_catalog()), 18)
         shares = {item["instrument_id"]: item for item in public_share_list()}
         self.assertNotIn("JDIJ", shares)
+        self.assertNotIn("JDIJ", public_share_catalog())
+        self.assertIn("JDIJ", public_share_catalog(include_inactive=True))
+        self.assertFalse(public_share_catalog(include_inactive=True)["JDIJ"]["research_enabled"])
         self.assertEqual(shares["CLS"]["yahoo_symbol"], "CLS.JO")
         self.assertEqual(shares["CLS"]["name"], "Clicks Group")
         self.assertIn("TFMJ", shares)

@@ -46,12 +46,13 @@ def persisted_shadow_evidence(repository, *, evaluated_at):
     return result
 
 
-def public_share_catalog():
-    """Only curated cash shares with a JSE Yahoo mapping can enter this universe."""
+def public_share_catalog(*, include_inactive=False):
+    """Only active curated cash shares with a JSE Yahoo mapping enter research."""
     return {key: data for key, data in JSE_TICKERS.items()
             if isinstance(data.get("yahoo_symbol"), str)
             and data["yahoo_symbol"].endswith(".JO")
-            and data.get("name")}
+            and data.get("name")
+            and (include_inactive or data.get("research_enabled", True))}
 
 
 def public_share_list():

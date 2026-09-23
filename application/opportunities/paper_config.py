@@ -31,7 +31,10 @@ class PaperLoopConfig:
         object.__setattr__(self, "universe", tuple(self.universe))
         if not 1 <= len(self.universe) <= 30 or len(set(self.universe)) != len(self.universe):
             raise ValueError("bounded unique universe required")
-        if any(key not in public_share_catalog() for key in self.universe):
+        # Existing durable accounts may retain an explicitly inactive legacy
+        # identity. Runtime loaders use the active catalog and skip it without
+        # issuing a provider request or relabelling historical records.
+        if any(key not in public_share_catalog(include_inactive=True) for key in self.universe):
             raise ValueError("unknown public cash equity")
         for name in ("starting_cash", "slippage_per_unit", "commission_per_fill",
                      "risk_fraction", "max_volume_fraction", "reward_multiple"):

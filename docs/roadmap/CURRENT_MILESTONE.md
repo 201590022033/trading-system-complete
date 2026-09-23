@@ -2,12 +2,15 @@
 
 ## 2026-09-23 stale Yahoo identity repair
 
-The public cash-share catalog and Railway paper universe no longer request the
-invalid `JDI.JO` symbol, which Yahoo returns as quote-not-found. The stale
-JD Group/JDIJ entry is replaced by Clicks Group (`CLS`, Yahoo `CLS.JO`), whose
-current JSE identity and public daily history were verified before admission.
-The universe remains at 18 cash shares; no historical record is relabelled and
-no broker mapping or execution capability is introduced.
+The active public cash-share catalog no longer requests the invalid `JDI.JO`
+symbol, which Yahoo returns as quote-not-found. The stale JD Group/JDIJ identity
+is retained as explicitly inactive metadata solely so the existing durable
+paper-account configuration remains byte-for-byte compatible; runtime loaders
+skip it before making a provider request. Clicks Group (`CLS`, Yahoo `CLS.JO`)
+was verified and admitted to the broader public catalog. It is not silently
+substituted into the existing durable paper account; that would require a
+deliberate v2 account migration. No historical record is relabelled and no
+broker mapping or execution capability is introduced.
 
 The Market chart selector also exposes four verified JSE-listed Satrix ETF
 securities (`STX40`, `STXFIN`, `STXRES`, `STXIND`) plus separately labelled

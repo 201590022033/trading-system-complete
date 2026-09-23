@@ -1,8 +1,9 @@
 # Linear Fusion Roadmap
 
-2026-09-23: removed the invalid `JDI.JO` Yahoo request from the active public
-cash-share universe and admitted the verified current Clicks Group `CLS.JO`
-mapping instead. The Market window also gains chart-only listed Satrix ETF
+2026-09-23: removed the invalid `JDI.JO` Yahoo request from active public
+research while retaining its identity as inactive durable-account metadata;
+verified Clicks Group `CLS.JO` was added to the broader public catalog without
+silently mutating the existing paper account. The Market window also gains chart-only listed Satrix ETF
 securities and explicitly labelled public CFD reference proxies. This changes
 no canonical admission, sizing or execution behavior.
 

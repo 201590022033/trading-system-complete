@@ -83,6 +83,14 @@ JSE_TICKERS = {
         "description": "Banking and financial services",
         "yahoo_symbol": "ABG.JO"
     },
+    "JDIJ": {
+        "name": "JD Group (inactive legacy identity)",
+        "sector": "Retail",
+        "description": "Retained only for durable paper-account configuration compatibility",
+        "yahoo_symbol": "JDI.JO",
+        "research_enabled": False,
+        "status": "INVALID_PROVIDER_MAPPING"
+    },
     "CLS": {
         "name": "Clicks Group",
         "sector": "Retail",
