@@ -5,6 +5,7 @@ const when = v => v ? (Number.isNaN(Date.parse(v)) ? v : new Date(v).toLocaleStr
 let instruments = [], chartInstruments = [], instrumentClasses = [], canonicalRecords = [], newsSnapshot = null, feedBusy = false, selectionVersion = 0;
 let chartPoll = null, newsPoll = null;
 let canonicalPoll = null, canonicalPollAttempts = 0;
+let technicalRequestVersion = 0;
 async function api(url, options = {}) {
   const response = await fetch(url, {...options, signal: AbortSignal.timeout(15000)});
   const data = await response.json();
@@ -84,7 +85,7 @@ function renderAutomaticTechnicalScreen(item, share) {
   </div><p class="muted">These are the exact dated inputs behind this Top 5 record. Ranging describes trend strength and can coexist with positive or negative momentum. Neutral RSI contributes no direction. SHORT is bearish research evidence; the cash-share simulator is long-only.</p>`;
 }
 async function loadAutomaticTechnicalScreen(instrumentId) {
-  const version=selectionVersion;
+  const version=++technicalRequestVersion;
   const share=instruments.find(i=>i.instrument_id===instrumentId),target=$('#canonical-technical-screen');
   if (!share) { $('#canonical-screen-title').textContent='Select an instrument'; target.innerHTML='<p class="muted">Choose a cash share or use “Review technical screen” on a Top 5 card.</p>'; return; }
   let item=canonicalRecords.find(row=>row.provenance?.data_symbol===share.yahoo_symbol);
@@ -95,12 +96,12 @@ async function loadAutomaticTechnicalScreen(instrumentId) {
       canonicalRecords=result.opportunities || [];
       item=canonicalRecords.find(row=>row.provenance?.data_symbol===share.yahoo_symbol);
     } catch (error) {
-      if (version!==selectionVersion) return;
+      if (version!==technicalRequestVersion) return;
       target.innerHTML=`<p class="unavailable">Canonical screen unavailable: ${esc(error.message)}</p>`;
       return;
     }
   }
-  if (version===selectionVersion && $('#instrument').value===instrumentId) renderAutomaticTechnicalScreen(item,share);
+  if (version===technicalRequestVersion && $('#instrument').value===instrumentId) renderAutomaticTechnicalScreen(item,share);
 }
 function reviewTechnicalScreen(item) {
   const share=opportunityShare(item);
@@ -307,6 +308,7 @@ async function refreshFeeds() {
   } finally { feedBusy = false; }
 }
 function selectedChanged(snapshot=null) {
+  technicalRequestVersion++;
   selectionVersion++;
   const selected = $('#instrument').value;
   const item=instruments.find(i=>i.instrument_id===selected);
