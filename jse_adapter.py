@@ -83,11 +83,11 @@ JSE_TICKERS = {
         "description": "Banking and financial services",
         "yahoo_symbol": "ABG.JO"
     },
-    "JDIJ": {
-        "name": "Jdgroup",
+    "CLS": {
+        "name": "Clicks Group",
         "sector": "Retail",
-        "description": "Automotive retail",
-        "yahoo_symbol": "JDI.JO"
+        "description": "Health, beauty and pharmacy retail",
+        "yahoo_symbol": "CLS.JO"
     },
     "AGL": {"name": "Anglo American", "sector": "Mining", "description": "Diversified mining", "yahoo_symbol": "AGL.JO"},
     "BTI": {"name": "British American Tobacco", "sector": "Consumer", "description": "Tobacco and consumer products", "yahoo_symbol": "BTI.JO"},

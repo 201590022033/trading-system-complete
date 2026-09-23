@@ -309,7 +309,7 @@ Available JSE tickers (in `jse_adapter.py`):
 - SHPJ (Shoprite)
 - TFMJ (Foschini Group)
 - ABSPJ (Absa Group)
-- JDIJ (Jdgroup)
+- CLS (Clicks Group)
 
 ---
 

@@ -3,7 +3,7 @@
   "mode": "PAPER",
   "starting_cash": 100000,
   "currency": "ZAR",
-  "universe": ["NPN", "SASOL", "BHP", "IMPJ", "SHPJ", "TFMJ", "ABSPJ", "JDIJ", "AGL", "BTI", "CFR", "FSR", "GFI", "KIO", "MTN", "NED", "REM", "VOD"],
+  "universe": ["NPN", "SASOL", "BHP", "IMPJ", "SHPJ", "TFMJ", "ABSPJ", "CLS", "AGL", "BTI", "CFR", "FSR", "GFI", "KIO", "MTN", "NED", "REM", "VOD"],
   "slippage_per_unit": 0.1,
   "commission_per_fill": 5.0,
   "risk_fraction": 0.005,

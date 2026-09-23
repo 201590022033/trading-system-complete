@@ -42,6 +42,9 @@ class PublicResearchRefreshTests(unittest.TestCase):
     def test_broad_catalog_preserves_legacy_but_does_not_stop_at_six(self):
         self.assertGreaterEqual(len(public_share_catalog()), 18)
         shares = {item["instrument_id"]: item for item in public_share_list()}
+        self.assertNotIn("JDIJ", shares)
+        self.assertEqual(shares["CLS"]["yahoo_symbol"], "CLS.JO")
+        self.assertEqual(shares["CLS"]["name"], "Clicks Group")
         self.assertIn("TFMJ", shares)
         self.assertEqual(shares["TFMJ"]["display_symbol"], "TFG")
         self.assertFalse(shares["TFMJ"]["capabilities"]["operational_analysis"])
@@ -55,7 +58,8 @@ class PublicResearchRefreshTests(unittest.TestCase):
         classes = {item["class_id"]: item for item in body["classes"]}
         self.assertEqual(classes["cash_equity"]["state"], "AVAILABLE")
         self.assertEqual(classes["cash_equity"]["instrument_count"], len(shares))
-        self.assertEqual(classes["index_etf"]["state"], "NOT_CONFIGURED")
+        self.assertEqual(classes["index_etf"]["state"], "CHART_ONLY_NOT_RANKED")
+        self.assertEqual(classes["index_etf"]["instrument_count"], 4)
         self.assertEqual(classes["cfd"]["state"], "BLOCKED_CONTRACT_EVIDENCE")
         self.assertEqual(classes["ssf"]["state"], "BLOCKED_CONTRACT_EVIDENCE")
 

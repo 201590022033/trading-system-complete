@@ -2,7 +2,7 @@ const $ = s => document.querySelector(s);
 const esc = v => String(v ?? '—').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const num = v => Number.isFinite(v) ? v.toLocaleString('en-ZA', {maximumFractionDigits:2}) : '—';
 const when = v => v ? (Number.isNaN(Date.parse(v)) ? v : new Date(v).toLocaleString('en-ZA')) : 'Not supplied';
-let instruments = [], instrumentClasses = [], canonicalRecords = [], newsSnapshot = null, feedBusy = false, selectionVersion = 0;
+let instruments = [], chartInstruments = [], instrumentClasses = [], canonicalRecords = [], newsSnapshot = null, feedBusy = false, selectionVersion = 0;
 let chartPoll = null, newsPoll = null;
 let canonicalPoll = null, canonicalPollAttempts = 0;
 async function api(url, options = {}) {
@@ -216,7 +216,7 @@ function showNews(result) {
 }
 async function refreshCharts() {
   clearTimeout(chartPoll);
-  const symbol = $('#instrument').value, period = $('#chart-period').value, version = selectionVersion;
+  const symbol = $('#chart-instrument')?.value || $('#instrument').value, period = $('#chart-period').value, version = selectionVersion;
   let pending = false;
   const requests = [['#index-chart','JSE']];
   if (symbol) requests.unshift(['#stock-chart',symbol]);
@@ -257,6 +257,21 @@ async function refreshOpportunities() {
     $('#opportunity-status').textContent = 'Canonical ranking unavailable.';
   }
 }
+function chartSelectedChanged() {
+  selectionVersion++;
+  const selected=$('#chart-instrument')?.value || '';
+  const item=[...instruments,...chartInstruments].find(row=>row.instrument_id===selected);
+  $('#chart-title').textContent=item ? `${item.display_symbol} · ${item.name}` : 'Price history';
+  $('#chart-boundary').textContent=item?.note || (item ? 'Curated public cash-share chart. Research only; provider delays apply.' : 'Choose a cash share, listed ETF or clearly labelled CFD reference.');
+  if (!selected) {
+    $('#stock-chart').innerHTML='<div class="chart-empty">Select a market instrument to load price history.</div>';
+    document.querySelectorAll('.quote').forEach(q=>q.classList.remove('selected'));
+    return;
+  }
+  $('#stock-chart').innerHTML='<div class="chart-empty">Loading selected chart…</div>';
+  document.querySelectorAll('.quote').forEach(q=>q.classList.toggle('selected',q.dataset.instrument===selected));
+  refreshCharts();
+}
 async function refreshQuotes() {
   if (!$('#quotes .quote')) return;
   await Promise.allSettled(instruments.map(async item=>{
@@ -285,18 +300,11 @@ function selectedChanged() {
   for (const control of ['#run','#technical','#load-technical-intelligence']) $(control).disabled=!!selected && !supported;
   $('#notice').textContent=!selected ? 'Select an instrument to inspect the automatic canonical screen. Legacy full analysis remains a separate six-share historical benchmark.' : supported ? 'Automatic canonical screen shown first. This share also has the separate legacy full benchmark available below.' : 'Automatic canonical screen shown first. The separate legacy full benchmark is unavailable for this share and has not been substituted.';
   loadAutomaticTechnicalScreen(selected);
-  $('#chart-title').textContent = selected ? `${selected} · Price history` : 'Price history';
   if (!selected) {
-    $('#stock-chart').innerHTML = '<div class="chart-empty">Select an instrument to load price history.<br><button id="choose-instrument" type="button">Choose instrument</button></div>';
-    $('#choose-instrument').onclick=()=>{
-      $('#chart-instrument').focus();
-    };
-    document.querySelectorAll('.quote').forEach(q=>q.classList.remove('selected'));
     return;
   }
-  $('#stock-chart').innerHTML = '<div class="chart-empty">Loading selected chart…</div>';
-  document.querySelectorAll('.quote').forEach(q=>q.classList.toggle('selected',q.dataset.instrument === $('#instrument').value));
-  refreshCharts();
+  if ($('#chart-instrument')) $('#chart-instrument').value=selected;
+  chartSelectedChanged();
   if (newsSnapshot) showNews(newsSnapshot);
 }
 function action(selector, handler) {
@@ -361,7 +369,7 @@ function ensureChartInstrumentControl() {
   label.textContent='Share to chart';
   const select=document.createElement('select');
   select.id='chart-instrument';
-  select.onchange=()=>{ $('#instrument').value=select.value; selectedChanged(); };
+  select.onchange=chartSelectedChanged;
   label.appendChild(select);
   title.parentElement.insertBefore(label,title.nextSibling);
 }
@@ -409,8 +417,9 @@ $('#chart-period').onchange=()=>{selectionVersion++; refreshCharts();};
 $('#news-filter').onchange=()=>{if(newsSnapshot) showNews(newsSnapshot);};
 $('#auto-refresh').onchange=()=>{if($('#auto-refresh').checked) refreshFeeds();};
 (async()=>{
-  const [status,universe]=await Promise.all([api('/api/system/status'),api('/api/public-shares')]);
+  const [status,universe,chartUniverse]=await Promise.all([api('/api/system/status'),api('/api/public-shares'),api('/api/market-chart-instruments')]);
   instruments=universe.instruments;
+  chartInstruments=chartUniverse.instruments || [];
   instrumentClasses=universe.classes || [];
   $('#system-pill').textContent='DEMO & PAPER · NOT LIVE MONEY';
   $('#system-result').textContent=JSON.stringify(status,null,2);
@@ -419,9 +428,11 @@ $('#auto-refresh').onchange=()=>{if($('#auto-refresh').checked) refreshFeeds();}
   const activeClass=instrumentClasses.find(item=>item.state==='AVAILABLE');
   $('#asset-class-status').textContent=activeClass ? `${activeClass.instrument_count} instruments · ${activeClass.reason} ETFs, CFDs and SSFs remain visible here with their evidence gates.` : 'No instrument class is currently available.';
   $('#asset-class-boundaries').innerHTML=instrumentClasses.filter(item=>item.state!=='AVAILABLE').map(item=>kv(`${item.label} · ${item.state.replaceAll('_',' ')}`,item.reason)).join('');
-  $('#chart-instrument').innerHTML=$('#instrument').innerHTML;
+  const chartOptions=(items)=>items.map(i=>`<option value="${i.instrument_id}">${esc(i.display_symbol)} · ${esc(i.name)}</option>`).join('');
+  $('#chart-instrument').innerHTML='<option value="">Select a chart</option>'+`<optgroup label="JSE cash shares">${chartOptions(instruments)}</optgroup>`+`<optgroup label="JSE index ETFs · chart only">${chartOptions(chartInstruments.filter(i=>i.asset_class==='index_etf'))}</optgroup>`+`<optgroup label="CFD references · public proxies, not IG contracts">${chartOptions(chartInstruments.filter(i=>i.asset_class==='cfd_reference'))}</optgroup>`;
   $('#quotes').innerHTML='<p class="muted">Select a public share in the chart controls, or use a validated AI/pinned watchlist selection when available.</p>';
   selectedChanged();
+  chartSelectedChanged();
   await refreshFeeds();
   await Promise.allSettled([refreshSources(), refreshIntelligence(), refreshTicker(), loadPortfolio(), refreshLearningStatus(), refreshAccountStatus()]);
   await refreshCanonicalOpportunities(true);

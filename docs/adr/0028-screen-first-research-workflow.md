@@ -32,11 +32,16 @@ calculate signals or risk in the browser. The old full-analysis controls remain
 available and clearly labelled as a separate six-share legacy benchmark.
 
 The public-universe API now declares instrument classes and states. JSE cash
-shares are available. Index ETFs are `NOT_CONFIGURED` pending verified identity,
-liquidity and cost profiles. CFDs and SSFs are
+shares are available. Four verified JSE index ETF securities are
+`CHART_ONLY_NOT_RANKED` pending liquidity and cost profiles. CFDs and SSFs are
 `BLOCKED_CONTRACT_EVIDENCE` pending their respective contract, cost, financing,
 margin, currency, expiry/roll and session facts. Unavailable classes remain
 visible but cannot be selected.
+
+The separate Market chart selector may show actual listed ETF charts and
+explicitly labelled public underlying/index proxies for CFD investigation.
+Proxy charts are never described as the broker contract price and do not enter
+ranking, geometry, sizing or execution.
 
 ## Consequences
 
@@ -49,4 +54,3 @@ visible but cannot be selected.
   for derivatives.
 - Ranking, signal mathematics, risk policy, paper scheduling and broker
   execution behavior are unchanged. Live execution remains disabled.
-

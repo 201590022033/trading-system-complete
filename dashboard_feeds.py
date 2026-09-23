@@ -93,6 +93,21 @@ class DashboardFeeds:
                       data_state="DELAYED_PUBLIC", note="Public cash-share bars may be delayed. Research only.")
         return result
 
+    def reference_chart(self, instrument, period="3mo"):
+        """Actual listed ETF or explicitly labelled public CFD reference chart."""
+        from market_chart_registry import resolve_market_chart
+        item = resolve_market_chart(instrument)
+        if period not in {"1d", "1mo", "3mo", "1y"}:
+            raise ValueError("Choose 1d, 1mo, 3mo or 1y")
+        def load():
+            from jse_adapter import YahooFinanceFetcher
+            return (self._chart_fetcher or YahooFinanceFetcher()).get_chart(item.data_symbol, period)
+        result = self._snapshot((item.data_symbol, period), 60 if period == "1d" else 300, load)
+        result.update(source=item.source, symbol=instrument, provider_symbol=item.data_symbol,
+                      data_state="DELAYED_PUBLIC", chart_basis=item.chart_basis,
+                      asset_class=item.asset_class, note=item.note)
+        return result
+
     def news(self):
         def load():
             from sentiment_analyzer import MacroSentimentScanner

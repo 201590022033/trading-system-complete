@@ -4,6 +4,7 @@ import os
 from flask import Flask, g, jsonify, render_template, request
 from flask_socketio import SocketIO
 from instrument_registry import instrument_list, resolve_instrument
+from market_chart_registry import market_chart_list, MARKET_CHART_INSTRUMENTS
 from operational_intelligence import service
 from dashboard_feeds import feeds
 from market_intelligence.source_registry import SourceRegistry
@@ -223,8 +224,14 @@ def instruments(): return jsonify(instruments=instrument_list())
 def public_shares():
     return jsonify(instruments=public_share_list(), classes=public_instrument_classes(),
                    state="CURATED_PUBLIC_CASH_SHARES", live_execution=False)
+@app.get("/api/market-chart-instruments")
+def market_chart_instruments():
+    return jsonify(instruments=market_chart_list(), state="READ_ONLY_CHART_CATALOG",
+                   canonical_ranking=False, live_execution=False)
 @app.get("/api/feed/market/<instrument>")
 def market_feed(instrument):
+    if instrument in MARKET_CHART_INSTRUMENTS:
+        return respond(lambda: feeds.reference_chart(instrument, request.args.get("period", "3mo")))
     if instrument in public_share_catalog() and instrument not in {item["instrument_id"] for item in instrument_list()}:
         return respond(lambda: feeds.public_chart(instrument, request.args.get("period", "3mo")))
     return respond(lambda: feeds.chart(instrument, request.args.get("period", "3mo")))
