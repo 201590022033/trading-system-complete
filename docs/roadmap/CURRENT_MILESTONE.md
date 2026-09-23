@@ -1,5 +1,16 @@
 # Current Milestone
 
+## 2026-09-23 technical snapshot consistency repair
+
+Top 5 and its technical review now use the same clicked opportunity snapshot,
+including session, evaluation time and identity. A single list response feeds
+the cards; asynchronous results cannot replace a newer instrument selection.
+Stored trend_state/volatility_state fields are rendered correctly. Cards expose
+directional and neutral technical counts rather than calling one directional
+indicator broad agreement. Historical HR7 controls/results are isolated in a
+collapsed archive and cleared on selection. Legacy mathematics, canonical
+ranking and durable account configuration remain unchanged.
+
 ## 2026-09-23 stale Yahoo identity repair
 
 The active public cash-share catalog no longer requests the invalid `JDI.JO`

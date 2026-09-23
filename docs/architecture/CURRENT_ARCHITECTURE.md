@@ -1,5 +1,10 @@
 # Current Architecture — Observed Repository Baseline
 
+The current technical review consumes the exact selected canonical opportunity
+snapshot. Frozen HR7 diagnostics are confined to a collapsed archive. UI
+confirmation descriptions report technical directional/neutral counts without
+changing the ranker's divergence mathematics or admitting new signals.
+
 This document describes the uploaded repository, not an aspirational redesign.
 
 ## 2026-09-22 streaming transaction isolation

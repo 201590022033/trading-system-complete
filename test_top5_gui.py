@@ -12,7 +12,7 @@ class TopFiveGuiTests(unittest.TestCase):
  def test_page_and_accessible_canonical_tab_load(self):
   app.config['TESTING']=True;response=app.test_client().get('/');self.assertEqual(response.status_code,200);self.assertIn(b'Canonical Top 5',response.data);self.assertIn('aria-live="polite"',self.panel);self.assertIn('aria-label=',self.panel)
  def test_fetches_canonical_top_five_and_manual_refresh(self):
-  self.assertIn("canonicalFetch('/api/v1/opportunities?limit=5')",self.js);self.assertIn("action('#refresh-canonical'",self.js)
+  self.assertIn('const items=canonicalRecords.slice(0,5)',self.js);self.assertIn("action('#refresh-canonical'",self.js)
  def test_workflow_screens_before_trade_geometry_and_exposes_asset_class_gates(self):
   for text in ('Choose universe','Automatic screen','Ranked shortlist','Deep analysis','Geometry &amp; risk size','Paper ticket'):
    self.assertIn(text,self.panel)

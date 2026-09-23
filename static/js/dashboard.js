@@ -53,6 +53,14 @@ function capturePaperTrade(item) {
 function opportunityShare(item) {
   return instruments.find(i=>i.yahoo_symbol===item?.provenance?.data_symbol);
 }
+function directionEvidence(item) {
+  const t=item.input_evidence?.technical;
+  if (!t) return 'Directional inputs unavailable';
+  const signals=[t.momentum_20d_signal,t.rsi_14_signal];
+  const active=signals.filter(v=>v===1 || v===-1).length;
+  const neutral=signals.filter(v=>v===0).length;
+  return `${active} directional technical indicator${active===1?'':'s'}; ${neutral} neutral. ${active===1?'Single-indicator technical direction; no second technical confirmation.':active===0?'No directional technical confirmation.':'See individual inputs for agreement or conflict.'}`;
+}
 function renderAutomaticTechnicalScreen(item, share) {
   const target=$('#canonical-technical-screen'),title=$('#canonical-screen-title');
   title.textContent=`${share.name} · ${share.display_symbol}`;
@@ -67,13 +75,16 @@ function renderAutomaticTechnicalScreen(item, share) {
     ${kv('Momentum 20-day signal',technical.momentum_20d_signal == null?'Unavailable':technical.momentum_20d_signal)}${kv('RSI 14 signal',technical.rsi_14_signal == null?'Unavailable':technical.rsi_14_signal)}
     ${kv('Momentum interpretation',technical.momentum_20d_signal === 1?'Positive / LONG evidence':technical.momentum_20d_signal === -1?'Negative / SHORT evidence':technical.momentum_20d_signal === 0?'Neutral evidence':'Unavailable')}
     ${kv('RSI interpretation',technical.rsi_14_signal === 1?'Oversold / LONG evidence':technical.rsi_14_signal === -1?'Overbought / SHORT evidence':technical.rsi_14_signal === 0?'Neutral evidence':'Unavailable')}
-    ${kv('Regime',regime.trend || regime.availability || 'Unavailable')}${kv('Volatility regime',regime.volatility || 'Unavailable')}
+    ${kv('Regime',regime.trend_state || regime.trend || 'Unavailable')}${kv('Volatility regime',regime.volatility_state || regime.volatility || 'Unavailable')}
+    ${kv('Evaluated',when(item.evaluated_at))}${kv('Price session',item.provenance?.last_usable_session)}${kv('Snapshot ID',item.opportunity_id)}
+    ${kv('Direction evidence',directionEvidence(item))}
     ${kv('Evidence samples',evidence.sample_count ?? item.sample_count ?? 'Unavailable')}${kv('Last available technical bar',when(technical.last_available_at))}
     ${kv('Canonical direction',item.direction)}${kv('Rank',item.rank == null?'Outside current Top 5':item.rank)}
     ${kv('Comparative score',item.ranking_score == null?'Not ranked':`${num(item.ranking_score)} / 100`)}${kv('Suitability',item.suitability_status)}
-  </div><p class="muted">This is the lightweight automatic canonical screen used before ranking. The legacy six-share benchmark below is separate and is not substituted for unsupported shares. Entry, stop, target and position size remain downstream steps.</p>`;
+  </div><p class="muted">These are the exact dated inputs behind this Top 5 record. Ranging describes trend strength and can coexist with positive or negative momentum. Neutral RSI contributes no direction. SHORT is bearish research evidence; the cash-share simulator is long-only.</p>`;
 }
 async function loadAutomaticTechnicalScreen(instrumentId) {
+  const version=selectionVersion;
   const share=instruments.find(i=>i.instrument_id===instrumentId),target=$('#canonical-technical-screen');
   if (!share) { $('#canonical-screen-title').textContent='Select an instrument'; target.innerHTML='<p class="muted">Choose a cash share or use “Review technical screen” on a Top 5 card.</p>'; return; }
   let item=canonicalRecords.find(row=>row.provenance?.data_symbol===share.yahoo_symbol);
@@ -84,18 +95,21 @@ async function loadAutomaticTechnicalScreen(instrumentId) {
       canonicalRecords=result.opportunities || [];
       item=canonicalRecords.find(row=>row.provenance?.data_symbol===share.yahoo_symbol);
     } catch (error) {
+      if (version!==selectionVersion) return;
       target.innerHTML=`<p class="unavailable">Canonical screen unavailable: ${esc(error.message)}</p>`;
       return;
     }
   }
-  if ($('#instrument').value===instrumentId) renderAutomaticTechnicalScreen(item,share);
+  if (version===selectionVersion && $('#instrument').value===instrumentId) renderAutomaticTechnicalScreen(item,share);
 }
 function reviewTechnicalScreen(item) {
   const share=opportunityShare(item);
   if (!share) return;
   $('#instrument').value=share.instrument_id;
   document.querySelector('nav button[data-tab="technical-view"]').click();
-  selectedChanged();
+  selectedChanged(item);
+  // Keep the clicked snapshot, even if a newer worker cycle finishes meanwhile.
+  renderAutomaticTechnicalScreen(item,share);
 }
 function renderCanonicalCard(item) {
   const regime = item.regime_context || {}, divergence = item.divergence_summary || {}, evidence = item.feature_evidence_summary || {};
@@ -104,7 +118,7 @@ function renderCanonicalCard(item) {
   const researchOnly=item.execution_suitability === 'RESEARCH-ONLY';
   return `<article class="panel canonical-card" data-opportunity-id="${esc(item.opportunity_id)}" data-research-only="${researchOnly}">
     <div class="row"><div><span class="canonical-rank">Rank ${esc(item.rank)}</span><h3>${esc(share?.name || item.instrument_id)} · ${esc(share?.display_symbol || item.instrument_id)}</h3><span class="canonical-status">${esc(item.eligibility_status)} ${researchOnly?'FOR RESEARCH':''}</span></div><div><div class="canonical-score">${esc(item.ranking_score == null ? 'Not scored' : `${num(item.ranking_score)} / 100`)}</div><small>Comparative research score</small></div></div>
-    ${kv('Research direction',item.direction)}${kv('Horizon',item.horizon_id)}${kv('Suitability',item.suitability_status)}${kv('Execution suitability',item.execution_suitability)}${kv('Data grade',item.data_grade)}${kv('Regime',regime.trend || regime.availability)}${kv('Divergence',divergence.state)}${kv('Effectiveness evidence',`${evidence.learned_count ?? '—'} estimated cells · ${evidence.sample_count ?? item.sample_count ?? '—'} samples; not LLM training`)}
+    ${kv('Research direction',item.direction)}${kv('Horizon',item.horizon_id)}${kv('Suitability',item.suitability_status)}${kv('Execution suitability',item.execution_suitability)}${kv('Data grade',item.data_grade)}${kv('Regime',regime.trend || regime.trend_state || regime.availability)}${kv('Technical confirmation',directionEvidence(item))}${kv('Effectiveness evidence',`${evidence.learned_count ?? '—'} estimated cells · ${evidence.sample_count ?? item.sample_count ?? '—'} samples; not LLM training`)}
     ${kv('Last usable session',item.provenance?.last_usable_session)}${kv('Data source',item.provenance?.data_symbol)}
     <h4>Why it ranks</h4>${kv('Suitability input',components.suitability == null ? 'Unavailable' : `${num(components.suitability * 100)} / 100`)}${kv('Historical effectiveness support',components.effectiveness_support == null ? 'Unavailable' : `${num(components.effectiveness_support * 100)} / 100`)}${kv('Evidence depth input',components.evidence_depth == null ? 'Unavailable' : `${num(components.evidence_depth * 100)} / 100`)}${kv('Direction agreement input',components.directional_strength == null ? 'Unavailable' : `${num(components.directional_strength * 100)} / 100`)}<small class="muted">These are comparative ranking inputs, not probabilities of profit. Costs use a disclosed ${esc(item.provenance?.cost_assumption_bps ?? 'unknown')} bps research assumption.</small>${canonicalList(item.reasons,'No ranking reasons supplied.')}
     <h4>Uncertainty and blockers</h4>${canonicalList([...(item.uncertainty || []),...(item.blockers || [])],'None reported by the canonical API.')}
@@ -142,8 +156,9 @@ async function refreshCanonicalOpportunities(trigger=false) {
       clearTimeout(canonicalPoll); canonicalPollAttempts=0;
       await canonicalFetch('/api/v1/opportunities/refresh',{method:'POST'});
     }
-    const [result,allResult]=await Promise.all([canonicalFetch('/api/v1/opportunities?limit=5'),canonicalFetch('/api/v1/opportunities')]),items=result.opportunities;
-    canonicalRecords=allResult.opportunities || [];
+    const result=await canonicalFetch('/api/v1/opportunities');
+    canonicalRecords=result.opportunities || [];
+    const items=canonicalRecords.slice(0,5);
     if (!Array.isArray(items)) throw Error('Malformed canonical response');
     const refresh=result.refresh || {};
     status.textContent=refresh.running ? 'Checking the curated public-share universe and matured evidence…' : `${items.length} canonical research opportunit${items.length===1?'y':'ies'} available · ${refresh.scanned || 0} shares checked · ${refresh.unranked || 0} lacked enough evidence · ${(refresh.unavailable || []).length} data unavailable.`;
@@ -291,7 +306,7 @@ async function refreshFeeds() {
     $('#feed-notice').textContent = `Checked ${new Date().toLocaleTimeString('en-ZA')} · Price refresh up to 60 seconds; daily history/news up to 5 minutes. See each source's result and timestamp.`;
   } finally { feedBusy = false; }
 }
-function selectedChanged() {
+function selectedChanged(snapshot=null) {
   selectionVersion++;
   const selected = $('#instrument').value;
   const item=instruments.find(i=>i.instrument_id===selected);
@@ -299,7 +314,12 @@ function selectedChanged() {
   const supported=!!item?.capabilities?.operational_analysis;
   for (const control of ['#run','#technical','#load-technical-intelligence']) $(control).disabled=!!selected && !supported;
   $('#notice').textContent=!selected ? 'Select an instrument to inspect the automatic canonical screen. Legacy full analysis remains a separate six-share historical benchmark.' : supported ? 'Automatic canonical screen shown first. This share also has the separate legacy full benchmark available below.' : 'Automatic canonical screen shown first. The separate legacy full benchmark is unavailable for this share and has not been substituted.';
-  loadAutomaticTechnicalScreen(selected);
+  if (!snapshot?.opportunity_id) loadAutomaticTechnicalScreen(selected);
+  const legacy=$('#legacy-benchmark');
+  if (legacy) legacy.open=false;
+  for (const id of ['action','reason','score','market','technical-result','news-result','technical-flow','indicator-inventory','gates','gate-summary']) {
+    $('#'+id).textContent=id==='action'?'NOT RUN':'Historical benchmark cleared for this selection.';
+  }
   if (!selected) {
     return;
   }
@@ -408,6 +428,22 @@ action('#reload-intelligence',refreshIntelligence);
 action('#refresh-learning-status',refreshLearningStatus);
 ensureAccountPanel();
 ensureChartInstrumentControl();
+// Historical diagnostics have their own collapsed workspace. Only the shared
+// instrument selector and canonical snapshot remain in the current workflow.
+const technicalView=$('#technical-view'),legacy=document.createElement('details');
+legacy.id='legacy-benchmark'; legacy.className='panel';
+legacy.innerHTML='<summary>Historical benchmark archive — frozen HR7 data, separate from current analysis</summary><p class="notice">Results here use the dated historical dataset. They do not describe the current Top 5 session. The Yahoo option only changes the market quote component.</p>';
+const controls=technicalView.querySelector('.controls'),historicalControls=document.createElement('div');
+historicalControls.className='controls';
+for (const child of [...controls.children]) if (!child.contains($('#instrument'))) historicalControls.appendChild(child);
+legacy.appendChild(historicalControls);
+const screen=technicalView.querySelector('.canonical-screen-panel');
+while (screen.nextElementSibling) legacy.appendChild(screen.nextElementSibling);
+technicalView.appendChild(legacy);
+const currentRefresh=document.createElement('button');
+currentRefresh.textContent='Refresh current technical evidence';
+currentRefresh.onclick=async()=>{canonicalRecords=[]; await loadAutomaticTechnicalScreen($('#instrument').value);};
+controls.appendChild(currentRefresh);
 document.body.classList.add('portfolio-view');
 document.querySelector('nav button[data-tab="portfolio"]').classList.add('active');
 action('#refresh-account-status',refreshAccountStatus);
