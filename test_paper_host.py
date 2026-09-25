@@ -14,6 +14,26 @@ from test_paper_closed_loop import T, charts
 
 
 class PaperHostTests(unittest.TestCase):
+    def test_learning_status_exposes_daily_swing_learning(self):
+        import app as deployed_app
+
+        class Repository:
+            def learning_status(self):
+                return {"database_state": "AVAILABLE", "pending_outcomes": 0}
+
+            def close(self):
+                pass
+
+        swing = {"state": "COLLECTING_OUTCOMES", "eligible_outcomes": 7,
+                 "minimum_samples": 30, "horizon_sessions": 3}
+        with patch.object(deployed_app, "paper_config", object()), \
+                patch.object(deployed_app, "runtime_repository", return_value=Repository()), \
+                patch.object(deployed_app, "paper_status", return_value={"learning": swing}):
+            response = deployed_app.app.test_client().get("/api/learning/status")
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json["daily_swing"], swing)
+        self.assertFalse(response.json["live_execution"])
+
     def test_worker_runtime_and_durable_web_after_restart_without_fallback(self):
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory)/"paper.db"
@@ -34,6 +54,18 @@ class PaperHostTests(unittest.TestCase):
                     self.assertEqual(worker.run_once(), 0)
                 finally:
                     repo.close()
+            verify = SQLiteRepository(path)
+            try:
+                inputs = verify.paper_records(
+                    config.account_id, "input", as_of=clock[0].isoformat(), limit=10)
+                self.assertTrue(inputs)
+                for frozen in inputs:
+                    for chart in frozen["input"]["charts"].values():
+                        self.assertLessEqual(len(chart["bars"]), 60)
+                        self.assertTrue(all(set(bar) == {"timestamp", "close", "volume"}
+                                            for bar in chart["bars"]))
+            finally:
+                verify.close()
             service = DurablePaperOpportunities(lambda: SQLiteRepository(path), config, clock=lambda: clock[0])
             app = Flask(__name__)
             app.register_blueprint(create_blueprint(service, PaperRefreshStatus(lambda: SQLiteRepository(path), config)))

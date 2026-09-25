@@ -1,5 +1,19 @@
 # Running the repaired PAPER loop
 
+## 2026-09-25 v2 lean-learning contract
+
+The Railway configuration now uses `railway-paper-zar-v2` and a daily schedule.
+Each frozen retry input retains at most 60 completed timestamp/close/volume bars
+per active instrument. The worker records compact ranked LONG decisions and
+labels them after three later completed sessions using the declared 10 bps
+research-cost assumption. Thirty matured samples are required before the
+existing contextual learner reports a learned cell. This is outcome-based
+strategy evaluation, not LLM training or automatic model promotion.
+
+IG streaming must remain disabled for this deployment. Do not enable it as a
+substitute for daily swing evidence. Listed ETFs and SSFs are not admitted by
+this configuration.
+
 The implementation is opt-in. Railway activation was authorized on 2026-09-19:
 the production database was backed up and migrated, and both services configured
 with `/app/config/paper.railway.json`. Deployment acceptance must verify actual

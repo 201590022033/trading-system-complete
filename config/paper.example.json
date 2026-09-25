@@ -9,9 +9,11 @@
   "risk_fraction": 0.005,
   "aggression": "conservative",
   "max_volume_fraction": 0.001,
-  "interval_seconds": 300,
+  "interval_seconds": 86400,
   "max_price_age_seconds": 86400,
   "max_holding_seconds": 604800,
+  "learning_horizon_sessions": 3,
+  "holding_sessions": 3,
   "reward_multiple": 2.0,
   "limits": {
     "limits_id": "paper-example-conservative-v1",

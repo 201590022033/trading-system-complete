@@ -18,6 +18,7 @@ from domain.registry.instrument import CanonicalInstrument, DEFAULT_INSTRUMENT_R
 from indicator_effectiveness import signal_outcome
 from intraday_instruments import DataGrade, InstrumentDefinition
 from jse_adapter import JSE_TICKERS, YahooFinanceFetcher
+from .daily_learning import FEATURE_ID as SWING_FEATURE_ID, VERSION as SWING_LEARNING_VERSION
 
 VERSION = "public-cash-research-v1"
 COST_BPS = 10.0  # Declared research assumption: 5 spread + 2 fees + 3 slippage.
@@ -173,12 +174,21 @@ def candidate_from_chart(key, chart, *, evaluated_at, news_report=None, learned_
                                           horizon_id="1d", category="technical"))
     matching = tuple(x for x in paper_outcomes if x.instrument_id == canonical.instrument_id
                      and x.horizon_id == "1d" and x.feature_id == "paper_strategy"
-                     and x.feature_version == "canonical-paper-loop-v1"
+                     and x.feature_version in {"canonical-paper-loop-v1", "canonical-paper-loop-v2"}
                      and x.available_time <= x.evaluated_at < evaluated_at
                      and x.outcome_maturity <= evaluated_at)
     if matching:
         evidence.append(learner.estimate(
             matching, feature_id="paper_strategy", evaluated_at=evaluated_at,
+            instrument_id=canonical.instrument_id, horizon_id="1d"))
+    swing_matching = tuple(x for x in paper_outcomes
+                           if x.horizon_id == "1d" and x.feature_id == SWING_FEATURE_ID
+                           and x.feature_version == SWING_LEARNING_VERSION
+                           and x.available_time <= x.evaluated_at < evaluated_at
+                           and x.outcome_maturity <= evaluated_at)
+    if swing_matching:
+        evidence.append(learner.estimate(
+            swing_matching, feature_id=SWING_FEATURE_ID, evaluated_at=evaluated_at,
             instrument_id=canonical.instrument_id, horizon_id="1d"))
     effectiveness = tuple(evidence)
     regime = classify_candidate(
@@ -209,8 +219,10 @@ def candidate_from_chart(key, chart, *, evaluated_at, news_report=None, learned_
             "reason": "NO_PERSISTED_SHADOW_EVIDENCE",
         })),
     }
-    if matching:
-        learned = effectiveness[-1]
+    learned_strategy = next((item for item in reversed(effectiveness)
+                             if item.feature_id in {SWING_FEATURE_ID, "paper_strategy"}), None)
+    if learned_strategy is not None:
+        learned = learned_strategy
         input_evidence["learned_effectiveness"] = {
             "state": learned.status, "feature_id": learned.feature_id,
             "feature_family": "strategy", "configuration_version": learned.configuration_version,

@@ -33,7 +33,28 @@ def frozen(i, **kwargs):
 
 class ClosedLoopTests(unittest.TestCase):
     def config(self):
-        return replace(PaperLoopConfig.load("config/paper.example.json"), universe=("TFMJ",))
+        return replace(PaperLoopConfig.load("config/paper.example.json"), universe=("TFMJ",),
+                       holding_sessions=1)
+
+    def test_three_session_swing_holds_until_declared_horizon(self):
+        with tempfile.TemporaryDirectory() as directory:
+            repo = SQLiteRepository(Path(directory)/"state.db")
+            try:
+                config = replace(self.config(), holding_sessions=3)
+                loop = PaperLoop(repo, config)
+                loop.initialize()
+                loop.cycle("j0", frozen(0))
+                self.assertTrue(loop.cycle("j1", frozen(1))["opened"])
+                self.assertFalse(loop.cycle("j2", frozen(2))["closed"])
+                self.assertFalse(loop.cycle("j3", frozen(3))["closed"])
+                result = loop.cycle("j4", frozen(4))
+                self.assertEqual(result["closed"], ["EQ_ZAR_TFMJ"])
+                outcome = repo.paper_records(
+                    config.account_id, "outcome", as_of=(T+timedelta(days=5)).isoformat())[0]
+                self.assertEqual(outcome["observed_sessions"], 3)
+                self.assertEqual(outcome["reason"], "HORIZON_EXIT")
+            finally:
+                repo.close()
 
     def test_real_chain_restart_idempotence_outcomes_and_rollback_both_backends(self):
         for backend in ("sqlite", "postgresql"):

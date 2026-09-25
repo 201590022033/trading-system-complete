@@ -1,5 +1,31 @@
 # Current Milestone
 
+## 2026-09-25 lean daily learning and storage repair
+
+The disposable Railway data was reset after PostgreSQL exhausted its 500 MB
+volume. The failure was caused by 149,303 GER40 tick observations plus repeated
+five-minute full-chart paper inputs; the learning/outcome tables were empty.
+
+The operational repair introduces `canonical-paper-loop-v2` and
+`ranked-long-swing-v1`. Railway paper work is scheduled once daily. Retry inputs
+retain at most 60 timestamp/close/volume bars per instrument. At most the Top 5
+LONG candidates are stored as compact, deduplicated decisions for each completed
+daily bar, then labelled after three later completed sessions with an explicit
+10 bps cost assumption. Matured outcomes enter the existing contextual learner;
+the 30-sample gate, shrinkage and research-only boundary remain intact. Simulated
+positions use a three-session horizon unless a daily-close stop/target or expiry
+occurs first.
+
+IG streaming is not part of this learning path and remains disabled. JSE cash
+shares are the only admitted paper universe. ETFs remain chart-only; SSFs remain
+blocked pending verified contract and cost evidence. No accuracy, profitability,
+live execution or production-weight promotion is claimed. See ADR 0029.
+
+- [x] Focused lean-loop suite passes: 30 tests.
+- [x] Full offline safe suite passes: 705 tests.
+- [x] Daily-swing sample count, three-session horizon and 30-sample gate are
+  visible through `/api/learning/status`.
+
 ## 2026-09-23 technical snapshot consistency repair
 
 Top 5 and its technical review now use the same clicked opportunity snapshot,

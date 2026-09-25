@@ -10,8 +10,13 @@ from domain.risk import RiskEvaluation, RiskStatus, ApprovedRiskIntent
 from domain.risk.paper_sizing import size_paper_policy
 from shadow_learning import stable_id, timestamp
 from .public_research import public_share_catalog, _identities, _available_at, refresh_public_research
+from .daily_learning import (
+    feature_outcomes as daily_feature_outcomes,
+    label_matured as label_daily_outcomes,
+    record_decisions as record_daily_decisions,
+)
 
-VERSION = "canonical-paper-loop-v1"
+VERSION = "canonical-paper-loop-v2"
 
 
 def opportunity_from_dict(data):
@@ -136,9 +141,16 @@ class PaperLoop:
                 bar_at, price, _ = values[-1]
                 if bar_at <= timestamp(trade["entry_bar_at"]):
                     continue
-                reason = ("STOP" if price <= trade["stop_price"] else
-                          "TARGET" if price >= trade["target_price"] else
-                          "TIME_EXPIRY" if now >= timestamp(trade["time_exit_at"]) else "SESSION_EXIT")
+                observed_sessions = sum(at > timestamp(trade["entry_bar_at"])
+                                        for at, _, _ in values)
+                stop_hit = price <= trade["stop_price"]
+                target_hit = price >= trade["target_price"]
+                time_expired = now >= timestamp(trade["time_exit_at"])
+                horizon_reached = observed_sessions >= self.config.holding_sessions
+                if not any((stop_hit, target_hit, time_expired, horizon_reached)):
+                    continue
+                reason = ("STOP" if stop_hit else "TARGET" if target_hit else
+                          "TIME_EXPIRY" if time_expired else "HORIZON_EXIT")
                 observation = MarketObservation(instrument, price, now, "Yahoo complete daily close; paper exit")
                 order = broker.close_position("paper-position:"+instrument,
                                               observation=observation, risk=risk_from_dict(trade["risk"]))
@@ -147,7 +159,6 @@ class PaperLoop:
                 fill = broker.fills()[-1]
                 net_pnl = trade["entry_cash_effect"] + fill.net_cash_effect
                 outcome_id = stable_id("paper-outcome", self.config.account_id, trade["intent_id"])
-                observed_sessions = sum(at > timestamp(trade["entry_bar_at"]) for at, _, _ in values)
                 outcome = {"outcome_id": outcome_id, "version": VERSION, "mode": "PAPER",
                            "instrument_id": instrument,
                            "horizon_id": "1d" if observed_sessions == 1 else "DELAYED_EXIT",
@@ -166,7 +177,16 @@ class PaperLoop:
                 state["daily_loss"] += max(0., -net_pnl)
                 closed.append(instrument)
                 del book[instrument]
-            outcomes = paper_feature_outcomes(self.repository, self.config.account_id, now)
+            learning_series = {
+                key: {"instrument_id": _identities(key, public_share_catalog()[key])[0].instrument_id,
+                      "bars": values}
+                for key, values in series.items()
+            }
+            labelled_learning_outcomes = label_daily_outcomes(
+                self.repository, self.config.account_id, learning_series, evaluated_at=now)
+            outcomes = (paper_feature_outcomes(self.repository, self.config.account_id, now)
+                        + daily_feature_outcomes(
+                            self.repository, self.config.account_id, evaluated_at=now))
             ranking = refresh_public_research(
                 fetcher=FrozenCharts({key: charts[key] for key in series}), evaluated_at=now, universe=self.config.universe,
                 max_workers=1, news_report=frozen["input"].get("news"), paper_outcomes=outcomes)
@@ -247,6 +267,11 @@ class PaperLoop:
                 opened.append(instrument)
             state["peak_equity"] = max(state["peak_equity"], broker.get_account().equity)
             ranked = [o for o in ranking.opportunities if o.rank is not None][:5]
+            recorded_learning_decisions = record_daily_decisions(
+                self.repository, self.config.account_id, ranked, learning_series,
+                evaluated_at=now,
+                horizon_sessions=self.config.learning_horizon_sessions,
+            )
             state["pending"] = []
             for o in ranked:
                 key = next((key for key in series if _identities(key, public_share_catalog()[key])[0].instrument_id == o.instrument_id), None)
@@ -269,7 +294,10 @@ class PaperLoop:
             result = {"mode": "PAPER", "live_execution": False, "evaluated_at": now.isoformat(),
                       "controls": controls,
                       "opened": opened, "closed": closed, "blocked": blocked, "unavailable": unavailable,
-                      "outcome_count": len(outcomes), "account": asdict(broker.get_account()),
+                      "outcome_count": len(outcomes),
+                      "learning_decisions_recorded": recorded_learning_decisions,
+                      "learning_outcomes_labelled": labelled_learning_outcomes,
+                      "account": asdict(broker.get_account()),
                       "ranking_record_id": ranking_id}
             self.repository.save_paper_record(rid, self.config.account_id, "cycle", now.isoformat(), result)
             return result

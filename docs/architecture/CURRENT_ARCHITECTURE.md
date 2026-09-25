@@ -1,5 +1,21 @@
 # Current Architecture — Observed Repository Baseline
 
+## 2026-09-25 lean daily swing learning
+
+After the disposable Railway database filled with unaggregated GER40 ticks and
+duplicated five-minute chart snapshots, the data was reset with user
+authorization. `canonical-paper-loop-v2` now schedules once daily, freezes at
+most 60 timestamp/close/volume bars per instrument, and records compact Top-5
+LONG decisions once per completed bar. `ranked-long-swing-v1` labels each
+decision after three later completed sessions using a declared 10 bps research
+cost. The existing contextual learner retains sparse/negative evidence and
+requires 30 samples before research ranking support can change. Legacy signal
+weights, broker execution and adaptive promotion remain unchanged. IG streaming
+is excluded from this loop and disabled operationally. The existing
+`/api/learning/status` response exposes the daily-swing horizon, eligible sample
+count and gate state separately from the older shadow-learning counters. See
+ADR 0029.
+
 The current technical review consumes the exact selected canonical opportunity
 snapshot. Frozen HR7 diagnostics are confined to a collapsed archive. UI
 confirmation descriptions report technical directional/neutral counts without

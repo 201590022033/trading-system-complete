@@ -24,6 +24,8 @@ class PaperLoopConfig:
     max_price_age_seconds: int = 86400
     max_holding_seconds: int = 604800
     reward_multiple: float = 2.
+    learning_horizon_sessions: int = 3
+    holding_sessions: int = 3
 
     def __post_init__(self):
         if self.mode != "PAPER" or self.currency != "ZAR" or not self.account_id:
@@ -45,10 +47,14 @@ class PaperLoopConfig:
             raise ValueError("invalid paper risk/participation/reward bounds")
         if self.aggression not in {"conservative", "balanced", "aggressive"}:
             raise ValueError("unknown aggression")
-        if not 60 <= self.interval_seconds <= 86400 or not 1 <= self.max_price_age_seconds <= 86400:
+        if not 60 <= self.interval_seconds <= 86400 or not 1 <= self.max_price_age_seconds <= 604800:
             raise ValueError("invalid bounded scheduling/freshness")
         if not 86400 <= self.max_holding_seconds <= 604800:
             raise ValueError("invalid paper holding expiry")
+        if not 1 <= self.learning_horizon_sessions <= 20:
+            raise ValueError("invalid learning horizon")
+        if not 1 <= self.holding_sessions <= 20:
+            raise ValueError("invalid paper holding sessions")
         limits = self.risk_limits()
         if limits.missing or limits.max_gearing > 1:
             raise ValueError("all paper limits must be explicit; no borrowing")

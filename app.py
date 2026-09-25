@@ -114,7 +114,14 @@ def status(): return jsonify(service.status())
 def learning_status():
     """Read-only persisted shadow-learning counters; never includes secrets."""
     try:
-        status = application_repository().learning_status()
+        repository = application_repository()
+        status = repository.learning_status()
+        if paper_config is not None:
+            paper = paper_status(repository, paper_config)
+            status["daily_swing"] = paper.get("learning", {
+                "state": paper.get("state", "UNAVAILABLE"),
+                "kind": "Ranked LONG swing effectiveness after declared costs",
+            })
         return jsonify(**status, live_execution=False)
     except Exception:
         return jsonify(database_state='UNAVAILABLE',live_execution=False),503

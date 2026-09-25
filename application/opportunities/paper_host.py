@@ -11,6 +11,9 @@ from shadow_learning import timestamp
 from workers.paper_loop import PaperScheduler, FrozenPaperHandler
 
 
+FROZEN_HISTORY_BARS = 60
+
+
 def configured_paper():
     path = os.environ.get("PAPER_LOOP_CONFIG")
     return PaperLoopConfig.load(path) if path else None
@@ -65,8 +68,11 @@ def compose_paper_worker(repository, config, *, fetcher=None, clock=None):
         for key in config.universe:
             try:
                 chart = fetcher.get_chart(public_share_catalog()[key]["yahoo_symbol"], "1y")
-                charts[key] = {name: chart[name] for name in ("symbol", "currency", "interval", "bars")}
-                charts[key]["bars"] = charts[key]["bars"][-400:]
+                charts[key] = {name: chart[name] for name in ("symbol", "currency", "interval")}
+                charts[key]["bars"] = [
+                    {name: bar.get(name) for name in ("timestamp", "close", "volume")}
+                    for bar in chart["bars"][-FROZEN_HISTORY_BARS:]
+                ]
             except Exception:
                 # Missing data is visible per symbol; exception text can include secrets.
                 continue
@@ -159,9 +165,11 @@ def paper_status(repository, config):
                                      (config.account_id, cutoff), rows=True))
     cycles = repository.paper_records(config.account_id, "cycle", as_of=cutoff, limit=96)
     outcomes = repository.paper_records(config.account_id, "outcome", as_of=cutoff, limit=400)
+    learning_outcomes = repository.paper_records(
+        config.account_id, "learning-outcome", as_of=cutoff, limit=1000)
     counts = {}
-    for outcome in outcomes:
-        if outcome.get("horizon_id") == "1d":
+    for outcome in learning_outcomes:
+        if outcome.get("horizon_sessions") == config.learning_horizon_sessions:
             key = outcome["instrument_id"]
             counts[key] = counts.get(key, 0) + 1
     proposed = [{"instrument_id": row["opportunity"]["instrument_id"],
@@ -180,9 +188,10 @@ def paper_status(repository, config):
             "commission_per_fill": config.commission_per_fill, "slippage_per_unit": config.slippage_per_unit,
             "pending": proposed, "position_geometry": state["book"], "totals": totals,
             "learning": {"outcomes_by_instrument": counts, "minimum_samples": 30,
+                         "horizon_sessions": config.learning_horizon_sessions,
                          "eligible_outcomes": sum(counts.values()), "persisted_news_records": evidence_count,
                          "state": "LEARNED_CELLS_AVAILABLE" if any(n >= 30 for n in counts.values()) else "COLLECTING_OUTCOMES",
-                         "kind": "Causal strategy effectiveness; LLM model weights are not trained"},
+                         "kind": "Ranked LONG swing effectiveness after declared costs; LLM model weights are not trained"},
             "equity_history": [{"at": row["evaluated_at"], "equity": row["account"]["equity"]} for row in reversed(cycles)],
             "account": asdict(PaperBroker.restore(state["broker"]).get_account()),
             "positions": state["broker"]["positions"],

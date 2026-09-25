@@ -1,5 +1,15 @@
 # Linear Fusion Roadmap
 
+2026-09-25: the active operational workspace replaces the unproductive
+five-minute/full-chart collection pattern with `canonical-paper-loop-v2`: one
+daily schedule, at most 60 compact completed bars per instrument for retry, one
+deduplicated Top-5 LONG decision per completed bar, and one three-session net
+outcome after a declared 10 bps research cost. The existing 30-sample causal
+effectiveness gate is wired back into research ranking support; no production
+signal weight or broker path is promoted. IG streaming is removed from the
+operational learning loop and remains disabled. ETFs remain chart-only and SSFs
+remain evidence-blocked. See ADR 0029.
+
 2026-09-23: removed the invalid `JDI.JO` Yahoo request from active public
 research while retaining its identity as inactive durable-account metadata;
 verified Clicks Group `CLS.JO` was added to the broader public catalog without
