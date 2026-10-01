@@ -72,6 +72,9 @@ class ClosedLoopTests(unittest.TestCase):
                     loop.initialize()
                     first = loop.cycle("j0", frozen(0))
                     self.assertFalse(first["opened"])
+                    first_brief = repo.paper_record(first["ranking_record_id"])["decision_brief"]
+                    self.assertEqual(first_brief["market"]["state"], "INSUFFICIENT_CONTEXT")
+                    self.assertFalse(first_brief["live_execution"])
                     self.assertEqual(len(repo.paper_records(
                         self.config().account_id, "candidate-decision",
                         as_of=T.isoformat())), 1)

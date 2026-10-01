@@ -15,6 +15,9 @@ from .daily_learning import (
     label_candidate_panel,
     record_candidate_panel,
 )
+from .market_brief import (build_market_context, build_decision_brief,
+                           record_benchmark_decisions, label_benchmark_decisions,
+                           benchmark_learning_summary)
 
 VERSION = "canonical-paper-loop-v2"
 
@@ -183,6 +186,13 @@ class PaperLoop:
                       "bars": values}
                 for key, values in series.items()
             }
+            market_context = build_market_context(
+                frozen["input"].get("context_charts", {}), series, evaluated_at=now)
+            labelled_benchmark_outcomes = label_benchmark_decisions(
+                self.repository, self.config.account_id,
+                frozen["input"].get("context_charts", {}), evaluated_at=now)
+            benchmark_learning = benchmark_learning_summary(
+                self.repository, self.config.account_id, evaluated_at=now)
             labelled_learning_outcomes = label_candidate_panel(
                 self.repository, self.config.account_id, learning_series, evaluated_at=now)
             outcomes = paper_feature_outcomes(self.repository, self.config.account_id, now)
@@ -273,7 +283,19 @@ class PaperLoop:
                 self.repository, self.config.account_id, ranking.opportunities, learning_series,
                 evaluated_at=now,
                 horizon_sessions=self.config.learning_horizon_sessions,
+                market_context=market_context,
+                sectors={key: public_share_catalog()[key].get("sector", "UNCLASSIFIED")
+                         for key in series},
             )
+            decision_brief = build_decision_brief(
+                ranking.opportunities, learning_series, market_context,
+                available_cash=broker.get_account().available_cash,
+                open_instruments=book, evaluated_at=now,
+                benchmark_learning=benchmark_learning)
+            recorded_benchmark_decisions = record_benchmark_decisions(
+                self.repository, self.config.account_id,
+                frozen["input"].get("context_charts", {}), market_context,
+                evaluated_at=now)
             state["pending"] = []
             for o in ranked:
                 key = next((key for key in series if _identities(key, public_share_catalog()[key])[0].instrument_id == o.instrument_id), None)
@@ -283,7 +305,9 @@ class PaperLoop:
             ranking_id = stable_id("paper-ranking", self.config.account_id, job_key)
             snapshot = {"version": VERSION, "evaluated_at": now.isoformat(), "mode": "PAPER",
                         "opportunities": [o.to_dict() for o in ranking.opportunities],
-                        "unavailable": list(ranking.unavailable)}
+                        "unavailable": list(ranking.unavailable),
+                        "decision_brief": decision_brief,
+                        "candidate_learning": selection_evidence}
             self.repository.save_paper_record(ranking_id, self.config.account_id, "ranking", now.isoformat(), snapshot)
             if not broker.reconcile(now).clean:
                 raise ValueError("paper ledger failed reconciliation")
@@ -301,6 +325,8 @@ class PaperLoop:
                       "outcome_count": len(outcomes),
                       "learning_decisions_recorded": recorded_learning_decisions,
                       "learning_outcomes_labelled": labelled_learning_outcomes,
+                      "benchmark_decisions_recorded": recorded_benchmark_decisions,
+                      "benchmark_outcomes_labelled": labelled_benchmark_outcomes,
                       "account": asdict(broker.get_account()),
                       "ranking_record_id": ranking_id}
             self.repository.save_paper_record(rid, self.config.account_id, "cycle", now.isoformat(), result)

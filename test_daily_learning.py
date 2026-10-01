@@ -70,13 +70,16 @@ class DailyLearningTests(unittest.TestCase):
                             for i in range(days)]},
                     }
                 self.assertEqual(record_candidate_panel(
-                    repository, "a", (selected, other), panel_series(1), evaluated_at=T), 2)
+                    repository, "a", (selected, other), panel_series(1), evaluated_at=T,
+                    market_context={"state": "SUPPORTIVE"},
+                    sectors={"TFMJ": "Retail", "OTHER": "Mining"}), 2)
                 self.assertEqual(record_candidate_panel(
                     repository, "a", (selected, other), panel_series(1), evaluated_at=T), 0)
                 decisions = repository.paper_records(
                     "a", PANEL_DECISION_KIND, as_of=T.isoformat(), limit=10)
                 self.assertEqual(len(decisions), 2)
                 self.assertTrue(any(row["selected"] for row in decisions))
+                self.assertTrue(all(row["market_state"] == "SUPPORTIVE" for row in decisions))
                 self.assertFalse(next(row for row in decisions
                                       if row["instrument_id"] == "EQ_ZAR_OTHER")["selected"])
                 self.assertTrue(all("bars" not in row and len(json.dumps(row)) < 2000
@@ -96,6 +99,7 @@ class DailyLearningTests(unittest.TestCase):
                 self.assertEqual(summary["paired_sessions"], 1)
                 self.assertEqual(summary["nonoverlapping_paired_sessions"], 1)
                 self.assertGreater(summary["mean_selection_edge"], 0)
+                self.assertEqual(summary["by_market_state"]["SUPPORTIVE"]["nonoverlapping_sessions"], 1)
                 self.assertEqual(summary["state"], "COLLECTING_COMPARISONS")
             finally:
                 repository.close()

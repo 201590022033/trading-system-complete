@@ -1,5 +1,10 @@
 # Linear Fusion Roadmap
 
+2026-10-01: ADR 0032 adds a bounded, market-first daily decision brief to the
+active Railway paper worker. Listed ETFs inform wider market and sector context
+without becoming tradable. Candidate outcomes are stratified by frozen market
+state. The legacy ranking remains the benchmark and adaptive output shadow-only.
+
 2026-10-01: within the sole active operational workspace, ADR 0031 replaces
 selected-only daily feedback with a bounded screened-candidate panel. Later
 completed closes label all shares; matched selected-versus-other comparisons

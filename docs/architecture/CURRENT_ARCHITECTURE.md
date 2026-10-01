@@ -74,6 +74,12 @@ named isolated option, and no Railway database is cloned or attached.
 
 ## 2026-09-19 operational deployment
 
+The daily Railway paper worker now freezes four listed ETF close series as
+context only (ADR 0032). It reports a broad-market ETF/breadth state and a
+human-review decision brief beside the existing canonical cash-share ranking.
+Market state is retained on compact candidate-panel outcomes for later
+conditional evaluation; it is not a replacement score or an admitted ETF order.
+
 The 2026-10-01 daily candidate-panel extension records one compact shadow
 decision per screened cash share and later labels selected and unselected
 shares using the same three-session close-to-close proxy. Matched-session

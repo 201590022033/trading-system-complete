@@ -1,5 +1,20 @@
 # Current Milestone
 
+## 2026-10-01 daily market-first brief — within active demo workspace
+
+The Railway daily worker now includes four compact listed-ETF context series
+alongside its cash-share scan. A causal market/breadth snapshot and a bounded
+human-review brief are persisted with the existing ranking and displayed above
+the internal simulator. Later completed ETF bars label the frozen broad-market
+and sector benchmarks against cash, while candidate outcomes retain market
+state so selected-versus-other comparisons can be inspected by wider conditions. This
+does not modify canonical ranking, paper risk, ETF/SSF admission or live orders.
+See ADR 0032. Railway acceptance requires a fresh completed-session cycle;
+the complete offline safe suite passes 712 tests; focused market/closed-loop
+tests pass 20 tests, and the Portfolio JavaScript syntax check passes. Railway
+deployment state is recorded separately.
+
+
 ## 2026-10-01 bounded candidate-panel repair — within active demo workspace
 
 The daily Railway paper path now records compact evidence for every screened

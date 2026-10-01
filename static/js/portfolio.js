@@ -16,6 +16,21 @@ function equityPlot(points) {
 function renderPaper(data) {
   paperSnapshot=data;
   const account=data.account,controls=data.controls || {},latest=data.recent_cycles?.[0];
+  const brief=data.decision_brief,market=brief?.market;
+  $('#canonical-market-context').textContent=brief?`Daily sampled market context: ${sentence(market?.state)} · completed-price brief ${when(brief.evaluated_at)}. ETF benchmarks are context only; Top 5 ranking is unchanged.`:'Daily market context is waiting for the worker.';
+  if(!brief) $('#paper-brief').innerHTML=emptyPaper('No daily brief has been produced by the updated worker yet. This is not a trade signal.');
+  else {
+    const breadth=market?.sampled_share_breadth_20_sessions;
+    const bench=market?.benchmarks || {};
+    const context=Object.entries(bench).map(([key,value])=>`${key.replace('ETF_','')} ${num(value.return_20_sessions*100)}%`).join(' · ');
+    const history=brief.benchmark_learning?.by_benchmark_and_market_state || {};
+    const regimeChecks=Object.entries(history).map(([key,states])=>{
+      const item=states[market?.state];
+      return item?`${key.replace('ETF_','')}: ${item.nonoverlapping_sessions} independent periods, mean ${num(item.mean_gross_return*100)}% gross` : null;
+    }).filter(Boolean).join(' · ');
+    const ideas=(brief.ideas || []).map(x=>[x.symbol || x.instrument_id,`#${x.rank} · ${x.sector}`,sentence(x.state),x.reason,`R ${num(x.minimum_one_share_notional)}`]);
+    $('#paper-brief').innerHTML=kv('Market context',sentence(market?.state || 'Unavailable'))+kv('Sampled share breadth',breadth==null?'—':`${num(breadth*100)}% of ${market.sampled_share_count}`)+kv('Listed ETF 20-session moves',context || 'Unavailable')+kv('Later market outcomes in this state',regimeChecks || 'Not mature yet')+`<p class="muted">Completed daily prices as of ${esc(when(brief.evaluated_at))}. This is a sampled market view, not the full JSE. ETF outcome comparisons are gross before spread and fees, and are not trade recommendations.</p>`+(ideas.length?`<div class="table-scroll">${paperTable(['Cash share','Legacy rank · sector','Review state','Why','One-share close proxy'],ideas)}</div>`:emptyPaper('No eligible review ideas in this daily brief.'))+`<p class="muted">Affordability uses R ${esc(num(brief.simulated_available_cash))} of simulated cash, not your connected account. Delayed closes are not executable quotes. Verify current price, spread, fees, available real cash and risk yourself; no live order is placed. The internal paper simulator still runs its legacy benchmark independently of this shadow brief.</p>`;
+  }
   $('#paper-state').textContent=controls.paused?'Entries paused':sentence(data.state);
   $('#paper-status').textContent=account ? `${controls.paused?'New entries paused':data.state==='STALE'?'Paper cycle overdue':'Paper ledger available'} · Last cycle ${when(data.last_evaluated_at)} · ${data.totals?.cycle || 0} saved cycles` : 'Paper account unavailable: '+sentence(data.state)+'. The worker and database must be configured before trading.';
   $('#paper-status').classList.toggle('is-warning',!account || data.state==='STALE');
@@ -36,7 +51,8 @@ function renderPaper(data) {
   // Shared unlock visibility is controlled by the connected-account workspace.
   const learning=data.learning || {},panel=data.candidate_learning || {};
   const edge=panel.mean_selection_edge==null?'—':num(panel.mean_selection_edge*100)+'%';
-  $('#paper-learning').innerHTML=kv('Candidate outcomes',panel.outcome_count ?? 0)+kv('Matched sessions',panel.paired_sessions ?? 0)+kv('Independent comparisons',`${panel.nonoverlapping_paired_sessions ?? 0} / ${panel.minimum_nonoverlapping_sessions ?? 30}`)+kv('Observed selection edge',edge)+`<p class="muted">${esc(sentence(panel.state || 'Waiting for candidate outcomes'))}. Each screened share is compared with unselected shares from the same session after a three-session hold, using a later completed close as entry proxy and declared costs. This is shadow research, not a validated forecast or live order.</p>`+`<p class="muted">Legacy selected-only outcomes: ${esc(learning.eligible_outcomes || 0)}. Actual closed paper trades: ${esc(data.totals?.outcome || 0)}. News AI does not retrain its model weights.</p>`;
+  const conditions=Object.entries(panel.by_market_state || {}).map(([state,value])=>`<p class="muted">${esc(sentence(state))}: ${esc(value.nonoverlapping_sessions)} independent comparisons; selected net ${esc(num(value.mean_selected_net_return*100))}% vs other ${esc(num(value.mean_other_net_return*100))}% and cash 0%. ${esc(sentence(value.state))}.</p>`).join('');
+  $('#paper-learning').innerHTML=kv('Candidate outcomes',panel.outcome_count ?? 0)+kv('Matched sessions',panel.paired_sessions ?? 0)+kv('Independent comparisons',`${panel.nonoverlapping_paired_sessions ?? 0} / ${panel.minimum_nonoverlapping_sessions ?? 30}`)+kv('Observed selection edge',edge)+conditions+`<p class="muted">${esc(sentence(panel.state || 'Waiting for candidate outcomes'))}. Each screened share is compared with unselected shares and cash from the same session after a three-session hold, using a later completed close as entry proxy and declared costs. This is shadow research, not a validated forecast or live order.</p>`+`<p class="muted">Legacy selected-only outcomes: ${esc(learning.eligible_outcomes || 0)}. Actual closed paper trades: ${esc(data.totals?.outcome || 0)}. News AI does not retrain its model weights.</p>`;
   $('#paper-model').innerHTML=kv('Model',data.model || 'Not configured')+kv('Price source',data.data_provider || '—')+kv('Commission per fill',money(data.commission_per_fill))+kv('Slippage per share',money(data.slippage_per_unit))+`<p class="muted">Entries require a later completed market session. Checking again does not invent a new price or bypass a risk limit.</p>`;
 }
 async function refreshPaper() {

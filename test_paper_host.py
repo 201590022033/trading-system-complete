@@ -14,9 +14,43 @@ from application.opportunities.api import create_blueprint
 from persistence.sqlite_repository import SQLiteRepository
 from workers.shadow_learning import ShadowWorker
 from test_paper_closed_loop import T, charts
+from test_market_brief import etf_chart
 
 
 class PaperHostTests(unittest.TestCase):
+    def test_worker_freezes_bounded_etf_context_and_exposes_brief(self):
+        with tempfile.TemporaryDirectory() as directory:
+            repository = SQLiteRepository(Path(directory) / "brief.db")
+            config = replace(PaperLoopConfig.load("config/paper.example.json"),
+                             universe=("TFMJ",), account_id="brief-test")
+            class Fetcher:
+                def get_chart(self, symbol, period):
+                    if symbol == "TFG.JO":
+                        return charts(T)["TFMJ"]
+                    return etf_chart(symbol)
+            try:
+                scheduler, handler = compose_paper_worker(
+                    repository, config, fetcher=Fetcher(), clock=lambda: T.isoformat())
+                scheduler.enqueue(T.isoformat())
+                worker = ShadowWorker(repository, "test", {"paper-cycle": handler},
+                                      clock=lambda: T.isoformat())
+                self.assertEqual(worker.run_once(), 1)
+                frozen = repository.paper_records(config.account_id, "input",
+                                                  as_of=T.isoformat(), limit=1)[0]
+                context = frozen["input"]["context_charts"]
+                self.assertEqual(len(context), 4)
+                self.assertEqual(len(repository.paper_records(
+                    config.account_id, "benchmark-decision", as_of=T.isoformat(), limit=10)), 4)
+                self.assertTrue(all(len(chart["bars"]) <= 60 for chart in context.values()))
+                self.assertTrue(all(set(bar) == {"timestamp", "close"}
+                                    for chart in context.values() for bar in chart["bars"]))
+                from application.opportunities.paper_host import paper_status
+                brief = paper_status(repository, config)["decision_brief"]
+                self.assertEqual(brief["version"], "daily-market-brief-v1")
+                self.assertEqual(brief["market"]["state"], "INSUFFICIENT_CONTEXT")
+            finally:
+                repository.close()
+
     def test_duplicate_completed_session_stores_only_compact_skip_input(self):
         with tempfile.TemporaryDirectory() as directory:
             repository = SQLiteRepository(Path(directory) / "paper.db")

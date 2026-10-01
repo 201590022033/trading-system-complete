@@ -162,7 +162,8 @@ def feature_outcomes(repository, account_id, *, evaluated_at):
 
 def record_candidate_panel(repository, account_id, opportunities, series, *, evaluated_at,
                            horizon_sessions=DEFAULT_HORIZON_SESSIONS,
-                           cost_bps=DEFAULT_COST_BPS):
+                           cost_bps=DEFAULT_COST_BPS, market_context=None,
+                           sectors=None):
     """Freeze one compact point-in-time row for every screened share/session."""
     now = _time(evaluated_at)
     instrument_to_symbol = {row["instrument_id"]: symbol for symbol, row in series.items()}
@@ -198,6 +199,8 @@ def record_candidate_panel(repository, account_id, opportunities, series, *, eva
             "signal_bar_at": signal_at.isoformat(), "signal_close": signal_close,
             "direction": opportunity.direction, "eligibility_status": opportunity.eligibility_status,
             "rank": opportunity.rank, "ranking_score": opportunity.ranking_score,
+            "market_state": (market_context or {}).get("state", "INSUFFICIENT_CONTEXT"),
+            "sector": (sectors or {}).get(symbol, "UNCLASSIFIED"),
             "selected": selected, "opportunity_id": opportunity.opportunity_id,
             "ranking_version": opportunity.ranking_version,
             "momentum_20d_signal": technical.get("momentum_20d_signal"),
@@ -251,6 +254,8 @@ def label_candidate_panel(repository, account_id, series, *, evaluated_at):
             "horizon_sessions": horizon,
             "label": "WIN" if net > 0 else "LOSS" if net < 0 else "FLAT",
             "selected": decision["selected"], "recorded_at": now.isoformat(),
+            "market_state": decision.get("market_state", "INSUFFICIENT_CONTEXT"),
+            "sector": decision.get("sector", "UNCLASSIFIED"),
         }
         repository.save_paper_record(outcome_id, account_id, PANEL_OUTCOME_KIND,
                                      exit_at.isoformat(), payload)
@@ -264,12 +269,14 @@ def candidate_panel_summary(repository, account_id, *, evaluated_at):
     rows = repository.paper_records(
         account_id, PANEL_OUTCOME_KIND, as_of=now.isoformat(), limit=MAX_RECORDS)
     groups = {}
+    states = {}
     for row in rows:
         if row.get("version") != PANEL_VERSION:
             continue
         key = (row["signal_bar_at"], row["entry_bar_at"], row["exit_bar_at"])
         groups.setdefault(key, {"selected": [], "other": []})[
             "selected" if row["selected"] else "other"].append(float(row["net_return"]))
+        states[key] = row.get("market_state", "INSUFFICIENT_CONTEXT")
     pairs = []
     for key, group in sorted(groups.items()):
         if group["selected"] and group["other"]:
@@ -280,6 +287,9 @@ def candidate_panel_summary(repository, account_id, *, evaluated_at):
         if last_exit is None or _time(pair[0][1]) > last_exit:
             nonoverlap.append(pair)
             last_exit = _time(pair[0][2])
+    by_market_state = {}
+    for pair in nonoverlap:
+        by_market_state.setdefault(states[pair[0]], []).append((pair[1], pair[2]))
     return {
         "state": "COLLECTING_COMPARISONS" if len(nonoverlap) < 30 else "READY_FOR_REVIEW",
         "version": PANEL_VERSION, "horizon_sessions": DEFAULT_HORIZON_SESSIONS,
@@ -293,6 +303,13 @@ def candidate_panel_summary(repository, account_id, *, evaluated_at):
         "mean_other_net_return": mean(pair[2] for pair in nonoverlap) if nonoverlap else None,
         "mean_selection_edge": mean(pair[1] - pair[2] for pair in nonoverlap)
                                if nonoverlap else None,
+        "by_market_state": {state: {"nonoverlapping_sessions": len(pairs_in_state),
+                                     "mean_selected_net_return": mean(p[0] for p in pairs_in_state),
+                                     "mean_other_net_return": mean(p[1] for p in pairs_in_state),
+                                     "mean_selection_edge": mean(p[0] - p[1] for p in pairs_in_state),
+                                     "selected_loss_session_fraction": sum(p[0] < 0 for p in pairs_in_state) / len(pairs_in_state),
+                                     "state": "COLLECTING" if len(pairs_in_state) < 30 else "READY_FOR_REVIEW"}
+                            for state, pairs_in_state in sorted(by_market_state.items())},
         "basis": "NEXT_COMPLETED_CLOSE_PROXY; MATCHED_SESSION; DECLARED_10_BPS_COST",
         "governance": "DESCRIPTIVE_RESEARCH_ONLY",
     }

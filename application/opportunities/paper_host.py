@@ -5,6 +5,7 @@ import os
 from .paper_config import PaperLoopConfig
 from .paper_loop import PaperLoop, opportunity_from_dict
 from .daily_learning import candidate_panel_summary
+from .market_brief import CONTEXT_ETFS
 from .service import OpportunityService
 from .public_research import public_share_catalog, _available_at
 from domain.broker.paper import PaperBroker
@@ -108,7 +109,20 @@ def compose_paper_worker(repository, config, *, fetcher=None, clock=None):
         if source_signature and source_signature == state.get("last_source_signature"):
             return {"state": "NO_NEW_COMPLETED_SESSION", "duplicate_session": True,
                     "source_signature": source_signature, "completed_sessions": sessions}
-        return {"charts": charts, "news": persisted_news(repository, observed_at),
+        context_charts = {}
+        from market_chart_registry import MARKET_CHART_INSTRUMENTS
+        for key in CONTEXT_ETFS:
+            try:
+                chart = fetcher.get_chart(MARKET_CHART_INSTRUMENTS[key].data_symbol, "1y")
+                context_charts[key] = {name: chart[name] for name in ("symbol", "currency", "interval")}
+                context_charts[key]["bars"] = [
+                    {name: bar.get(name) for name in ("timestamp", "close")}
+                    for bar in chart["bars"][-FROZEN_HISTORY_BARS:]
+                ]
+            except Exception:
+                continue
+        return {"charts": charts, "context_charts": context_charts,
+                "news": persisted_news(repository, observed_at),
                 "source_signature": source_signature, "completed_sessions": sessions}
 
     def processor(key, frozen):
@@ -200,7 +214,8 @@ def paper_status(repository, config):
     outcomes = repository.paper_records(config.account_id, "outcome", as_of=cutoff, limit=400)
     learning_outcomes = repository.paper_records(
         config.account_id, "learning-outcome", as_of=cutoff, limit=1000)
-    panel_summary = candidate_panel_summary(repository, config.account_id, evaluated_at=now)
+    panel_summary = (snapshot.get("candidate_learning") if snapshot else None) or \
+        candidate_panel_summary(repository, config.account_id, evaluated_at=now)
     counts = {}
     for outcome in learning_outcomes:
         if outcome.get("horizon_sessions") == config.learning_horizon_sessions:
@@ -228,6 +243,7 @@ def paper_status(repository, config):
                          "kind": "Legacy selected-only v1 outcomes; no automatic candidate learning"},
             "candidate_learning": {**panel_summary,
                                    "decision_count": totals.get("candidate-decision", 0)},
+            "decision_brief": snapshot.get("decision_brief") if snapshot else None,
             "equity_history": [{"at": row["evaluated_at"], "equity": row["account"]["equity"]} for row in reversed(cycles)],
             "account": asdict(PaperBroker.restore(state["broker"]).get_account()),
             "positions": state["broker"]["positions"],
