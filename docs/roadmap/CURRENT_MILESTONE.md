@@ -12,7 +12,13 @@ empty v2 week is not promoted or backfilled. See ADR 0030.
 
 - [x] Focused session/freshness/status suite passes: 27 tests.
 - [x] Full offline safe suite passes: 707 tests.
-- [ ] Railway v3 web/worker deployment and first useful cycle verified.
+- [x] Railway v3 web/worker deployment succeeded at commit `43e9d84`.
+- [x] First v3 cycle ranked five opportunities and recorded compact LONG
+  decisions for Sasol (rank 3) and Shoprite (rank 4) from the completed
+  2026-09-30 session; no outcome is mature yet.
+- [x] Post-acceptance database size is about 9.55 MB; the first v3 input is
+  about 23 KB and its two learning decisions total about 1.25 KB.
+- [x] IG streaming remains disabled and live execution remains false.
 
 ## 2026-09-25 lean daily learning and storage repair
 
