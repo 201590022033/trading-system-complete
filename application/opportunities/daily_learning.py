@@ -1,4 +1,4 @@
-"""Compact causal learning for ranked long swing candidates.
+"""Compact causal evidence for daily cash-share swing research.
 
 One immutable decision is stored per instrument and completed daily bar.  The
 decision is labelled only after the configured number of later completed bars
@@ -6,6 +6,7 @@ exists.  Full chart histories are deliberately not copied into these records.
 """
 
 from math import isfinite
+from statistics import mean
 
 from domain.evaluation.effectiveness import FeatureOutcome
 from shadow_learning import stable_id, timestamp
@@ -17,7 +18,10 @@ DECISION_KIND = "learning-decision"
 OUTCOME_KIND = "learning-outcome"
 DEFAULT_HORIZON_SESSIONS = 3
 DEFAULT_COST_BPS = 10.0
-MAX_RECORDS = 1000
+MAX_RECORDS = 5000
+PANEL_VERSION = "daily-candidate-panel-v1"
+PANEL_DECISION_KIND = "candidate-decision"
+PANEL_OUTCOME_KIND = "candidate-outcome"
 
 
 def _time(value):
@@ -154,3 +158,141 @@ def feature_outcomes(repository, account_id, *, evaluated_at):
             float(row["net_return"]), row["outcome_id"],
         ))
     return tuple(result)
+
+
+def record_candidate_panel(repository, account_id, opportunities, series, *, evaluated_at,
+                           horizon_sessions=DEFAULT_HORIZON_SESSIONS,
+                           cost_bps=DEFAULT_COST_BPS):
+    """Freeze one compact point-in-time row for every screened share/session."""
+    now = _time(evaluated_at)
+    instrument_to_symbol = {row["instrument_id"]: symbol for symbol, row in series.items()}
+    saved = 0
+    for opportunity in opportunities:
+        symbol = instrument_to_symbol.get(opportunity.instrument_id)
+        if symbol is None or not series[symbol]["bars"]:
+            continue
+        signal_at, signal_close, _ = series[symbol]["bars"][-1]
+        record_id = stable_id("daily-candidate", account_id, opportunity.instrument_id,
+                              signal_at.isoformat(), PANEL_VERSION)
+        if repository.paper_record(record_id) is not None:
+            continue
+        evidence = opportunity.input_evidence
+        technical = evidence.get("technical") or {}
+        news = evidence.get("news_macro") or {}
+        items = news.get("items") or ()
+        news_scores = []
+        for item in items:
+            try:
+                score = float(item["score"])
+            except (KeyError, TypeError, ValueError):
+                continue
+            if isfinite(score):
+                news_scores.append(score)
+        selected = (opportunity.rank is not None and opportunity.rank <= 5
+                    and opportunity.direction == "LONG"
+                    and opportunity.eligibility_status == "ELIGIBLE")
+        payload = {
+            "decision_id": record_id, "version": PANEL_VERSION,
+            "mode": "SHADOW_RESEARCH", "instrument_id": opportunity.instrument_id,
+            "symbol": symbol, "decision_at": now.isoformat(),
+            "signal_bar_at": signal_at.isoformat(), "signal_close": signal_close,
+            "direction": opportunity.direction, "eligibility_status": opportunity.eligibility_status,
+            "rank": opportunity.rank, "ranking_score": opportunity.ranking_score,
+            "selected": selected, "opportunity_id": opportunity.opportunity_id,
+            "ranking_version": opportunity.ranking_version,
+            "momentum_20d_signal": technical.get("momentum_20d_signal"),
+            "rsi_14_signal": technical.get("rsi_14_signal"),
+            "regime_state": opportunity.regime_context.get("trend"),
+            "volatility_state": opportunity.regime_context.get("volatility"),
+            "news_state": news.get("state", "UNAVAILABLE"),
+            "news_score": mean(news_scores) if news_scores else None,
+            "horizon_sessions": horizon_sessions, "cost_bps": cost_bps,
+        }
+        repository.save_paper_record(record_id, account_id, PANEL_DECISION_KIND,
+                                     now.isoformat(), payload)
+        saved += 1
+    return saved
+
+
+def label_candidate_panel(repository, account_id, series, *, evaluated_at):
+    """Use the next completed close as entry proxy, then hold three sessions."""
+    now = _time(evaluated_at)
+    saved = 0
+    decisions = repository.paper_records(
+        account_id, PANEL_DECISION_KIND, as_of=now.isoformat(), limit=MAX_RECORDS)
+    for decision in decisions:
+        outcome_id = stable_id("daily-candidate-outcome", decision["decision_id"])
+        if repository.paper_record(outcome_id) is not None:
+            continue
+        values = series.get(decision["symbol"])
+        if values is None:
+            continue
+        later = [bar for bar in values["bars"]
+                 if bar[0] > _time(decision["signal_bar_at"])]
+        horizon = int(decision["horizon_sessions"])
+        if len(later) <= horizon:
+            continue
+        entry_at, entry_close, _ = later[0]
+        exit_at, exit_close, _ = later[horizon]
+        if exit_at > now or not all(isfinite(float(price)) and float(price) > 0
+                                    for price in (entry_close, exit_close)):
+            continue
+        gross = float(exit_close) / float(entry_close) - 1
+        net = gross - float(decision["cost_bps"]) / 10000
+        payload = {
+            "outcome_id": outcome_id, "decision_id": decision["decision_id"],
+            "version": PANEL_VERSION, "mode": "SHADOW_RESEARCH",
+            "instrument_id": decision["instrument_id"], "symbol": decision["symbol"],
+            "signal_bar_at": decision["signal_bar_at"],
+            "entry_bar_at": entry_at.isoformat(), "exit_bar_at": exit_at.isoformat(),
+            "entry_close": float(entry_close), "exit_close": float(exit_close),
+            "gross_return": gross, "net_return": net,
+            "cost_bps": float(decision["cost_bps"]),
+            "horizon_sessions": horizon,
+            "label": "WIN" if net > 0 else "LOSS" if net < 0 else "FLAT",
+            "selected": decision["selected"], "recorded_at": now.isoformat(),
+        }
+        repository.save_paper_record(outcome_id, account_id, PANEL_OUTCOME_KIND,
+                                     exit_at.isoformat(), payload)
+        saved += 1
+    return saved
+
+
+def candidate_panel_summary(repository, account_id, *, evaluated_at):
+    """Report matched selected-versus-other outcomes; never infer trade skill."""
+    now = _time(evaluated_at)
+    rows = repository.paper_records(
+        account_id, PANEL_OUTCOME_KIND, as_of=now.isoformat(), limit=MAX_RECORDS)
+    groups = {}
+    for row in rows:
+        if row.get("version") != PANEL_VERSION:
+            continue
+        key = (row["signal_bar_at"], row["entry_bar_at"], row["exit_bar_at"])
+        groups.setdefault(key, {"selected": [], "other": []})[
+            "selected" if row["selected"] else "other"].append(float(row["net_return"]))
+    pairs = []
+    for key, group in sorted(groups.items()):
+        if group["selected"] and group["other"]:
+            pairs.append((key, mean(group["selected"]), mean(group["other"])))
+    nonoverlap = []
+    last_exit = None
+    for pair in pairs:
+        if last_exit is None or _time(pair[0][1]) > last_exit:
+            nonoverlap.append(pair)
+            last_exit = _time(pair[0][2])
+    return {
+        "state": "COLLECTING_COMPARISONS" if len(nonoverlap) < 30 else "READY_FOR_REVIEW",
+        "version": PANEL_VERSION, "horizon_sessions": DEFAULT_HORIZON_SESSIONS,
+        "outcome_count": sum(len(group["selected"]) + len(group["other"])
+                             for group in groups.values()),
+        "selected_outcome_count": sum(len(group["selected"]) for group in groups.values()),
+        "comparison_outcome_count": sum(len(group["other"]) for group in groups.values()),
+        "paired_sessions": len(pairs), "nonoverlapping_paired_sessions": len(nonoverlap),
+        "minimum_nonoverlapping_sessions": 30,
+        "mean_selected_net_return": mean(pair[1] for pair in nonoverlap) if nonoverlap else None,
+        "mean_other_net_return": mean(pair[2] for pair in nonoverlap) if nonoverlap else None,
+        "mean_selection_edge": mean(pair[1] - pair[2] for pair in nonoverlap)
+                               if nonoverlap else None,
+        "basis": "NEXT_COMPLETED_CLOSE_PROXY; MATCHED_SESSION; DECLARED_10_BPS_COST",
+        "governance": "DESCRIPTIVE_RESEARCH_ONLY",
+    }

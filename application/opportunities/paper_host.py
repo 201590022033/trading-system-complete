@@ -4,6 +4,7 @@ from datetime import datetime, timezone
 import os
 from .paper_config import PaperLoopConfig
 from .paper_loop import PaperLoop, opportunity_from_dict
+from .daily_learning import candidate_panel_summary
 from .service import OpportunityService
 from .public_research import public_share_catalog, _available_at
 from domain.broker.paper import PaperBroker
@@ -199,6 +200,7 @@ def paper_status(repository, config):
     outcomes = repository.paper_records(config.account_id, "outcome", as_of=cutoff, limit=400)
     learning_outcomes = repository.paper_records(
         config.account_id, "learning-outcome", as_of=cutoff, limit=1000)
+    panel_summary = candidate_panel_summary(repository, config.account_id, evaluated_at=now)
     counts = {}
     for outcome in learning_outcomes:
         if outcome.get("horizon_sessions") == config.learning_horizon_sessions:
@@ -223,7 +225,9 @@ def paper_status(repository, config):
                          "horizon_sessions": config.learning_horizon_sessions,
                          "eligible_outcomes": sum(counts.values()), "persisted_news_records": evidence_count,
                          "state": "LEARNED_CELLS_AVAILABLE" if any(n >= 30 for n in counts.values()) else "COLLECTING_OUTCOMES",
-                         "kind": "Ranked LONG swing effectiveness after declared costs; LLM model weights are not trained"},
+                         "kind": "Legacy selected-only v1 outcomes; no automatic candidate learning"},
+            "candidate_learning": {**panel_summary,
+                                   "decision_count": totals.get("candidate-decision", 0)},
             "equity_history": [{"at": row["evaluated_at"], "equity": row["account"]["equity"]} for row in reversed(cycles)],
             "account": asdict(PaperBroker.restore(state["broker"]).get_account()),
             "positions": state["broker"]["positions"],

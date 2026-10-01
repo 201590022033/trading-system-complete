@@ -11,9 +11,9 @@ from domain.risk.paper_sizing import size_paper_policy
 from shadow_learning import stable_id, timestamp
 from .public_research import public_share_catalog, _identities, _available_at, refresh_public_research
 from .daily_learning import (
-    feature_outcomes as daily_feature_outcomes,
-    label_matured as label_daily_outcomes,
-    record_decisions as record_daily_decisions,
+    candidate_panel_summary,
+    label_candidate_panel,
+    record_candidate_panel,
 )
 
 VERSION = "canonical-paper-loop-v2"
@@ -183,14 +183,15 @@ class PaperLoop:
                       "bars": values}
                 for key, values in series.items()
             }
-            labelled_learning_outcomes = label_daily_outcomes(
+            labelled_learning_outcomes = label_candidate_panel(
                 self.repository, self.config.account_id, learning_series, evaluated_at=now)
-            outcomes = (paper_feature_outcomes(self.repository, self.config.account_id, now)
-                        + daily_feature_outcomes(
-                            self.repository, self.config.account_id, evaluated_at=now))
+            outcomes = paper_feature_outcomes(self.repository, self.config.account_id, now)
+            selection_evidence = candidate_panel_summary(
+                self.repository, self.config.account_id, evaluated_at=now)
             ranking = refresh_public_research(
                 fetcher=FrozenCharts({key: charts[key] for key in series}), evaluated_at=now, universe=self.config.universe,
-                max_workers=1, news_report=frozen["input"].get("news"), paper_outcomes=outcomes)
+                max_workers=1, news_report=frozen["input"].get("news"),
+                paper_outcomes=outcomes, selection_evidence=selection_evidence)
             current = {o.instrument_id: o for o in ranking.opportunities}
             opened, blocked = [], []
             # Pending proposals were ranked in an earlier cycle. Recheck current eligibility.
@@ -268,8 +269,8 @@ class PaperLoop:
                 opened.append(instrument)
             state["peak_equity"] = max(state["peak_equity"], broker.get_account().equity)
             ranked = [o for o in ranking.opportunities if o.rank is not None][:5]
-            recorded_learning_decisions = record_daily_decisions(
-                self.repository, self.config.account_id, ranked, learning_series,
+            recorded_learning_decisions = record_candidate_panel(
+                self.repository, self.config.account_id, ranking.opportunities, learning_series,
                 evaluated_at=now,
                 horizon_sessions=self.config.learning_horizon_sessions,
             )

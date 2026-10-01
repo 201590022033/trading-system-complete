@@ -1,5 +1,20 @@
 # Current Milestone
 
+## 2026-10-01 bounded candidate-panel repair — within active demo workspace
+
+The daily Railway paper path now records compact evidence for every screened
+cash share, not only selected Top-5 LONG ideas. Mature labels use a later
+completed close as a hypothetical entry and compare selected versus unselected
+shares in matched sessions. Legacy selected-only feedback no longer adjusts the
+rank; actual closed paper trades retain their governed evidence path. The
+Portfolio learning panel displays comparison counts and descriptive edge.
+Historical shadow-runtime jobs remain separate and unscheduled on Railway.
+See ADR 0031. No model promotion, Sharpe claim or live execution is implied.
+The offline safe suite passes 708 tests, the focused closed-loop suite passes
+16 tests, and the Portfolio JavaScript syntax check passes. Railway deployment
+and fresh candidate evidence still require separate verification.
+
+
 ## 2026-10-01 session-aware daily collection repair
 
 Seven healthy v2 Railway jobs used only about 312 KB of additional database

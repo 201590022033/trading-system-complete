@@ -72,6 +72,9 @@ class ClosedLoopTests(unittest.TestCase):
                     loop.initialize()
                     first = loop.cycle("j0", frozen(0))
                     self.assertFalse(first["opened"])
+                    self.assertEqual(len(repo.paper_records(
+                        self.config().account_id, "candidate-decision",
+                        as_of=T.isoformat())), 1)
                     repo.close()
                     repo = open_repo()
                     loop = PaperLoop(repo, self.config())
@@ -100,6 +103,9 @@ class ClosedLoopTests(unittest.TestCase):
                     self.assertEqual(paper_feature_outcomes(repo, self.config().account_id, T), ())
                     state = repo.paper_account(self.config().account_id)
                     self.assertEqual(len(state["broker"]["fills"]), 2)
+                    self.assertEqual(len(repo.paper_records(
+                        self.config().account_id, "candidate-decision",
+                        as_of=(T+timedelta(days=3)).isoformat())), 3)
                     self.assertAlmostEqual(third["account"]["equity"]-self.config().starting_cash,
                         repo.paper_records(self.config().account_id, "outcome", as_of=(T+timedelta(days=3)).isoformat())[0]["net_pnl"])
                 finally:

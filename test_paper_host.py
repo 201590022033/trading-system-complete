@@ -74,10 +74,12 @@ class PaperHostTests(unittest.TestCase):
                  "minimum_samples": 30, "horizon_sessions": 3}
         with patch.object(deployed_app, "paper_config", object()), \
                 patch.object(deployed_app, "runtime_repository", return_value=Repository()), \
-                patch.object(deployed_app, "paper_status", return_value={"learning": swing}):
+                patch.object(deployed_app, "paper_status", return_value={
+                    "learning": swing, "candidate_learning": {"state": "COLLECTING_COMPARISONS"}}):
             response = deployed_app.app.test_client().get("/api/learning/status")
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json["daily_swing"], swing)
+        self.assertEqual(response.json["candidate_learning"]["state"], "COLLECTING_COMPARISONS")
         self.assertFalse(response.json["live_execution"])
 
     def test_worker_runtime_and_durable_web_after_restart_without_fallback(self):

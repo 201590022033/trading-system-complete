@@ -1,5 +1,12 @@
 # Linear Fusion Roadmap
 
+2026-10-01: within the sole active operational workspace, ADR 0031 replaces
+selected-only daily feedback with a bounded screened-candidate panel. Later
+completed closes label all shares; matched selected-versus-other comparisons
+are shown as descriptive shadow research, not a trained forecast. Legacy
+selected-only outcomes no longer influence ranking. Actual closed paper trades
+retain the existing evidence path. Historical shadow jobs remain unscheduled.
+
 2026-10-01: operational investigation found that seven compact daily jobs added
 only about 312 KB but exact 24-hour freshness rejected all conservatively delayed
 bars. `railway-paper-zar-v3` therefore uses a bounded four-day daily freshness

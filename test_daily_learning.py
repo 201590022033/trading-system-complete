@@ -9,8 +9,13 @@ from application.opportunities.daily_learning import (
     DECISION_KIND,
     FEATURE_ID,
     OUTCOME_KIND,
+    PANEL_DECISION_KIND,
+    PANEL_OUTCOME_KIND,
+    candidate_panel_summary,
     feature_outcomes,
+    label_candidate_panel,
     label_matured,
+    record_candidate_panel,
     record_decisions,
 )
 from application.opportunities.paper_loop import FrozenCharts
@@ -32,6 +37,11 @@ def opportunity():
         regime_version="regime-v1",
         regime_context={"trend": "BULL"},
         ranking_version="ranking-v1",
+        eligibility_status="ELIGIBLE",
+        ranking_score=60.0,
+        input_evidence={"technical": {"momentum_20d_signal": 1,
+                                      "rsi_14_signal": 0},
+                        "news_macro": {"state": "UNAVAILABLE"}},
     )
 
 
@@ -42,6 +52,54 @@ def series(days):
 
 
 class DailyLearningTests(unittest.TestCase):
+    def test_candidate_panel_tracks_alternatives_and_next_session_proxy(self):
+        with tempfile.TemporaryDirectory() as directory:
+            repository = SQLiteRepository(Path(directory) / "panel.db")
+            try:
+                repository.create_paper_account("a", {"mode": "PAPER"})
+                selected = opportunity()
+                other = SimpleNamespace(**{**opportunity().__dict__,
+                    "instrument_id": "EQ_ZAR_OTHER", "direction": "SHORT", "rank": 2})
+                def panel_series(days):
+                    return {
+                        "TFMJ": {"instrument_id": "EQ_ZAR_TFMJ", "bars": [
+                            (T + timedelta(days=i), float(100 + i), 1_000_000)
+                            for i in range(days)]},
+                        "OTHER": {"instrument_id": "EQ_ZAR_OTHER", "bars": [
+                            (T + timedelta(days=i), float(100 - i), 1_000_000)
+                            for i in range(days)]},
+                    }
+                self.assertEqual(record_candidate_panel(
+                    repository, "a", (selected, other), panel_series(1), evaluated_at=T), 2)
+                self.assertEqual(record_candidate_panel(
+                    repository, "a", (selected, other), panel_series(1), evaluated_at=T), 0)
+                decisions = repository.paper_records(
+                    "a", PANEL_DECISION_KIND, as_of=T.isoformat(), limit=10)
+                self.assertEqual(len(decisions), 2)
+                self.assertTrue(any(row["selected"] for row in decisions))
+                self.assertFalse(next(row for row in decisions
+                                      if row["instrument_id"] == "EQ_ZAR_OTHER")["selected"])
+                self.assertTrue(all("bars" not in row and len(json.dumps(row)) < 2000
+                                    for row in decisions))
+                self.assertEqual(label_candidate_panel(
+                    repository, "a", panel_series(4), evaluated_at=T + timedelta(days=3)), 0)
+                self.assertEqual(label_candidate_panel(
+                    repository, "a", panel_series(5), evaluated_at=T + timedelta(days=4)), 2)
+                outcomes = repository.paper_records(
+                    "a", PANEL_OUTCOME_KIND, as_of=(T + timedelta(days=4)).isoformat(), limit=10)
+                chosen = next(row for row in outcomes if row["selected"])
+                self.assertEqual(chosen["entry_close"], 101.0)
+                self.assertEqual(chosen["exit_close"], 104.0)
+                self.assertAlmostEqual(chosen["net_return"], 104 / 101 - 1 - .001)
+                summary = candidate_panel_summary(
+                    repository, "a", evaluated_at=T + timedelta(days=4))
+                self.assertEqual(summary["paired_sessions"], 1)
+                self.assertEqual(summary["nonoverlapping_paired_sessions"], 1)
+                self.assertGreater(summary["mean_selection_edge"], 0)
+                self.assertEqual(summary["state"], "COLLECTING_COMPARISONS")
+            finally:
+                repository.close()
+
     def test_compact_decision_is_deduplicated_and_labels_only_after_three_sessions(self):
         with tempfile.TemporaryDirectory() as directory:
             repository = SQLiteRepository(Path(directory) / "learning.db")
@@ -93,7 +151,7 @@ class DailyLearningTests(unittest.TestCase):
             finally:
                 repository.close()
 
-    def test_thirty_matured_swing_outcomes_feed_existing_ranking_support(self):
+    def test_selected_only_returns_do_not_change_ranking_without_comparison(self):
         kwargs = dict(fetcher=FrozenCharts(charts(T)), evaluated_at=T,
                       universe=("TFMJ",), max_workers=1)
 
@@ -109,8 +167,8 @@ class DailyLearningTests(unittest.TestCase):
             **kwargs, paper_outcomes=evidence(.02)).opportunities[0]
         negative = refresh_public_research(
             **kwargs, paper_outcomes=evidence(-.02)).opportunities[0]
-        self.assertGreater(positive.ranking_score, negative.ranking_score)
-        self.assertIn(FEATURE_ID, negative.feature_evidence_summary.negative_feature_ids)
+        self.assertEqual(positive.ranking_score, negative.ranking_score)
+        self.assertNotIn(FEATURE_ID, negative.feature_evidence_summary.negative_feature_ids)
 
 
 if __name__ == "__main__":

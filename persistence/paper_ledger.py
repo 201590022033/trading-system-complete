@@ -54,7 +54,7 @@ class PaperLedger:
         return json.loads(rows[0][0]) if rows else None
 
     def paper_records(self, account_id, kind, *, as_of, limit=400):
-        if not isinstance(limit, int) or not 1 <= limit <= 1000:
+        if not isinstance(limit, int) or not 1 <= limit <= 5000:
             raise ValueError("bounded paper query required")
         rows = self._job_sql(
             "SELECT payload FROM paper_records WHERE account_id=? AND kind=? AND available_at<=? "

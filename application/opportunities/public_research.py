@@ -18,7 +18,6 @@ from domain.registry.instrument import CanonicalInstrument, DEFAULT_INSTRUMENT_R
 from indicator_effectiveness import signal_outcome
 from intraday_instruments import DataGrade, InstrumentDefinition
 from jse_adapter import JSE_TICKERS, YahooFinanceFetcher
-from .daily_learning import FEATURE_ID as SWING_FEATURE_ID, VERSION as SWING_LEARNING_VERSION
 
 VERSION = "public-cash-research-v1"
 COST_BPS = 10.0  # Declared research assumption: 5 spread + 2 fees + 3 slippage.
@@ -129,7 +128,7 @@ def _signal(closes, feature):
 
 
 def candidate_from_chart(key, chart, *, evaluated_at, news_report=None, learned_evidence=None,
-                         paper_outcomes=()):
+                         paper_outcomes=(), selection_evidence=None):
     catalog = public_share_catalog()
     if key not in catalog:
         raise ValueError("share is outside the curated public catalog")
@@ -181,15 +180,6 @@ def candidate_from_chart(key, chart, *, evaluated_at, news_report=None, learned_
         evidence.append(learner.estimate(
             matching, feature_id="paper_strategy", evaluated_at=evaluated_at,
             instrument_id=canonical.instrument_id, horizon_id="1d"))
-    swing_matching = tuple(x for x in paper_outcomes
-                           if x.horizon_id == "1d" and x.feature_id == SWING_FEATURE_ID
-                           and x.feature_version == SWING_LEARNING_VERSION
-                           and x.available_time <= x.evaluated_at < evaluated_at
-                           and x.outcome_maturity <= evaluated_at)
-    if swing_matching:
-        evidence.append(learner.estimate(
-            swing_matching, feature_id=SWING_FEATURE_ID, evaluated_at=evaluated_at,
-            instrument_id=canonical.instrument_id, horizon_id="1d"))
     effectiveness = tuple(evidence)
     regime = classify_candidate(
         closes, evaluated_at, RegimeParameters(.02, .025, .008),
@@ -218,9 +208,12 @@ def candidate_from_chart(key, chart, *, evaluated_at, news_report=None, learned_
             "state": "UNAVAILABLE",
             "reason": "NO_PERSISTED_SHADOW_EVIDENCE",
         })),
+        "selection_evidence": dict(selection_evidence or {
+            "state": "UNAVAILABLE", "reason": "NO_MATCHED_FORWARD_COMPARISONS",
+        }),
     }
     learned_strategy = next((item for item in reversed(effectiveness)
-                             if item.feature_id in {SWING_FEATURE_ID, "paper_strategy"}), None)
+                             if item.feature_id == "paper_strategy"), None)
     if learned_strategy is not None:
         learned = learned_strategy
         input_evidence["learned_effectiveness"] = {
@@ -256,7 +249,8 @@ class RefreshResult:
 
 
 def refresh_public_research(*, fetcher=None, evaluated_at=None, universe=None, max_workers=4,
-                            news_report=None, learned_evidence=None, paper_outcomes=()):
+                            news_report=None, learned_evidence=None, paper_outcomes=(),
+                            selection_evidence=None):
     """One bounded on-demand pass. Failed shares never become ranked records."""
     evaluated_at = evaluated_at or datetime.now(timezone.utc)
     catalog = public_share_catalog()
@@ -267,7 +261,8 @@ def refresh_public_research(*, fetcher=None, evaluated_at=None, universe=None, m
     def load(key):
         return candidate_from_chart(key, fetcher.get_chart(catalog[key]["yahoo_symbol"], "1y"),
                                     evaluated_at=evaluated_at, news_report=news_report,
-                                    learned_evidence=learned_evidence, paper_outcomes=paper_outcomes)
+                                    learned_evidence=learned_evidence, paper_outcomes=paper_outcomes,
+                                    selection_evidence=selection_evidence)
 
     with ThreadPoolExecutor(max_workers=max_workers, thread_name_prefix="public-research") as pool:
         futures = {pool.submit(load, key): key for key in keys}

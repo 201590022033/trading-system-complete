@@ -1,5 +1,12 @@
 # Persistent Shadow Learning
 
+The historical shadow job chain described below is not currently scheduled by
+Railway's daily paper heartbeat. The deployed daily cash-share candidate panel
+is a separate, bounded shadow research loop; see ADR 0031. Its matched
+selected-versus-unselected outcomes are descriptive and do not train model
+weights or automatically change ranking. The old selected-only v1 outcome path
+is retained for provenance but no longer supplies ranking evidence.
+
 ## Current repair and deployment status
 
 The implementation was repaired following the independent audit of `ea3f3a7`.

@@ -122,6 +122,9 @@ def learning_status():
                 "state": paper.get("state", "UNAVAILABLE"),
                 "kind": "Ranked LONG swing effectiveness after declared costs",
             })
+            status["candidate_learning"] = paper.get("candidate_learning", {
+                "state": paper.get("state", "UNAVAILABLE"),
+            })
         return jsonify(**status, live_execution=False)
     except Exception:
         return jsonify(database_state='UNAVAILABLE',live_execution=False),503

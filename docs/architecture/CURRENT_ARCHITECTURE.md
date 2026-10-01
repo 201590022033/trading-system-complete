@@ -74,6 +74,14 @@ named isolated option, and no Railway database is cloned or attached.
 
 ## 2026-09-19 operational deployment
 
+The 2026-10-01 daily candidate-panel extension records one compact shadow
+decision per screened cash share and later labels selected and unselected
+shares using the same three-session close-to-close proxy. Matched-session
+comparisons are visible in Portfolio but do not alter the production ranking.
+Actual closed paper-trade outcomes retain the governed effectiveness path.
+The older persistent shadow worker jobs are not scheduled by the Railway
+paper heartbeat. See ADR 0031.
+
 Railway web and worker now share the migrated PostgreSQL paper account and
 `config/paper.railway.json`. The Portfolio & demo workspace reads equity,
 positions, pending proposals, fills, outcomes and learning from that ledger.
