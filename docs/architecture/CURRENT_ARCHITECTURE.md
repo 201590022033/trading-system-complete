@@ -1,5 +1,15 @@
 # Current Architecture — Observed Repository Baseline
 
+## 2026-10-01 session-aware daily repair
+
+`railway-paper-zar-v3` retains the ADR 0029 daily, compact, long-only learning
+model but accepts completed daily bars across a bounded four-calendar-day
+weekend/holiday/provider-delay window. The worker fingerprints causally usable
+source-session timestamps. A repeated fingerprint stores only a compact
+`NO_NEW_COMPLETED_SESSION` input and does not run another paper cycle or replace
+the last valid ranking. Empty non-stale rankings with provider failures report
+`NO_USABLE_MARKET_DATA`. See ADR 0030.
+
 ## 2026-09-25 lean daily swing learning
 
 After the disposable Railway database filled with unaggregated GER40 ticks and

@@ -178,9 +178,15 @@ class ClosedLoopTests(unittest.TestCase):
             try:
                 loop = PaperLoop(repo, self.config())
                 loop.initialize()
-                data = frozen(3)
+                holiday = frozen(3)
+                holiday["input"]["charts"] = charts(T)
+                accepted = loop.cycle("j3", holiday)
+                self.assertTrue(repo.paper_record(
+                    accepted["ranking_record_id"])["opportunities"])
+
+                data = frozen(5)
                 data["input"]["charts"] = charts(T)
-                result = loop.cycle("j3", data)
+                result = loop.cycle("j5", data)
                 self.assertFalse(repo.paper_record(result["ranking_record_id"])["opportunities"])
                 self.assertEqual(result["unavailable"], ["TFMJ"])
             finally:

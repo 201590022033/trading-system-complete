@@ -1,12 +1,15 @@
 import tempfile
 import unittest
+import json
 from dataclasses import replace
 from datetime import timedelta
 from pathlib import Path
 from unittest.mock import patch
 from flask import Flask
 from application.opportunities.paper_config import PaperLoopConfig
-from application.opportunities.paper_host import compose_paper_worker, DurablePaperOpportunities, PaperRefreshStatus
+from application.opportunities.paper_host import (
+    compose_paper_worker, DurablePaperOpportunities, PaperRefreshStatus, _paper_state,
+)
 from application.opportunities.api import create_blueprint
 from persistence.sqlite_repository import SQLiteRepository
 from workers.shadow_learning import ShadowWorker
@@ -14,6 +17,49 @@ from test_paper_closed_loop import T, charts
 
 
 class PaperHostTests(unittest.TestCase):
+    def test_duplicate_completed_session_stores_only_compact_skip_input(self):
+        with tempfile.TemporaryDirectory() as directory:
+            repository = SQLiteRepository(Path(directory) / "paper.db")
+            config = replace(PaperLoopConfig.load("config/paper.example.json"),
+                             universe=("TFMJ",), account_id="dedupe-test")
+            now = [T]
+
+            class Fetcher:
+                def get_chart(self, symbol, period):
+                    return charts(T)["TFMJ"]
+
+            try:
+                scheduler, handler = compose_paper_worker(
+                    repository, config, fetcher=Fetcher(), clock=lambda: now[0].isoformat())
+                worker = ShadowWorker(repository, "test", {"paper-cycle": handler},
+                                      clock=lambda: now[0].isoformat())
+                scheduler.enqueue(now[0].isoformat())
+                self.assertEqual(worker.run_once(), 1)
+                first_state = repository.paper_account(config.account_id)
+                self.assertIsNotNone(first_state["last_source_signature"])
+
+                now[0] += timedelta(days=1)
+                scheduler.enqueue(now[0].isoformat())
+                self.assertEqual(worker.run_once(), 1)
+                inputs = repository.paper_records(
+                    config.account_id, "input", as_of=now[0].isoformat(), limit=10)
+                self.assertEqual(len(inputs), 2)
+                self.assertTrue(inputs[0]["input"]["duplicate_session"])
+                self.assertNotIn("charts", inputs[0]["input"])
+                self.assertLess(len(json.dumps(inputs[0])), 2000)
+                self.assertEqual(len(repository.paper_records(
+                    config.account_id, "cycle", as_of=now[0].isoformat(), limit=10)), 1)
+                self.assertEqual(repository.paper_account(config.account_id)["last_evaluated_at"],
+                                 first_state["last_evaluated_at"])
+            finally:
+                repository.close()
+
+    def test_empty_ranking_is_reported_as_no_usable_market_data(self):
+        state = {"status": "AVAILABLE"}
+        snapshot = {"opportunities": [], "unavailable": [{"symbol": "TFMJ"}]}
+        self.assertEqual(_paper_state(state, snapshot, False), "NO_USABLE_MARKET_DATA")
+        self.assertEqual(_paper_state(state, snapshot, True), "STALE")
+
     def test_learning_status_exposes_daily_swing_learning(self):
         import app as deployed_app
 
@@ -79,7 +125,7 @@ class PaperHostTests(unittest.TestCase):
                     failure = client.get("/api/v1/opportunities")
                     self.assertEqual(failure.status_code, 503)
                     self.assertNotIn("private-credential", failure.get_data(as_text=True))
-                clock[0] += timedelta(days=2)
+                clock[0] += timedelta(days=5)
                 self.assertEqual(client.get("/api/v1/opportunities").json["count"], 0)
 
     def test_utc_future_nested_evidence_and_undated_news(self):

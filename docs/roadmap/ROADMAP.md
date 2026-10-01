@@ -1,5 +1,12 @@
 # Linear Fusion Roadmap
 
+2026-10-01: operational investigation found that seven compact daily jobs added
+only about 312 KB but exact 24-hour freshness rejected all conservatively delayed
+bars. `railway-paper-zar-v3` therefore uses a bounded four-day daily freshness
+window, completed-session fingerprints, compact no-new-session records and a
+truthful `NO_USABLE_MARKET_DATA` state. The empty v2 week is not treated as
+learning evidence. See ADR 0030.
+
 2026-09-25: the active operational workspace replaces the unproductive
 five-minute/full-chart collection pattern with `canonical-paper-loop-v2`: one
 daily schedule, at most 60 compact completed bars per instrument for retry, one

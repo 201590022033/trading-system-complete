@@ -21,7 +21,7 @@ class PaperLoopConfig:
     max_volume_fraction: float
     limits: dict
     interval_seconds: int = 300
-    max_price_age_seconds: int = 86400
+    max_price_age_seconds: int = 345600
     max_holding_seconds: int = 604800
     reward_multiple: float = 2.
     learning_horizon_sessions: int = 3

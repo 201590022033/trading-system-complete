@@ -1,5 +1,20 @@
 # Running the repaired PAPER loop
 
+## 2026-10-01 v3 session-aware operation
+
+Railway uses `railway-paper-zar-v3`. Daily bars have a bounded four-calendar-day
+freshness allowance so next-day availability, weekends, public holidays and
+ordinary Yahoo delay do not reject a legitimate completed session. This is not
+an exchange calendar and does not make an old observation current; after four
+days the ranking is stale and unavailable for new paper action.
+
+The worker fingerprints the latest causally usable source session per available
+instrument. If the fingerprint matches the last successfully ranked cycle, the
+new calendar-day job stores a compact `NO_NEW_COMPLETED_SESSION` input without
+another chart payload, ranking or cycle. Failed/empty rankings do not advance
+the fingerprint. `NO_USABLE_MARKET_DATA` means the worker ran but committed no
+usable candidates; it must not be interpreted as a healthy market snapshot.
+
 ## 2026-09-25 v2 lean-learning contract
 
 The Railway configuration now uses `railway-paper-zar-v2` and a daily schedule.
@@ -61,8 +76,9 @@ the saved account and frozen jobs, not a reset balance.
   currencies, derivatives, short borrow and real account balances are not wired.
 - Yahoo daily completed-close observations, conservatively available the next
   UTC day; no guessed holiday calendar, fabricated OHLC, intrabar execution,
-  guaranteed stop price, or licensed intraday feed. Freshness defaults to one day;
-  weekend/stale data blocks entries rather than being relabelled current.
+  guaranteed stop price, or licensed intraday feed. Freshness is bounded at four
+  calendar days; a repeated completed session is compactly skipped, while data
+  beyond the bound blocks entries rather than being relabelled current.
 - Entry requires an earlier ranked proposal and a later complete observation.
   The structural stop uses preceding 20 closes; target defaults to 2R. Positions
   exit at the next available new observed session close, or the first valid

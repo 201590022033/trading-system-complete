@@ -1,5 +1,19 @@
 # Current Milestone
 
+## 2026-10-01 session-aware daily collection repair
+
+Seven healthy v2 Railway jobs used only about 312 KB of additional database
+space but produced zero decisions because the exact 24-hour freshness boundary
+rejected every conservatively delayed daily bar. The v3 repair uses a bounded
+four-day daily-bar tolerance, fingerprints completed source sessions, stores a
+compact skip input when the session is unchanged, preserves the last valid
+ranking and reports `NO_USABLE_MARKET_DATA` for an empty provider result. The
+empty v2 week is not promoted or backfilled. See ADR 0030.
+
+- [x] Focused session/freshness/status suite passes: 27 tests.
+- [x] Full offline safe suite passes: 707 tests.
+- [ ] Railway v3 web/worker deployment and first useful cycle verified.
+
 ## 2026-09-25 lean daily learning and storage repair
 
 The disposable Railway data was reset after PostgreSQL exhausted its 500 MB

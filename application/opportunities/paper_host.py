@@ -5,13 +5,30 @@ import os
 from .paper_config import PaperLoopConfig
 from .paper_loop import PaperLoop, opportunity_from_dict
 from .service import OpportunityService
-from .public_research import public_share_catalog
+from .public_research import public_share_catalog, _available_at
 from domain.broker.paper import PaperBroker
-from shadow_learning import timestamp
+from shadow_learning import stable_id, timestamp
 from workers.paper_loop import PaperScheduler, FrozenPaperHandler
 
 
 FROZEN_HISTORY_BARS = 60
+
+
+def completed_session_identity(charts, cutoff):
+    """Identify the causally usable source sessions without retaining bar data."""
+    sessions = {}
+    for key, chart in charts.items():
+        try:
+            usable = [bar for bar in chart.get("bars", ())
+                      if _available_at(bar["timestamp"]) <= cutoff]
+            if usable:
+                sessions[key] = usable[-1]["timestamp"]
+        except (KeyError, TypeError, ValueError):
+            continue
+    if not sessions:
+        return None, sessions
+    ordered = tuple(sorted(sessions.items()))
+    return stable_id("paper-completed-sessions", *ordered), sessions
 
 
 def configured_paper():
@@ -64,6 +81,7 @@ def compose_paper_worker(repository, config, *, fetcher=None, clock=None):
         scanner = MacroSentimentScanner(max_llm_items=2, retain_items=True)
 
     def loader():
+        observed_at = timestamp(clock())
         charts = {}
         for key in config.universe:
             try:
@@ -84,9 +102,20 @@ def compose_paper_worker(repository, config, *, fetcher=None, clock=None):
                 persist_news_report(repository, report, observed_at=clock())
             except Exception:
                 pass
-        return {"charts": charts, "news": persisted_news(repository, timestamp(clock()))}
+        source_signature, sessions = completed_session_identity(charts, observed_at)
+        state = repository.paper_account(config.account_id) or {}
+        if source_signature and source_signature == state.get("last_source_signature"):
+            return {"state": "NO_NEW_COMPLETED_SESSION", "duplicate_session": True,
+                    "source_signature": source_signature, "completed_sessions": sessions}
+        return {"charts": charts, "news": persisted_news(repository, observed_at),
+                "source_signature": source_signature, "completed_sessions": sessions}
 
     def processor(key, frozen):
+        if frozen["input"].get("duplicate_session"):
+            return {"mode": "PAPER", "live_execution": False,
+                    "evaluated_at": frozen["evaluated_at"],
+                    "state": "NO_NEW_COMPLETED_SESSION",
+                    "source_signature": frozen["input"]["source_signature"]}
         return loop.cycle(key, frozen, paused=os.environ.get("PAPER_PAUSED") == "1")
 
     return scheduler, FrozenPaperHandler(repository, config.account_id, loader, processor, clock)
@@ -137,7 +166,8 @@ class PaperRefreshStatus:
             at = timestamp(snapshot["evaluated_at"]) if snapshot else None
             now = datetime.now(timezone.utc)
             stale = at is not None and (at > now or (now-at).total_seconds() > self.config.max_price_age_seconds)
-            return {"state": "STALE" if stale else state["status"] if state else "WORKER_NOT_STARTED", "running": False,
+            status = _paper_state(state, snapshot, stale)
+            return {"state": status, "running": False,
                     "last_completed": state["last_evaluated_at"] if state else None,
                     "scanned": len(self.config.universe) if snapshot else 0,
                     "unranked": sum(row["rank"] is None for row in snapshot["opportunities"]) if snapshot else 0,
@@ -158,6 +188,8 @@ def paper_status(repository, config):
     now = datetime.now(timezone.utc)
     at = timestamp(state["last_evaluated_at"]) if state["last_evaluated_at"] else None
     stale = at is None or at > now or (now-at).total_seconds() > config.max_price_age_seconds
+    snapshot = (repository.paper_record(state["ranking_record_id"])
+                if state.get("ranking_record_id") else None)
     from .paper_controls import controls_for, AGGRESSION
     controls = controls_for(state, config)
     cutoff = now.isoformat()
@@ -180,7 +212,7 @@ def paper_status(repository, config):
     evidence_count = repository._job_sql(
         "SELECT COUNT(*) FROM evidence_records WHERE parser_version=? AND ingested_at<=?",
         ("persisted-public-analysis-v1", cutoff), rows=True)[0][0]
-    return {"state": "STALE" if stale else state["status"], "mode": "PAPER", "live_execution": False,
+    return {"state": _paper_state(state, snapshot, stale), "mode": "PAPER", "live_execution": False,
             "account_id": config.account_id, "last_evaluated_at": state["last_evaluated_at"],
             "controls": controls, "effective_risk_fraction": config.risk_fraction * AGGRESSION[controls["aggression"]],
             "risk_limits": config.limits, "model": "Daily close · ZAR cash shares · long only",
@@ -199,3 +231,13 @@ def paper_status(repository, config):
             "recent_fills": repository.paper_records(config.account_id, "fill", as_of=cutoff, limit=20),
             "recent_policies": repository.paper_records(config.account_id, "policy", as_of=cutoff, limit=10),
             "recent_risks": repository.paper_records(config.account_id, "risk", as_of=cutoff, limit=10)}
+
+
+def _paper_state(state, snapshot, stale):
+    if state is None:
+        return "WORKER_NOT_STARTED"
+    if stale:
+        return "STALE"
+    if snapshot and not snapshot.get("opportunities") and snapshot.get("unavailable"):
+        return "NO_USABLE_MARKET_DATA"
+    return state["status"]

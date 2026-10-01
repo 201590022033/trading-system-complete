@@ -93,6 +93,7 @@ class PaperLoop:
             VERSION, self.config.slippage_per_unit, self.config.commission_per_fill, self.config.currency))
         initial = {"mode": "PAPER", "version": VERSION, "config": self.config.to_dict(),
                    "broker": broker.snapshot(), "book": {}, "pending": [], "last_evaluated_at": None,
+                   "last_source_signature": None,
                    "peak_equity": self.config.starting_cash, "daily_loss": 0., "loss_day": None,
                    "ranking_record_id": None, "status": "INITIALIZED"}
         self.repository.create_paper_account(self.config.account_id, initial)
@@ -291,6 +292,8 @@ class PaperLoop:
                     {**asdict(fill), "filled_at": fill.filled_at.isoformat()})
             state.update(broker=broker.snapshot(), ranking_record_id=ranking_id,
                          last_evaluated_at=now.isoformat(), status="PAUSED" if paused else "AVAILABLE")
+            if ranking.opportunities and frozen["input"].get("source_signature"):
+                state["last_source_signature"] = frozen["input"]["source_signature"]
             result = {"mode": "PAPER", "live_execution": False, "evaluated_at": now.isoformat(),
                       "controls": controls,
                       "opened": opened, "closed": closed, "blocked": blocked, "unavailable": unavailable,
