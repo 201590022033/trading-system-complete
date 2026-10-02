@@ -62,6 +62,21 @@ function directionEvidence(item) {
   const neutral=signals.filter(v=>v===0).length;
   return `${active} directional technical indicator${active===1?'':'s'}; ${neutral} neutral. ${active===1?'Single-indicator technical direction; no second technical confirmation.':active===0?'No directional technical confirmation.':'See individual inputs for agreement or conflict.'}`;
 }
+function swingHistoryEvidence(item) {
+  const history=item.input_evidence?.swing_history;
+  if (!history || history.state !== 'HISTORICAL_RESEARCH_CONTEXT') return kv('3–4 session history','Unavailable — no causal matching history');
+  const percentage=value=>Number.isFinite(value)?`${num(value*100)}%`:'Unavailable';
+  return `<h4>3–4 session historical setup context — shadow only</h4>${kv('Current setup / market',`${history.setup} / ${history.market_state}`)}${kv('Yahoo sessions / through',`${history.source_sessions} / ${history.history_through}`)}${kv('Data-quality flagged sessions',`${history.data_quality?.discontinuity_sessions?.length ?? 0} instrument; ${history.data_quality?.benchmark_discontinuity_sessions?.length ?? 0} benchmark; affected windows excluded, not repaired`)}`+
+    Object.entries(history.horizons || {}).map(([horizon,cell])=>{
+      const sample=cell.all_history || {},held=cell.held_out || {};
+      return kv(horizon,`${sample.sample_count ?? 0} non-overlapping historical trades; ${cell.context}`)+
+        kv('Historical mean after assumed costs',percentage(sample.mean_net_return))+
+        kv('M11 shrunk historical estimate',`${percentage(sample.contextual_learner?.shrunk_mean_net_return)}; ${sample.contextual_learner?.status || 'Unavailable'}`)+
+        kv('Final-third temporal holdout',`${held.sample_count ?? 0} trades; mean ${percentage(held.mean_net_return)}; ${held.state || 'Unavailable'}`)+
+        kv('50 bps round-trip cost stress',percentage(sample.mean_net_50bps_stress))+
+        kv('Versus Satrix 40 on matched dates',`${percentage(sample.mean_etf_excess)}; ${sample.etf_comparison_count ?? 0} comparisons`);
+    }).join('')+'<p class="muted">Later-close entry proxy, not next-open execution. Close-only paths cannot validate intrabar stops. Yahoo history may be revised; costs are not actual OST fees. Descriptive evidence, not profit probabilities or a ranking change. Current news/AI opinions are not historical training labels.</p>';
+}
 function renderAutomaticTechnicalScreen(item, share) {
   const target=$('#canonical-technical-screen'),title=$('#canonical-screen-title');
   title.textContent=`${share.name} · ${share.display_symbol}`;
@@ -122,6 +137,7 @@ function renderCanonicalCard(item) {
     ${kv('Research direction',item.direction)}${kv('Horizon',item.horizon_id)}${kv('Suitability',item.suitability_status)}${kv('Execution suitability',item.execution_suitability)}${kv('Data grade',item.data_grade)}${kv('Regime',regime.trend || regime.trend_state || regime.availability)}${kv('Technical confirmation',directionEvidence(item))}${kv('Effectiveness evidence',`${evidence.learned_count ?? '—'} estimated cells · ${evidence.sample_count ?? item.sample_count ?? '—'} samples; not LLM training`)}
     ${kv('Last usable session',item.provenance?.last_usable_session)}${kv('Data source',item.provenance?.data_symbol)}
     <h4>Why it ranks</h4>${kv('Suitability input',components.suitability == null ? 'Unavailable' : `${num(components.suitability * 100)} / 100`)}${kv('Historical effectiveness support',components.effectiveness_support == null ? 'Unavailable' : `${num(components.effectiveness_support * 100)} / 100`)}${kv('Evidence depth input',components.evidence_depth == null ? 'Unavailable' : `${num(components.evidence_depth * 100)} / 100`)}${kv('Direction agreement input',components.directional_strength == null ? 'Unavailable' : `${num(components.directional_strength * 100)} / 100`)}<small class="muted">These are comparative ranking inputs, not probabilities of profit. Costs use a disclosed ${esc(item.provenance?.cost_assumption_bps ?? 'unknown')} bps research assumption.</small>${canonicalList(item.reasons,'No ranking reasons supplied.')}
+    ${swingHistoryEvidence(item)}
     <h4>Uncertainty and blockers</h4>${canonicalList([...(item.uncertainty || []),...(item.blockers || [])],'None reported by the canonical API.')}
     <div class="paper-trade-actions"><button type="button" data-review-technical>Review technical screen</button><button type="button" data-print-paper-trade>Print paper-trade worksheet</button><button type="button" data-capture-paper-trade ${['LONG','SHORT'].includes(item.direction)?'':'disabled'}>Capture actual trade</button></div><small class="muted">Technical review comes before trade geometry and sizing. Printing or pre-filling does not submit an order.</small>
     <details><summary>${researchOnly?'Research provenance and trading boundary':'Policy, risk and provenance'}</summary><div class="canonical-detail" role="region" aria-label="Research detail for ${esc(item.instrument_id)}"><p class="muted">Open to inspect the authoritative record.</p></div></details>

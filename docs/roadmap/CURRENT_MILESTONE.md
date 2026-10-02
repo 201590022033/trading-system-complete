@@ -1,5 +1,33 @@
 # Current Milestone
 
+## 2026-10-02 Yahoo history reconnection — within the sole ACTIVE workspace
+
+Reuse Yahoo/HR2 normalization and the M11 contextual learner for compact
+three-/four-session trend, pullback and breakout context (ADR 0034). All 18
+active catalog shares and four ETFs returned history since 2021, generally
+1,437 sessions; BHP 1,167 and Richemont 864. Raw hashed snapshots stay local;
+only compact summaries and matching daily evidence ship to Railway. Protected
+history is unchanged. Runtime inputs freeze matching evidence for retries,
+with causal generation clocks, exact benchmark identity and 90-day expiry.
+Top 5 cards display historical and temporal-holdout results separately from
+one-day ranking inputs. Ranking, broker orders and adaptive promotion unchanged.
+Current Ollama news remains attributed current context, never historical labels.
+Online candidate records now retain setup/context/source lineage; their existing
+three-session labels do not become four-session labels or a setup learner.
+
+Verification: 729 safe tests pass, JavaScript syntax passes and all 54 protected
+artifacts remain unchanged. The compact
+shipped report is 676,737 bytes, with 30,739 causally usable sessions through
+Oct 1. Raw downloads also contained the not-yet-completed Oct 2 bar, which is
+excluded. Quality gates quarantine Yahoo unit discontinuities in Satrix 40
+(Apr 25/29, 2025) and Vodacom (Jan 10/13, 2025), including affected benchmark
+comparisons; no price repair or profitable-outcome filtering. Current benchmark
+context can be UNKNOWN when Yahoo omits the cash share's exact usable session.
+Railway acceptance follows deployment; existing dated ranking snapshots are
+not rewritten with hindsight.
+Budget/performance gates below remain open; the earlier six-year retention
+forecast must be remeasured with the additional compact per-day snapshot.
+
 ## 2026-10-02 acceptance follow-through — within the sole ACTIVE workspace
 
 - [x] Prior market brief deployment ran a real completed cycle Oct 2 02:00 SAST:

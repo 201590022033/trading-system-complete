@@ -121,7 +121,13 @@ def compose_paper_worker(repository, config, *, fetcher=None, clock=None):
         if source_signature and source_signature == state.get("last_source_signature"):
             return {"state": "NO_NEW_COMPLETED_SESSION", "duplicate_session": True,
                     "source_signature": source_signature, "completed_sessions": sessions}
+        from .swing_history import BENCHMARK, current_evidence, load_report
+        history = load_report()
+        swing_evidence = {key: current_evidence(key, chart, context_charts.get(BENCHMARK),
+                         evaluated_at=observed_at, report=history)
+                         for key, chart in {**charts, **context_charts}.items()}
         return {"charts": charts, "context_charts": context_charts,
+                "swing_history_evidence": swing_evidence,
                 "news": persisted_news(repository, observed_at),
                 "source_signature": source_signature, "completed_sessions": sessions}
 

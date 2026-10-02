@@ -18,6 +18,36 @@ from test_market_brief import etf_chart
 
 
 class PaperHostTests(unittest.TestCase):
+    def test_compact_history_is_frozen_and_reaches_ranking_and_candidate_lineage(self):
+        from application.opportunities.swing_history import VERSION, summarize_history
+        data = charts(T)["TFMJ"]
+        report = {"version": VERSION, "available_at": T.isoformat(), "limitations": ["SHADOW_ONLY"],
+                  "instruments": {"TFMJ": {"symbol": data["symbol"], "source_sha256": "a"*64,
+                                    **summarize_history(data, {}, cutoff=T)}}}
+        with tempfile.TemporaryDirectory() as directory:
+            repo = SQLiteRepository(Path(directory)/"history.db")
+            config = replace(PaperLoopConfig.load("config/paper.example.json"), universe=("TFMJ",))
+            class Fetcher:
+                def get_chart(self, symbol, period):
+                    return data if symbol == data["symbol"] else etf_chart(symbol)
+            try:
+                with patch("application.opportunities.swing_history.load_report", return_value=report):
+                    scheduler, handler = compose_paper_worker(repo, config, fetcher=Fetcher(), clock=lambda:T.isoformat())
+                    job = scheduler.enqueue(T.isoformat())
+                    result = handler(job)
+                frozen = repo.paper_records(config.account_id, "input", as_of=T.isoformat())[0]
+                evidence = frozen["input"]["swing_history_evidence"]["TFMJ"]
+                self.assertEqual(evidence["state"], "HISTORICAL_RESEARCH_CONTEXT")
+                snapshot = repo.paper_record(result["ranking_record_id"])
+                self.assertEqual(snapshot["opportunities"][0]["input_evidence"]["swing_history"], evidence)
+                decision = repo.paper_records(config.account_id, "candidate-decision", as_of=T.isoformat())[0]
+                self.assertEqual(decision["swing_history_source_sha256"], "a"*64)
+                self.assertEqual(decision["swing_setup"], evidence["setup"])
+                with patch("application.opportunities.swing_history.load_report", side_effect=AssertionError("retry reloaded history")):
+                    self.assertEqual(handler(job), result)
+            finally:
+                repo.close()
+
     def test_missing_etf_data_keeps_all_four_admission_rows(self):
         with tempfile.TemporaryDirectory() as directory:
             repo=SQLiteRepository(Path(directory)/"missing.db")

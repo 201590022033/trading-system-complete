@@ -18,6 +18,7 @@ from domain.registry.instrument import CanonicalInstrument, DEFAULT_INSTRUMENT_R
 from indicator_effectiveness import signal_outcome
 from intraday_instruments import DataGrade, InstrumentDefinition
 from jse_adapter import JSE_TICKERS, YahooFinanceFetcher
+from .swing_history import current_evidence
 
 VERSION = "public-cash-research-v1"
 COST_BPS = 10.0  # Declared research assumption: 5 spread + 2 fees + 3 slippage.
@@ -144,7 +145,7 @@ def _signal(closes, feature):
 
 def candidate_from_chart(key, chart, *, evaluated_at, news_report=None, learned_evidence=None,
                          paper_outcomes=(), selection_evidence=None, strategy_horizon_sessions=1,
-                         catalog=None):
+                         catalog=None, swing_history=None, benchmark_chart=None, historical_evidence=None):
     catalog = catalog if catalog is not None else public_share_catalog()
     if key not in catalog:
         raise ValueError("share is outside the curated public catalog")
@@ -213,6 +214,8 @@ def candidate_from_chart(key, chart, *, evaluated_at, news_report=None, learned_
                        max(timestamp(item["available_at"]) for item in news["items"]),
                        score, canonical.instrument_id, "1d", "sentiment"))
     input_evidence = {
+        "swing_history": historical_evidence if historical_evidence is not None else current_evidence(
+            key, chart, benchmark_chart, evaluated_at=evaluated_at, report=swing_history),
         "technical": {
             "features": ("momentum_20d", "rsi_14"),
             "last_available_at": clocks[-1].isoformat(),
@@ -269,20 +272,27 @@ class RefreshResult:
 
 def refresh_public_research(*, fetcher=None, evaluated_at=None, universe=None, max_workers=4,
                             news_report=None, learned_evidence=None, paper_outcomes=(),
-                            selection_evidence=None, strategy_horizon_sessions=1, catalog=None):
+                            selection_evidence=None, strategy_horizon_sessions=1, catalog=None,
+                            benchmark_chart=None, swing_evidence=None):
     """One bounded on-demand pass. Failed shares never become ranked records."""
     evaluated_at = evaluated_at or datetime.now(timezone.utc)
     catalog = catalog if catalog is not None else public_share_catalog()
     keys = tuple(key for key in (universe or catalog) if key in catalog)[:30]
     fetcher = fetcher or YahooFinanceFetcher()
     candidates, unavailable = [], []
+    from .swing_history import load_report
+    swing_history = load_report() if swing_evidence is None else {}
 
     def load(key):
         return candidate_from_chart(key, fetcher.get_chart(catalog[key]["yahoo_symbol"], "1y"),
                                     evaluated_at=evaluated_at, news_report=news_report,
                                     learned_evidence=learned_evidence, paper_outcomes=paper_outcomes,
                                     selection_evidence=selection_evidence,
-                                    strategy_horizon_sessions=strategy_horizon_sessions, catalog=catalog)
+                                    strategy_horizon_sessions=strategy_horizon_sessions, catalog=catalog,
+                                    swing_history=swing_history, benchmark_chart=benchmark_chart,
+                                    historical_evidence=(swing_evidence.get(key, {
+                                        "state": "UNAVAILABLE", "reason": "NO_FROZEN_HISTORY_SNAPSHOT"})
+                                        if swing_evidence is not None else None))
 
     with ThreadPoolExecutor(max_workers=max_workers, thread_name_prefix="public-research") as pool:
         futures = {pool.submit(load, key): key for key in keys}

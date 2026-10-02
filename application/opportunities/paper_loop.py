@@ -207,7 +207,9 @@ class PaperLoop:
                 fetcher=FrozenCharts({key: charts[key] for key in series}), evaluated_at=now, universe=self.config.universe,
                 max_workers=1, news_report=frozen["input"].get("news"),
                 paper_outcomes=outcomes, selection_evidence=selection_evidence,
-                strategy_horizon_sessions=self.config.holding_sessions)
+                strategy_horizon_sessions=self.config.holding_sessions,
+                benchmark_chart=frozen["input"].get("context_charts", {}).get("ETF_STX40"),
+                swing_evidence=frozen["input"].get("swing_history_evidence", {}))
             current = {o.instrument_id: o for o in ranking.opportunities}
             # Separate ETF research admission; never enters cash-share pending orders.
             etf_charts = frozen["input"].get("context_charts", {})
@@ -226,7 +228,9 @@ class PaperLoop:
             etf_ranking = refresh_public_research(
                 fetcher=FrozenCharts({key: etf_charts[key] for key in etf_series}),
                 evaluated_at=now, universe=tuple(public_etf_catalog()), max_workers=1,
-                catalog=public_etf_catalog(), strategy_horizon_sessions=self.config.holding_sessions)
+                catalog=public_etf_catalog(), strategy_horizon_sessions=self.config.holding_sessions,
+                benchmark_chart=etf_charts.get("ETF_STX40"),
+                swing_evidence=frozen["input"].get("swing_history_evidence", {}))
             etf_recorded = record_candidate_panel(
                 self.repository, self.config.account_id, etf_ranking.opportunities, etf_series,
                 evaluated_at=now, market_context=market_context,

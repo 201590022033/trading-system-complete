@@ -1,5 +1,18 @@
 # Current Architecture — Observed Repository Baseline
 
+## 2026-10-02 compact Yahoo swing context
+
+ADR 0034 reconnects HR2 Yahoo normalization and the M11 contextual learner via
+an offline three-/four-session setup report for cash shares and all four ETFs.
+Raw hashed snapshots stay local; a compact versioned report ships with code.
+The daily loader freezes only matching setup/market cells, with later-close
+entry semantics, cost stress, temporal holdout and discontinuity exclusions.
+Read-only candidate API/Top 5 cards expose this separately from unchanged
+one-day ranking inputs. Candidate decisions/outcomes retain compact setup
+lineage. Online outcomes remain three-session; four-session online learning,
+intrabar stops, actual OST costs and production promotion are not implemented.
+Ollama is attributed current news context, not historical sentiment training.
+
 ## 2026-10-02 scheduled ETF research and horizon repair
 
 ADR 0033 adds exact planned-session strategy feedback and separate mandatory

@@ -180,6 +180,7 @@ def record_candidate_panel(repository, account_id, opportunities, series, *, eva
         evidence = opportunity.input_evidence
         technical = evidence.get("technical") or {}
         news = evidence.get("news_macro") or {}
+        swing = evidence.get("swing_history") or {}
         items = news.get("items") or ()
         news_scores = []
         for item in items:
@@ -205,6 +206,10 @@ def record_candidate_panel(repository, account_id, opportunities, series, *, eva
             "ranking_version": opportunity.ranking_version,
             "momentum_20d_signal": technical.get("momentum_20d_signal"),
             "rsi_14_signal": technical.get("rsi_14_signal"),
+            "swing_setup": swing.get("setup", "UNAVAILABLE"),
+            "swing_market_state": swing.get("market_state", "UNKNOWN"),
+            "swing_history_version": swing.get("version"),
+            "swing_history_source_sha256": swing.get("source_sha256"),
             "regime_state": opportunity.regime_context.get("trend"),
             "volatility_state": opportunity.regime_context.get("volatility"),
             "news_state": news.get("state", "UNAVAILABLE"),
@@ -256,6 +261,10 @@ def label_candidate_panel(repository, account_id, series, *, evaluated_at,
             "label": "WIN" if net > 0 else "LOSS" if net < 0 else "FLAT",
             "selected": decision["selected"], "recorded_at": now.isoformat(),
             "market_state": decision.get("market_state", "INSUFFICIENT_CONTEXT"),
+            "swing_setup": decision.get("swing_setup", "UNAVAILABLE"),
+            "swing_market_state": decision.get("swing_market_state", "UNKNOWN"),
+            "swing_history_version": decision.get("swing_history_version"),
+            "swing_history_source_sha256": decision.get("swing_history_source_sha256"),
             "sector": decision.get("sector", "UNCLASSIFIED"),
         }
         repository.save_paper_record(outcome_id, account_id, outcome_kind,
