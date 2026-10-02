@@ -12,18 +12,33 @@
   actual cash are missing; no change to cash-account orders or live broker paths.
 - [x] Daily bounded cron exit, scheduled-idle status and lossless 90-day snapshot
   compression implemented. Compact evidence has no automatic expiry (ADR 0033).
-- [ ] New deployment acceptance: pending final test, Git and Railway verification.
-  Local verification: 718 safe tests pass; 54 protected artifacts unchanged;
+- [x] Code commit `8d56b6c` pushed; web and cron worker SUCCESS on the same SHA.
+  Explicit additive PostgreSQL migration passed. A bounded real-data acceptance
+  cycle at 12:34:49 UTC persisted 17 fresh cash decisions and four separate ETF
+  decisions, zero fills and zero mature outcomes. Public ETF API returns all four
+  RESEARCH-ONLY entries. Manual worker restart processed zero duplicate jobs,
+  exited with SCHEDULED_IDLE, and next cron run is Oct 3 02:00 SAST.
+  Local verification: 719 safe tests (including missing ETF admission fixture);
+  54 protected artifacts unchanged;
   changed registry/entrypoint tests and JavaScript syntax pass.
 - [ ] $5 budget gate CONDITIONAL: current usage ~$2.57, trial account refuses
   $5 hard limit and alert. No $10 limit or subscription change was applied.
 - [ ] Outcome/performance acceptance awaits future sessions and 30 independent
   comparisons. October 8 remains a review checkpoint, not promotion.
 
-Measured volume 143 MB/500 MB versus logical DB ~10 MB. Conservative compressed
-retention forecast is about six years before review, with 100 MB free reserve
+Measured volume 143 MB/500 MB versus logical DB ~10 MB. Latest bounded report
+forecasts 6.00 years before storage review, with 100 MB free reserve
 and 2x overhead; online learning reads remain 5,000 rows/kind. Actual OST cash,
 fees and spread are unconfigured. Suggestions are manual, not trading approval.
+
+Actual account preference confirmed: Standard Bank OST (IRESS/ViewPoint now,
+awaiting Shyft). No further broker-mapping automation is required for this
+manual suggestion/paper workflow. Negative ETF direction means watch/avoid,
+not an executable cash short. No old snapshots were yet eligible for 90-day
+compression and no data was discarded during acceptance.
+
+Raw Railway metrics confirm worker memory usage is zero between scheduled runs
+(12:35–12:38 UTC), rather than merely inferring savings from an idle status.
 
 ## 2026-10-01 daily market-first brief — within active demo workspace
 

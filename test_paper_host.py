@@ -18,6 +18,23 @@ from test_market_brief import etf_chart
 
 
 class PaperHostTests(unittest.TestCase):
+    def test_missing_etf_data_keeps_all_four_admission_rows(self):
+        with tempfile.TemporaryDirectory() as directory:
+            repo=SQLiteRepository(Path(directory)/"missing.db")
+            config=replace(PaperLoopConfig.load("config/paper.example.json"),universe=("TFMJ",))
+            try:
+                from application.opportunities.paper_loop import PaperLoop
+                loop=PaperLoop(repo,config)
+                loop.initialize()
+                result=loop.cycle("missing-etfs",{"job_key":"missing-etfs",
+                    "evaluated_at":T.isoformat(),"input":{"charts":charts(T)}})
+                snapshot=repo.paper_record(result["ranking_record_id"])
+                self.assertEqual(snapshot["etf_opportunities"],[])
+                self.assertEqual(len(snapshot["etf_research"]["admissions"]),4)
+                self.assertTrue(all(row["state"]=="DATA_UNAVAILABLE" for row in snapshot["etf_research"]["admissions"]))
+                self.assertEqual(snapshot["etf_research"]["actual_account"]["cash_short_borrow"],"UNAVAILABLE")
+            finally:repo.close()
+
     def test_worker_freezes_bounded_etf_context_and_exposes_brief(self):
         with tempfile.TemporaryDirectory() as directory:
             repository = SQLiteRepository(Path(directory) / "brief.db")

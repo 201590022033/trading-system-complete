@@ -44,7 +44,7 @@ class TopFiveGuiTests(unittest.TestCase):
   for identifier in ('market-ai','technical-view','portfolio','system'):self.assertIn(f'id="{identifier}"',self.html)
  def test_market_chart_selector_separates_etfs_and_cfd_references(self):
   self.assertIn("api('/api/market-chart-instruments')",self.js)
-  self.assertIn('JSE index ETFs · chart only',self.js)
+  self.assertIn('JSE index ETFs · shadow research',self.js)
   self.assertIn('CFD references · public proxies, not IG contracts',self.js)
   self.assertIn('chart-boundary',self.html)
 
