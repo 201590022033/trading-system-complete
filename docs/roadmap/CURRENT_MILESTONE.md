@@ -23,8 +23,22 @@ excluded. Quality gates quarantine Yahoo unit discontinuities in Satrix 40
 (Apr 25/29, 2025) and Vodacom (Jan 10/13, 2025), including affected benchmark
 comparisons; no price repair or profitable-outcome filtering. Current benchmark
 context can be UNKNOWN when Yahoo omits the cash share's exact usable session.
-Railway acceptance follows deployment; existing dated ranking snapshots are
-not rewritten with hindsight.
+Railway acceptance: code commit `6ba27ff` pushed to origin/master; web
+`0dbe5e74-b432-4b59-b4c2-eb6c2aef19ce` and worker
+`5242eb7a-e40f-4faa-9bcd-8f704327ccc9` SUCCESS on that SHA. Public health
+reports healthy PostgreSQL and live_execution=false. A read-only cloud preview
+using the actual stored 17 cash/four ETF charts resolves all 21 into historical
+context. Sasol is TREND; current exact-session broad-market context is UNKNOWN,
+not invented from a stale benchmark bar. Report source coverage is instrument
+specific (through Sep 30 or Oct 1). No DB snapshot was rewritten or additional
+paper trade placed for this preview. New matching evidence appears with the
+next fresh source-session cycle, scheduled Oct 3 02:00 SAST; actual worker
+snapshot persistence on that future cycle remains an acceptance follow-up.
+
+Measured locally: full 22-instrument matching snapshot is 44,328 bytes and
+4,558 bytes gzip before base64, rather than copied multi-year prices. The
+Railway active universe is 17 cash shares/four ETFs; the report also covers the
+remaining catalog share. No provider, LLM, volume or account-plan expansion.
 Budget/performance gates below remain open; the earlier six-year retention
 forecast must be remeasured with the additional compact per-day snapshot.
 
