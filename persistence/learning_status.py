@@ -33,7 +33,9 @@ def learning_status(repository, now=None):
         if rows:
             state=json.loads(rows[0][0]) if isinstance(rows[0][0],str) else rows[0][0]
             # Explicit safe projection; checkpoints and arbitrary payloads never leak.
-            result['worker_status']={key:state[key] for key in ('status','last_heartbeat_at','started_at','processed') if key in state}
-            if timestamp(state['last_heartbeat_at'])<current-timedelta(seconds=300):
+            result['worker_status']={key:state[key] for key in ('status','last_heartbeat_at','started_at','processed','schedule','next_scheduled_at') if key in state}
+            scheduled_idle = (state.get('status') == 'SCHEDULED_IDLE' and state.get('next_scheduled_at')
+                              and current <= timestamp(state['next_scheduled_at'])+timedelta(hours=2))
+            if not scheduled_idle and timestamp(state['last_heartbeat_at'])<current-timedelta(seconds=300):
                 result['worker_status']['status']='STALE'
     return result

@@ -14,7 +14,7 @@ def heartbeat(worker_id: str | None = None) -> dict[str, str]:
             "mode": os.environ.get("APP_MODE", "DEVELOPMENT").upper(), "version": os.environ.get("RAILWAY_GIT_COMMIT_SHA") or os.environ.get("COMMIT_SHA", "unknown")}
 
 
-def run(interval_seconds: float = 30.0, *, cycles=None, repository=None, handlers=None, schedulers=None) -> None:
+def run(interval_seconds: float = 30.0, *, cycles=None, repository=None, handlers=None, schedulers=None, scheduled=False) -> None:
     from workers.shadow_learning import ShadowWorker, configured_repository
     from workers.runtime import runtime_handlers
     owned=repository is None
@@ -35,7 +35,10 @@ def run(interval_seconds: float = 30.0, *, cycles=None, repository=None, handler
             if scheduler is not None:
                 selected["ig-stream-ingestion"] = handler
                 scheduler_list.append(scheduler)
-        worker=ShadowWorker(repository,worker_id,selected)
+        worker=ShadowWorker(repository,worker_id,selected, max_jobs=10 if scheduled else 1)
+        run_started_at = datetime.now(timezone.utc).isoformat()
+        if scheduled:
+            cycles = 1
         count=0
         while cycles is None or count<cycles:
             now = datetime.now(timezone.utc).isoformat()
@@ -47,9 +50,29 @@ def run(interval_seconds: float = 30.0, *, cycles=None, repository=None, handler
             print(json.dumps(status,sort_keys=True),flush=True)
             count+=1
             if cycles is None or count<cycles: time.sleep(max(1,interval_seconds))
+        if scheduled:
+            from datetime import timedelta
+            now = datetime.now(timezone.utc)
+            failures = repository._job_sql("SELECT COUNT(*) FROM worker_jobs WHERE status='FAILED' AND last_updated>=?",
+                                           (run_started_at,), rows=True)[0][0]
+            if failures:
+                repository.save_worker_status({**heartbeat(worker_id), "status": "FAILED",
+                                              "processed": processed})
+                raise RuntimeError("scheduled worker job failed; inspect sanitized job state")
+            from application.opportunities.paper_host import configured_paper
+            config = configured_paper()
+            if config:
+                repository.archive_paper_inputs(config.account_id, before=(now-timedelta(days=90)).isoformat())
+            next_run = now.replace(hour=0, minute=0, second=0, microsecond=0)+timedelta(days=1)
+            repository.save_worker_status({**heartbeat(worker_id), "status": "SCHEDULED_IDLE",
+                "schedule": "0 0 * * *", "next_scheduled_at": next_run.isoformat(),
+                "processed": processed})
     finally:
         if owned: repository.close()
 
 
 if __name__ == "__main__":
-    run()
+    import argparse
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--scheduled", action="store_true", help="process bounded due jobs, then exit")
+    run(scheduled=parser.parse_args().scheduled)

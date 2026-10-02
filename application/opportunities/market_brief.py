@@ -87,7 +87,7 @@ def label_benchmark_decisions(repository, account_id, context_charts, *, evaluat
         if chart is None or chart.get("symbol") != MARKET_CHART_INSTRUMENTS[key].data_symbol:
             continue
         later = [(at, close) for at, close in _etf_series(chart, now)
-                 if at > _time(decision["signal_bar_at"])]
+                 if at > max(_time(decision["signal_bar_at"]), _time(decision["decision_at"]))]
         if len(later) <= decision["horizon_sessions"]:
             continue
         entry_at, entry_close = later[0]

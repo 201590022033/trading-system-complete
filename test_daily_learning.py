@@ -52,6 +52,22 @@ def series(days):
 
 
 class DailyLearningTests(unittest.TestCase):
+    def test_delayed_signal_cannot_enter_before_the_actual_decision(self):
+        with tempfile.TemporaryDirectory() as directory:
+            repository=SQLiteRepository(Path(directory)/"delayed.db")
+            try:
+                repository.create_paper_account("a",{"mode":"PAPER"})
+                record_candidate_panel(repository,"a",(opportunity(),),series(1),
+                                       evaluated_at=T+timedelta(days=2,hours=1))
+                self.assertEqual(label_candidate_panel(repository,"a",series(6),
+                    evaluated_at=T+timedelta(days=5)),0)
+                self.assertEqual(label_candidate_panel(repository,"a",series(7),
+                    evaluated_at=T+timedelta(days=6)),1)
+                outcome=repository.paper_records("a",PANEL_OUTCOME_KIND,
+                    as_of=(T+timedelta(days=6)).isoformat())[0]
+                self.assertEqual(outcome["entry_bar_at"],(T+timedelta(days=3)).isoformat())
+                self.assertEqual(outcome["exit_bar_at"],(T+timedelta(days=6)).isoformat())
+            finally:repository.close()
     def test_candidate_panel_tracks_alternatives_and_next_session_proxy(self):
         with tempfile.TemporaryDirectory() as directory:
             repository = SQLiteRepository(Path(directory) / "panel.db")

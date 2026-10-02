@@ -163,7 +163,7 @@ def feature_outcomes(repository, account_id, *, evaluated_at):
 def record_candidate_panel(repository, account_id, opportunities, series, *, evaluated_at,
                            horizon_sessions=DEFAULT_HORIZON_SESSIONS,
                            cost_bps=DEFAULT_COST_BPS, market_context=None,
-                           sectors=None):
+                           sectors=None, decision_kind=PANEL_DECISION_KIND):
     """Freeze one compact point-in-time row for every screened share/session."""
     now = _time(evaluated_at)
     instrument_to_symbol = {row["instrument_id"]: symbol for symbol, row in series.items()}
@@ -211,18 +211,19 @@ def record_candidate_panel(repository, account_id, opportunities, series, *, eva
             "news_score": mean(news_scores) if news_scores else None,
             "horizon_sessions": horizon_sessions, "cost_bps": cost_bps,
         }
-        repository.save_paper_record(record_id, account_id, PANEL_DECISION_KIND,
+        repository.save_paper_record(record_id, account_id, decision_kind,
                                      now.isoformat(), payload)
         saved += 1
     return saved
 
 
-def label_candidate_panel(repository, account_id, series, *, evaluated_at):
+def label_candidate_panel(repository, account_id, series, *, evaluated_at,
+                          decision_kind=PANEL_DECISION_KIND, outcome_kind=PANEL_OUTCOME_KIND):
     """Use the next completed close as entry proxy, then hold three sessions."""
     now = _time(evaluated_at)
     saved = 0
     decisions = repository.paper_records(
-        account_id, PANEL_DECISION_KIND, as_of=now.isoformat(), limit=MAX_RECORDS)
+        account_id, decision_kind, as_of=now.isoformat(), limit=MAX_RECORDS)
     for decision in decisions:
         outcome_id = stable_id("daily-candidate-outcome", decision["decision_id"])
         if repository.paper_record(outcome_id) is not None:
@@ -231,7 +232,7 @@ def label_candidate_panel(repository, account_id, series, *, evaluated_at):
         if values is None:
             continue
         later = [bar for bar in values["bars"]
-                 if bar[0] > _time(decision["signal_bar_at"])]
+                 if bar[0] > max(_time(decision["signal_bar_at"]), _time(decision["decision_at"]))]
         horizon = int(decision["horizon_sessions"])
         if len(later) <= horizon:
             continue
@@ -257,17 +258,17 @@ def label_candidate_panel(repository, account_id, series, *, evaluated_at):
             "market_state": decision.get("market_state", "INSUFFICIENT_CONTEXT"),
             "sector": decision.get("sector", "UNCLASSIFIED"),
         }
-        repository.save_paper_record(outcome_id, account_id, PANEL_OUTCOME_KIND,
+        repository.save_paper_record(outcome_id, account_id, outcome_kind,
                                      exit_at.isoformat(), payload)
         saved += 1
     return saved
 
 
-def candidate_panel_summary(repository, account_id, *, evaluated_at):
+def candidate_panel_summary(repository, account_id, *, evaluated_at, outcome_kind=PANEL_OUTCOME_KIND):
     """Report matched selected-versus-other outcomes; never infer trade skill."""
     now = _time(evaluated_at)
     rows = repository.paper_records(
-        account_id, PANEL_OUTCOME_KIND, as_of=now.isoformat(), limit=MAX_RECORDS)
+        account_id, outcome_kind, as_of=now.isoformat(), limit=MAX_RECORDS)
     groups = {}
     states = {}
     for row in rows:

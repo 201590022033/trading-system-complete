@@ -9,7 +9,7 @@ from domain.policy.paper_geometry import resolve_paper_policy
 from domain.risk import RiskEvaluation, RiskStatus, ApprovedRiskIntent
 from domain.risk.paper_sizing import size_paper_policy
 from shadow_learning import stable_id, timestamp
-from .public_research import public_share_catalog, _identities, _available_at, refresh_public_research
+from .public_research import public_share_catalog, public_etf_catalog, _identities, _available_at, refresh_public_research, strategy_horizon_id
 from .daily_learning import (
     candidate_panel_summary,
     label_candidate_panel,
@@ -40,16 +40,19 @@ def risk_from_dict(data):
     return RiskEvaluation(**values)
 
 
-def paper_feature_outcomes(repository, account_id, now):
+def paper_feature_outcomes(repository, account_id, now, *, horizon_sessions=1):
     outcomes = []
+    horizon = strategy_horizon_id(horizon_sessions)
     for row in repository.paper_records(account_id, "outcome", as_of=now.isoformat()):
         # Explicitly recorded strategy outcomes: no indicator attribution.
-        if row["version"] != VERSION or row["mode"] != "PAPER" or row["horizon_id"] != "1d":
+        if row["version"] != VERSION or row["mode"] != "PAPER" or row["horizon_id"] != horizon:
+            continue
+        if row.get("planned_horizon_sessions", 1) != horizon_sessions:
             continue
         if timestamp(row["recorded_at"]) > now:
             continue
         outcomes.append(FeatureOutcome(
-            "paper_strategy", VERSION, "strategy", row["instrument_id"], "1d",
+            "paper_strategy", VERSION, "strategy", row["instrument_id"], horizon,
             row["regime_version"], row["regime_state"], 1,
             timestamp(row["decision_at"]), timestamp(row["decision_at"]),
             timestamp(row["recorded_at"]), row["gross_return"], row["net_return"],
@@ -63,13 +66,13 @@ class FrozenCharts:
 
     def get_chart(self, symbol, period):
         for key, chart in self.charts.items():
-            if public_share_catalog().get(key, {}).get("yahoo_symbol") == symbol:
+            if {**public_share_catalog(), **public_etf_catalog()}.get(key, {}).get("yahoo_symbol") == symbol:
                 return chart
         raise ValueError("frozen public chart unavailable")
 
 
 def causal_series(key, chart, now):
-    catalog = public_share_catalog()[key]
+    catalog = {**public_share_catalog(), **public_etf_catalog()}[key]
     if chart.get("symbol") != catalog["yahoo_symbol"] or chart.get("interval") != "1d" or chart.get("currency") != "ZAR":
         raise ValueError("public chart identity/currency/cadence unavailable")
     series = []
@@ -165,7 +168,8 @@ class PaperLoop:
                 outcome_id = stable_id("paper-outcome", self.config.account_id, trade["intent_id"])
                 outcome = {"outcome_id": outcome_id, "version": VERSION, "mode": "PAPER",
                            "instrument_id": instrument,
-                           "horizon_id": "1d" if observed_sessions == 1 else "DELAYED_EXIT",
+                           "horizon_id": strategy_horizon_id(self.config.holding_sessions),
+                           "planned_horizon_sessions": self.config.holding_sessions,
                            "observed_sessions": observed_sessions, "reason": reason,
                            "decision_at": trade["decision_at"], "entry_at": trade["entry_at"],
                            "exit_at": now.isoformat(), "recorded_at": now.isoformat(),
@@ -195,14 +199,54 @@ class PaperLoop:
                 self.repository, self.config.account_id, evaluated_at=now)
             labelled_learning_outcomes = label_candidate_panel(
                 self.repository, self.config.account_id, learning_series, evaluated_at=now)
-            outcomes = paper_feature_outcomes(self.repository, self.config.account_id, now)
+            outcomes = paper_feature_outcomes(self.repository, self.config.account_id, now,
+                                               horizon_sessions=self.config.holding_sessions)
             selection_evidence = candidate_panel_summary(
                 self.repository, self.config.account_id, evaluated_at=now)
             ranking = refresh_public_research(
                 fetcher=FrozenCharts({key: charts[key] for key in series}), evaluated_at=now, universe=self.config.universe,
                 max_workers=1, news_report=frozen["input"].get("news"),
-                paper_outcomes=outcomes, selection_evidence=selection_evidence)
+                paper_outcomes=outcomes, selection_evidence=selection_evidence,
+                strategy_horizon_sessions=self.config.holding_sessions)
             current = {o.instrument_id: o for o in ranking.opportunities}
+            # Separate ETF research admission; never enters cash-share pending orders.
+            etf_charts = frozen["input"].get("context_charts", {})
+            etf_series = {}
+            for key in public_etf_catalog():
+                try:
+                    bars = causal_series(key, etf_charts[key], now)
+                    if (now-bars[-1][0]).total_seconds() > self.config.max_price_age_seconds:
+                        raise ValueError("stale ETF")
+                    etf_series[key] = {"instrument_id": key, "bars": bars}
+                except (ValueError, KeyError, TypeError, OverflowError):
+                    pass
+            etf_labelled = label_candidate_panel(
+                self.repository, self.config.account_id, etf_series, evaluated_at=now,
+                decision_kind="etf-candidate-decision", outcome_kind="etf-candidate-outcome")
+            etf_ranking = refresh_public_research(
+                fetcher=FrozenCharts({key: etf_charts[key] for key in etf_series}),
+                evaluated_at=now, universe=tuple(public_etf_catalog()), max_workers=1,
+                catalog=public_etf_catalog(), strategy_horizon_sessions=self.config.holding_sessions)
+            etf_recorded = record_candidate_panel(
+                self.repository, self.config.account_id, etf_ranking.opportunities, etf_series,
+                evaluated_at=now, market_context=market_context,
+                horizon_sessions=self.config.learning_horizon_sessions,
+                decision_kind="etf-candidate-decision")
+            etf_research = {
+                "mode": "SHADOW_RESEARCH", "live_execution": False,
+                "planned_horizon_sessions": self.config.holding_sessions,
+                "actual_account": {"broker": "Standard Bank OST", "handoff": "MANUAL_ONLY",
+                                   "affordability": "NOT_CONFIGURED", "cash_zar": None,
+                                   "fees": "NOT_CONFIGURED"},
+                "admissions": [{"instrument_id": key,
+                    "state": "RESEARCH_ADMITTED" if key in etf_series else "DATA_UNAVAILABLE",
+                    "minimum_units": 1, "unit_price_zar": etf_series[key]["bars"][-1][1] if key in etf_series else None,
+                    "liquidity": "OBSERVED_DAILY_VOLUME" if key in etf_series and etf_series[key]["bars"][-1][2] is not None else "UNKNOWN",
+                    "sizing": "BLOCKED_ACTUAL_CASH_AND_FEES_UNCONFIGURED"}
+                    for key in public_etf_catalog()],
+                "learning": candidate_panel_summary(self.repository, self.config.account_id,
+                    evaluated_at=now, outcome_kind="etf-candidate-outcome"),
+                "decisions_recorded": etf_recorded, "outcomes_labelled": etf_labelled}
             opened, blocked = [], []
             # Pending proposals were ranked in an earlier cycle. Recheck current eligibility.
             for pending in state["pending"]:
@@ -305,6 +349,8 @@ class PaperLoop:
             ranking_id = stable_id("paper-ranking", self.config.account_id, job_key)
             snapshot = {"version": VERSION, "evaluated_at": now.isoformat(), "mode": "PAPER",
                         "opportunities": [o.to_dict() for o in ranking.opportunities],
+                        "etf_opportunities": [o.to_dict() for o in etf_ranking.opportunities],
+                        "etf_research": etf_research,
                         "unavailable": list(ranking.unavailable),
                         "decision_brief": decision_brief,
                         "candidate_learning": selection_evidence}
@@ -317,7 +363,7 @@ class PaperLoop:
                     {**asdict(fill), "filled_at": fill.filled_at.isoformat()})
             state.update(broker=broker.snapshot(), ranking_record_id=ranking_id,
                          last_evaluated_at=now.isoformat(), status="PAUSED" if paused else "AVAILABLE")
-            if ranking.opportunities and frozen["input"].get("source_signature"):
+            if (ranking.opportunities or etf_ranking.opportunities) and frozen["input"].get("source_signature"):
                 state["last_source_signature"] = frozen["input"]["source_signature"]
             result = {"mode": "PAPER", "live_execution": False, "evaluated_at": now.isoformat(),
                       "controls": controls,

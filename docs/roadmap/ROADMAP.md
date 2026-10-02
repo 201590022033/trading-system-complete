@@ -1,5 +1,12 @@
 # Linear Fusion Roadmap
 
+2026-10-02: ADR 0033 repairs three-session feedback and delayed-signal entry
+timing, admits four ETFs to separate shadow research regardless of cash/data
+availability, and adds cron worker exit plus lossless snapshot compression.
+All work stays within the existing sole ACTIVE workspace. OST/Shyft handoff
+is manual; no promotion or live orders. The $5 cost gate remains conditional
+because Railway's trial account refuses the requested cap/alert.
+
 2026-10-01: ADR 0032 adds a bounded, market-first daily decision brief to the
 active Railway paper worker. Listed ETFs inform wider market and sector context
 without becoming tradable. Candidate outcomes are stratified by frozen market

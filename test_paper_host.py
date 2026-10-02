@@ -42,12 +42,26 @@ class PaperHostTests(unittest.TestCase):
                 self.assertEqual(len(repository.paper_records(
                     config.account_id, "benchmark-decision", as_of=T.isoformat(), limit=10)), 4)
                 self.assertTrue(all(len(chart["bars"]) <= 60 for chart in context.values()))
-                self.assertTrue(all(set(bar) == {"timestamp", "close"}
+                self.assertTrue(all(set(bar) == {"timestamp", "close", "volume"}
                                     for chart in context.values() for bar in chart["bars"]))
                 from application.opportunities.paper_host import paper_status
                 brief = paper_status(repository, config)["decision_brief"]
                 self.assertEqual(brief["version"], "daily-market-brief-v1")
                 self.assertEqual(brief["market"]["state"], "INSUFFICIENT_CONTEXT")
+                research = paper_status(repository, config)["etf_research"]
+                self.assertEqual(len(research["admissions"]), 4)
+                self.assertEqual(research["actual_account"]["affordability"], "NOT_CONFIGURED")
+                self.assertFalse(research["live_execution"])
+                self.assertEqual(len(repository.paper_records(config.account_id,
+                    "etf-candidate-decision", as_of=T.isoformat())), 4)
+                service = DurablePaperOpportunities(lambda: SQLiteRepository(Path(directory)/"brief.db"), config, clock=lambda:T)
+                web = Flask(__name__)
+                web.register_blueprint(create_blueprint(service))
+                response = web.test_client().get('/api/v1/opportunities?asset_class=index_etf')
+                self.assertEqual(response.status_code, 200)
+                self.assertEqual(response.get_json()["count"], 4)
+                self.assertTrue(all(row["instrument_id"].startswith("ETF_") for row in response.get_json()["opportunities"]))
+                self.assertTrue(all(not row.instrument_id.startswith("ETF_") for row in service.list_opportunities()))
             finally:
                 repository.close()
 

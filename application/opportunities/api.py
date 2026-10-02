@@ -17,7 +17,14 @@ def create_blueprint(service, refresh=None):
  @bp.get('/api/v1/opportunities')
  def listing():
   raw=request.args.get('limit');
-  try: limit=int(raw) if raw is not None else None;items=service.list_opportunities(limit)
+  try:
+   limit=int(raw) if raw is not None else None
+   asset_class=request.args.get('asset_class')
+   if asset_class is not None:
+    from .paper_host import DurablePaperOpportunities
+    if not isinstance(service,DurablePaperOpportunities):raise ValueError('asset class listing requires the durable research worker')
+    items=service.list_opportunities(limit,asset_class=asset_class)
+   else:items=service.list_opportunities(limit)
   except ValueError as exc:return error('INVALID_REQUEST',str(exc),422)
   metadata=refresh.status() if refresh is not None else {'state':'NOT_CONFIGURED'}
   return jsonify(opportunities=[serialize_opportunity(x) for x in items],count=len(items),score_semantics='comparative research score; not probability of profit',refresh=metadata,live_execution=False)

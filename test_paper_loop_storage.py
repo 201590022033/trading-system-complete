@@ -11,6 +11,28 @@ NOW = "2026-09-19T12:00:00+00:00"
 
 
 class PaperStorageTests(unittest.TestCase):
+    def test_lossless_archive_preserves_immutability_and_latest_ranking_both_backends(self):
+        for backend in ("sqlite", "postgresql"):
+            with self.subTest(backend=backend), tempfile.TemporaryDirectory() as directory:
+                path = Path(directory)/"archive.db"
+                repo = SQLiteRepository(path) if backend == "sqlite" else PostgresRepository(
+                    "postgresql://fixture", connection=SQLiteDBAPIForPostgres(path))
+                if backend != "sqlite": repo.initialize()
+                try:
+                    repo.create_paper_account("a", {"mode":"PAPER", "ranking_record_id":"latest"})
+                    payload = {"bars": [100]*1000}
+                    for rid in ("old", "latest"):
+                        repo.save_paper_record(rid,"a","ranking",NOW,payload)
+                    repo.save_paper_record("outcome","a","candidate-outcome",NOW,payload)
+                    self.assertEqual(repo.archive_paper_inputs("a",before="2026-10-01T00:00:00Z"),1)
+                    self.assertEqual(repo.paper_record("old"),payload)
+                    repo.save_paper_record("old","a","ranking",NOW,payload)
+                    with self.assertRaises(ValueError):repo.save_paper_record("old","a","ranking",NOW,{"bars":[]})
+                    self.assertEqual(len(repo.paper_records("a","ranking",as_of="2026-10-01T00:00:00Z")),1)
+                    self.assertEqual(repo.paper_record("outcome"),payload)
+                    self.assertEqual(repo.archive_paper_inputs("a",before="2026-10-01T00:00:00Z"),0)
+                finally:repo.close()
+
     def test_both_backends_rollback_immutable_cutoff_and_job_replay(self):
         for backend in ("sqlite", "postgresql"):
             with self.subTest(backend=backend), tempfile.TemporaryDirectory() as directory:

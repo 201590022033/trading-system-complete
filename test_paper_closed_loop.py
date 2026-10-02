@@ -53,6 +53,13 @@ class ClosedLoopTests(unittest.TestCase):
                     config.account_id, "outcome", as_of=(T+timedelta(days=5)).isoformat())[0]
                 self.assertEqual(outcome["observed_sessions"], 3)
                 self.assertEqual(outcome["reason"], "HORIZON_EXIT")
+                self.assertEqual(outcome["horizon_id"], "3_sessions")
+                self.assertEqual(outcome["planned_horizon_sessions"], 3)
+                now = T+timedelta(days=5)
+                learned = paper_feature_outcomes(repo, config.account_id, now, horizon_sessions=3)
+                self.assertEqual(len(learned), 1)
+                self.assertEqual(learned[0].horizon_id, "3_sessions")
+                self.assertEqual(paper_feature_outcomes(repo, config.account_id, now), ())
             finally:
                 repo.close()
 

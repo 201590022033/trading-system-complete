@@ -10,6 +10,14 @@ class LearningStatusBehavior(unittest.TestCase):
     repositories=transactions.TransactionContracts.repositories
     labelled=transactions.TransactionContracts.labelled
 
+    def test_scheduled_idle_is_not_a_crash_but_missed_schedule_is_stale(self):
+        for repo,db in self.repositories():
+            repo.save_worker_status({'worker_id':'cron','status':'SCHEDULED_IDLE',
+                'last_heartbeat_at':END,'started_at':T,'processed':1,
+                'next_scheduled_at':'2026-01-03T00:00:00Z','schedule':'0 0 * * *'})
+            self.assertEqual(repo.learning_status(now='2026-01-02T23:00:00Z')['worker_status']['status'],'SCHEDULED_IDLE')
+            self.assertEqual(repo.learning_status(now='2026-01-03T03:00:00Z')['worker_status']['status'],'STALE')
+
     def test_counts_timestamps_events_and_unavailable_are_distinct(self):
         for repo,db in self.repositories():
             a,ev=self.labelled(repo,'a'); b,_=self.labelled(repo,'b')

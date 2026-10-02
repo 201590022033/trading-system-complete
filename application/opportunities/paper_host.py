@@ -104,11 +104,6 @@ def compose_paper_worker(repository, config, *, fetcher=None, clock=None):
                 persist_news_report(repository, report, observed_at=clock())
             except Exception:
                 pass
-        source_signature, sessions = completed_session_identity(charts, observed_at)
-        state = repository.paper_account(config.account_id) or {}
-        if source_signature and source_signature == state.get("last_source_signature"):
-            return {"state": "NO_NEW_COMPLETED_SESSION", "duplicate_session": True,
-                    "source_signature": source_signature, "completed_sessions": sessions}
         context_charts = {}
         from market_chart_registry import MARKET_CHART_INSTRUMENTS
         for key in CONTEXT_ETFS:
@@ -116,11 +111,16 @@ def compose_paper_worker(repository, config, *, fetcher=None, clock=None):
                 chart = fetcher.get_chart(MARKET_CHART_INSTRUMENTS[key].data_symbol, "1y")
                 context_charts[key] = {name: chart[name] for name in ("symbol", "currency", "interval")}
                 context_charts[key]["bars"] = [
-                    {name: bar.get(name) for name in ("timestamp", "close")}
+                    {name: bar.get(name) for name in ("timestamp", "close", "volume")}
                     for bar in chart["bars"][-FROZEN_HISTORY_BARS:]
                 ]
             except Exception:
                 continue
+        source_signature, sessions = completed_session_identity({**charts, **context_charts}, observed_at)
+        state = repository.paper_account(config.account_id) or {}
+        if source_signature and source_signature == state.get("last_source_signature"):
+            return {"state": "NO_NEW_COMPLETED_SESSION", "duplicate_session": True,
+                    "source_signature": source_signature, "completed_sessions": sessions}
         return {"charts": charts, "context_charts": context_charts,
                 "news": persisted_news(repository, observed_at),
                 "source_signature": source_signature, "completed_sessions": sessions}
@@ -143,7 +143,7 @@ class DurablePaperOpportunities(OpportunityService):
         self.factory, self.config = repository_factory, config
         self.clock = clock or (lambda: datetime.now(timezone.utc))
 
-    def _read(self):
+    def _read(self, asset_class="cash_equity"):
         repository = self.factory()
         try:
             state = repository.paper_account(self.config.account_id)
@@ -154,19 +154,25 @@ class DurablePaperOpportunities(OpportunityService):
             now = self.clock()
             if at > now or (now-at).total_seconds() > self.config.max_price_age_seconds:
                 return ()
-            return tuple(opportunity_from_dict(row) for row in snapshot["opportunities"] if row["rank"] is not None)
+            rows = snapshot.get("etf_opportunities", ()) if asset_class == "index_etf" else snapshot["opportunities"]
+            if asset_class == "all":
+                rows = [*snapshot["opportunities"], *snapshot.get("etf_opportunities", ())]
+            return tuple(opportunity_from_dict(row) for row in rows
+                         if row["rank"] is not None or row["instrument_id"].startswith("ETF_"))
         finally:
             repository.close()
 
-    def list_opportunities(self, limit=None):
+    def list_opportunities(self, limit=None, *, asset_class="cash_equity"):
+        if asset_class not in {"cash_equity", "index_etf"}:
+            raise ValueError("unsupported research asset class")
         if limit is not None and (not isinstance(limit, int) or limit < 1):
             raise ValueError("limit must be a positive integer")
-        values = sorted(self._read(), key=lambda x: (x.rank, x.opportunity_id))
+        values = sorted(self._read(asset_class), key=lambda x: (x.rank if x.rank is not None else 999, x.opportunity_id))
         return tuple(values[:limit] if limit else values)
 
     def get_opportunity(self, oid):
         # Never use a stale in-process copy when the database is unavailable.
-        return {x.opportunity_id: x for x in self._read()}[oid]
+        return {x.opportunity_id: x for x in self._read("all")}[oid]
 
 
 class PaperRefreshStatus:
@@ -187,6 +193,7 @@ class PaperRefreshStatus:
                     "scanned": len(self.config.universe) if snapshot else 0,
                     "unranked": sum(row["rank"] is None for row in snapshot["opportunities"]) if snapshot else 0,
                     "unavailable": snapshot["unavailable"] if snapshot else list(self.config.universe),
+                    "etf_research": snapshot.get("etf_research") if snapshot else None,
                     "source": "DURABLE_PAPER_WORKER"}
         finally:
             repository.close()
@@ -244,6 +251,7 @@ def paper_status(repository, config):
             "candidate_learning": {**panel_summary,
                                    "decision_count": totals.get("candidate-decision", 0)},
             "decision_brief": snapshot.get("decision_brief") if snapshot else None,
+            "etf_research": snapshot.get("etf_research") if snapshot else None,
             "equity_history": [{"at": row["evaluated_at"], "equity": row["account"]["equity"]} for row in reversed(cycles)],
             "account": asdict(PaperBroker.restore(state["broker"]).get_account()),
             "positions": state["broker"]["positions"],

@@ -1,5 +1,30 @@
 # Current Milestone
 
+## 2026-10-02 acceptance follow-through — within the sole ACTIVE workspace
+
+- [x] Prior market brief deployment ran a real completed cycle Oct 2 02:00 SAST:
+  17 cash candidate decisions, four ETF benchmark decisions; DEFENSIVE market;
+  no matured outcomes or fills. Operational collection is verified, not profit.
+- [x] Exact planned three-session paper outcomes now reach the matching learner;
+  one-day technical evidence remains separate. Historic rows are not relabelled.
+- [x] Delayed source-bar labels cannot enter before the actual decision timestamp.
+- [x] Four ETFs admitted to separate shadow research/API and visible when data or
+  actual cash are missing; no change to cash-account orders or live broker paths.
+- [x] Daily bounded cron exit, scheduled-idle status and lossless 90-day snapshot
+  compression implemented. Compact evidence has no automatic expiry (ADR 0033).
+- [ ] New deployment acceptance: pending final test, Git and Railway verification.
+  Local verification: 718 safe tests pass; 54 protected artifacts unchanged;
+  changed registry/entrypoint tests and JavaScript syntax pass.
+- [ ] $5 budget gate CONDITIONAL: current usage ~$2.57, trial account refuses
+  $5 hard limit and alert. No $10 limit or subscription change was applied.
+- [ ] Outcome/performance acceptance awaits future sessions and 30 independent
+  comparisons. October 8 remains a review checkpoint, not promotion.
+
+Measured volume 143 MB/500 MB versus logical DB ~10 MB. Conservative compressed
+retention forecast is about six years before review, with 100 MB free reserve
+and 2x overhead; online learning reads remain 5,000 rows/kind. Actual OST cash,
+fees and spread are unconfigured. Suggestions are manual, not trading approval.
+
 ## 2026-10-01 daily market-first brief — within active demo workspace
 
 The Railway daily worker now includes four compact listed-ETF context series

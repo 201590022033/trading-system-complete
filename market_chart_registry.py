@@ -17,7 +17,7 @@ class MarketChartInstrument:
 
     def to_dict(self):
         return {**asdict(self), "capabilities": {"public_chart": True,
-                "canonical_ranking": False, "broker_execution": False}}
+                "canonical_ranking": self.asset_class == "index_etf", "broker_execution": False}}
 
 
 MARKET_CHART_INSTRUMENTS = {
@@ -25,19 +25,19 @@ MARKET_CHART_INSTRUMENTS = {
         MarketChartInstrument(
             "ETF_STX40", "STX40", "Satrix 40 ETF", "index_etf", "etf",
             "STX40.JO", "Yahoo Finance", "LISTED_SECURITY",
-            "Actual JSE-listed ETF price; not yet admitted to canonical ranking or sizing."),
+            "Actual JSE-listed ETF; separate shadow research admitted, actual-account sizing unconfigured."),
         MarketChartInstrument(
             "ETF_STXFIN", "STXFIN", "Satrix FINI ETF", "index_etf", "etf",
             "STXFIN.JO", "Yahoo Finance", "LISTED_SECURITY",
-            "Actual JSE-listed ETF price; not yet admitted to canonical ranking or sizing."),
+            "Actual JSE-listed ETF; separate shadow research admitted, actual-account sizing unconfigured."),
         MarketChartInstrument(
             "ETF_STXRES", "STXRES", "Satrix RESI ETF", "index_etf", "etf",
             "STXRES.JO", "Yahoo Finance", "LISTED_SECURITY",
-            "Actual JSE-listed ETF price; not yet admitted to canonical ranking or sizing."),
+            "Actual JSE-listed ETF; separate shadow research admitted, actual-account sizing unconfigured."),
         MarketChartInstrument(
             "ETF_STXIND", "STXIND", "Satrix INDI ETF", "index_etf", "etf",
             "STXIND.JO", "Yahoo Finance", "LISTED_SECURITY",
-            "Actual JSE-listed ETF price; not yet admitted to canonical ranking or sizing."),
+            "Actual JSE-listed ETF; separate shadow research admitted, actual-account sizing unconfigured."),
         MarketChartInstrument(
             "CFD_REF_BRENT", "BRENT REF", "Brent CFD reference", "cfd_reference", "proxy",
             "BZ=F", "Yahoo Finance", "UNDERLYING_FUTURES_PROXY",
@@ -64,4 +64,3 @@ def resolve_market_chart(value):
 
 def market_chart_list():
     return [item.to_dict() for item in MARKET_CHART_INSTRUMENTS.values()]
-

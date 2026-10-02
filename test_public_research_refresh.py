@@ -61,14 +61,14 @@ class PublicResearchRefreshTests(unittest.TestCase):
         classes = {item["class_id"]: item for item in body["classes"]}
         self.assertEqual(classes["cash_equity"]["state"], "AVAILABLE")
         self.assertEqual(classes["cash_equity"]["instrument_count"], len(shares))
-        self.assertEqual(classes["index_etf"]["state"], "CHART_ONLY_NOT_RANKED")
+        self.assertEqual(classes["index_etf"]["state"], "AVAILABLE")
         self.assertEqual(classes["index_etf"]["instrument_count"], 4)
         self.assertEqual(classes["cfd"]["state"], "BLOCKED_CONTRACT_EVIDENCE")
         self.assertEqual(classes["ssf"]["state"], "BLOCKED_CONTRACT_EVIDENCE")
 
     def test_unavailable_instrument_classes_explain_their_evidence_gates(self):
         classes = {item["class_id"]: item for item in public_instrument_classes()}
-        self.assertIn("liquidity", classes["index_etf"]["reason"])
+        self.assertIn("OST cash/fees", classes["index_etf"]["reason"])
         self.assertIn("financing", classes["cfd"]["reason"])
         self.assertIn("expiry", classes["ssf"]["reason"])
 

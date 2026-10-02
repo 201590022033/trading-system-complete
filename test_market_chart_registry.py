@@ -21,7 +21,7 @@ class MarketChartRegistryTests(unittest.TestCase):
         self.assertEqual(rows["CFD_REF_BRENT"]["data_symbol"], "BZ=F")
         self.assertEqual(rows["CFD_REF_BRENT"]["instrument_type"], "proxy")
         self.assertFalse(rows["CFD_REF_BRENT"]["capabilities"]["broker_execution"])
-        self.assertFalse(rows["ETF_STX40"]["capabilities"]["canonical_ranking"])
+        self.assertTrue(rows["ETF_STX40"]["capabilities"]["canonical_ranking"])
 
     def test_api_exposes_chart_only_catalog_without_execution(self):
         response = app.test_client().get("/api/market-chart-instruments")
@@ -54,4 +54,3 @@ class MarketChartRegistryTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-

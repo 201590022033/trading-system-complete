@@ -1,5 +1,15 @@
 # Current Architecture — Observed Repository Baseline
 
+## 2026-10-02 scheduled ETF research and horizon repair
+
+ADR 0033 adds exact planned-session strategy feedback and separate mandatory
+ETF listing (`?asset_class=index_etf`), reusing context charts. ETFs do not enter
+cash simulator orders. Outcome entries must follow actual decision time.
+The daily Railway worker exits between cron runs; scheduled idle is not a crash.
+After 90 days input/ranking snapshots compress losslessly with ID read-through;
+compact evidence has no automatic expiry. OST/Shyft cash, fees and sizing are
+unconfigured and handoff is manual. The $5 cost gate is conditional, not a cap.
+
 ## 2026-10-01 session-aware daily repair
 
 `railway-paper-zar-v3` retains the ADR 0029 daily, compact, long-only learning

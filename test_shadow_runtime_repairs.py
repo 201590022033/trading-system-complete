@@ -124,3 +124,13 @@ class PostgresCompositionRepairs(unittest.TestCase):
         heartbeat.run(interval_seconds=0,cycles=1,repository=self.repo,
             handlers={job.job_type:lambda job:calls.append(1) or {}})
         self.assertEqual(calls,[1])
+
+    def test_scheduled_worker_processes_then_exits_with_idle_status(self):
+        from workers import heartbeat
+        job=JobCheckpoint('cron-job','observation-generation',T)
+        self.repo.save_job(job)
+        with patch('application.opportunities.paper_host.configured_paper',return_value=None), patch.object(heartbeat.time,'sleep',side_effect=AssertionError('cron must exit')):
+            heartbeat.run(scheduled=True,repository=self.repo,handlers={job.job_type:lambda job:{}})
+        status=self.repo.learning_status()['worker_status']
+        self.assertEqual(status['status'],'SCHEDULED_IDLE')
+        self.assertEqual(status['schedule'],'0 0 * * *')

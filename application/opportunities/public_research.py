@@ -23,6 +23,12 @@ VERSION = "public-cash-research-v1"
 COST_BPS = 10.0  # Declared research assumption: 5 spread + 2 fees + 3 slippage.
 
 
+def strategy_horizon_id(sessions):
+    if not isinstance(sessions, int) or isinstance(sessions, bool) or sessions < 1:
+        raise ValueError("positive completed-session horizon required")
+    return "1d" if sessions == 1 else f"{sessions}_sessions"
+
+
 def persisted_shadow_evidence(repository, *, evaluated_at):
     """Read current causal legacy shadow context, never relabel it as feature skill."""
     from shadow_learning import timestamp
@@ -66,15 +72,22 @@ def public_share_list():
             for key, data in public_share_catalog().items()]
 
 
+def public_etf_catalog():
+    from market_chart_registry import MARKET_CHART_INSTRUMENTS
+    return {key: {"name": item.name, "yahoo_symbol": item.data_symbol,
+                  "sector": "index", "asset_class": "index_etf", "instrument_type": "etf"}
+            for key, item in MARKET_CHART_INSTRUMENTS.items() if item.asset_class == "index_etf"}
+
+
 def public_instrument_classes():
     """UI-facing scope with unavailable classes kept explicit, never invented."""
     return [
         {"class_id": "cash_equity", "label": "JSE cash shares", "state": "AVAILABLE",
          "instrument_count": len(public_share_catalog()),
          "reason": "Curated public daily-chart universe with canonical technical screening."},
-        {"class_id": "index_etf", "label": "JSE index ETFs", "state": "CHART_ONLY_NOT_RANKED",
+        {"class_id": "index_etf", "label": "JSE index ETFs", "state": "AVAILABLE",
          "instrument_count": 4,
-         "reason": "Four verified listed ETF charts are available in Market; ranking, liquidity profiles and cost evidence are not configured yet."},
+         "reason": "Four listed ETFs are admitted to separate shadow research. Missing data and actual OST cash/fees remain explicit; no broker submission."},
         {"class_id": "cfd", "label": "CFDs", "state": "BLOCKED_CONTRACT_EVIDENCE",
          "instrument_count": 0,
          "reason": "Public reference charts are available in Market, but contract size, spread, financing, margin, currency, session and broker mapping must be verified first."},
@@ -94,18 +107,20 @@ def _legacy(key):
 
 
 def _identities(key, data):
+    asset_class = data.get("asset_class", "equity")
+    instrument_type = data.get("instrument_type", "cash_equity")
     try:
         canonical = DEFAULT_INSTRUMENT_REGISTRY.resolve(key)
     except KeyError:
         canonical = CanonicalInstrument(
-            f"EQ_ZAR_{key}", data["name"], "equity", key, key,
+            key if asset_class == "index_etf" else f"EQ_ZAR_{key}", data["name"], asset_class, key, key,
             data["yahoo_symbol"], None, "XJSE", "ZAR", "Africa/Johannesburg",
             "JSE", None, None, None, None, None, None,
             GovernanceState.RESEARCH, (key, data["yahoo_symbol"]), ("1d",),
-            ("yahoo", "historical"), "jse_adapter.JSE_TICKERS", "cash_equity",
+            ("yahoo", "historical"), "public-research-catalog", instrument_type,
             data.get("sector", "unspecified"))
     research = InstrumentDefinition(
-        canonical.instrument_id, data["name"], key, key, "equity", "cash_equity",
+        canonical.instrument_id, data["name"], key, key, asset_class, "cash_equity",
         "ZAR", "single_stock_neutral", data_symbol=data["yahoo_symbol"],
         exchange="XJSE", timezone="Africa/Johannesburg", supports_intraday=False,
         supports_historical_data=True, data_grade=DataGrade.RESEARCH,
@@ -128,8 +143,9 @@ def _signal(closes, feature):
 
 
 def candidate_from_chart(key, chart, *, evaluated_at, news_report=None, learned_evidence=None,
-                         paper_outcomes=(), selection_evidence=None):
-    catalog = public_share_catalog()
+                         paper_outcomes=(), selection_evidence=None, strategy_horizon_sessions=1,
+                         catalog=None):
+    catalog = catalog if catalog is not None else public_share_catalog()
     if key not in catalog:
         raise ValueError("share is outside the curated public catalog")
     data = catalog[key]
@@ -171,15 +187,16 @@ def candidate_from_chart(key, chart, *, evaluated_at, news_report=None, learned_
             signals.append(SignalEvidence(feature, VERSION, _signal(closes, feature),
                                           clocks[-1], instrument_id=canonical.instrument_id,
                                           horizon_id="1d", category="technical"))
+    strategy_horizon = strategy_horizon_id(strategy_horizon_sessions)
     matching = tuple(x for x in paper_outcomes if x.instrument_id == canonical.instrument_id
-                     and x.horizon_id == "1d" and x.feature_id == "paper_strategy"
+                     and x.horizon_id == strategy_horizon and x.feature_id == "paper_strategy"
                      and x.feature_version in {"canonical-paper-loop-v1", "canonical-paper-loop-v2"}
                      and x.available_time <= x.evaluated_at < evaluated_at
                      and x.outcome_maturity <= evaluated_at)
     if matching:
         evidence.append(learner.estimate(
             matching, feature_id="paper_strategy", evaluated_at=evaluated_at,
-            instrument_id=canonical.instrument_id, horizon_id="1d"))
+            instrument_id=canonical.instrument_id, horizon_id=strategy_horizon))
     effectiveness = tuple(evidence)
     regime = classify_candidate(
         closes, evaluated_at, RegimeParameters(.02, .025, .008),
@@ -222,6 +239,7 @@ def candidate_from_chart(key, chart, *, evaluated_at, news_report=None, learned_
             "evaluated_at": learned.evaluated_at.isoformat(),
             "matured_through": learned.matured_through.isoformat() if learned.matured_through else None,
             "sample_count": learned.sample_count, "outcome_ids": list(learned.lineage),
+            "horizon_id": strategy_horizon,
             "expected_return_net": learned.expected_return_net,
             "source": "DURABLE_PAPER_OUTCOMES", "governance": "RESEARCH_ONLY"}
     suitability = evaluate_suitability(
@@ -231,6 +249,7 @@ def candidate_from_chart(key, chart, *, evaluated_at, news_report=None, learned_
                                  f"{clocks[0].date()}/{clocks[-1].date()}"),
         features=effectiveness, costs=CostEvidence("ASSUMED", COST_BPS, "5+2+3 bps research assumption"),
         liquidity=LiquidityEvidence("UNKNOWN"), provenance={
+            "asset_class": data.get("asset_class", "cash_equity"),
             "catalog": "jse_adapter.JSE_TICKERS", "data_symbol": data["yahoo_symbol"],
             "last_usable_session": (clocks[-1] - timedelta(days=1)).date().isoformat(),
             "research_pipeline": VERSION, "cost_assumption_bps": COST_BPS})
@@ -250,10 +269,10 @@ class RefreshResult:
 
 def refresh_public_research(*, fetcher=None, evaluated_at=None, universe=None, max_workers=4,
                             news_report=None, learned_evidence=None, paper_outcomes=(),
-                            selection_evidence=None):
+                            selection_evidence=None, strategy_horizon_sessions=1, catalog=None):
     """One bounded on-demand pass. Failed shares never become ranked records."""
     evaluated_at = evaluated_at or datetime.now(timezone.utc)
-    catalog = public_share_catalog()
+    catalog = catalog if catalog is not None else public_share_catalog()
     keys = tuple(key for key in (universe or catalog) if key in catalog)[:30]
     fetcher = fetcher or YahooFinanceFetcher()
     candidates, unavailable = [], []
@@ -262,7 +281,8 @@ def refresh_public_research(*, fetcher=None, evaluated_at=None, universe=None, m
         return candidate_from_chart(key, fetcher.get_chart(catalog[key]["yahoo_symbol"], "1y"),
                                     evaluated_at=evaluated_at, news_report=news_report,
                                     learned_evidence=learned_evidence, paper_outcomes=paper_outcomes,
-                                    selection_evidence=selection_evidence)
+                                    selection_evidence=selection_evidence,
+                                    strategy_horizon_sessions=strategy_horizon_sessions, catalog=catalog)
 
     with ThreadPoolExecutor(max_workers=max_workers, thread_name_prefix="public-research") as pool:
         futures = {pool.submit(load, key): key for key in keys}

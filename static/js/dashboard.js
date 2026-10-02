@@ -157,16 +157,25 @@ async function refreshCanonicalOpportunities(trigger=false) {
       clearTimeout(canonicalPoll); canonicalPollAttempts=0;
       await canonicalFetch('/api/v1/opportunities/refresh',{method:'POST'});
     }
-    const result=await canonicalFetch('/api/v1/opportunities');
+    const selectedClass=$('#canonical-asset-class')?.value || 'cash_equity';
+    const result=await canonicalFetch(selectedClass==='index_etf' ? '/api/v1/opportunities?asset_class=index_etf' : '/api/v1/opportunities');
     canonicalRecords=result.opportunities || [];
     const items=canonicalRecords.slice(0,5);
     if (!Array.isArray(items)) throw Error('Malformed canonical response');
     const refresh=result.refresh || {};
+    const etf=selectedClass==='index_etf' ? refresh.etf_research : null;
     status.textContent=refresh.running ? 'Checking the curated public-share universe and matured evidence…' : `${items.length} canonical research opportunit${items.length===1?'y':'ies'} available · ${refresh.scanned || 0} shares checked · ${refresh.unranked || 0} lacked enough evidence · ${(refresh.unavailable || []).length} data unavailable.`;
     cards.innerHTML=items.length ? items.map(renderCanonicalCard).join('') : `<div class="panel canonical-empty"><h3>${refresh.running ? 'Research refresh in progress.' : 'No canonical opportunities available yet.'}</h3><p class="muted">${refresh.running ? 'Checking dated public price history and matured research outcomes.' : 'No share passed the current evidence gate. Legacy recommendations are not substituted.'}</p></div>`;
+    if(selectedClass==='index_etf') {
+      status.textContent=`${items.length} ETF research candidates · three-session shadow tracking · manual OST review only · actual cash and fees not configured.`;
+      cards.insertAdjacentHTML('beforeend',`<div class="panel"><h3>Mandatory ETF research admission</h3><p>No ETF is removed because your cash is too small. Research eligibility is not trading approval. Daily volume is not a verified bid/ask spread.</p>${etf ? etf.admissions.map(row=>kv(row.instrument_id,`${row.state} · one unit: ${row.unit_price_zar==null?'unavailable':'R '+num(row.unit_price_zar)} · ${row.sizing}`)).join('') : '<p>Waiting for the worker’s first ETF research snapshot. All four ETFs remain admitted; data has not been substituted.</p>'}</div>`);
+    }
     cards.querySelectorAll('.canonical-card').forEach((card,index)=>{
       const item=items[index];
       card.querySelector('[data-review-technical]').onclick=()=>reviewTechnicalScreen(item);
+      if(item.provenance?.asset_class==='index_etf') {
+        card.querySelector('[data-review-technical]').onclick=()=>{card.querySelector('details').open=true;};
+      }
       card.querySelector('[data-print-paper-trade]').onclick=()=>printPaperTrade(item);
       const capture=card.querySelector('[data-capture-paper-trade]');
       if(!capture.disabled)capture.onclick=()=>capturePaperTrade(item);
@@ -451,6 +460,7 @@ document.querySelector('nav button[data-tab="portfolio"]').classList.add('active
 action('#refresh-account-status',refreshAccountStatus);
 action('#import-portfolio',async()=>{ const result=await post('/api/portfolio/csv',{csv:$('#portfolio-csv').value}); $('#portfolio-status').textContent=`Imported ${result.count} position(s) · CSV snapshot only`; renderPortfolio(result.rows); });
 $('#instrument').onchange=selectedChanged;
+$('#canonical-asset-class').onchange=()=>refreshCanonicalOpportunities();
 $('#chart-period').onchange=()=>{selectionVersion++; refreshCharts();};
 $('#news-filter').onchange=()=>{if(newsSnapshot) showNews(newsSnapshot);};
 $('#auto-refresh').onchange=()=>{if($('#auto-refresh').checked) refreshFeeds();};
@@ -467,7 +477,7 @@ $('#auto-refresh').onchange=()=>{if($('#auto-refresh').checked) refreshFeeds();}
   $('#asset-class-status').textContent=activeClass ? `${activeClass.instrument_count} instruments · ${activeClass.reason} ETFs, CFDs and SSFs remain visible here with their evidence gates.` : 'No instrument class is currently available.';
   $('#asset-class-boundaries').innerHTML=instrumentClasses.filter(item=>item.state!=='AVAILABLE').map(item=>kv(`${item.label} · ${item.state.replaceAll('_',' ')}`,item.reason)).join('');
   const chartOptions=(items)=>items.map(i=>`<option value="${i.instrument_id}">${esc(i.display_symbol)} · ${esc(i.name)}</option>`).join('');
-  $('#chart-instrument').innerHTML='<option value="">Select a chart</option>'+`<optgroup label="JSE cash shares">${chartOptions(instruments)}</optgroup>`+`<optgroup label="JSE index ETFs · chart only">${chartOptions(chartInstruments.filter(i=>i.asset_class==='index_etf'))}</optgroup>`+`<optgroup label="CFD references · public proxies, not IG contracts">${chartOptions(chartInstruments.filter(i=>i.asset_class==='cfd_reference'))}</optgroup>`;
+  $('#chart-instrument').innerHTML='<option value="">Select a chart</option>'+`<optgroup label="JSE cash shares">${chartOptions(instruments)}</optgroup>`+`<optgroup label="JSE index ETFs · shadow research">${chartOptions(chartInstruments.filter(i=>i.asset_class==='index_etf'))}</optgroup>`+`<optgroup label="CFD references · public proxies, not IG contracts">${chartOptions(chartInstruments.filter(i=>i.asset_class==='cfd_reference'))}</optgroup>`;
   $('#quotes').innerHTML='<p class="muted">Select a public share in the chart controls, or use a validated AI/pinned watchlist selection when available.</p>';
   selectedChanged();
   chartSelectedChanged();
