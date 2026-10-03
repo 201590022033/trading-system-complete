@@ -83,6 +83,8 @@ def compose_paper_worker(repository, config, *, fetcher=None, clock=None, strate
         raise ValueError("only the existing Swing paper workflow may be attributed")
     scheduler = PaperScheduler(repository, config.account_id, interval_seconds=config.interval_seconds,
                                strategy_profile=profile)
+    from domain.strategy.attribution import freeze_profile
+    technical_definition = freeze_profile(DEFAULT_STRATEGY_REGISTRY.resolve("jse_swing_3_5d", "1.1.0"))
     scanner = None
     if os.environ.get("PAPER_NEWS_ENABLED") == "1":
         from sentiment_analyzer import MacroSentimentScanner
@@ -90,13 +92,17 @@ def compose_paper_worker(repository, config, *, fetcher=None, clock=None, strate
 
     def loader():
         observed_at = timestamp(clock())
-        charts = {}
+        charts, acquired = {}, {}
         for key in config.universe:
             try:
                 chart = fetcher.get_chart(public_share_catalog()[key]["yahoo_symbol"], "1y")
+                if chart.get("symbol") != public_share_catalog()[key]["yahoo_symbol"]:
+                    continue
+                acquired[key] = chart
                 charts[key] = {name: chart[name] for name in ("symbol", "currency", "interval")}
                 charts[key]["bars"] = [
-                    {name: bar.get(name) for name in ("timestamp", "close", "volume")}
+                    {**{name: bar.get(name) for name in ("timestamp", "close", "volume")},
+                     **{name: bar[name] for name in ("open", "high", "low") if bar.get(name) is not None}}
                     for bar in chart["bars"][-FROZEN_HISTORY_BARS:]
                 ]
             except Exception:
@@ -110,14 +116,18 @@ def compose_paper_worker(repository, config, *, fetcher=None, clock=None, strate
                 persist_news_report(repository, report, observed_at=clock())
             except Exception:
                 pass
-        context_charts = {}
+        context_charts, acquired_context = {}, {}
         from market_chart_registry import MARKET_CHART_INSTRUMENTS
         for key in CONTEXT_ETFS:
             try:
                 chart = fetcher.get_chart(MARKET_CHART_INSTRUMENTS[key].data_symbol, "1y")
+                if chart.get("symbol") != MARKET_CHART_INSTRUMENTS[key].data_symbol:
+                    continue
+                acquired_context[key] = chart
                 context_charts[key] = {name: chart[name] for name in ("symbol", "currency", "interval")}
                 context_charts[key]["bars"] = [
-                    {name: bar.get(name) for name in ("timestamp", "close", "volume")}
+                    {**{name: bar.get(name) for name in ("timestamp", "close", "volume")},
+                     **{name: bar[name] for name in ("open", "high", "low") if bar.get(name) is not None}}
                     for bar in chart["bars"][-FROZEN_HISTORY_BARS:]
                 ]
             except Exception:
@@ -132,7 +142,13 @@ def compose_paper_worker(repository, config, *, fetcher=None, clock=None, strate
         swing_evidence = {key: current_evidence(key, chart, context_charts.get(BENCHMARK),
                          evaluated_at=observed_at, report=history)
                          for key, chart in {**charts, **context_charts}.items()}
+        from .swing_technical import snapshot as swing_snapshot
+        swing_technical = {key: swing_snapshot(chart, evaluated_at=observed_at,
+            benchmark_chart=acquired_context.get(BENCHMARK))
+            for key, chart in {**acquired, **acquired_context}.items()}
         return {"charts": charts, "context_charts": context_charts,
+                "swing_technical": swing_technical,
+                "swing_technical_definition": technical_definition,
                 "swing_history_evidence": swing_evidence,
                 "news": persisted_news(repository, observed_at),
                 "source_signature": source_signature, "completed_sessions": sessions}
@@ -287,6 +303,8 @@ def paper_status(repository, config):
             "candidate_learning": {**panel_summary,
                                    "decision_count": decision_count},
             "strategy_learning": strategy_learning,
+            "swing_technical_learning": snapshot.get("swing_technical_learning") if snapshot else None,
+            "swing_technical": snapshot.get("swing_technical") if snapshot else None,
             "decision_brief": snapshot.get("decision_brief") if snapshot else None,
             "etf_research": snapshot.get("etf_research") if snapshot else None,
             "equity_history": [{"at": row["evaluated_at"], "equity": row["account"]["equity"]} for row in reversed(cycles)],

@@ -103,6 +103,18 @@ _attributed_swing = replace(_defaults[0], reference=StrategyProfileRef("jse_swin
         if item.capability_id == "profile_attribution" else item for item in _defaults[0].capabilities),
     limitations=("New canonical runs retain this exact profile; older jobs and records remain LEGACY_UNATTRIBUTED.",
                  *_defaults[0].limitations[1:]))
-DEFAULT_STRATEGY_REGISTRY = StrategyProfileRegistry((*_defaults, _attributed_swing), current_versions={
+_technical_swing = replace(_attributed_swing,
+    reference=StrategyProfileRef("jse_swing_3_5d", "1.1.0"),
+    universe_scope=("JSE_CASH_EQUITIES", "JSE_INDEX_ETFS"),
+    capabilities=(*_attributed_swing.capabilities,
+        Capability("swing_technical_horizons", C.IMPLEMENTED_REUSABLE,
+            "Separate OHLCV EMA20/50, Wilder RSI/ATR14 and independent 3/4/5-session forward-return shadow path. Not the benchmark ranker or paper execution policy.",
+            ("application.opportunities.swing_technical",))),
+    limitations=("Separate technical shadow version; current benchmark stays pinned to 1.0.1.",
+        "Close-return labels are not stop/target execution, causal indicator attribution or validated profitability.",
+        "Sector alignment, catalysts/calendar, ATR execution geometry, trailing and actual OST costs remain gates.",
+        "Curated cash and index ETF research scope is not certified liquid or admitted for execution.",
+        "Actual OST cash, fees and spreads remain unconfigured; no validated profitability or broker execution."))
+DEFAULT_STRATEGY_REGISTRY = StrategyProfileRegistry((*_defaults, _attributed_swing, _technical_swing), current_versions={
     **{profile.reference.strategy_profile_id: profile.reference.strategy_profile_version for profile in _defaults},
     "jse_swing_3_5d": "1.0.1"})

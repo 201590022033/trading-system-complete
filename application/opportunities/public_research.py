@@ -147,7 +147,7 @@ def _signal(closes, feature):
 def candidate_from_chart(key, chart, *, evaluated_at, news_report=None, learned_evidence=None,
                          paper_outcomes=(), selection_evidence=None, strategy_horizon_sessions=1,
                          catalog=None, swing_history=None, benchmark_chart=None, historical_evidence=None,
-                         strategy_profile=None):
+                         strategy_profile=None, swing_technical_evidence=None):
     strategy_profile = reference(strategy_profile)
     catalog = catalog if catalog is not None else public_share_catalog()
     if key not in catalog:
@@ -219,7 +219,10 @@ def candidate_from_chart(key, chart, *, evaluated_at, news_report=None, learned_
                        1 if score > 0 else -1 if score < 0 else 0,
                        max(timestamp(item["available_at"]) for item in news["items"]),
                        score, canonical.instrument_id, "1d", "sentiment"))
+    from .swing_technical import snapshot as swing_snapshot
     input_evidence = {
+        "swing_technical": swing_technical_evidence if swing_technical_evidence is not None else swing_snapshot(
+            chart, evaluated_at=evaluated_at, benchmark_chart=benchmark_chart),
         "swing_history": historical_evidence if historical_evidence is not None else current_evidence(
             key, chart, benchmark_chart, evaluated_at=evaluated_at, report=swing_history),
         "technical": {
@@ -280,7 +283,7 @@ class RefreshResult:
 def refresh_public_research(*, fetcher=None, evaluated_at=None, universe=None, max_workers=4,
                             news_report=None, learned_evidence=None, paper_outcomes=(),
                             selection_evidence=None, strategy_horizon_sessions=1, catalog=None,
-                            benchmark_chart=None, swing_evidence=None, strategy_profile=None):
+                            benchmark_chart=None, swing_evidence=None, strategy_profile=None, swing_technical=None):
     """One bounded on-demand pass. Failed shares never become ranked records."""
     evaluated_at = evaluated_at or datetime.now(timezone.utc)
     strategy_profile = reference(strategy_profile)
@@ -299,6 +302,8 @@ def refresh_public_research(*, fetcher=None, evaluated_at=None, universe=None, m
                                     strategy_horizon_sessions=strategy_horizon_sessions, catalog=catalog,
                                     swing_history=swing_history, benchmark_chart=benchmark_chart,
                                     strategy_profile=strategy_profile,
+                                    swing_technical_evidence=(swing_technical.get(key, {"state": "UNAVAILABLE",
+                                        "reason": "NO_FROZEN_TECHNICAL_SNAPSHOT"}) if swing_technical is not None else None),
                                     historical_evidence=(swing_evidence.get(key, {
                                         "state": "UNAVAILABLE", "reason": "NO_FROZEN_HISTORY_SNAPSHOT"})
                                         if swing_evidence is not None else None))

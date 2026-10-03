@@ -63,6 +63,16 @@ def validate(url):
         assert len(paper_feature_outcomes(repo, config.account_id, T+timedelta(days=3),
                                          strategy_profile=profile.reference)) == 1
         assert paper_feature_outcomes(repo, config.account_id, T+timedelta(days=3)) == ()
+        from application.opportunities.swing_technical import snapshot, record_and_label, OUTCOME_KIND
+        from test_swing_technical import chart, clock
+        first = chart(80)
+        record_and_label(repo, config.account_id,
+            {"TFMJ": snapshot(first, evaluated_at=clock(first), benchmark_chart=first)},
+            {"TFMJ": first}, evaluated_at=clock(first))
+        final = chart(86)
+        summary = record_and_label(repo, config.account_id, {}, {"TFMJ": final}, evaluated_at=clock(final))
+        assert all(summary["horizons"][str(h)]["sample_count"] == 1 for h in (3, 4, 5))
+        assert len(repo.paper_records(config.account_id, OUTCOME_KIND, as_of=clock(final).isoformat())) == 3
         repo.initialize()
         assert repo._job_sql("SELECT COUNT(*) FROM strategy_record_refs", rows=True)[0][0] > 10
         # A new process gets its URL through stdin, never command-line output.
@@ -83,7 +93,7 @@ finally: repo.close()
                                 capture_output=True, timeout=15)
         if result.returncode:
             raise RuntimeError("separate-process recovery failed (output withheld)")
-        print("PASS native PostgreSQL: additive migrations, exact lineage, concurrent exactly-once fill, rollback, remigration and separate-process recovery")
+        print("PASS native PostgreSQL: migrations, exact lineage, concurrent exactly-once fill, rollback, recovery and distinct Swing 3/4/5-session labels")
     finally:
         repo.close()
 

@@ -1,5 +1,12 @@
 # Linear Fusion Roadmap
 
+2026-10-03: after attribution commit 781c0ab, ADR 0037 implements the authorized
+core Swing technical/horizon shadow stage within the sole ACTIVE workspace.
+EMA20/50, Wilder RSI/ATR14, OHLC structure, volume and broad relative strength
+are frozen/displayed; exact 1.1.0 3/4/5-session labels and M11 condition cohorts
+are separate from the unchanged 1.0.1 benchmark. Subsequent policy/catalyst/
+cost/walk-forward gates stay PLANNED, not concurrently active or promoted.
+
 2026-10-03: ADR 0036 completes attribution-only wiring within the sole ACTIVE
 workspace. New Swing 1.0.1 runs and paper/learning records retain exact version;
 legacy records/jobs/positions stay unattributed. Both-backend additive storage,

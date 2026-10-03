@@ -1,5 +1,15 @@
 # Current Architecture — Observed Repository Baseline
 
+## 2026-10-03 Swing technical/horizon shadow
+
+ADR 0037 adds `application.opportunities.swing_technical`: real daily OHLCV,
+EMA20/50, Wilder RSI/ATR14, relative volume, structure, matched benchmark and
+reference geometry. Worker freezes full-history features before truncating
+retry bars. Exact Swing 1.1.0 shadow decisions and 3/4/5 next-close labels feed
+M11 condition-cohort estimates; API technical/Portfolio views display them.
+This is separate from current 1.0.1 momentum/RSI ranking and three-session
+paper execution. No rule promotion or actual OST profitability evidence.
+
 ## 2026-10-03 exact strategy attribution
 
 ADR 0036 adds exact paired identity/version through new canonical research,

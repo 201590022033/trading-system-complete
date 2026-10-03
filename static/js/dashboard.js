@@ -86,8 +86,18 @@ function renderAutomaticTechnicalScreen(item, share) {
   }
   const technical=item.input_evidence?.technical || {},regime=item.input_evidence?.regime || {};
   const evidence=item.feature_evidence_summary || {};
+  const swing=item.input_evidence?.swing_technical || {}, swingValues=swing.values || {};
   target.innerHTML=`<div class="canonical-screen-grid">
     ${kv('Screen order','Universe-wide before ranking')}${kv('Daily horizon',item.horizon_id)}
+    ${kv('Swing shadow state',swing.state || 'Unavailable')}
+    ${kv('Core Swing setup',swing.setup_state || 'Unavailable')}
+    ${kv('Swing shadow strategy',swing.strategy_profile_version || 'Unavailable')}
+    ${Object.entries(swingValues).map(([key,value])=>kv(`Swing ${key}`,value == null?'Unavailable':Number(value).toFixed(4))).join('')}
+    ${kv('Swing limitations',(swing.missing || []).join(', ') || 'Shadow only; not a promoted trade signal')}
+    ${kv('ATR/structure stop reference',swing.geometry?.stop == null?'Unavailable':Number(swing.geometry.stop).toFixed(4))}
+    ${kv('2R target reference',swing.geometry?.target_2r == null?'Unavailable':Number(swing.geometry.target_2r).toFixed(4))}
+    ${kv('Reference geometry','Signal close only; not actual entry, executable policy or a trailing stop')}
+    ${kv('Ranking below','Preserved momentum/RSI benchmark; Swing technical shadow does not yet replace it')}
     ${kv('Momentum 20-day signal',technical.momentum_20d_signal == null?'Unavailable':technical.momentum_20d_signal)}${kv('RSI 14 signal',technical.rsi_14_signal == null?'Unavailable':technical.rsi_14_signal)}
     ${kv('Momentum interpretation',technical.momentum_20d_signal === 1?'Positive / LONG evidence':technical.momentum_20d_signal === -1?'Negative / SHORT evidence':technical.momentum_20d_signal === 0?'Neutral evidence':'Unavailable')}
     ${kv('RSI interpretation',technical.rsi_14_signal === 1?'Oversold / LONG evidence':technical.rsi_14_signal === -1?'Overbought / SHORT evidence':technical.rsi_14_signal === 0?'Neutral evidence':'Unavailable')}

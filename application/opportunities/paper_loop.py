@@ -221,7 +221,8 @@ class PaperLoop:
                 strategy_horizon_sessions=self.config.holding_sessions,
                 strategy_profile=strategy_profile,
                 benchmark_chart=frozen["input"].get("context_charts", {}).get("ETF_STX40"),
-                swing_evidence=frozen["input"].get("swing_history_evidence", {}))
+                swing_evidence=frozen["input"].get("swing_history_evidence", {}),
+                swing_technical=frozen["input"].get("swing_technical", {}))
             current = {o.instrument_id: o for o in ranking.opportunities}
             # Separate ETF research admission; never enters cash-share pending orders.
             etf_charts = frozen["input"].get("context_charts", {})
@@ -243,7 +244,8 @@ class PaperLoop:
                 catalog=public_etf_catalog(), strategy_horizon_sessions=self.config.holding_sessions,
                 strategy_profile=strategy_profile,
                 benchmark_chart=etf_charts.get("ETF_STX40"),
-                swing_evidence=frozen["input"].get("swing_history_evidence", {}))
+                swing_evidence=frozen["input"].get("swing_history_evidence", {}),
+                swing_technical=frozen["input"].get("swing_technical", {}))
             etf_recorded = record_candidate_panel(
                 self.repository, self.config.account_id, etf_ranking.opportunities, etf_series,
                 evaluated_at=now, market_context=market_context,
@@ -368,6 +370,11 @@ class PaperLoop:
                     state["pending"].append({"symbol": key, "opportunity": o.to_dict(),
                                              "structure": [(at.isoformat(), price) for at, price, _ in series[key][-20:]]})
             ranking_id = stable_id("paper-ranking", self.config.account_id, job_key)
+            from .swing_technical import record_and_label
+            swing_technical = frozen["input"].get("swing_technical", {})
+            swing_learning = record_and_label(self.repository, self.config.account_id,
+                swing_technical, {**charts, **frozen["input"].get("context_charts", {})}, evaluated_at=now,
+                strategy_definition=frozen["input"].get("swing_technical_definition"))
             snapshot = {"version": VERSION, "evaluated_at": now.isoformat(), "mode": "PAPER",
                         **fields(strategy_profile),
                         "opportunities": [o.to_dict() for o in ranking.opportunities],
@@ -375,7 +382,8 @@ class PaperLoop:
                         "etf_research": etf_research,
                         "unavailable": list(ranking.unavailable),
                         "decision_brief": decision_brief,
-                        "candidate_learning": selection_evidence}
+                        "candidate_learning": selection_evidence,
+                        "swing_technical": swing_technical, "swing_technical_learning": swing_learning}
             self.repository.save_paper_record(ranking_id, self.config.account_id, "ranking", now.isoformat(), snapshot)
             if not broker.reconcile(now).clean:
                 raise ValueError("paper ledger failed reconciliation")

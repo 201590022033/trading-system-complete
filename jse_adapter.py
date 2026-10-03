@@ -195,8 +195,13 @@ class YahooFinanceFetcher(PriceFetcher):
             close = float(row["Close"]) * scale
             if not math.isfinite(close) or close <= 0:
                 continue
-            bars.append({"timestamp": stamp.isoformat(), "close": close,
-                         "volume": float(row["Volume"]) if math.isfinite(float(row["Volume"])) else None})
+            bar = {"timestamp": stamp.isoformat(), "close": close,
+                   "volume": float(row["Volume"]) if math.isfinite(float(row["Volume"])) else None}
+            for source, target in (("Open", "open"), ("High", "high"), ("Low", "low")):
+                value = float(row[source]) if source in row else None
+                if value is not None and math.isfinite(value) and value > 0:
+                    bar[target] = value * scale
+            bars.append(bar)
         if not bars:
             raise ValueError("Yahoo returned no valid closing prices")
         return {"symbol": symbol, "currency": unit, "provider_currency": raw_currency,

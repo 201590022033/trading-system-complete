@@ -1,5 +1,31 @@
 # Current Milestone
 
+## 2026-10-03 Core Swing technical/horizon shadow — within the sole ACTIVE workspace
+
+After attribution commit `781c0ab`, owner explicitly requested completing the
+EMA/ATR and timeline gap. ADR 0037 adds separate immutable Swing 1.1.0 shadow
+definition (cash + mandatory ETF context). Yahoo adapter retains real normalized
+OHLC; worker computes full-history causal EMA20/50, Wilder RSI14/ATR14, relative
+volume, prior 10/20 structure and exact-date broad benchmark strength before
+retaining 60 daily bars. Technical UI displays values, missing inputs, shadow
+setup and structural/ATR 2R reference geometry. No synthetic OHLC.
+
+One exact-version feature decision per instrument/session and independent
+3/4/5 observed-session next-close labels feed M11 present/absent setup cohorts.
+Actual decision/availability/entry/exit/maturity clocks and negative outcomes
+are stored. Full feature values/definition are frozen on retry. Current profile,
+legacy momentum/RSI ranking, account config and three-session simulator remain
+benchmarks. Shadow setup thresholds are hypotheses, not optimized settings.
+No automatic promotion/live orders. Sector model, catalysts/calendar, actual
+OST costs, trailing/execution policy and cost-aware walk-forward remain gates.
+Verification: 758 safe tests pass; seven focused Swing tests cover Wilder
+smoothing, finite-history EMA, missing OHLC, future-data exclusion, benchmark
+alignment, SQLite/PostgreSQL-fixture label maturity and worker retry. Native
+PostgreSQL acceptance also passes distinct 3/4/5 labels, lineage, rollback and
+separate-process recovery in a disposable database. All 54 protected artifacts
+remain unchanged. JavaScript syntax/offline UI checks pass; no browser visual QA.
+No push or Railway deployment performed in this stage.
+
 ## 2026-10-03 Strategy-specific attribution — within the sole ACTIVE workspace
 
 Owner authorized the planned attribution slice and imported Swing narrative
