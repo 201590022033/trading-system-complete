@@ -1,5 +1,6 @@
 """Exact-version registry with explicitly selected current versions, never overwrite."""
 from types import MappingProxyType
+from dataclasses import replace
 from .profile import CapabilityState as C, StrategyCapability as Capability
 from .profile import StrategyLifecycle as L, StrategyProfile, StrategyProfileRef
 
@@ -93,5 +94,15 @@ def default_profiles():
 
 
 _defaults = default_profiles()
-DEFAULT_STRATEGY_REGISTRY = StrategyProfileRegistry(_defaults, current_versions={
-    profile.reference.strategy_profile_id: profile.reference.strategy_profile_version for profile in _defaults})
+# Preserve the shipped 1.0.0 definition exactly. Attribution is an additive
+# version, not evidence that the intended Swing rules have been validated.
+_attributed_swing = replace(_defaults[0], reference=StrategyProfileRef("jse_swing_3_5d", "1.0.1"),
+    capabilities=tuple(replace(item, state=C.IMPLEMENTED_REUSABLE,
+        description="Exact-version lineage for new canonical runs and paper learning; legacy records stay unattributed.",
+        component_references=("domain.strategy.attribution", "application.opportunities.paper_loop", "persistence.paper_ledger"))
+        if item.capability_id == "profile_attribution" else item for item in _defaults[0].capabilities),
+    limitations=("New canonical runs retain this exact profile; older jobs and records remain LEGACY_UNATTRIBUTED.",
+                 *_defaults[0].limitations[1:]))
+DEFAULT_STRATEGY_REGISTRY = StrategyProfileRegistry((*_defaults, _attributed_swing), current_versions={
+    **{profile.reference.strategy_profile_id: profile.reference.strategy_profile_version for profile in _defaults},
+    "jse_swing_3_5d": "1.0.1"})

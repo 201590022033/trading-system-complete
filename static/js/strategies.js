@@ -12,12 +12,12 @@
   function renderDetail(profile) {
     detail.hidden=false;
     detail.innerHTML=`<h3>${esc(profile.display_name)}</h3><p>${esc(profile.lifecycle_label)} · version ${esc(profile.strategy_profile_version)}</p>
-      <p class="notice">Profile foundation only. Opening a profile neither selects a trading model nor enables execution.</p>
+      <p class="notice">Opening a profile is navigation, not trading-model selection or execution permission. Check each record's exact strategy attribution.</p>
       <p>Intended timeframe: ${esc(profile.decision_timeframe)}. Holding horizons: ${esc((profile.intended_horizon_ids || []).join(', '))} — intent, not runtime configuration.</p>
       <h4>Capabilities and remaining gates</h4><ul>${(profile.capabilities || []).map(item=>`<li><strong>${esc(item.capability_id)} · ${esc(item.state)}</strong><p>${esc(item.description)}</p></li>`).join('')}</ul>
       <h4>Limitations</h4><ul>${(profile.limitations || []).map(item=>`<li>${esc(item)}</li>`).join('')}</ul>
       <p>Research ranking → execution feasibility → account-specific sizing remain separate. A high research rank may be uneconomic for your account.</p>
-      ${profile.canonical_workflow_tab === 'canonical-opportunities' ? '<button type="button" data-open-canonical>Open existing canonical screening / Top 5</button><p class="muted">This is the existing daily workflow, not a new profile-attributed ranking. Strategy attribution is still pending.</p>' : '<p class="muted">No strategy trading workflow is connected. Development placeholder only.</p>'}`;
+      ${profile.canonical_workflow_tab === 'canonical-opportunities' ? `<button type="button" data-open-canonical>Open existing canonical screening / Top 5</button><p class="muted">${profile.attribution_state === 'EXACT_VERSION_NEW_RUNS_ONLY_LEGACY_UNATTRIBUTED' ? 'New runs retain exact strategy versions. Existing records remain unattributed. Current rules are daily-close / three-session paper research, not a validated full 3–5-day Swing model.' : 'This historical foundation version did not attribute workflow records.'}</p>` : '<p class="muted">No strategy trading workflow is connected. Development placeholder only.</p>'}`;
     detail.querySelector('[data-open-canonical]')?.addEventListener('click',()=>{
       document.querySelector('nav button[data-tab="canonical-opportunities"]').click();
     });

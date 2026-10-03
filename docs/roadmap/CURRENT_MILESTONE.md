@@ -1,5 +1,26 @@
 # Current Milestone
 
+## 2026-10-03 Strategy-specific attribution — within the sole ACTIVE workspace
+
+Owner authorized the planned attribution slice and imported Swing narrative
+comparison. ADR 0036 implements paired refs through canonical/paper/learning
+and reference evaluation chains; definitions and compact lineage indexes have
+paired SQLite 0011 / PostgreSQL 0006 migrations. New jobs pin Swing 1.0.1;
+old jobs/records/positions retain original absence. Account config/cash and
+legacy ranking/risk mathematics are preserved. Exact version/horizon isolation
+precedes learner fallback. API/UI distinguish evidence pools and legacy rows.
+See `docs/research/SWING_NARRATIVE_READINESS.md` for remaining indicators,
+policy, catalyst, cost and validation gaps, not a blanket completeness claim.
+
+Verification: baseline 740; final safe suite 751 passed; all 54 protected
+artifacts unchanged. JavaScript syntax and offline UI checks passed.
+Native PostgreSQL acceptance
+passed in a newly created isolated localhost database: migration/remigration,
+concurrent exactly-once fill, rollback, exact outcomes and separate-process
+recovery. Disposable test database removed; existing local/Railway data untouched.
+No push/deployment or live broker action. Owner's follow-up authorizes the
+next core Swing feature/horizon shadow slice after this acceptance/commit.
+
 ## 2026-10-03 Strategy Profile foundation — within the sole ACTIVE workspace
 
 Owner requested repository audit then the bounded Strategy Profile Foundation

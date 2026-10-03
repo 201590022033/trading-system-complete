@@ -10,6 +10,7 @@ from datetime import datetime, timedelta, timezone
 from math import isfinite
 
 from domain.evaluation.effectiveness import ContextualEffectivenessLearner, FeatureOutcome
+from domain.strategy.attribution import fields, reference, identity_suffix
 from domain.evaluation.opportunity import OpportunityCandidate, rank_opportunities
 from domain.evaluation.suitability import CostEvidence, LiquidityEvidence, SuitabilityEvidence, evaluate_suitability
 from domain.features.divergence import DivergenceConfig, SignalEvidence, summarize
@@ -145,7 +146,9 @@ def _signal(closes, feature):
 
 def candidate_from_chart(key, chart, *, evaluated_at, news_report=None, learned_evidence=None,
                          paper_outcomes=(), selection_evidence=None, strategy_horizon_sessions=1,
-                         catalog=None, swing_history=None, benchmark_chart=None, historical_evidence=None):
+                         catalog=None, swing_history=None, benchmark_chart=None, historical_evidence=None,
+                         strategy_profile=None):
+    strategy_profile = reference(strategy_profile)
     catalog = catalog if catalog is not None else public_share_catalog()
     if key not in catalog:
         raise ValueError("share is outside the curated public catalog")
@@ -179,17 +182,19 @@ def candidate_from_chart(key, chart, *, evaluated_at, news_report=None, learned_
                 outcomes.append(FeatureOutcome(
                     feature, VERSION, "technical", canonical.instrument_id, "1d", None,
                     None, state, clocks[i], clocks[i], clocks[i + 1], gross, net,
-                    f"{key}:{feature}:{clocks[i].date().isoformat()}"))
+                    f"{key}:{feature}:{clocks[i].date().isoformat()}" + identity_suffix(strategy_profile),
+                    **fields(strategy_profile)))
             previous = state
         evidence.append(learner.estimate(
             outcomes, feature_id=feature, evaluated_at=evaluated_at,
-            instrument_id=canonical.instrument_id, horizon_id="1d"))
+            instrument_id=canonical.instrument_id, horizon_id="1d", strategy_profile=strategy_profile))
         if len(closes) >= 21:
             signals.append(SignalEvidence(feature, VERSION, _signal(closes, feature),
                                           clocks[-1], instrument_id=canonical.instrument_id,
                                           horizon_id="1d", category="technical"))
     strategy_horizon = strategy_horizon_id(strategy_horizon_sessions)
     matching = tuple(x for x in paper_outcomes if x.instrument_id == canonical.instrument_id
+                     and reference(x) == strategy_profile
                      and x.horizon_id == strategy_horizon and x.feature_id == "paper_strategy"
                      and x.feature_version in {"canonical-paper-loop-v1", "canonical-paper-loop-v2"}
                      and x.available_time <= x.evaluated_at < evaluated_at
@@ -197,7 +202,8 @@ def candidate_from_chart(key, chart, *, evaluated_at, news_report=None, learned_
     if matching:
         evidence.append(learner.estimate(
             matching, feature_id="paper_strategy", evaluated_at=evaluated_at,
-            instrument_id=canonical.instrument_id, horizon_id=strategy_horizon))
+            instrument_id=canonical.instrument_id, horizon_id=strategy_horizon,
+            strategy_profile=strategy_profile))
     effectiveness = tuple(evidence)
     regime = classify_candidate(
         closes, evaluated_at, RegimeParameters(.02, .025, .008),
@@ -244,13 +250,14 @@ def candidate_from_chart(key, chart, *, evaluated_at, news_report=None, learned_
             "sample_count": learned.sample_count, "outcome_ids": list(learned.lineage),
             "horizon_id": strategy_horizon,
             "expected_return_net": learned.expected_return_net,
-            "source": "DURABLE_PAPER_OUTCOMES", "governance": "RESEARCH_ONLY"}
+            "source": "DURABLE_PAPER_OUTCOMES", "governance": "RESEARCH_ONLY", **fields(strategy_profile)}
     suitability = evaluate_suitability(
         research, "1d", evaluated_at,
         data=SuitabilityEvidence("AVAILABLE", DataGrade.RESEARCH, "Yahoo public daily bars",
                                  "1d", len(closes), 0.0, "NEXT_DAY_BAR_AVAILABILITY",
                                  f"{clocks[0].date()}/{clocks[-1].date()}"),
         features=effectiveness, costs=CostEvidence("ASSUMED", COST_BPS, "5+2+3 bps research assumption"),
+        strategy_profile=strategy_profile,
         liquidity=LiquidityEvidence("UNKNOWN"), provenance={
             "asset_class": data.get("asset_class", "cash_equity"),
             "catalog": "jse_adapter.JSE_TICKERS", "data_symbol": data["yahoo_symbol"],
@@ -260,7 +267,7 @@ def candidate_from_chart(key, chart, *, evaluated_at, news_report=None, learned_
                            instrument_id=canonical.instrument_id, horizon_id="1d")
     return OpportunityCandidate(canonical, suitability, divergence, effectiveness,
                                 regime, DataGrade.RESEARCH.value,
-                                input_evidence=input_evidence)
+                                input_evidence=input_evidence, **fields(strategy_profile))
 
 
 @dataclass(frozen=True)
@@ -273,9 +280,10 @@ class RefreshResult:
 def refresh_public_research(*, fetcher=None, evaluated_at=None, universe=None, max_workers=4,
                             news_report=None, learned_evidence=None, paper_outcomes=(),
                             selection_evidence=None, strategy_horizon_sessions=1, catalog=None,
-                            benchmark_chart=None, swing_evidence=None):
+                            benchmark_chart=None, swing_evidence=None, strategy_profile=None):
     """One bounded on-demand pass. Failed shares never become ranked records."""
     evaluated_at = evaluated_at or datetime.now(timezone.utc)
+    strategy_profile = reference(strategy_profile)
     catalog = catalog if catalog is not None else public_share_catalog()
     keys = tuple(key for key in (universe or catalog) if key in catalog)[:30]
     fetcher = fetcher or YahooFinanceFetcher()
@@ -290,6 +298,7 @@ def refresh_public_research(*, fetcher=None, evaluated_at=None, universe=None, m
                                     selection_evidence=selection_evidence,
                                     strategy_horizon_sessions=strategy_horizon_sessions, catalog=catalog,
                                     swing_history=swing_history, benchmark_chart=benchmark_chart,
+                                    strategy_profile=strategy_profile,
                                     historical_evidence=(swing_evidence.get(key, {
                                         "state": "UNAVAILABLE", "reason": "NO_FROZEN_HISTORY_SNAPSHOT"})
                                         if swing_evidence is not None else None))

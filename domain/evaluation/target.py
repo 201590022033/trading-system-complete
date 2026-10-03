@@ -9,6 +9,7 @@ from types import MappingProxyType
 from typing import Mapping
 
 from domain.contracts.trade import MetricContext
+from domain.strategy.attribution import StrategyAttributed, fields, same_strategy
 
 
 VERSION = "strategy-target-v1"
@@ -110,7 +111,7 @@ class TargetCriterion:
 
 
 @dataclass(frozen=True)
-class StrategyTarget:
+class StrategyTarget(StrategyAttributed):
     target_id: str
     target_version: str
     created_at: datetime
@@ -125,6 +126,9 @@ class StrategyTarget:
     applicable_experiment_family: str
 
     def __post_init__(self):
+        super().__post_init__()
+        for criterion in self.criteria:
+            same_strategy(self, criterion.context)
         if not all((self.target_id, self.target_version, self.strategy_family,
                     self.author_governance, self.rationale, self.applicable_experiment_family)):
             raise ValueError("target identity, family, governance and rationale are required")
@@ -139,6 +143,7 @@ class StrategyTarget:
 
     def to_dict(self) -> dict[str, object]:
         return {
+            **fields(self),
             "target_id": self.target_id, "target_version": self.target_version,
             "created_at": self.created_at.isoformat(), "strategy_family": self.strategy_family,
             "instrument_scope": list(self.instrument_scope), "horizon_scope": list(self.horizon_scope),
@@ -157,7 +162,7 @@ class StrategyTarget:
 
 
 @dataclass(frozen=True)
-class MetricObservation:
+class MetricObservation(StrategyAttributed):
     criterion_id: str
     metric_id: MetricIdentity
     evidence_stage: EvidenceStage
@@ -167,6 +172,8 @@ class MetricObservation:
     provenance: Mapping[str, object]
 
     def __post_init__(self):
+        super().__post_init__()
+        same_strategy(self, self.context)
         if self.observed_at.tzinfo is None or self.observed_at.utcoffset() is None:
             raise ValueError("observation time must be timezone-aware")
         if isinstance(self.value, float) and not isfinite(self.value):
@@ -186,7 +193,7 @@ class CriterionAssessment:
 
 
 @dataclass(frozen=True)
-class TargetAssessment:
+class TargetAssessment(StrategyAttributed):
     target_id: str
     target_version: str
     status: str
@@ -194,12 +201,15 @@ class TargetAssessment:
     promotion_authorized: bool = False
 
     def __post_init__(self):
+        super().__post_init__()
         if self.promotion_authorized:
             raise ValueError("M16 cannot authorize promotion")
 
 
 def assess_target(target: StrategyTarget, observations: tuple[MetricObservation, ...]) -> TargetAssessment:
     """Compare declared requirements only; never promotes or changes a strategy."""
+    for observation in observations:
+        same_strategy(target, observation)
     indexed = {item.criterion_id: item for item in observations}
     results = []
     for criterion in target.criteria:
@@ -239,7 +249,7 @@ def assess_target(target: StrategyTarget, observations: tuple[MetricObservation,
         status = "EVIDENCE_INCOMPLETE"
     else:
         status = "REQUIREMENTS_SATISFIED_FOR_REVIEW"
-    return TargetAssessment(target.target_id, target.target_version, status, tuple(results))
+    return TargetAssessment(target.target_id, target.target_version, status, tuple(results), **fields(target))
 
 
 @dataclass(frozen=True)

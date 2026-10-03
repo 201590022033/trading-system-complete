@@ -4,6 +4,7 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from math import isfinite, sqrt
 from statistics import mean
+from domain.strategy.attribution import StrategyAttributed, reference, fields
 
 VERSION = "contextual-effectiveness-v1"
 
@@ -26,7 +27,7 @@ class EffectivenessConfig:
 
 
 @dataclass(frozen=True)
-class FeatureOutcome:
+class FeatureOutcome(StrategyAttributed):
     feature_id: str
     feature_version: str
     feature_family: str
@@ -43,6 +44,7 @@ class FeatureOutcome:
     record_id: str = ""
 
     def __post_init__(self):
+        super().__post_init__()
         for name in ("evaluated_at", "available_time", "outcome_maturity"):
             value = getattr(self, name)
             if value.tzinfo is None or value.utcoffset() is None:
@@ -56,7 +58,7 @@ class FeatureOutcome:
 
 
 @dataclass(frozen=True)
-class FeatureEffectiveness:
+class FeatureEffectiveness(StrategyAttributed):
     feature_id: str
     feature_version: str
     feature_family: str
@@ -120,10 +122,17 @@ class ContextualEffectivenessLearner:
                 ((None, None, None), "global"))
 
     def estimate(self, outcomes, *, feature_id, evaluated_at, instrument_id=None,
-                 horizon_id=None, regime_state=None, regime_version=None):
+                 horizon_id=None, regime_state=None, regime_version=None, strategy_profile=None):
         if evaluated_at.tzinfo is None or evaluated_at.utcoffset() is None:
             raise ValueError("evaluated_at must be timezone-aware")
-        all_eligible = tuple(item for item in self._eligible(outcomes, evaluated_at)
+        strategy = reference(strategy_profile)
+        # Partition BEFORE fallback. Legacy callers cannot absorb attributed rows.
+        # Attributed strategies may fall back across instruments/regimes, never horizons.
+        pool = tuple(item for item in outcomes if reference(item) == strategy
+                     and (strategy is None or item.horizon_id == horizon_id))
+        if strategy is not None and not horizon_id:
+            raise ValueError("attributed learning requires an explicit horizon")
+        all_eligible = tuple(item for item in self._eligible(pool, evaluated_at)
                              if item.feature_id == feature_id and
                              (regime_version is None or item.regime_version == regime_version))
         selected = ()
@@ -162,7 +171,7 @@ class ContextualEffectivenessLearner:
             _std_error(net), _std_error(net), min(1.0, len(selected) / self.config.minimum_sample) if selected else 0.0,
             "SUFFICIENT" if status == "LEARNED" else "INSUFFICIENT",
             status, fallback, raw, prior, shrink, self.config.recency_half_life_seconds,
-            self.config.version, tuple(item.record_id for item in selected),
+            self.config.version, tuple(item.record_id for item in selected), **fields(strategy),
         )
 
     def _weights(self, outcomes, evaluated_at):

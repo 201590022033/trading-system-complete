@@ -32,8 +32,10 @@ class StrategyProfileApiTests(unittest.TestCase):
         client = app.test_client()
         current = client.get("/api/v1/strategy-profiles/jse_swing_3_5d").get_json()
         exact = client.get("/api/v1/strategy-profiles/jse_swing_3_5d/versions/1.0.0").get_json()
-        self.assertEqual(current, exact)
-        self.assertEqual(exact["available_versions"], ["1.0.0"])
+        self.assertEqual(current["profile"]["strategy_profile_version"], "1.0.1")
+        self.assertEqual(exact["profile"]["strategy_profile_version"], "1.0.0")
+        self.assertEqual(exact["available_versions"], ["1.0.0", "1.0.1"])
+        self.assertEqual(exact["profile"]["attribution_state"], "FOUNDATION_ONLY_NOT_PROPAGATED_TO_EXISTING_RECORDS")
         for path in ("/api/v1/strategy-profiles/unknown", "/api/v1/strategy-profiles/jse_swing_3_5d/versions/9.0.0"):
             self.assertEqual(client.get(path).status_code, 404)
         for method in ("post", "put", "patch", "delete"):

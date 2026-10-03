@@ -106,5 +106,7 @@ class StrategyProfile:
                 "allowed_research_modes": list(self.allowed_research_modes),
                 "capabilities": [item.to_dict() for item in self.capabilities],
                 "limitations": list(self.limitations), "canonical_workflow_tab": self.canonical_workflow_tab,
-                "attribution_state": "FOUNDATION_ONLY_NOT_PROPAGATED_TO_EXISTING_RECORDS",
+                "attribution_state": ("EXACT_VERSION_NEW_RUNS_ONLY_LEGACY_UNATTRIBUTED"
+                    if any(item.capability_id == "profile_attribution" and item.state is CapabilityState.IMPLEMENTED_REUSABLE
+                           for item in self.capabilities) else "FOUNDATION_ONLY_NOT_PROPAGATED_TO_EXISTING_RECORDS"),
                 "validated_strategy": False, "strategy_execution_enabled": False, "live_execution": False}

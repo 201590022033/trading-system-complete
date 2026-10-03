@@ -13,6 +13,7 @@ from domain.evaluation.suitability import InstrumentSuitability
 from domain.features.divergence import DivergenceFeature
 from domain.features.regime import MarketRegime
 from domain.registry.instrument import CanonicalInstrument, GovernanceState
+from domain.strategy.attribution import StrategyAttributed, fields, same_strategy, identity_suffix
 
 VERSION = "opportunity-ranking-v1"
 SCORE_SEMANTICS = "COMPARATIVE_RESEARCH_RANKING_SCORE_NOT_A_PROBABILITY_OR_EXPECTED_RETURN"
@@ -58,7 +59,7 @@ def isclose(left, right, tolerance=1e-12):
 
 
 @dataclass(frozen=True)
-class OpportunityCandidate:
+class OpportunityCandidate(StrategyAttributed):
     instrument: CanonicalInstrument
     suitability: InstrumentSuitability
     divergence: DivergenceFeature | None
@@ -69,10 +70,14 @@ class OpportunityCandidate:
     input_evidence: Mapping[str, object] = field(default_factory=dict)
 
     def __post_init__(self):
+        super().__post_init__()
+        for item in self.effectiveness:
+            same_strategy(self, item)
         if not isinstance(self.instrument, CanonicalInstrument):
             raise TypeError("canonical M3 instrument required")
         if not isinstance(self.suitability, InstrumentSuitability):
             raise TypeError("canonical M12 suitability required")
+        same_strategy(self, self.suitability)
         if not isinstance(self.effectiveness, tuple) or any(
                 not isinstance(item, FeatureEffectiveness) for item in self.effectiveness):
             raise TypeError("canonical M11 effectiveness tuple required")
@@ -94,7 +99,7 @@ class FeatureEvidenceSummary:
 
 
 @dataclass(frozen=True)
-class ResearchOpportunity:
+class ResearchOpportunity(StrategyAttributed):
     opportunity_id: str
     evaluated_at: datetime
     opportunity_version: str
@@ -134,6 +139,7 @@ class ResearchOpportunity:
     input_evidence: Mapping[str, object] = field(default_factory=dict)
 
     def __post_init__(self):
+        super().__post_init__()
         if self.evaluated_at.tzinfo is None or self.evaluated_at.utcoffset() is None:
             raise ValueError("evaluated_at must be timezone-aware")
         if self.direction not in {"LONG", "SHORT", "WATCH", "UNKNOWN"}:
@@ -151,6 +157,7 @@ class ResearchOpportunity:
 
     def to_dict(self):
         return {
+            **fields(self),
             "opportunity_id": self.opportunity_id,
             "evaluated_at": self.evaluated_at.isoformat(),
             "opportunity_version": self.opportunity_version,
@@ -192,7 +199,7 @@ class ResearchOpportunity:
 
 
 @dataclass(frozen=True)
-class OpportunityRanking:
+class OpportunityRanking(StrategyAttributed):
     evaluated_at: datetime
     ranking_version: str
     top_n: int
@@ -353,7 +360,7 @@ class OpportunityRanker:
         mapping = candidate.broker_mapping
         if mapping is None:
             reasons.append("EXECUTION_MAPPING_UNAVAILABLE_RESEARCH_ONLY")
-        identity = f"{instrument.instrument_id}|{suitability.horizon_id}|{evaluated_at.isoformat()}|{self.config.version}"
+        identity = f"{instrument.instrument_id}|{suitability.horizon_id}|{evaluated_at.isoformat()}|{self.config.version}" + identity_suffix(candidate)
         opportunity_id = "opp:" + sha256(identity.encode()).hexdigest()
         divergence_summary = ({"state": divergence.state,
                                "dominant_direction": divergence.dominant_direction,
@@ -387,9 +394,13 @@ class OpportunityRanker:
              "divergence_configuration_version": getattr(divergence, "configuration_version", None),
              "broker_mapping_version": getattr(mapping, "version", None)},
             input_evidence=causal_input_evidence(candidate.input_evidence, evaluated_at),
+            **fields(candidate),
         )
 
     def rank(self, candidates, *, evaluated_at, top_n=5):
+        candidates = tuple(candidates)
+        if candidates:
+            same_strategy(*candidates)
         if evaluated_at.tzinfo is None or evaluated_at.utcoffset() is None:
             raise ValueError("evaluated_at must be timezone-aware")
         if not isinstance(top_n, int) or top_n < 1:
@@ -404,7 +415,7 @@ class OpportunityRanker:
                           key=lambda item: (item.eligibility_status, item.instrument_id, item.horizon_id))
         all_items = tuple(ranks.get(item.opportunity_id, item) for item in rankable) + tuple(unranked)
         return OpportunityRanking(evaluated_at.astimezone(timezone.utc), self.config.version, top_n,
-                                  ranked[:top_n], all_items)
+                                  ranked[:top_n], all_items, **(fields(candidates[0]) if candidates else {}))
 
 
 def rank_opportunities(candidates, *, evaluated_at, top_n=5, config=RankingConfig()):

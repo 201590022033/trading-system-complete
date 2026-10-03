@@ -7,6 +7,7 @@ from typing import Any, Mapping, Optional, Tuple
 
 from .market import Direction, finite, utc_timestamp
 from .policy import TradeGeometry
+from domain.strategy.attribution import StrategyAttributed, fields
 
 
 def _mapping(value: Mapping[str, Any], field: str) -> None:
@@ -15,7 +16,7 @@ def _mapping(value: Mapping[str, Any], field: str) -> None:
 
 
 @dataclass(frozen=True)
-class TradeIntent:
+class TradeIntent(StrategyAttributed):
     intent_id: str
     strategy_version: str
     instrument_id: str
@@ -34,6 +35,7 @@ class TradeIntent:
     expires_at: datetime
 
     def __post_init__(self) -> None:
+        super().__post_init__()
         for name in ("generated_at", "expires_at"):
             object.__setattr__(self, name, utc_timestamp(getattr(self, name)))
         if not self.intent_id or not self.strategy_version or not self.instrument_id or not self.execution_symbol:
@@ -50,7 +52,7 @@ class TradeIntent:
             raise ValueError("provenance identifiers must be tuples")
 
     def to_dict(self) -> dict[str, Any]:
-        return {"intent_id": self.intent_id, "strategy_version": self.strategy_version,
+        return {**fields(self), "intent_id": self.intent_id, "strategy_version": self.strategy_version,
                 "instrument_id": self.instrument_id, "execution_symbol": self.execution_symbol,
                 "generated_at": self.generated_at.isoformat(), "direction": self.direction.value,
                 "opportunity_score": self.opportunity_score, "opportunity_rank": self.opportunity_rank,
@@ -61,7 +63,7 @@ class TradeIntent:
 
 
 @dataclass(frozen=True)
-class RiskDecision:
+class RiskDecision(StrategyAttributed):
     intent_id: str
     evaluated_at: datetime
     approved: bool
@@ -75,6 +77,7 @@ class RiskDecision:
     rejection_reasons: Tuple[str, ...]
 
     def __post_init__(self) -> None:
+        super().__post_init__()
         object.__setattr__(self, "evaluated_at", utc_timestamp(self.evaluated_at))
         if not self.intent_id:
             raise ValueError("intent identity is required")
@@ -88,7 +91,7 @@ class RiskDecision:
             raise ValueError("approved risk decisions cannot have rejection reasons")
 
     def to_dict(self) -> dict[str, Any]:
-        return {"intent_id": self.intent_id, "evaluated_at": self.evaluated_at.isoformat(),
+        return {**fields(self), "intent_id": self.intent_id, "evaluated_at": self.evaluated_at.isoformat(),
                 "approved": self.approved, "reduced_size": self.reduced_size,
                 "authorized_units": self.authorized_units, "authorized_notional": self.authorized_notional,
                 "maximum_loss_monetary": self.maximum_loss_monetary, "committed_margin": self.committed_margin,
@@ -97,7 +100,7 @@ class RiskDecision:
 
 
 @dataclass(frozen=True)
-class OrderIntent:
+class OrderIntent(StrategyAttributed):
     order_intent_id: str
     intent_id: str
     instrument_id: str
@@ -112,6 +115,7 @@ class OrderIntent:
     dispatched_at: datetime
 
     def __post_init__(self) -> None:
+        super().__post_init__()
         object.__setattr__(self, "dispatched_at", utc_timestamp(self.dispatched_at))
         if not all((self.order_intent_id, self.intent_id, self.instrument_id, self.broker_symbol, self.client_order_id)):
             raise ValueError("order identity is required")
@@ -123,7 +127,7 @@ class OrderIntent:
         finite(self.quantity, "quantity", minimum=0.0)
 
     def to_dict(self) -> dict[str, Any]:
-        result = {"order_intent_id": self.order_intent_id, "intent_id": self.intent_id,
+        result = {**fields(self), "order_intent_id": self.order_intent_id, "intent_id": self.intent_id,
                   "instrument_id": self.instrument_id, "broker_symbol": self.broker_symbol,
                   "side": self.side, "order_type": self.order_type, "price": self.price,
                   "quantity": self.quantity, "time_in_force": self.time_in_force,
@@ -133,7 +137,7 @@ class OrderIntent:
 
 
 @dataclass(frozen=True)
-class MetricContext:
+class MetricContext(StrategyAttributed):
     sampling_basis: str
     period_duration: str
     trading_calendar: str
@@ -152,6 +156,7 @@ class MetricContext:
     pnl_basis: Optional[str] = None
 
     def __post_init__(self) -> None:
+        super().__post_init__()
         if self.sampling_basis not in {"TRADE_BY_TRADE", "PERIODIC_CALENDAR"}:
             raise ValueError("unsupported metric sampling basis")
         if not self.period_duration or not self.trading_calendar:
@@ -174,7 +179,7 @@ class MetricContext:
             raise ValueError("unsupported realized/unrealized basis")
 
     def to_dict(self) -> dict[str, Any]:
-        return {"sampling_basis": self.sampling_basis, "period_duration": self.period_duration,
+        return {**fields(self), "sampling_basis": self.sampling_basis, "period_duration": self.period_duration,
                 "trading_calendar": self.trading_calendar, "annualization_factor": self.annualization_factor,
                 "return_unit": self.return_unit, "return_basis": self.return_basis,
                 "cost_basis": self.cost_basis, "horizon_id": self.horizon_id,

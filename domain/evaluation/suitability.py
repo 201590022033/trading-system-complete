@@ -5,6 +5,7 @@ from datetime import datetime
 from statistics import mean
 
 from intraday_instruments import DataGrade, InstrumentDefinition
+from domain.strategy.attribution import StrategyAttributed, fields, same_strategy
 
 VERSION = "instrument-suitability-v1"
 
@@ -36,7 +37,7 @@ class LiquidityEvidence:
 
 
 @dataclass(frozen=True)
-class InstrumentSuitability:
+class InstrumentSuitability(StrategyAttributed):
     instrument_id: str
     horizon_id: str
     evaluated_at: datetime
@@ -65,6 +66,7 @@ class InstrumentSuitability:
     provenance: dict = field(default_factory=dict)
 
     def __post_init__(self):
+        super().__post_init__()
         if self.evaluated_at.tzinfo is None or self.evaluated_at.utcoffset() is None:
             raise ValueError("evaluated_at must be timezone-aware")
         if self.overall_status not in {"SUITABLE", "CONDITIONALLY_SUITABLE", "INSUFFICIENT_EVIDENCE", "UNSUPPORTED", "BLOCKED"}:
@@ -97,7 +99,7 @@ def _feature_summary(records):
 def evaluate_suitability(instrument: InstrumentDefinition, horizon_id: str, evaluated_at: datetime,
                          *, data: SuitabilityEvidence, features=(), costs=None, liquidity=None,
                          execution_required=False, human_permitted=True, manually_blocked=False,
-                         regime_coverage="UNKNOWN", provenance=None) -> InstrumentSuitability:
+                         regime_coverage="UNKNOWN", provenance=None, strategy_profile=None) -> InstrumentSuitability:
     """Evaluate hard eligibility first, then report independent soft dimensions."""
     if not isinstance(instrument, InstrumentDefinition):
         raise TypeError("canonical InstrumentDefinition required")
@@ -128,6 +130,8 @@ def evaluate_suitability(instrument: InstrumentDefinition, horizon_id: str, eval
     if intraday and data.data_grade != DataGrade.EXECUTION:
         reasons.append("INTRADAY_NOT_EXECUTION_GRADE")
     records, learned, insufficient, positive, negative = _feature_summary(features)
+    for record in records:
+        same_strategy(record, strategy_profile)
     if not records:
         feature_status = "UNAVAILABLE"
     elif learned:
@@ -171,6 +175,7 @@ def evaluate_suitability(instrument: InstrumentDefinition, horizon_id: str, eval
         stability, costs.expected_cost_bps if costs else None, tuple(blockers), tuple(dict.fromkeys(reasons)),
         {"instrument_registry_version": instrument.version, "data_source": data.source_type,
          "candidate": False, **(provenance or {})},
+        **fields(strategy_profile),
     )
 
 

@@ -6,6 +6,7 @@ from enum import Enum
 from math import isfinite
 from types import MappingProxyType
 from typing import Mapping
+from domain.strategy.attribution import StrategyAttributed, fields, same_strategy
 
 
 VERSION = "risk-exposure-v1"
@@ -152,7 +153,7 @@ class FXConversion:
 
 
 @dataclass(frozen=True)
-class ApprovedRiskIntent:
+class ApprovedRiskIntent(StrategyAttributed):
     policy_id: str
     instrument_id: str
     position_size: float
@@ -164,7 +165,7 @@ class ApprovedRiskIntent:
 
 
 @dataclass(frozen=True)
-class RiskEvaluation:
+class RiskEvaluation(StrategyAttributed):
     evaluation_id: str
     risk_version: str
     evaluated_at: datetime
@@ -191,6 +192,9 @@ class RiskEvaluation:
     approved_intent: ApprovedRiskIntent | None = None
 
     def __post_init__(self):
+        super().__post_init__()
+        if self.approved_intent is not None:
+            same_strategy(self, self.approved_intent)
         object.__setattr__(self, "evaluated_at", _utc(self.evaluated_at, "evaluated_at"))
         object.__setattr__(self, "hard_limit_checks", MappingProxyType(dict(self.hard_limit_checks)))
         object.__setattr__(self, "provenance", MappingProxyType(dict(self.provenance)))
@@ -203,6 +207,7 @@ class RiskEvaluation:
 
     def to_dict(self) -> dict[str, object]:
         return {
+            **fields(self),
             "evaluation_id": self.evaluation_id, "risk_version": self.risk_version,
             "evaluated_at": self.evaluated_at.isoformat(), "policy_id": self.policy_id,
             "instrument_id": self.instrument_id, "status": self.status.value,

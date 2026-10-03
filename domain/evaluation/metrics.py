@@ -5,21 +5,23 @@ from statistics import mean, stdev
 from types import MappingProxyType
 from typing import Callable, Mapping
 from domain.contracts.trade import MetricContext
+from domain.strategy.attribution import StrategyAttributed, fields, same_strategy
 
 VERSION="canonical-metrics-v1"; LEGACY_VERSION="legacy-tstat-like-v1"
 
 @dataclass(frozen=True)
-class MetricResult:
+class MetricResult(StrategyAttributed):
  metric_id:str; metric_version:str; value:float|None; context:MetricContext
  sample_count:int; effective_sample_count:float; minimum_required_sample:int
  status:str; warnings:tuple[str,...]=(); provenance:Mapping[str,object]=field(default_factory=dict)
  def __post_init__(self):
+  super().__post_init__(); same_strategy(self, self.context)
   if self.status not in {'VALID','INSUFFICIENT_EVIDENCE','INVALID_CONTEXT','UNAVAILABLE'}: raise ValueError('invalid metric status')
   if self.value is not None and (isinstance(self.value,bool) or not isfinite(self.value)): raise ValueError('metric value must be finite or unavailable')
   if self.sample_count<0 or self.effective_sample_count<0 or self.minimum_required_sample<0: raise ValueError('sample depths must be nonnegative')
   if self.status!='VALID' and self.value is not None: raise ValueError('invalid/unavailable metrics cannot carry numeric zero or value')
   object.__setattr__(self,'provenance',MappingProxyType(dict(self.provenance)))
- def to_dict(self): return {'metric_id':self.metric_id,'metric_version':self.metric_version,'value':self.value,'context':self.context.to_dict(),'sample_count':self.sample_count,'effective_sample_count':self.effective_sample_count,'minimum_required_sample':self.minimum_required_sample,'status':self.status,'warnings':list(self.warnings),'provenance':dict(self.provenance)}
+ def to_dict(self): return {**fields(self),'metric_id':self.metric_id,'metric_version':self.metric_version,'value':self.value,'context':self.context.to_dict(),'sample_count':self.sample_count,'effective_sample_count':self.effective_sample_count,'minimum_required_sample':self.minimum_required_sample,'status':self.status,'warnings':list(self.warnings),'provenance':dict(self.provenance)}
 
 @dataclass(frozen=True)
 class MetricDefinition:
@@ -34,7 +36,7 @@ class MetricRegistry:
  def definitions(self): return tuple(self._items[k] for k in sorted(self._items))
 
 def _result(mid,ctx,values,status='VALID',value=None,warnings=(),minimum=1,version=VERSION,effective=None):
- n=len(values); return MetricResult(mid,version,value,ctx,n,float(n if effective is None else effective),minimum,status,tuple(warnings),{'library_version':VERSION})
+ n=len(values); return MetricResult(mid,version,value,ctx,n,float(n if effective is None else effective),minimum,status,tuple(warnings),{'library_version':VERSION}, **fields(ctx))
 def _finite(values): return tuple(float(x) for x in values if x is not None and isfinite(float(x)))
 def _context(ctx,mid,*,unit=None,periodic=False):
  if not isinstance(ctx,MetricContext) or ctx.metric_id not in {None,mid} or ctx.metric_version not in {None,VERSION,LEGACY_VERSION}: return False

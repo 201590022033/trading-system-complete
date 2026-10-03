@@ -8,6 +8,7 @@ from types import MappingProxyType
 from typing import Mapping
 from domain.risk import RiskEvaluation,RiskStatus
 from .adapter import UnsupportedBrokerCapability
+from domain.strategy.attribution import StrategyAttributed, fields, reference, same_strategy
 
 VERSION='paper-broker-v1';FILL_VERSION='paper-supplied-observation-v1'
 class PaperBrokerError(RuntimeError):pass
@@ -27,9 +28,10 @@ class PaperExecutionConfig:
   if (self.slippage_per_unit==0 or self.commission_per_fill==0) and not self.zero_cost_test_fixture:raise ValueError('zero costs allowed only for explicit test fixture')
 
 @dataclass(frozen=True)
-class CanonicalOrderIntent:
+class CanonicalOrderIntent(StrategyAttributed):
  order_intent_id:str;created_at:datetime;broker:str;instrument_id:str;execution_symbol:str;direction:str;quantity:float;order_type:str;requested_entry:float|None;stop_price:float|None;target_price:float|None;time_in_force:str;risk_evaluation_id:str;allow_reversal:bool;provenance:Mapping[str,object]
  def __post_init__(self):
+  super().__post_init__()
   object.__setattr__(self,'created_at',utc(self.created_at,'created_at'))
   if not all((self.order_intent_id,self.instrument_id,self.execution_symbol,self.risk_evaluation_id)) or self.broker!='PAPER':raise ValueError('complete PAPER intent identity required')
   if self.direction not in {'LONG','SHORT'} or self.order_type!='MARKET' or self.time_in_force not in {'DAY','IOC'}:raise ValueError('only broker-neutral PAPER market intents are supported')
@@ -44,13 +46,13 @@ class MarketObservation:
   if not self.instrument_id or not self.source or not isfinite(self.price) or self.price<=0:raise ValueError('causal positive market observation required')
 
 @dataclass(frozen=True)
-class PaperOrder:
+class PaperOrder(StrategyAttributed):
  order_id:str;intent_id:str;instrument_id:str;direction:str;quantity:float;state:OrderState;created_at:datetime;updated_at:datetime;rejection_reason:str|None=None
 @dataclass(frozen=True)
-class PaperFill:
+class PaperFill(StrategyAttributed):
  fill_id:str;order_id:str;intent_id:str;instrument_id:str;direction:str;quantity:float;observed_price:float;fill_price:float;slippage:float;transaction_cost:float;net_cash_effect:float;filled_at:datetime;fill_model_version:str;observation_source:str
 @dataclass(frozen=True)
-class PaperPosition:
+class PaperPosition(StrategyAttributed):
  position_id:str;instrument_id:str;execution_symbol:str;state:PositionState;quantity:float;average_entry_price:float;opened_at:datetime;last_mark:float|None;unrealized_pnl:float;realized_pnl:float;originating_order_ids:tuple[str,...];fill_ids:tuple[str,...]
 @dataclass(frozen=True)
 class PaperAccount:
@@ -74,6 +76,7 @@ class PaperBroker:
  def _event(self,t,ref,detail,at):self._audit.append(AuditEvent(len(self._audit)+1,t,utc(at,'audit time'),ref,detail))
  def preview_order(self,intent):return {'broker':'PAPER','mode':'PAPER','intent_id':intent.order_intent_id,'quantity':intent.quantity,'fill_model':self.config.fill_model_version,'executable':False}
  def place_order(self,intent:CanonicalOrderIntent,*,risk:RiskEvaluation,observation:MarketObservation|None=None):
+  same_strategy(intent, risk)
   if intent.order_intent_id in {x.intent_id for x in self._orders.values()}:raise PaperBrokerError('duplicate active or historical order intent')
   now=intent.created_at;oid='paper-order:'+sha256(intent.order_intent_id.encode()).hexdigest();reason=None
   if risk.evaluation_id!=intent.risk_evaluation_id or risk.status not in {RiskStatus.APPROVED,RiskStatus.REDUCED}:reason='VALID_RISK_APPROVAL_REQUIRED'
@@ -81,22 +84,24 @@ class PaperBroker:
   elif intent.quantity>risk.approved_position_size:reason='QUANTITY_EXCEEDS_RISK_APPROVAL'
   elif risk.instrument_id!=intent.instrument_id:reason='RISK_INSTRUMENT_MISMATCH'
   existing=self._positions.get(intent.instrument_id)
+  if existing: same_strategy(intent, existing)
   if not reason and existing and existing.state.value!=intent.direction and intent.quantity>existing.quantity:reason='REVERSAL_REQUIRES_CLOSE_THEN_SEPARATE_ORDER'
   if reason:
-   order=PaperOrder(oid,intent.order_intent_id,intent.instrument_id,intent.direction,intent.quantity,OrderState.REJECTED,now,now,reason);self._orders[oid]=order;self._event('REJECTED',oid,reason,now);return order
-  order=PaperOrder(oid,intent.order_intent_id,intent.instrument_id,intent.direction,intent.quantity,OrderState.PENDING,now,now);self._orders[oid]=order;self._event('VALIDATED',oid,'risk-approved PAPER intent',now)
+   order=PaperOrder(oid,intent.order_intent_id,intent.instrument_id,intent.direction,intent.quantity,OrderState.REJECTED,now,now,reason, **fields(intent));self._orders[oid]=order;self._event('REJECTED',oid,reason,now);return order
+  order=PaperOrder(oid,intent.order_intent_id,intent.instrument_id,intent.direction,intent.quantity,OrderState.PENDING,now,now, **fields(intent));self._orders[oid]=order;self._event('VALIDATED',oid,'risk-approved PAPER intent',now)
   if observation is None:return order
   return self._fill(order,intent,observation)
  def _fill(self,order,intent,obs):
   if self.config.slippage_per_unit is None or self.config.commission_per_fill is None:raise PaperBrokerError('paper slippage and transaction costs are unconfigured')
   if obs.instrument_id!=intent.instrument_id or obs.observed_at<intent.created_at:raise PaperBrokerError('causal matching market observation required')
   sign=1 if intent.direction=='LONG' else -1;fp=obs.price+sign*self.config.slippage_per_unit;slip=intent.quantity*self.config.slippage_per_unit;cost=self.config.commission_per_fill;cash_effect=-sign*intent.quantity*fp-cost
-  fill=PaperFill('paper-fill:'+sha256((order.order_id+obs.observed_at.isoformat()).encode()).hexdigest(),order.order_id,intent.order_intent_id,intent.instrument_id,intent.direction,intent.quantity,obs.price,fp,slip,cost,cash_effect,obs.observed_at,self.config.fill_model_version,obs.source)
+  fill=PaperFill('paper-fill:'+sha256((order.order_id+obs.observed_at.isoformat()).encode()).hexdigest(),order.order_id,intent.order_intent_id,intent.instrument_id,intent.direction,intent.quantity,obs.price,fp,slip,cost,cash_effect,obs.observed_at,self.config.fill_model_version,obs.source, **fields(intent))
   self.cash+=cash_effect;self._fills.append(fill);self._orders[order.order_id]=replace(order,state=OrderState.FILLED,updated_at=obs.observed_at);self._apply(fill,intent.execution_symbol);self._marks[intent.instrument_id]=obs.price;self._event('FILL',fill.fill_id,self.config.fill_model_version,obs.observed_at);return self._orders[order.order_id]
  def _apply(self,f,symbol):
   p=self._positions.get(f.instrument_id);sign=1 if f.direction=='LONG' else -1
   if not p:
-   self._positions[f.instrument_id]=PaperPosition('paper-position:'+f.instrument_id,f.instrument_id,symbol,PositionState.LONG if sign>0 else PositionState.SHORT,f.quantity,f.fill_price,f.filled_at,f.observed_price,0.,0.,(f.order_id,),(f.fill_id,));return
+   self._positions[f.instrument_id]=PaperPosition('paper-position:'+f.instrument_id,f.instrument_id,symbol,PositionState.LONG if sign>0 else PositionState.SHORT,f.quantity,f.fill_price,f.filled_at,f.observed_price,0.,0.,(f.order_id,),(f.fill_id,), **fields(f));return
+  same_strategy(p, f)
   psign=1 if p.state is PositionState.LONG else -1
   if psign==sign:
    q=p.quantity+f.quantity;avg=(p.average_entry_price*p.quantity+f.fill_price*f.quantity)/q;self._positions[f.instrument_id]=replace(p,quantity=q,average_entry_price=avg,last_mark=f.observed_price,originating_order_ids=p.originating_order_ids+(f.order_id,),fill_ids=p.fill_ids+(f.fill_id,));return
@@ -110,7 +115,8 @@ class PaperBroker:
  def close_position(self,position_id,*,observation,risk):
   p=next((x for x in self._positions.values() if x.position_id==position_id),None)
   if not p:raise KeyError('position not found')
-  intent=CanonicalOrderIntent('close:'+position_id+':'+observation.observed_at.isoformat(),observation.observed_at,'PAPER',p.instrument_id,p.execution_symbol,'SHORT' if p.state is PositionState.LONG else 'LONG',p.quantity,'MARKET',None,None,None,'IOC',risk.evaluation_id,False,{'close_position_id':position_id})
+  same_strategy(p, risk)
+  intent=CanonicalOrderIntent('close:'+position_id+':'+observation.observed_at.isoformat(),observation.observed_at,'PAPER',p.instrument_id,p.execution_symbol,'SHORT' if p.state is PositionState.LONG else 'LONG',p.quantity,'MARKET',None,None,None,'IOC',risk.evaluation_id,False,{'close_position_id':position_id}, **fields(p))
   return self.place_order(intent,risk=risk,observation=observation)
  def cancel_order(self,order_id,at=None):
   o=self._orders[order_id]
@@ -150,6 +156,11 @@ class PaperBroker:
   for row in payload['positions']:
    p=read(PaperPosition,row,('opened_at',),{'state':PositionState},('originating_order_ids','fill_ids'));b._positions[p.instrument_id]=p
   b._audit=[read(AuditEvent,x,('recorded_at',)) for x in payload['audit']]
+  for fill in b._fills:
+   same_strategy(fill, b._orders[fill.order_id])
+  by_fill={f.fill_id:f for f in b._fills}
+  for position in b._positions.values():
+   for fid in position.fill_ids: same_strategy(position, by_fill[fid])
   if not isfinite(b.cash) or not isfinite(b.realized):
    raise PaperBrokerError('invalid paper monetary checkpoint')
   expected=b.starting_cash+sum(f.net_cash_effect for f in b._fills)

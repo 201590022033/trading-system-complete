@@ -1,5 +1,12 @@
 # Linear Fusion Roadmap
 
+2026-10-03: ADR 0036 completes attribution-only wiring within the sole ACTIVE
+workspace. New Swing 1.0.1 runs and paper/learning records retain exact version;
+legacy records/jobs/positions stay unattributed. Both-backend additive storage,
+retry/archives and learner version/horizon isolation preserve account/rules.
+Owner now authorizes core Swing technical/horizon shadow wiring AFTER this
+slice's acceptance and commit. No simultaneous stage, live order or promotion.
+
 2026-10-03: owner-authorized Strategy Profile Foundation + Trading Strategies
 shell (ADR 0035) is a bounded delivery within the sole ACTIVE operational demo
 workspace. Three immutable versioned profiles, read-only discovery and truthful

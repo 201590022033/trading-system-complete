@@ -5,6 +5,7 @@ from math import isfinite
 from domain.contracts.policy import CandidateTradePolicy, EntryPolicyType, ExitPolicyType, StopPolicyType
 from domain.policy.engine import TradePolicyEngine, PolicyContext
 from shadow_learning import stable_id
+from domain.strategy.attribution import fields
 
 VERSION = "paper-close-structure-v1"
 
@@ -45,7 +46,7 @@ def resolve_paper_policy(opportunity, *, now, observed_at, observed_price,
         raise ValueError("target outside positive price domain")
     expiry = now + timedelta(seconds=max_holding_seconds)
     context = PolicyContext(now, expiry, 86400, slippage_assumption={
-        "status": "CONFIGURED_PAPER_ASSUMPTION", "per_unit": slippage})
+        "status": "CONFIGURED_PAPER_ASSUMPTION", "per_unit": slippage}, **fields(opportunity))
     base = TradePolicyEngine().create(opportunity, created_at=now, context=context)
     snapshot = CandidateTradePolicy(VERSION, VERSION, EntryPolicyType.MARKET,
                                     StopPolicyType.STRUCTURAL_INVALIDATION,

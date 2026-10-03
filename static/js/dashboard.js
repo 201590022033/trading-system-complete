@@ -92,7 +92,7 @@ function renderAutomaticTechnicalScreen(item, share) {
     ${kv('Momentum interpretation',technical.momentum_20d_signal === 1?'Positive / LONG evidence':technical.momentum_20d_signal === -1?'Negative / SHORT evidence':technical.momentum_20d_signal === 0?'Neutral evidence':'Unavailable')}
     ${kv('RSI interpretation',technical.rsi_14_signal === 1?'Oversold / LONG evidence':technical.rsi_14_signal === -1?'Overbought / SHORT evidence':technical.rsi_14_signal === 0?'Neutral evidence':'Unavailable')}
     ${kv('Regime',regime.trend_state || regime.trend || 'Unavailable')}${kv('Volatility regime',regime.volatility_state || regime.volatility || 'Unavailable')}
-    ${kv('Evaluated',when(item.evaluated_at))}${kv('Price session',item.provenance?.last_usable_session)}${kv('Snapshot ID',item.opportunity_id)}
+    ${kv('Strategy',item.strategy_profile_id ? `${item.strategy_profile_id} / ${item.strategy_profile_version}` : 'LEGACY_UNATTRIBUTED')}${kv('Evaluated',when(item.evaluated_at))}${kv('Price session',item.provenance?.last_usable_session)}${kv('Snapshot ID',item.opportunity_id)}
     ${kv('Direction evidence',directionEvidence(item))}
     ${kv('Evidence samples',evidence.sample_count ?? item.sample_count ?? 'Unavailable')}${kv('Last available technical bar',when(technical.last_available_at))}
     ${kv('Canonical direction',item.direction)}${kv('Rank',item.rank == null?'Outside current Top 5':item.rank)}

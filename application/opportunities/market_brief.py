@@ -5,6 +5,7 @@ from statistics import mean
 
 from market_chart_registry import MARKET_CHART_INSTRUMENTS
 from shadow_learning import stable_id, timestamp
+from domain.strategy.attribution import fields, reference, identity_suffix, same_strategy
 from .public_research import _available_at, public_share_catalog
 
 
@@ -47,7 +48,8 @@ def _etf_momentum(chart, evaluated_at):
             "return_20_sessions": usable[-1][1] / usable[-21][1] - 1}
 
 
-def record_benchmark_decisions(repository, account_id, context_charts, market_context, *, evaluated_at):
+def record_benchmark_decisions(repository, account_id, context_charts, market_context, *, evaluated_at,
+                               strategy_profile=None):
     """Freeze four ETF trend hypotheses, not ETF trade recommendations."""
     now = _time(evaluated_at)
     saved = 0
@@ -55,13 +57,13 @@ def record_benchmark_decisions(repository, account_id, context_charts, market_co
         if key not in CONTEXT_ETFS:
             continue
         record_id = stable_id("daily-benchmark", account_id, key, movement["session_at"],
-                              BENCHMARK_VERSION)
+                              BENCHMARK_VERSION + identity_suffix(strategy_profile))
         if repository.paper_record(record_id) is not None:
             continue
         values = _etf_series(context_charts[key], now)
         if not values or values[-1][0].isoformat() != movement["session_at"]:
             continue
-        payload = {"decision_id": record_id, "version": BENCHMARK_VERSION,
+        payload = {**fields(strategy_profile), "decision_id": record_id, "version": BENCHMARK_VERSION,
                    "mode": "SHADOW_RESEARCH", "benchmark_id": key,
                    "signal_bar_at": movement["session_at"],
                    "market_state": market_context["state"],
@@ -92,7 +94,7 @@ def label_benchmark_decisions(repository, account_id, context_charts, *, evaluat
             continue
         entry_at, entry_close = later[0]
         exit_at, exit_close = later[decision["horizon_sessions"]]
-        payload = {"outcome_id": outcome_id, "decision_id": decision["decision_id"],
+        payload = {**fields(decision), "outcome_id": outcome_id, "decision_id": decision["decision_id"],
                    "version": BENCHMARK_VERSION, "mode": "SHADOW_RESEARCH",
                    "benchmark_id": key, "market_state": decision["market_state"],
                    "signal_bar_at": decision["signal_bar_at"],
@@ -105,14 +107,14 @@ def label_benchmark_decisions(repository, account_id, context_charts, *, evaluat
     return saved
 
 
-def benchmark_learning_summary(repository, account_id, *, evaluated_at):
+def benchmark_learning_summary(repository, account_id, *, evaluated_at, strategy_profile=None):
     """Independent-session descriptive evidence against cash, never a forecast."""
     now = _time(evaluated_at)
     rows = repository.paper_records(account_id, BENCHMARK_OUTCOME_KIND,
                                     as_of=now.isoformat(), limit=MAX_BENCHMARK_RECORDS)
     groups = {}
     for row in rows:
-        if row.get("version") == BENCHMARK_VERSION:
+        if row.get("version") == BENCHMARK_VERSION and reference(row) == reference(strategy_profile):
             groups.setdefault((row["benchmark_id"], row["market_state"]), []).append(row)
     result = {}
     for (key, state), items in sorted(groups.items()):
@@ -126,7 +128,7 @@ def benchmark_learning_summary(repository, account_id, *, evaluated_at):
             "mean_gross_return": mean(nonoverlap),
             "loss_session_fraction": sum(value < 0 for value in nonoverlap) / len(nonoverlap),
             "state": "COLLECTING" if len(nonoverlap) < 30 else "READY_FOR_REVIEW"}
-    return {"version": BENCHMARK_VERSION, "basis": "LISTED_ETF_CLOSE_PROXY_BEFORE_COSTS",
+    return {**fields(strategy_profile), "version": BENCHMARK_VERSION, "basis": "LISTED_ETF_CLOSE_PROXY_BEFORE_COSTS",
             "comparison": "CASH_ZERO_GROSS_RETURN", "by_benchmark_and_market_state": result,
             "governance": "DESCRIPTIVE_RESEARCH_ONLY"}
 
@@ -167,7 +169,7 @@ def build_market_context(context_charts, share_series, *, evaluated_at):
 
 
 def build_decision_brief(opportunities, share_series, market_context, *, available_cash,
-                         open_instruments=(), evaluated_at, benchmark_learning=None):
+                         open_instruments=(), evaluated_at, benchmark_learning=None, strategy_profile=None):
     """Prioritise human review; never turn delayed closes into an order."""
     now = timestamp(evaluated_at.isoformat() if hasattr(evaluated_at, "isoformat")
                     else evaluated_at)
@@ -175,6 +177,7 @@ def build_decision_brief(opportunities, share_series, market_context, *, availab
     by_instrument = {value["instrument_id"]: key for key, value in share_series.items()}
     ideas = []
     for opportunity in opportunities:
+        same_strategy(opportunity, strategy_profile)
         if opportunity.rank is None or opportunity.rank > 5:
             continue
         key = by_instrument.get(opportunity.instrument_id)
@@ -195,13 +198,13 @@ def build_decision_brief(opportunities, share_series, market_context, *, availab
             state, reason = "PAPER_CASH_LIMIT", "One share exceeds available simulated cash"
         else:
             state, reason = "REVIEW", "Check current quote, spread, total costs and risk before any manual decision"
-        ideas.append({"instrument_id": opportunity.instrument_id, "symbol": key,
+        ideas.append({**fields(opportunity), "instrument_id": opportunity.instrument_id, "symbol": key,
                       "sector": sector, "rank": opportunity.rank,
                       "legacy_ranking_score": opportunity.ranking_score,
                       "state": state, "reason": reason, "last_completed_close": price,
                       "last_completed_bar_at": bar_at.isoformat(),
                       "minimum_one_share_notional": price})
-    return {"version": VERSION, "evaluated_at": now.isoformat(),
+    return {**fields(strategy_profile), "version": VERSION, "evaluated_at": now.isoformat(),
             "market": market_context, "ideas": ideas[:5],
             "benchmark_learning": benchmark_learning or {},
             "simulated_available_cash": available_cash,

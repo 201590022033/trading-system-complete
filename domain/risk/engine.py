@@ -3,6 +3,7 @@
 from hashlib import sha256
 from math import floor, isclose
 from datetime import timezone
+from domain.strategy.attribution import fields
 
 from domain.contracts.policy import StopPolicyType
 from domain.policy.engine import TradePolicy
@@ -137,7 +138,7 @@ class RiskEngine:
         approved_budget = min(budget, loss)
         status = RiskStatus.REDUCED if reductions or loss < requested else RiskStatus.APPROVED
         intent = ApprovedRiskIntent(policy.policy_id, policy.instrument_id, rounded, notional,
-                                    gearing, margin, loss, portfolio.account_currency)
+                                    gearing, margin, loss, portfolio.account_currency, **fields(policy))
         checks.update({"per_trade_risk": "PASS", "instrument_exposure": "PASS",
                        "sector_exposure": "PASS", "correlated_exposure": "PASS", "gearing": "PASS"})
         return self._result(status, policy, evaluated_at, limits, portfolio, metadata,
@@ -168,7 +169,7 @@ class RiskEngine:
             estimated_loss_at_stop, reduction_reasons, rejection_reasons, blockers,
             checks or {}, {"limits_id": limits.limits_id, "portfolio_state_id": portfolio.state_id,
                            "metadata_source": metadata.source,
-                           "fx_source": fx.source if fx else "SAME_CURRENCY_OR_UNAVAILABLE"}, approved_intent)
+                           "fx_source": fx.source if fx else "SAME_CURRENCY_OR_UNAVAILABLE"}, approved_intent, **fields(policy))
 
 
 __all__ = ["RiskEngine"]

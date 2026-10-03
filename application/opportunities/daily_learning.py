@@ -10,6 +10,7 @@ from statistics import mean
 
 from domain.evaluation.effectiveness import FeatureOutcome
 from shadow_learning import stable_id, timestamp
+from domain.strategy.attribution import fields, reference, identity_suffix
 
 
 VERSION = "ranked-long-swing-v1"
@@ -53,11 +54,12 @@ def record_decisions(repository, account_id, opportunities, series, *, evaluated
         entry_at, entry_close, _ = bars[-1]
         decision_id = stable_id(
             "ranked-long-swing-decision", account_id, opportunity.instrument_id,
-            entry_at.isoformat(), VERSION,
+            entry_at.isoformat(), VERSION + identity_suffix(opportunity),
         )
         if repository.paper_record(decision_id) is not None:
             continue
         payload = {
+            **fields(opportunity),
             "decision_id": decision_id,
             "version": VERSION,
             "feature_id": FEATURE_ID,
@@ -111,6 +113,7 @@ def label_matured(repository, account_id, series, *, evaluated_at):
         if not all(isfinite(value) for value in (entry_close, exit_close, gross, net)):
             continue
         payload = {
+            **fields(decision),
             "outcome_id": outcome_id,
             "decision_id": decision["decision_id"],
             "version": VERSION,
@@ -156,6 +159,7 @@ def feature_outcomes(repository, account_id, *, evaluated_at):
             _time(row["decision_at"]), _time(row["entry_bar_at"]),
             _time(row["exit_bar_at"]), float(row["gross_return"]),
             float(row["net_return"]), row["outcome_id"],
+            **fields(row),
         ))
     return tuple(result)
 
@@ -174,7 +178,8 @@ def record_candidate_panel(repository, account_id, opportunities, series, *, eva
             continue
         signal_at, signal_close, _ = series[symbol]["bars"][-1]
         record_id = stable_id("daily-candidate", account_id, opportunity.instrument_id,
-                              signal_at.isoformat(), PANEL_VERSION)
+                              signal_at.isoformat(), PANEL_VERSION + identity_suffix(opportunity)
+                              + (f"|{horizon_sessions}|{cost_bps}" if reference(opportunity) else ""))
         if repository.paper_record(record_id) is not None:
             continue
         evidence = opportunity.input_evidence
@@ -194,6 +199,7 @@ def record_candidate_panel(repository, account_id, opportunities, series, *, eva
                     and opportunity.direction == "LONG"
                     and opportunity.eligibility_status == "ELIGIBLE")
         payload = {
+            **fields(opportunity),
             "decision_id": record_id, "version": PANEL_VERSION,
             "mode": "SHADOW_RESEARCH", "instrument_id": opportunity.instrument_id,
             "symbol": symbol, "decision_at": now.isoformat(),
@@ -249,6 +255,7 @@ def label_candidate_panel(repository, account_id, series, *, evaluated_at,
         gross = float(exit_close) / float(entry_close) - 1
         net = gross - float(decision["cost_bps"]) / 10000
         payload = {
+            **fields(decision),
             "outcome_id": outcome_id, "decision_id": decision["decision_id"],
             "version": PANEL_VERSION, "mode": "SHADOW_RESEARCH",
             "instrument_id": decision["instrument_id"], "symbol": decision["symbol"],
@@ -273,7 +280,8 @@ def label_candidate_panel(repository, account_id, series, *, evaluated_at,
     return saved
 
 
-def candidate_panel_summary(repository, account_id, *, evaluated_at, outcome_kind=PANEL_OUTCOME_KIND):
+def candidate_panel_summary(repository, account_id, *, evaluated_at, outcome_kind=PANEL_OUTCOME_KIND,
+                            strategy_profile=None, horizon_sessions=DEFAULT_HORIZON_SESSIONS):
     """Report matched selected-versus-other outcomes; never infer trade skill."""
     now = _time(evaluated_at)
     rows = repository.paper_records(
@@ -282,6 +290,8 @@ def candidate_panel_summary(repository, account_id, *, evaluated_at, outcome_kin
     states = {}
     for row in rows:
         if row.get("version") != PANEL_VERSION:
+            continue
+        if reference(row) != reference(strategy_profile) or row.get("horizon_sessions") != horizon_sessions:
             continue
         key = (row["signal_bar_at"], row["entry_bar_at"], row["exit_bar_at"])
         groups.setdefault(key, {"selected": [], "other": []})[
@@ -301,8 +311,9 @@ def candidate_panel_summary(repository, account_id, *, evaluated_at, outcome_kin
     for pair in nonoverlap:
         by_market_state.setdefault(states[pair[0]], []).append((pair[1], pair[2]))
     return {
+        **fields(strategy_profile),
         "state": "COLLECTING_COMPARISONS" if len(nonoverlap) < 30 else "READY_FOR_REVIEW",
-        "version": PANEL_VERSION, "horizon_sessions": DEFAULT_HORIZON_SESSIONS,
+        "version": PANEL_VERSION, "horizon_sessions": horizon_sessions,
         "outcome_count": sum(len(group["selected"]) + len(group["other"])
                              for group in groups.values()),
         "selected_outcome_count": sum(len(group["selected"]) for group in groups.values()),

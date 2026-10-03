@@ -3,7 +3,7 @@ from dataclasses import asdict
 from datetime import datetime, timezone
 import os
 from .paper_config import PaperLoopConfig
-from .paper_loop import PaperLoop, opportunity_from_dict
+from .paper_loop import PaperLoop, opportunity_from_dict, paper_feature_outcomes
 from .daily_learning import candidate_panel_summary
 from .market_brief import CONTEXT_ETFS
 from .service import OpportunityService
@@ -11,6 +11,8 @@ from .public_research import public_share_catalog, _available_at
 from domain.broker.paper import PaperBroker
 from shadow_learning import stable_id, timestamp
 from workers.paper_loop import PaperScheduler, FrozenPaperHandler
+from domain.strategy import DEFAULT_STRATEGY_REGISTRY
+from domain.strategy.attribution import fields, reference
 
 
 FROZEN_HISTORY_BARS = 60
@@ -70,13 +72,17 @@ def persisted_news(repository, now):
     return {"available_at": now.isoformat(), "items": items}
 
 
-def compose_paper_worker(repository, config, *, fetcher=None, clock=None):
+def compose_paper_worker(repository, config, *, fetcher=None, clock=None, strategy_profile=None):
     from jse_adapter import YahooFinanceFetcher
     clock = clock or (lambda: datetime.now(timezone.utc).isoformat())
     fetcher = fetcher or YahooFinanceFetcher()
     loop = PaperLoop(repository, config)
     loop.initialize()
-    scheduler = PaperScheduler(repository, config.account_id, interval_seconds=config.interval_seconds)
+    profile = strategy_profile or DEFAULT_STRATEGY_REGISTRY.resolve("jse_swing_3_5d", "1.0.1")
+    if profile.strategy_family != "jse_cash_swing" or profile.canonical_workflow_tab != "canonical-opportunities":
+        raise ValueError("only the existing Swing paper workflow may be attributed")
+    scheduler = PaperScheduler(repository, config.account_id, interval_seconds=config.interval_seconds,
+                               strategy_profile=profile)
     scanner = None
     if os.environ.get("PAPER_NEWS_ENABLED") == "1":
         from sentiment_analyzer import MacroSentimentScanner
@@ -134,6 +140,7 @@ def compose_paper_worker(repository, config, *, fetcher=None, clock=None):
     def processor(key, frozen):
         if frozen["input"].get("duplicate_session"):
             return {"mode": "PAPER", "live_execution": False,
+                    **fields(frozen),
                     "evaluated_at": frozen["evaluated_at"],
                     "state": "NO_NEW_COMPLETED_SESSION",
                     "source_signature": frozen["input"]["source_signature"]}
@@ -218,6 +225,7 @@ def paper_status(repository, config):
     stale = at is None or at > now or (now-at).total_seconds() > config.max_price_age_seconds
     snapshot = (repository.paper_record(state["ranking_record_id"])
                 if state.get("ranking_record_id") else None)
+    strategy = reference(snapshot)
     from .paper_controls import controls_for, AGGRESSION
     controls = controls_for(state, config)
     cutoff = now.isoformat()
@@ -228,13 +236,34 @@ def paper_status(repository, config):
     learning_outcomes = repository.paper_records(
         config.account_id, "learning-outcome", as_of=cutoff, limit=1000)
     panel_summary = (snapshot.get("candidate_learning") if snapshot else None) or \
-        candidate_panel_summary(repository, config.account_id, evaluated_at=now)
+        candidate_panel_summary(repository, config.account_id, evaluated_at=now,
+            strategy_profile=strategy, horizon_sessions=config.learning_horizon_sessions)
+    from domain.evaluation.effectiveness import ContextualEffectivenessLearner
+    strategy_outcomes = paper_feature_outcomes(repository, config.account_id, now,
+        horizon_sessions=config.holding_sessions, strategy_profile=strategy)
+    estimates = [ContextualEffectivenessLearner().estimate(strategy_outcomes,
+        feature_id="paper_strategy", evaluated_at=now, instrument_id=instrument,
+        horizon_id=("1d" if config.holding_sessions == 1 else f"{config.holding_sessions}_sessions"),
+        strategy_profile=strategy) for instrument in sorted({row.instrument_id for row in strategy_outcomes})]
+    strategy_learning = {**fields(strategy), "strategy_attribution_state": "ATTRIBUTED" if strategy else "LEGACY_UNATTRIBUTED",
+        "eligible_closed_outcomes": len(strategy_outcomes), "holding_sessions": config.holding_sessions,
+        "minimum_sample": 30, "read_limit": 400, "governance": "RESEARCH_ONLY_NOT_PROMOTION",
+        "cost_basis": "SIMULATED_FILL_COSTS_NOT_ACTUAL_OST_FEES",
+        "cells": [{"instrument_id": row.instrument_id, "horizon_id": row.horizon_id,
+                   "status": row.status, "sample_count": row.sample_count, "negative_outcomes": row.negative_outcomes,
+                   "expected_return_net": row.expected_return_net, "uncertainty": row.uncertainty,
+                   "fallback_level": row.fallback_level} for row in estimates]}
+    scope = ("s.strategy_profile_id=? AND s.strategy_profile_version=?" if strategy else "s.record_id IS NULL")
+    decision_count = repository._job_sql("SELECT COUNT(*) FROM paper_records p LEFT JOIN strategy_record_refs s ON p.record_id=s.record_id "
+        "WHERE p.account_id=? AND p.kind='candidate-decision' AND p.available_at<=? AND " + scope,
+        (config.account_id, cutoff, *([strategy.strategy_profile_id, strategy.strategy_profile_version] if strategy else [])), rows=True)[0][0]
     counts = {}
     for outcome in learning_outcomes:
         if outcome.get("horizon_sessions") == config.learning_horizon_sessions:
             key = outcome["instrument_id"]
             counts[key] = counts.get(key, 0) + 1
     proposed = [{"instrument_id": row["opportunity"]["instrument_id"],
+                 **fields(row["opportunity"]),
                  "direction": row["opportunity"]["direction"],
                  "rank": row["opportunity"]["rank"], "evaluated_at": row["opportunity"]["evaluated_at"],
                  "state": "PAUSED" if controls["paused"] else "SHORT_BORROW_UNAVAILABLE" if row["opportunity"]["direction"] == "SHORT" else "WAITING_FOR_NEXT_COMPLETE_SESSION"}
@@ -243,6 +272,7 @@ def paper_status(repository, config):
         "SELECT COUNT(*) FROM evidence_records WHERE parser_version=? AND ingested_at<=?",
         ("persisted-public-analysis-v1", cutoff), rows=True)[0][0]
     return {"state": _paper_state(state, snapshot, stale), "mode": "PAPER", "live_execution": False,
+            **fields(strategy), "strategy_attribution_state": "ATTRIBUTED" if strategy else "LEGACY_UNATTRIBUTED",
             "account_id": config.account_id, "last_evaluated_at": state["last_evaluated_at"],
             "controls": controls, "effective_risk_fraction": config.risk_fraction * AGGRESSION[controls["aggression"]],
             "risk_limits": config.limits, "model": "Daily close · ZAR cash shares · long only",
@@ -255,7 +285,8 @@ def paper_status(repository, config):
                          "state": "LEARNED_CELLS_AVAILABLE" if any(n >= 30 for n in counts.values()) else "COLLECTING_OUTCOMES",
                          "kind": "Legacy selected-only v1 outcomes; no automatic candidate learning"},
             "candidate_learning": {**panel_summary,
-                                   "decision_count": totals.get("candidate-decision", 0)},
+                                   "decision_count": decision_count},
+            "strategy_learning": strategy_learning,
             "decision_brief": snapshot.get("decision_brief") if snapshot else None,
             "etf_research": snapshot.get("etf_research") if snapshot else None,
             "equity_history": [{"at": row["evaluated_at"], "equity": row["account"]["equity"]} for row in reversed(cycles)],

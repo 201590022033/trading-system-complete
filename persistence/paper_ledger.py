@@ -5,6 +5,7 @@ import base64
 import hashlib
 from contextlib import contextmanager
 from shadow_learning import timestamp
+from domain.strategy.attribution import fields, reference, same_strategy, validate_frozen_profile
 
 
 def encode(value):
@@ -12,6 +13,63 @@ def encode(value):
 
 
 class PaperLedger:
+    def save_strategy_definition(self, frozen):
+        ref = validate_frozen_profile(frozen)
+        if ref is None:
+            raise ValueError("exact frozen strategy definition required")
+        raw, digest = encode(frozen["strategy_profile_snapshot"]), frozen["strategy_profile_sha256"]
+        key = (ref.strategy_profile_id, ref.strategy_profile_version)
+        with self.transaction():
+            self._job_sql("INSERT INTO strategy_definitions VALUES (?,?,?,?) ON CONFLICT(strategy_profile_id,strategy_profile_version) DO NOTHING",
+                          (*key, raw, digest))
+            rows = self._job_sql("SELECT payload,sha256 FROM strategy_definitions WHERE strategy_profile_id=? AND strategy_profile_version=?", key, rows=True)
+            if tuple(rows[0]) != (raw, digest):
+                raise ValueError("strategy definition is immutable; use a new version")
+
+    def strategy_definition(self, strategy_profile_id, strategy_profile_version):
+        rows = self._job_sql("SELECT payload,sha256 FROM strategy_definitions WHERE strategy_profile_id=? AND strategy_profile_version=?",
+                             (strategy_profile_id, strategy_profile_version), rows=True)
+        if not rows:
+            return None
+        raw, digest = rows[0]
+        if hashlib.sha256(raw.encode()).hexdigest() != digest:
+            raise ValueError("stored strategy definition checksum mismatch")
+        return json.loads(raw)
+
+    def _strategy_record(self, record_id, account_id, kind, payload):
+        ref = reference(payload)
+        if ref is not None and self.strategy_definition(ref.strategy_profile_id, ref.strategy_profile_version) is None:
+            raise ValueError("strategy definition must be registered before records")
+        for child in (*payload.get("opportunities", ()), *payload.get("etf_opportunities", ())):
+            same_strategy(payload, child)
+        for name in ("risk", "approved_intent"):
+            if isinstance(payload.get(name), dict):
+                same_strategy(payload, payload[name])
+        if kind == "input" and ref is not None:
+            definition = self.strategy_definition(ref.strategy_profile_id, ref.strategy_profile_version)
+            validate_frozen_profile(payload, definition=definition)
+        # Parents can live in hot storage or lossless archives. No hot-table FK
+        # is used, so moving a snapshot to its archive cannot destroy lineage.
+        for name in ("decision_id", "policy_id", "risk_evaluation_id", "entry_fill_record_id", "exit_fill_record_id"):
+            parent_id = payload.get(name)
+            if not parent_id or parent_id == record_id:
+                continue
+            parent = self.paper_record(parent_id)
+            if parent is not None:
+                same_strategy(payload, parent)
+            elif ref is not None and ((name == "decision_id" and kind.endswith("outcome")) or
+                    (name == "policy_id" and kind in {"risk", "intent"}) or
+                    (name == "risk_evaluation_id" and kind == "intent") or
+                    name in {"entry_fill_record_id", "exit_fill_record_id"}):
+                raise ValueError("attributed record requires its exact durable parent")
+        if ref is None:
+            return
+        self._job_sql("INSERT INTO strategy_record_refs VALUES (?,?,?,?,?) ON CONFLICT(record_id) DO NOTHING",
+                      (record_id, account_id, kind, ref.strategy_profile_id, ref.strategy_profile_version))
+        row = self._job_sql("SELECT account_id,kind,strategy_profile_id,strategy_profile_version FROM strategy_record_refs WHERE record_id=?", (record_id,), rows=True)[0]
+        if tuple(row) != (account_id, kind, ref.strategy_profile_id, ref.strategy_profile_version):
+            raise ValueError("immutable strategy record reference conflict")
+
     def create_paper_account(self, account_id, initial):
         if not account_id or initial.get("mode") != "PAPER":
             raise ValueError("explicit PAPER account required")
@@ -59,6 +117,7 @@ class PaperLedger:
                                  (record_id,), rows=True)
             if tuple(rows[0]) != (account_id, kind, at, serialized):
                 raise ValueError("conflicting immutable paper record")
+            self._strategy_record(record_id, account_id, kind, payload)
 
     def paper_record(self, record_id):
         rows = self._job_sql("SELECT payload FROM paper_records WHERE record_id=?", (record_id,), rows=True)

@@ -10,13 +10,14 @@ from typing import Mapping
 from domain.contracts.policy import CandidateTradePolicy, EntryPolicyType, ExitPolicyType, StopPolicyType
 from domain.evaluation.opportunity import ResearchOpportunity
 from .families import AUDIT_ONLY, HORIZON_ALIGNED, PolicyFamily, VERSION as FAMILY_VERSION
+from domain.strategy.attribution import StrategyAttributed, fields, same_strategy
 
 VERSION = "trade-policy-v1"
 NON_EXECUTABLE = "NON_EXECUTABLE_RESEARCH_PLAN"
 
 
 @dataclass(frozen=True)
-class PolicyContext:
+class PolicyContext(StrategyAttributed):
     """Causally available scheduling context; no future price is accepted."""
 
     available_at: datetime
@@ -27,6 +28,7 @@ class PolicyContext:
         default_factory=lambda: {"status": "UNAVAILABLE"})
 
     def __post_init__(self):
+        super().__post_init__()
         if self.available_at.tzinfo is None or self.available_at.utcoffset() is None:
             raise ValueError("context availability must be timezone-aware")
         if self.horizon_end is not None and (
@@ -41,7 +43,7 @@ class PolicyContext:
 
 
 @dataclass(frozen=True)
-class TradePolicy:
+class TradePolicy(StrategyAttributed):
     policy_id: str
     policy_version: str
     policy_family_id: str
@@ -98,6 +100,7 @@ class TradePolicy:
     provenance: Mapping[str, object] = field(default_factory=dict)
 
     def __post_init__(self):
+        super().__post_init__()
         for name in ("created_at", "allowed_entry_window_start", "allowed_entry_window_end",
                      "invalidation_time", "time_exit_at"):
             value = getattr(self, name)
@@ -194,6 +197,7 @@ class TradePolicyEngine:
             raise TypeError("canonical M13 ResearchOpportunity required")
         if not isinstance(context, PolicyContext):
             raise TypeError("canonical PolicyContext required")
+        same_strategy(opportunity, context)
         if created_at.tzinfo is None or created_at.utcoffset() is None:
             raise ValueError("created_at must be timezone-aware")
         created_at = created_at.astimezone(timezone.utc)
@@ -285,6 +289,7 @@ class TradePolicyEngine:
              "opportunity_version": opportunity.opportunity_version,
              "ranking_version": opportunity.ranking_version,
              "policy_family_version": FAMILY_VERSION},
+            **fields(opportunity),
         )
 
 

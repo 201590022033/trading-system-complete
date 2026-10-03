@@ -9,6 +9,7 @@ from types import MappingProxyType
 from typing import Mapping, Protocol
 
 from domain.contracts.trade import MetricContext
+from domain.strategy.attribution import StrategyAttributed, same_strategy
 
 VERSION = "experiment-registry-v1"
 SECRET_KEYS = {"password", "api_key", "secret", "token", "cst", "x-security-token", "cookie", "authorization"}
@@ -75,7 +76,7 @@ class FactorialDesign:
 
 
 @dataclass(frozen=True)
-class ExperimentDefinition:
+class ExperimentDefinition(StrategyAttributed):
     experiment_id: str; experiment_version: str; created_at: datetime; created_by: str; mode: ExperimentMode
     strategy_family: str; instrument_scope: tuple[str,...]; horizon_scope: tuple[str,...]
     baseline_id: str; baseline_version: str; baseline_commit: str
@@ -88,6 +89,7 @@ class ExperimentDefinition:
     data_boundaries: tuple[DataBoundary,...]; factorial_design: FactorialDesign | None = None
     registry_version: str = VERSION
     def __post_init__(self):
+        super().__post_init__()
         required=(self.experiment_id,self.experiment_version,self.created_by,self.strategy_family,self.baseline_id,self.baseline_version,self.baseline_commit,self.observed_deficiency,self.primary_hypothesis,self.expected_mechanism,self.falsifiable_prediction,self.treatment_description,self.treatment_version,self.treatment_config_hash,self.control_reference,self.strategy_target_id,self.strategy_target_version)
         if any(not x for x in required): raise ValueError("complete experiment identity and scientific definition required")
         object.__setattr__(self,"created_at",utc(self.created_at,"created_at"))
@@ -97,12 +99,13 @@ class ExperimentDefinition:
 
 
 @dataclass(frozen=True)
-class ExperimentRun:
+class ExperimentRun(StrategyAttributed):
     run_id: str; experiment_id: str; experiment_version: str; started_at: datetime; completed_at: datetime
     git_commit: str; code_version: str; environment: str; dataset_versions: Mapping[str,str]
     feature_versions: tuple[str,...]; regime_version: str | None; cost_model_version: str | None
     random_seed: int | None; configuration_hash: str; causal_cutoff: datetime; stage: ExperimentStage
     def __post_init__(self):
+        super().__post_init__()
         if not all((self.run_id,self.experiment_id,self.experiment_version,self.git_commit,self.code_version,self.environment,self.configuration_hash)): raise ValueError("complete run provenance required")
         object.__setattr__(self,"started_at",utc(self.started_at,"started_at")); object.__setattr__(self,"completed_at",utc(self.completed_at,"completed_at")); object.__setattr__(self,"causal_cutoff",utc(self.causal_cutoff,"causal_cutoff"))
         if self.completed_at < self.started_at: raise ValueError("run completion precedes start")
@@ -110,7 +113,7 @@ class ExperimentRun:
 
 
 @dataclass(frozen=True)
-class ExperimentResult:
+class ExperimentResult(StrategyAttributed):
     result_id: str; run_id: str; recorded_at: datetime; metrics: Mapping[str,float|int|bool|None]
     metric_contexts: Mapping[str,MetricContext]; strategy_target_id: str; strategy_target_version: str
     target_assessment_reference: str | None; sample_counts: Mapping[str,float|int]
@@ -119,6 +122,11 @@ class ExperimentResult:
     warnings: tuple[str,...]; data_quality_limitations: tuple[str,...]
     canonical_metrics: tuple["MetricResult",...] = ()
     def __post_init__(self):
+        super().__post_init__()
+        for context in self.metric_contexts.values():
+            same_strategy(self, context)
+        for metric in self.canonical_metrics:
+            same_strategy(self, metric)
         if not self.result_id or not self.run_id or not self.strategy_target_id or not self.strategy_target_version: raise ValueError("result, run and target identity required")
         object.__setattr__(self,"recorded_at",utc(self.recorded_at,"recorded_at"))
         for name in ("metrics","metric_contexts","sample_counts","uncertainty","regime_breakdown","cost_sensitivity"):
@@ -129,12 +137,13 @@ class ExperimentResult:
 
 
 @dataclass(frozen=True)
-class ExperimentDecision:
+class ExperimentDecision(StrategyAttributed):
     decision_id: str; experiment_id: str; experiment_version: str; decided_at: datetime
     decision: DecisionType; authority: str; rationale: str; supporting_result_ids: tuple[str,...]
     failed_hard_target_criteria: tuple[str,...]; unresolved_evidence: tuple[str,...]
     next_allowed_stage: ExperimentStage | None; successor_baseline_id: str | None = None
     def __post_init__(self):
+        super().__post_init__()
         if not all((self.decision_id,self.experiment_id,self.experiment_version,self.authority,self.rationale)) or not self.supporting_result_ids: raise ValueError("decision authority, rationale and results required")
         object.__setattr__(self,"decided_at",utc(self.decided_at,"decided_at"))
         if self.successor_baseline_id and self.decision is not DecisionType.ACCEPT_FOR_NEXT_STAGE: raise ValueError("baseline succession requires explicit accepted-for-next-stage decision")
@@ -160,12 +169,14 @@ class InMemoryExperimentRepository:
     def record_run(self,r):
         definition=self._definitions.get((r.experiment_id,r.experiment_version))
         if definition is None: raise KeyError("experiment definition must be registered first")
+        same_strategy(definition, r)
         if definition.mode is ExperimentMode.CONFIRMATORY and r.started_at < definition.created_at: raise ValueError("confirmatory run predates preregistration")
         if r.run_id in self._runs: raise ValueError("run records are append-only")
         self._runs[r.run_id]=r; return r
     def record_result(self,r):
         run=self._runs.get(r.run_id)
         if run is None: raise KeyError("run must exist before result")
+        same_strategy(run, r)
         definition=self._definitions[(run.experiment_id,run.experiment_version)]
         if (r.strategy_target_id,r.strategy_target_version)!=(definition.strategy_target_id,definition.strategy_target_version): raise ValueError("StrategyTarget identity/version mismatch")
         if r.evidence_stage is ExperimentStage.OUT_OF_SAMPLE and not any(x.oos_start for x in definition.data_boundaries): raise ValueError("OOS result requires declared non-overlapping OOS boundary")
@@ -174,6 +185,13 @@ class InMemoryExperimentRepository:
     def record_decision(self,d):
         if (d.experiment_id,d.experiment_version) not in self._definitions: raise KeyError("unknown experiment")
         if any(x not in self._results for x in d.supporting_result_ids): raise KeyError("decision references unknown result")
+        same_strategy(d, self._definitions[(d.experiment_id,d.experiment_version)])
+        for result_id in d.supporting_result_ids:
+            result = self._results[result_id]
+            run = self._runs[result.run_id]
+            if (run.experiment_id, run.experiment_version) != (d.experiment_id, d.experiment_version):
+                raise ValueError("decision result belongs to a different experiment")
+            same_strategy(d, result)
         if d.decision_id in self._decisions: raise ValueError("decisions are append-only")
         self._decisions[d.decision_id]=d; return d
     def get_experiment(self,e,v):

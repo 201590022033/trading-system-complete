@@ -1,5 +1,17 @@
 # Current Architecture — Observed Repository Baseline
 
+## 2026-10-03 exact strategy attribution
+
+ADR 0036 adds exact paired identity/version through new canonical research,
+paper and learning chains, preserving legacy absence. Swing `1.0.1` is pinned
+before new acquisition; `1.0.0` remains unchanged. Both-backend additive
+definition/reference tables preserve old account config, cash, positions and
+archives. M11 fallback cannot cross strategy version or requested horizon.
+API/Top5/Portfolio expose exact evidence pools; reference metrics/targets/
+experiments validate lineage without inventing thresholds or promotion.
+This does not add the narrative's EMA/ATR Swing decision rules. See
+`docs/research/SWING_NARRATIVE_READINESS.md` for the actual implementation gaps.
+
 ## 2026-10-03 Strategy Profile foundation
 
 ADR 0035 adds `domain/strategy` immutable profile/reference/capability contracts

@@ -34,16 +34,20 @@ app.config.update(SESSION_COOKIE_HTTPONLY=True, SESSION_COOKIE_SAMESITE='Strict'
 socketio = SocketIO(app, cors_allowed_origins="*")
 canonical_opportunity_service = OpportunityService()
 def canonical_refresh_runner():
+    from domain.strategy import DEFAULT_STRATEGY_REGISTRY
+    from domain.strategy.attribution import freeze_profile
+    profile = DEFAULT_STRATEGY_REGISTRY.resolve("jse_swing_3_5d", "1.0.1")
     evaluated_at = datetime.now(timezone.utc)
     repository = runtime_repository()
     try:
+        repository.save_strategy_definition(freeze_profile(profile))
         news_snapshot = feeds.news()
         news_report = ({**news_snapshot["data"], "available_at": news_snapshot["last_success"]}
                        if news_snapshot.get("state") in {"AVAILABLE", "PARTIAL"}
                        and news_snapshot.get("data") and news_snapshot.get("last_success") else None)
         learned = persisted_shadow_evidence(repository, evaluated_at=evaluated_at)
         return refresh_public_research(evaluated_at=evaluated_at, news_report=news_report,
-                                       learned_evidence=learned)
+                                       learned_evidence=learned, strategy_profile=profile.reference)
     finally:
         repository.close()
 from application.opportunities.paper_host import (
