@@ -1,5 +1,22 @@
 # Current Architecture — Observed Repository Baseline
 
+## 2026-10-03 Strategy Profile foundation
+
+ADR 0035 adds `domain/strategy` immutable profile/reference/capability contracts
+and an exact-version registry with explicit current-version pins. Three backend
+profiles declare Swing research/paper priority, Intraday CFD development/data
+validation and Long-Term Investment development. This is foundation-only,
+not yet attribution through existing M13–M16/paper/learning objects.
+`GET /api/v1/strategy-profiles` and current/exact-version detail routes expose
+read-only configuration without storage, providers, schedulers or broker calls.
+The new Trading Strategies tab renders these declarations; Swing links the ONE
+existing canonical screening/Top-5 workspace. Placeholders expose no trading
+workflow. Intended 3–5-session horizons do not alter one-day ranking or the
+three-session simulator. No weights, risk controls, account state, migration,
+historical relabelling, Demo activation or LIVE execution changed.
+See `STRATEGY_PROFILE_IMPLEMENTATION_AUDIT.md` for owner/module mapping and
+the staged attribution/migration/evaluation plan.
+
 ## 2026-10-02 compact Yahoo swing context
 
 ADR 0034 reconnects HR2 Yahoo normalization and the M11 contextual learner via

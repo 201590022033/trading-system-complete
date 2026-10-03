@@ -1,5 +1,29 @@
 # Current Milestone
 
+## 2026-10-03 Strategy Profile foundation — within the sole ACTIVE workspace
+
+Owner requested repository audit then the bounded Strategy Profile Foundation
++ Trading Strategies dashboard shell. Baseline clean master at `e98b340`,
+729 safe tests passing. Inventory/conflicts/ownership, StrategyTarget relation,
+future attribution/migrations, tests and reversible stages are recorded in
+`docs/architecture/STRATEGY_PROFILE_IMPLEMENTATION_AUDIT.md` and ADR 0035.
+
+Implemented immutable exact-version profile/reference/capability contracts,
+an explicit-current registry, three profiles, read-only no-storage/provider API,
+backend-driven cards and exact-version detail. Swing links existing canonical
+Top 5; placeholders expose blockers without a trading workflow. Records remain
+unattributed until the separately planned vertical slice. No migration, config
+mutation, scoring/risk change, live execution or broker activation. Existing
+daily-ranking/three-session simulator semantics and legacy artifacts preserved.
+Operational cost/outcome/IG gates remain open, not superseded by card labels.
+
+Foundation acceptance complete locally: 740 safe tests pass (baseline 729),
+38 focused tests pass, JavaScript syntax and offline DOM interaction checks pass,
+and all 54 protected artifacts remain unchanged. Offline DOM checks are not
+browser visual verification. No push or Railway deployment is part of this
+foundation acceptance. Subsequent attribution and strategy validation stages
+remain planned, not implemented or approved for execution.
+
 ## 2026-10-02 Yahoo history reconnection — within the sole ACTIVE workspace
 
 Reuse Yahoo/HR2 normalization and the M11 contextual learner for compact

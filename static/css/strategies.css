@@ -1,0 +1,9 @@
+.strategy-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 18px; }
+.strategy-card { display: flex; flex-direction: column; min-width: 0; }
+.strategy-card h3 { margin-top: 0; }
+.strategy-card small { overflow-wrap: anywhere; color: var(--muted); margin-bottom: 20px; }
+.strategy-card button { margin-top: auto; align-self: flex-start; }
+.strategy-horizon { font-size: 22px; }
+#strategy-detail li { margin-bottom: 12px; }
+#strategy-detail:focus { outline: 2px solid #64deba; outline-offset: 3px; }
+@media (max-width: 850px) { .strategy-grid { grid-template-columns: 1fr; } }

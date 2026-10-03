@@ -1,5 +1,14 @@
 # Linear Fusion Roadmap
 
+2026-10-03: owner-authorized Strategy Profile Foundation + Trading Strategies
+shell (ADR 0035) is a bounded delivery within the sole ACTIVE operational demo
+workspace. Three immutable versioned profiles, read-only discovery and truthful
+UI placeholders reuse the canonical Swing workspace without changing trading.
+Exact attribution/persistence, causal 3–5-session Swing wiring and validation
+are subsequent PLANNED stages, not concurrently active. Intraday/Investment
+maturation remains deferred. Existing cost/performance/IG gates remain open.
+
+
 2026-10-02: ADR 0033 repairs three-session feedback and delayed-signal entry
 timing, admits four ETFs to separate shadow research regardless of cash/data
 availability, and adds cron worker exit plus lossless snapshot compression.

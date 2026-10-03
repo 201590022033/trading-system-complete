@@ -1,5 +1,27 @@
 # Target Architecture — Evolutionary Adaptive Intelligence Layer
 
+## 2026-10-03 strategy-oriented evolution
+
+The owner now directs future canonical development around explicit, versioned
+Trading Strategy Profiles. ADR 0035 implements only the foundation and dashboard
+discovery shell. Mature M3–M16, source/news, risk and paper components are reused;
+the older multi-agent governance below remains a benchmark, not the new canonical
+strategy orchestrator. Target Swing pipeline:
+
+`exact StrategyProfile → universe → causal market data/features/catalysts/regime
+→ suitability → M13 ranking → Top 5 → M14 policy → execution feasibility/M15 risk
+→ paper execution → outcome → exact-version evaluation/learning`
+
+StrategyTarget remains a separate versioned evaluation-requirements contract.
+Future generated objects must pin profile ID/version before computation and
+retain exact lineage; old decisions stay LEGACY_UNATTRIBUTED. Shared raw data may
+remain strategy-neutral. Research ordering is distinct from account economics
+and position sizing; M15 remains the final veto. Swing is the first strategy to
+mature. Intraday CFD and long-term investing remain truthful development
+placeholders until their separate data/validation gates pass. No optimized
+weights, generic timeframe switch, live execution or automatic promotion.
+See the implementation audit for staged scope, conflicts and migrations.
+
 2026-09-19: the bounded canonical PAPER vertical slice is implemented (ADR 0024).
 It does not promote adaptive production weights, provide live execution or solve
 cross-broker capital allocation. Target capabilities below remain aspirational

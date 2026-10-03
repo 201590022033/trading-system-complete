@@ -57,6 +57,8 @@ else:
     canonical_opportunity_refresh = OpportunityRefresh(canonical_opportunity_service,
                                                       runner=canonical_refresh_runner)
 app.register_blueprint(create_blueprint(canonical_opportunity_service, canonical_opportunity_refresh))
+from application.strategy_profiles import create_strategy_blueprint
+app.register_blueprint(create_strategy_blueprint())
 from application.opportunities.operator_api import create_operator_blueprint, has_access
 app.register_blueprint(create_operator_blueprint(runtime_repository, paper_config))
 from connected_portfolio_api import create_connected_blueprint
