@@ -9,6 +9,43 @@ from app import app
 
 
 class StrategyProfileApiTests(unittest.TestCase):
+    def test_every_detail_route_is_offline_and_truthful(self):
+        from domain.strategy import DEFAULT_STRATEGY_REGISTRY
+        client = app.test_client()
+        with patch("app.runtime_repository", side_effect=AssertionError("database touched")), \
+                patch("app.canonical_refresh_runner", side_effect=AssertionError("pipeline run")), \
+                patch("app.feeds.news", side_effect=AssertionError("provider touched")):
+            for current in DEFAULT_STRATEGY_REGISTRY.current_profiles():
+                identity = current.reference.strategy_profile_id
+                for profile in DEFAULT_STRATEGY_REGISTRY.versions(identity):
+                    version = profile.reference.strategy_profile_version
+                    with self.subTest(identity=identity, version=version):
+                        response = client.get(f"/api/v1/strategy-profiles/{identity}/versions/{version}")
+                        self.assertEqual(response.status_code, 200)
+                        data = response.get_json()
+                        self.assertTrue(data["read_only"])
+                        self.assertEqual(data["profile"], profile.to_dict())
+                        for flag in ("live_execution", "strategy_execution_enabled", "validated_strategy"):
+                            self.assertFalse(data["profile"][flag])
+                        if identity != "jse_swing_3_5d":
+                            self.assertIsNone(data["profile"]["canonical_workflow_tab"])
+                            self.assertEqual(data["profile"]["allowed_research_modes"], ["RESEARCH"])
+
+    def test_mutations_on_all_discovery_routes_never_resolve_profiles(self):
+        from unittest.mock import Mock
+        registry = Mock()
+        web = Flask(__name__)
+        web.register_blueprint(create_strategy_blueprint(registry))
+        client = web.test_client()
+        for path in ("/api/v1/strategy-profiles",
+                     "/api/v1/strategy-profiles/jse_swing_3_5d",
+                     "/api/v1/strategy-profiles/jse_swing_3_5d/versions/1.0.1"):
+            for method in ("post", "put", "patch", "delete"):
+                with self.subTest(path=path, method=method):
+                    response = getattr(client, method)(path, json={"live_execution": True})
+                    self.assertEqual(response.status_code, 405)
+        self.assertEqual(registry.mock_calls, [])
+
     def test_offline_ui_interaction_harness(self):
         node = shutil.which("node")
         if node is None:

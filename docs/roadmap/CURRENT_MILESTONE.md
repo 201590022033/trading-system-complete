@@ -1,5 +1,16 @@
 # Current Milestone
 
+## 2026-10-04 Strategy foundation revalidation — within the sole ACTIVE workspace
+
+Owner requested the foundation/shell milestone again. Clean remote master at
+`c27488b` already contains ADR 0035 foundation plus later attribution/technical
+shadow work. Preserve those implementations; no new milestone or trading
+behavior activated. Added exhaustive exact-version discovery and route-mutation
+safety tests. Baseline 758 safe tests, 126 focused checks and final 760 safe
+tests pass; all 54 protected artifacts unchanged. JavaScript syntax/offline
+UI checks pass. See `docs/reports/2026-10-04-STRATEGY-FOUNDATION-REVALIDATION.md`.
+No new migration, broker mutation, LIVE enablement, push or deployment.
+
 ## 2026-10-03 Core Swing technical/horizon shadow — within the sole ACTIVE workspace
 
 After attribution commit `781c0ab`, owner explicitly requested completing the
