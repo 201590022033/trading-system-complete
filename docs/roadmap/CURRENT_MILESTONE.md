@@ -1,5 +1,21 @@
 # Current Milestone
 
+## 2026-10-04 Alpha Vantage setup/fallback — within the sole ACTIVE workspace
+
+Owner requests free-tier conditional Yahoo repair plus both local/Railway private
+setup. Starting clean f572634; baseline 786 safe tests pass. ADR 0040 implements
+bounded direct compact requests, verified JSE search/session/close identity,
+durable shared production cache/budget, negative caching and separate frozen
+shadow repairs. Original ranking/paper source and all strategy rules remain
+unchanged. Private setup preserves existing settings and skips deployments;
+live JSE coverage remains unverified until the owner supplies the key privately.
+Owner supplied it through the hidden prompt; private local and both Railway
+service updates completed without deployments. Five live search calls did not
+establish JSE coverage; foreign Sasol listings were rejected and the last search
+was provider-limited. Final 56 focused/807 safe tests pass; 54 protected artifacts
+unchanged. Read-only deployment uses the owner's existing push/deploy authorization.
+No actual JSE data repair is claimed. See the Alpha Vantage setup report.
+
 ## 2026-10-04 IG Swing volume — within the sole ACTIVE workspace
 
 Owner authorized volume investigation and appropriate Swing data wiring. Starting

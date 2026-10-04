@@ -1,5 +1,10 @@
 # Linear Fusion Roadmap
 
+2026-10-04: ADR 0040 implements owner-authorized conditional Alpha Vantage
+free-tier repair/setup in the sole active Swing workspace. Cache/budget, verified
+JSE identity/date/close and frozen shadow lineage gate repairs; older holes remain
+explicit. Actual coverage needs private-key validation. Ranking/fills unchanged.
+
 2026-10-04: ADR 0039 adds IG volume/readiness diagnostics in the sole ACTIVE Swing
 workspace. Real Demo probes establish JSE equity-history permission denial. Cash
 feed replacement remains blocked pending IG entitlement and source/volume/session

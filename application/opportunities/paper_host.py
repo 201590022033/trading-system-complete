@@ -145,16 +145,39 @@ def compose_paper_worker(repository, config, *, fetcher=None, clock=None, strate
                          evaluated_at=observed_at, report=history)
                          for key, chart in {**charts, **context_charts}.items()}
         from .swing_technical import snapshot as swing_snapshot
+        from .alpha_vantage_data import configured_client, repair_chart
+        shadow_acquired = {**acquired, **acquired_context}
+        alpha_report = {"state": "NOT_CONFIGURED", "live_execution": False, "instruments": {}}
+        try:
+            alpha = configured_client(repository)
+        except Exception:
+            alpha = None
+            alpha_report["state"] = "CONFIGURATION_UNAVAILABLE"
+        if alpha is not None:
+            alpha_report["state"] = "YAHOO_FIRST_CONDITIONAL_FALLBACK"
+            for key in alpha.ordered_keys(shadow_acquired):
+                chart = shadow_acquired[key]
+                try:
+                    shadow_acquired[key], alpha_report["instruments"][key] = repair_chart(alpha, chart, observed_at)
+                except Exception:
+                    alpha_report["instruments"][key] = {"state": "REPAIR_UNAVAILABLE"}
+        shadow_input = {}
+        if any(row.get("repaired_sessions") for row in alpha_report["instruments"].values()):
+            shadow_input["swing_charts"] = {key: {**chart, "bars": chart["bars"][-FROZEN_HISTORY_BARS:]}
+                                           for key, chart in shadow_acquired.items()}
         from .ig_swing_data import configured_investigation
         ig_swing_data = configured_investigation(config.universe, observed_at)
-        swing_technical = {key: swing_snapshot(chart, evaluated_at=observed_at,
-            benchmark_chart=acquired_context.get(BENCHMARK))
-            for key, chart in {**acquired, **acquired_context}.items()}
+        swing_technical = {key: {**swing_snapshot(chart, evaluated_at=observed_at,
+            benchmark_chart=shadow_acquired.get(BENCHMARK)),
+            **({"data_repair": alpha_report["instruments"][key]} if key in alpha_report["instruments"] else {})}
+            for key, chart in shadow_acquired.items()}
         return {"charts": charts, "context_charts": context_charts,
                 "swing_technical": swing_technical,
                 "swing_technical_definition": technical_definition,
                 "swing_policy_definition": policy_definition,
                 "ig_swing_data": ig_swing_data,
+                **shadow_input,
+                "alpha_vantage_data": alpha_report,
                 "swing_history_evidence": swing_evidence,
                 "news": persisted_news(repository, observed_at),
                 "source_signature": source_signature, "completed_sessions": sessions}
@@ -312,6 +335,7 @@ def paper_status(repository, config):
             "swing_technical_learning": snapshot.get("swing_technical_learning") if snapshot else None,
             "swing_policy_shadow": snapshot.get("swing_policy_shadow") if snapshot else None,
             "ig_swing_data": snapshot.get("ig_swing_data") if snapshot else None,
+            "alpha_vantage_data": snapshot.get("alpha_vantage_data") if snapshot else None,
             "swing_technical": snapshot.get("swing_technical") if snapshot else None,
             "decision_brief": snapshot.get("decision_brief") if snapshot else None,
             "etf_research": snapshot.get("etf_research") if snapshot else None,

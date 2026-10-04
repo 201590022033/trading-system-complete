@@ -1,5 +1,15 @@
 # Current Architecture — Observed Repository Baseline
 
+## 2026-10-04 conditional Alpha Vantage Swing repair
+
+ADR 0040 adds private free-key setup, direct verified-symbol daily compact
+requests and durable shared production budget/cache (20/day, five/minute).
+Only invalid recent Yahoo bars trigger fallback; exact close/date/JSE identity
+gates retain raw OHLCV provenance. Separate frozen shadow charts feed technical
+labels and policy replay; original cash ranking/fills remain unchanged. No actual
+JSE coverage is claimed until a private-key probe succeeds. Free 100-bar history
+leaves older holes visible. No API key, synthetic data, migration or live execution.
+
 ## 2026-10-04 IG Swing data readiness
 
 ADR 0039 reuses M12B for volume-field coverage and opt-in Demo readiness checks.
