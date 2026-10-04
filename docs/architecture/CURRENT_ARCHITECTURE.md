@@ -1,5 +1,9 @@
 # Current Architecture — Observed Repository Baseline
 
+Swing quality annotations (ADR 0041) are a separately versioned display-only
+extension to frozen evidence. Causal averages never mutate provider charts;
+independent real-window ranges do not change policy formulas/admission.
+
 ## 2026-10-04 conditional Alpha Vantage Swing repair
 
 ADR 0040 adds private free-key setup, direct verified-symbol daily compact

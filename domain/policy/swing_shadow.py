@@ -113,6 +113,9 @@ def simulate(policy, chart, *, evaluated_at, horizon_sessions):
     path = []
     for index, row in enumerate(later[:horizon_sessions+1]):
         try:
+            from application.opportunities.swing_data_quality import real_ohlc
+            if not real_ohlc(row):
+                raise ValueError("real OHLC required")
             o, h, l, c = (float(row[key]) for key in ("open", "high", "low", "close"))
             if not all(isfinite(x) and x > 0 for x in (o, h, l, c)) or l > min(o, c) or h < max(o, c):
                 raise ValueError("invalid OHLC")

@@ -1,5 +1,14 @@
 # Current Milestone
 
+## 2026-10-04 Swing dated quality/averages — sole ACTIVE workspace
+
+Starting master 7f13876. ADR 0041 adds dated diagnostics, causal display averages
+and independent real prior-range checks. Raw charts and versioned Swing formulas
+remain unchanged. Estimates cannot supply ATR or resolve stop/target outcomes.
+Absent calendar sessions are not fabricated. All 815 safe tests pass; JavaScript
+syntax and diff whitespace checks pass. Verified source/calendar coverage remains
+the next prerequisite; these annotations do not unblock the frozen shadow policy.
+
 ## 2026-10-04 Alpha Vantage setup/fallback — within the sole ACTIVE workspace
 
 Owner requests free-tier conditional Yahoo repair plus both local/Railway private

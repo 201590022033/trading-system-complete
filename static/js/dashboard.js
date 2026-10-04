@@ -94,6 +94,9 @@ function renderAutomaticTechnicalScreen(item, share) {
     ${kv('Swing shadow strategy',swing.strategy_profile_version || 'Unavailable')}
     ${Object.entries(swingValues).map(([key,value])=>kv(`Swing ${key}`,value == null?'Unavailable':Number(value).toFixed(4))).join('')}
     ${kv('Swing limitations',(swing.missing || []).join(', ') || 'Shadow only; not a promoted trade signal')}
+    ${swing.data_quality ? kv('Damaged price days',`${swing.data_quality.invalid_ohlc_count}; latest: ${(swing.data_quality.issues || []).map(row=>`${row.session}: ${row.price_quality}${row.display_ohlc ? `, average close ${Number(row.display_ohlc.close).toFixed(4)}` : ''}`).join('; ')}`) : ''}
+    ${swing.data_quality ? kv('Average basis','Up to five preceding real price bars; display only. Volume and stop/target outcomes require real data.') : ''}
+    ${swing.data_quality ? Object.entries(swing.data_quality.indicator_checks?.prior_structure || {}).map(([window,row])=>kv(`Independent prior ${window}-session range`,row.state==='REAL_DATA_AVAILABLE'?`${Number(row.low).toFixed(4)}–${Number(row.high).toFixed(4)} (real prices; diagnostic only)`:'Real data required')).join('') : ''}
     ${kv('ATR/structure stop reference',swing.geometry?.stop == null?'Unavailable':Number(swing.geometry.stop).toFixed(4))}
     ${kv('2R target reference',swing.geometry?.target_2r == null?'Unavailable':Number(swing.geometry.target_2r).toFixed(4))}
     ${kv('Reference geometry','Signal close only; not actual entry, executable policy or a trailing stop')}

@@ -38,8 +38,22 @@ def snapshot(chart, *, evaluated_at, benchmark_chart=None):
     try:
         bars = usable_bars(chart, now)
     except (ValueError, KeyError, TypeError, OverflowError):
-        return {"version": VERSION, "state": "UNAVAILABLE", "reason": "INVALID_OR_STALE_DAILY_CHART"}
+        unavailable = {"version": VERSION, "state": "UNAVAILABLE", "reason": "INVALID_OR_STALE_DAILY_CHART"}
+        if chart and chart.get("interval") == "1d" and chart.get("currency") == "ZAR":
+            try:
+                from .swing_data_quality import diagnostics
+                completed = [r for r in chart.get("bars", ()) if _available_at(r["timestamp"]) <= now]
+                times = [_available_at(r["timestamp"]) for r in completed]
+                if completed and all(a < b for a, b in zip(times, times[1:])):
+                    quality = diagnostics(completed)
+                    if quality["invalid_ohlc_count"]:
+                        unavailable["data_quality"] = quality
+            except (ValueError, KeyError, TypeError, OverflowError):
+                pass
+        return unavailable
     closes = [float(row["close"]) for row in bars]
+    from .swing_data_quality import diagnostics, real_ohlc
+    quality = diagnostics(bars)
     values = {"ema20": None, "ema50": None, "rsi14_wilder": None, "atr14_wilder": None,
               "relative_volume20": None, "prior_high10": None, "prior_low10": None,
               "prior_high20": None, "prior_low20": None, "relative_return20": None}
@@ -54,7 +68,7 @@ def snapshot(chart, *, evaluated_at, benchmark_chart=None):
         missing.append("RSI_REQUIRES_15_SESSIONS")
     try:
         ohlc = [(float(row["open"]), float(row["high"]), float(row["low"]), float(row["close"])) for row in bars]
-        if any(not all(isfinite(x) and x > 0 for x in row) or
+        if any(not real_ohlc(row) for row in bars) or any(not all(isfinite(x) and x > 0 for x in row) or
                row[2] > min(row[0], row[3]) or row[1] < max(row[0], row[3]) for row in ohlc):
             raise ValueError("invalid OHLC")
         ranges = [max(row[1]-row[2], abs(row[1]-closes[i-1]), abs(row[2]-closes[i-1]))
@@ -120,6 +134,7 @@ def snapshot(chart, *, evaluated_at, benchmark_chart=None):
             "source_bars": len(bars), "initialization": "FIRST_OBSERVED_CLOSE_EMA_INITIAL_SMA_WILDER",
             "source_sha256": sha256(json.dumps(bars, sort_keys=True, separators=(",", ":"), allow_nan=False).encode()).hexdigest(),
             "values": values, "missing": missing,
+            **({"data_quality": quality} if quality["invalid_ohlc_count"] else {}),
             "benchmark_source": benchmark_source,
             "geometry": geometry,
             "conditions": conditions,

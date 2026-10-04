@@ -1,5 +1,9 @@
 # Linear Fusion Roadmap
 
+2026-10-04: ADR 0041 adds Swing dated quality flags and causal display averages.
+Verified calendar/source coverage and versioned real-window indicator evaluation
+remain prerequisites for relaxing shadow policy data gates.
+
 2026-10-04: ADR 0040 implements owner-authorized conditional Alpha Vantage
 free-tier repair/setup in the sole active Swing workspace. Cache/budget, verified
 JSE identity/date/close and frozen shadow lineage gate repairs; older holes remain
