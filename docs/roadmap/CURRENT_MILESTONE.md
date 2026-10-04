@@ -1,5 +1,18 @@
 # Current Milestone
 
+## 2026-10-04 IG Swing volume — within the sole ACTIVE workspace
+
+Owner authorized volume investigation and appropriate Swing data wiring. Starting
+clean master 2dbc272; baseline 773 safe tests pass. Authenticated Demo search finds
+three JSE candidate EPICs, but market detail and direct DAY history all return
+equity-access 403. ADR 0039 adds M12B volume diagnostics, bounded Demo probe and
+frozen worker/status/UI readiness plumbing. Actual price admission remains BLOCKED
+by entitlement and unverified cash/volume semantics; no fake volume or CFD cash
+substitution. No deployment, env change or orders. See the investigation report.
+Diagnostics acceptance: 64 focused / 786 full safe tests pass; 54 protected
+artifacts unchanged, JavaScript syntax and diff whitespace checks pass. Feed
+admission remains blocked; do not mark volume or OHLC repair complete.
+
 ## 2026-10-04 Daily Swing shadow policy — within the sole ACTIVE workspace
 
 Owner explicitly requested the next daily policy/entry-exit simulation stage.

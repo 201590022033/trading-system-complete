@@ -1,5 +1,15 @@
 # Current Architecture — Observed Repository Baseline
 
+## 2026-10-04 IG Swing data readiness
+
+ADR 0039 reuses M12B for volume-field coverage and opt-in Demo readiness checks.
+Worker input freezes compact diagnostics, exposed through committed paper status
+and Portfolio without web provider calls or replay refetches. Authenticated JSE
+candidate search succeeds but market detail and DAY history for Sasol/Naspers/
+Shoprite return equity-entitlement 403. Cash admission is blocked; no observed
+JSE volume, price substitution, source blending, cohort mixing or broker changes.
+Yahoo cash ranking/paper/shadow rules remain unchanged. See the IG volume report.
+
 ## 2026-10-04 Daily Swing shadow policy
 
 ADR 0038 adds cash-only 1.2.0 research/shadow policy and append-only daily OHLC

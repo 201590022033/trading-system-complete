@@ -388,7 +388,8 @@ class PaperLoop:
                         "decision_brief": decision_brief,
                         "candidate_learning": selection_evidence,
                         "swing_technical": swing_technical, "swing_technical_learning": swing_learning,
-                        "swing_policy_shadow": swing_policy_shadow}
+                        "swing_policy_shadow": swing_policy_shadow,
+                        "ig_swing_data": frozen["input"].get("ig_swing_data")}
             self.repository.save_paper_record(ranking_id, self.config.account_id, "ranking", now.isoformat(), snapshot)
             if not broker.reconcile(now).clean:
                 raise ValueError("paper ledger failed reconciliation")

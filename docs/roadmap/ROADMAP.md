@@ -1,5 +1,10 @@
 # Linear Fusion Roadmap
 
+2026-10-04: ADR 0039 adds IG volume/readiness diagnostics in the sole ACTIVE Swing
+workspace. Real Demo probes establish JSE equity-history permission denial. Cash
+feed replacement remains blocked pending IG entitlement and source/volume/session
+verification; Brent acceptance is not share-volume evidence. No live activation.
+
 2026-10-04: owner authorizes and ADR 0038 implements the bounded daily Swing
 shadow policy stage within the sole active workspace. Cash-only 1.2.0 later-close
 entry and conservative OHLC stop/2R/time replay retain exact frozen lineage,

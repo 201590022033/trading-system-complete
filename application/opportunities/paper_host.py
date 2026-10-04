@@ -145,6 +145,8 @@ def compose_paper_worker(repository, config, *, fetcher=None, clock=None, strate
                          evaluated_at=observed_at, report=history)
                          for key, chart in {**charts, **context_charts}.items()}
         from .swing_technical import snapshot as swing_snapshot
+        from .ig_swing_data import configured_investigation
+        ig_swing_data = configured_investigation(config.universe, observed_at)
         swing_technical = {key: swing_snapshot(chart, evaluated_at=observed_at,
             benchmark_chart=acquired_context.get(BENCHMARK))
             for key, chart in {**acquired, **acquired_context}.items()}
@@ -152,6 +154,7 @@ def compose_paper_worker(repository, config, *, fetcher=None, clock=None, strate
                 "swing_technical": swing_technical,
                 "swing_technical_definition": technical_definition,
                 "swing_policy_definition": policy_definition,
+                "ig_swing_data": ig_swing_data,
                 "swing_history_evidence": swing_evidence,
                 "news": persisted_news(repository, observed_at),
                 "source_signature": source_signature, "completed_sessions": sessions}
@@ -308,6 +311,7 @@ def paper_status(repository, config):
             "strategy_learning": strategy_learning,
             "swing_technical_learning": snapshot.get("swing_technical_learning") if snapshot else None,
             "swing_policy_shadow": snapshot.get("swing_policy_shadow") if snapshot else None,
+            "ig_swing_data": snapshot.get("ig_swing_data") if snapshot else None,
             "swing_technical": snapshot.get("swing_technical") if snapshot else None,
             "decision_brief": snapshot.get("decision_brief") if snapshot else None,
             "etf_research": snapshot.get("etf_research") if snapshot else None,

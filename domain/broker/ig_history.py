@@ -177,7 +177,27 @@ class IGHistoricalSeries:
             "timestamp_quality": self.timestamp_quality, "price_basis": price_basis,
             "data_grade": self.data_grade, "pages_received": self.pages_received,
             "remaining_allowance": self.remaining_allowance, "source_limitations": self.source_limitations,
+            "volume_quality": self.volume_quality(),
         }
+
+    def volume_quality(self):
+        """Field coverage is not proof of exchange-wide daily share turnover."""
+        volumes = [bar.last_traded_volume for bar in self.bars]
+        trailing = volumes[-21:]
+        missing = sum(value is None for value in volumes)
+        positive = sum(value is not None and value > 0 for value in volumes)
+        eligible = (len(trailing) == 21 and all(value is not None for value in trailing)
+                    and sum(trailing[:-1]) > 0)
+        return {"field": "lastTradedVolume", "bars": len(volumes),
+                "missing": missing, "zero": len(volumes)-missing-positive,
+                "positive": positive,
+                "state": "EMPTY" if not volumes else "MISSING" if missing == len(volumes)
+                         else "PARTIAL" if missing else "ALL_ZERO" if not positive else "PRESENT",
+                "relative_volume20_numerically_available": eligible,
+                "relative_volume20": trailing[-1]/(sum(trailing[:-1])/20) if eligible else None,
+                "cash_swing_admitted": False,
+                "semantics": "IG_LAST_TRADED_VOLUME_EXCHANGE_COVERAGE_UNVERIFIED",
+                "required_verification": "JSE_SHARE_IDENTITY_SESSION_UNITS_ADJUSTMENTS_AND_VOLUME_SCOPE"}
 
     def suitability_evidence(self):
         return SuitabilityEvidence(
