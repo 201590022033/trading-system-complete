@@ -1,5 +1,10 @@
 # Linear Fusion Roadmap
 
+2026-10-04: owner prioritizes local daily OHLC and online strategy hypothesis
+refinement. ADR0042 adds a bounded AI research loop with historical comparisons.
+Prospective scoring, calendar/source integrity and portfolio/cost validation
+remain prerequisites for strategy promotion; canonical baseline unchanged.
+
 2026-10-04: ADR 0041 adds Swing dated quality flags and causal display averages.
 Verified calendar/source coverage and versioned real-window indicator evaluation
 remain prerequisites for relaxing shadow policy data gates.

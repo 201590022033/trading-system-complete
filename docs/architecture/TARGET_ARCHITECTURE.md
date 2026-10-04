@@ -1,5 +1,10 @@
 # Target Architecture — Evolutionary Adaptive Intelligence Layer
 
+2026-10-04 owner-directed split: local daily OHLC archive → authenticated working
+snapshot → online scheduled AI hypothesis research → frozen experiment and
+chronological comparison → prospective validation → reviewed strategy version.
+ADR0042 implements through retrospective comparison only; no automatic adoption.
+
 ## 2026-10-03 strategy-oriented evolution
 
 The owner now directs future canonical development around explicit, versioned

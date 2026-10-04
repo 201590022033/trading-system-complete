@@ -75,6 +75,9 @@ def persisted_news(repository, now):
 def compose_paper_worker(repository, config, *, fetcher=None, clock=None, strategy_profile=None):
     from jse_adapter import YahooFinanceFetcher
     clock = clock or (lambda: datetime.now(timezone.utc).isoformat())
+    if fetcher is None and os.environ.get("SWING_DATA_SOURCE") == "LOCAL_UPLOAD":
+        from .swing_research import UploadedFetcher
+        fetcher = UploadedFetcher(repository)
     fetcher = fetcher or YahooFinanceFetcher()
     loop = PaperLoop(repository, config)
     loop.initialize()

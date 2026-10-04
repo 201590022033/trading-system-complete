@@ -9,5 +9,5 @@ restartPolicyType = "ON_FAILURE"
 
 [environments.worker.deploy]
 startCommand = "python -m workers.heartbeat --scheduled"
-cronSchedule = "0 0 * * *"
+cronSchedule = "0 6 * * *"
 restartPolicyType = "NEVER"

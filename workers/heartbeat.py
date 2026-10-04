@@ -51,6 +51,10 @@ def run(interval_seconds: float = 30.0, *, cycles=None, repository=None, handler
             count+=1
             if cycles is None or count<cycles: time.sleep(max(1,interval_seconds))
         if scheduled:
+            if os.environ.get("SWING_RESEARCH_ENABLED") == "1":
+                from application.opportunities.swing_research import run_research
+                research = run_research(repository, datetime.now(timezone.utc))
+                print(json.dumps({"swing_research_state": research["state"], "live_execution": False}), flush=True)
             from datetime import timedelta
             now = datetime.now(timezone.utc)
             failures = repository._job_sql("SELECT COUNT(*) FROM worker_jobs WHERE status='FAILED' AND last_updated>=?",
@@ -63,9 +67,14 @@ def run(interval_seconds: float = 30.0, *, cycles=None, repository=None, handler
             config = configured_paper()
             if config:
                 repository.archive_paper_inputs(config.account_id, before=(now-timedelta(days=90)).isoformat())
-            next_run = now.replace(hour=0, minute=0, second=0, microsecond=0)+timedelta(days=1)
+            cron_hour = int(os.environ.get("SWING_WORKER_CRON_HOUR", "0"))
+            if not 0 <= cron_hour <= 23:
+                raise ValueError("valid UTC cron hour required")
+            next_run = now.replace(hour=cron_hour, minute=0, second=0, microsecond=0)
+            if next_run <= now:
+                next_run += timedelta(days=1)
             repository.save_worker_status({**heartbeat(worker_id), "status": "SCHEDULED_IDLE",
-                "schedule": "0 0 * * *", "next_scheduled_at": next_run.isoformat(),
+                "schedule": f"0 {cron_hour} * * *", "next_scheduled_at": next_run.isoformat(),
                 "processed": processed})
     finally:
         if owned: repository.close()

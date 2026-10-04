@@ -1,5 +1,22 @@
 # Current Milestone
 
+## 2026-10-04 Local daily OHLC / online AI research — sole ACTIVE workspace
+
+Owner clarified the intended adaptive goal and authorized the local/cloud split.
+Start5bd04f1. ADR0042 implements local dated raw storage, private bounded ingress,
+LOCAL_UPLOAD paper source, separate research profile1.3.0, one daily Ollama Cloud
+hypothesis, frozen proposals and chronological historical comparisons in the
+Trading Strategies tab. Prior strategies/default1.0.1 remain unchanged. This is
+research refinement, not model-weight training, portfolio proof or promotion.
+First real local collection obtained21 charts. Source switch waits for verified
+upload. Local task07:30 requires powered-on signed-in PC; cloud worker08:00 SA.
+Source/calendar quality and prospective validation remain follow-up gates.
+Acceptance:57 focused and839 full safe tests pass;54 protected artifacts unchanged.
+JavaScript syntax and diff whitespace checks pass. First real historical baseline
+comparison has0 closed samples under strict OHLC gates; no profitability claim.
+Private task/token configured; deployment/upload/model evidence recorded in the
+completion report. No browser visual acceptance or native PostgreSQL acceptance.
+
 ## 2026-10-04 Swing dated quality/averages — sole ACTIVE workspace
 
 Starting master 7f13876. ADR 0041 adds dated diagnostics, causal display averages

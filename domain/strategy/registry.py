@@ -128,6 +128,16 @@ _policy_swing = replace(_technical_swing,
         "Liquidity, verified exchange calendar, sector/catalysts, corporate-action quality and actual OST costs/account feasibility remain unresolved; M15 approval is not granted.",
         "Overlapping per-signal horizons are research samples, not an executable portfolio or walk-forward proof.",
         "ETFs retain separate 1.1.0 technical research; no ETF policy or trading admission."))
-DEFAULT_STRATEGY_REGISTRY = StrategyProfileRegistry((*_defaults, _attributed_swing, _technical_swing, _policy_swing), current_versions={
+_research_swing = replace(_policy_swing,
+    reference=StrategyProfileRef("jse_swing_3_5d", "1.3.0"),
+    capabilities=(*_policy_swing.capabilities,
+        Capability("ai_hypothesis_research", C.IMPLEMENTED_REUSABLE,
+            "Local daily raw history and authenticated cloud snapshots; bounded Ollama hypotheses for volume, RSI ceiling and 3/4/5-session exits, frozen proposals and chronological historical comparisons. No automatic promotion or execution.",
+            ("application.opportunities.swing_research", "scripts.collect_swing_data"))),
+    limitations=("Research-loop version; canonical ranking/paper benchmark remains pinned to 1.0.1.",
+        "Historical comparisons are not prospective walk-forward validation or executable portfolio evidence.",
+        "Local collector requires a powered-on signed-in computer; incomplete source data stays blocked.",
+        *_policy_swing.limitations[1:]))
+DEFAULT_STRATEGY_REGISTRY = StrategyProfileRegistry((*_defaults, _attributed_swing, _technical_swing, _policy_swing, _research_swing), current_versions={
     **{profile.reference.strategy_profile_id: profile.reference.strategy_profile_version for profile in _defaults},
     "jse_swing_3_5d": "1.0.1"})

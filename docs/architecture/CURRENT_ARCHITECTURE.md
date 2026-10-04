@@ -1,5 +1,10 @@
 # Current Architecture — Observed Repository Baseline
 
+ADR0042 / research profile1.3.0 adds a local daily raw archive, authenticated
+bounded cloud snapshot and separate scheduled Ollama hypothesis/evaluation loop.
+LOCAL_UPLOAD paper source is explicit; public dashboard feeds remain separate.
+Research proposals do not change default1.0.1 or promote strategy parameters.
+
 Swing quality annotations (ADR 0041) are a separately versioned display-only
 extension to frozen evidence. Causal averages never mutate provider charts;
 independent real-window ranges do not change policy formulas/admission.
