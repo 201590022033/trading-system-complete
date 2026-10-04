@@ -1,5 +1,13 @@
 # Linear Fusion Roadmap
 
+2026-10-04: owner authorizes and ADR 0038 implements the bounded daily Swing
+shadow policy stage within the sole active workspace. Cash-only 1.2.0 later-close
+entry and conservative OHLC stop/2R/time replay retain exact frozen lineage,
+independent 3/4/5-session exits and hypothetical cost stress. Benchmark 1.0.1,
+technical 1.1.0/ETF research, account config and M15 remain unchanged. No execution
+or promotion. Empirical walk-forward, portfolio allocation, factual liquidity,
+calendar/catalysts and actual account costs remain the next planned gates.
+
 2026-10-03: after attribution commit 781c0ab, ADR 0037 implements the authorized
 core Swing technical/horizon shadow stage within the sole ACTIVE workspace.
 EMA20/50, Wilder RSI/ATR14, OHLC structure, volume and broad relative strength

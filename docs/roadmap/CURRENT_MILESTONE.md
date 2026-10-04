@@ -1,5 +1,21 @@
 # Current Milestone
 
+## 2026-10-04 Daily Swing shadow policy — within the sole ACTIVE workspace
+
+Owner explicitly requested the next daily policy/entry-exit simulation stage.
+Starting clean local master `f0f17f0`; baseline 760 safe tests pass. ADR 0038
+adds cash-only 1.2.0 shadow rules, frozen job/decision/entry/path/outcome lineage,
+conservative daily OHLC stop/target/gap replay, independent 3/4/5 observed-session
+exits and hypothetical 10/25/50 bps costs. Portfolio/status show separate policy
+evidence. No orders, sizing, new schema or learner/ranking promotion. All five
+prior profile definitions remain byte-equivalent as serialized snapshots;
+current benchmark remains 1.0.1 and old jobs opt out. Actual liquidity/calendar/
+costs/account M15 and empirical walk-forward remain unresolved admission gates.
+Acceptance complete locally: 97 focused tests and all 773 safe tests pass;
+all 54 protected artifacts unchanged. JavaScript syntax/offline UI checks pass.
+No native PostgreSQL or browser visual acceptance in this stage. See
+`docs/reports/2026-10-04-SWING-SHADOW-POLICY.md`. No push or deployment.
+
 ## 2026-10-04 Strategy foundation revalidation — within the sole ACTIVE workspace
 
 Owner requested the foundation/shell milestone again. Clean remote master at

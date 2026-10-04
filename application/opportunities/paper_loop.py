@@ -375,6 +375,10 @@ class PaperLoop:
             swing_learning = record_and_label(self.repository, self.config.account_id,
                 swing_technical, {**charts, **frozen["input"].get("context_charts", {})}, evaluated_at=now,
                 strategy_definition=frozen["input"].get("swing_technical_definition"))
+            from .swing_policy import record_and_replay
+            swing_policy_shadow = record_and_replay(self.repository, self.config.account_id,
+                swing_technical, charts, evaluated_at=now.isoformat(),
+                definition=frozen["input"].get("swing_policy_definition"))
             snapshot = {"version": VERSION, "evaluated_at": now.isoformat(), "mode": "PAPER",
                         **fields(strategy_profile),
                         "opportunities": [o.to_dict() for o in ranking.opportunities],
@@ -383,7 +387,8 @@ class PaperLoop:
                         "unavailable": list(ranking.unavailable),
                         "decision_brief": decision_brief,
                         "candidate_learning": selection_evidence,
-                        "swing_technical": swing_technical, "swing_technical_learning": swing_learning}
+                        "swing_technical": swing_technical, "swing_technical_learning": swing_learning,
+                        "swing_policy_shadow": swing_policy_shadow}
             self.repository.save_paper_record(ranking_id, self.config.account_id, "ranking", now.isoformat(), snapshot)
             if not broker.reconcile(now).clean:
                 raise ValueError("paper ledger failed reconciliation")

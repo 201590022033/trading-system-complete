@@ -85,6 +85,8 @@ def compose_paper_worker(repository, config, *, fetcher=None, clock=None, strate
                                strategy_profile=profile)
     from domain.strategy.attribution import freeze_profile
     technical_definition = freeze_profile(DEFAULT_STRATEGY_REGISTRY.resolve("jse_swing_3_5d", "1.1.0"))
+    from .swing_policy import frozen_definition
+    policy_definition = frozen_definition()
     scanner = None
     if os.environ.get("PAPER_NEWS_ENABLED") == "1":
         from sentiment_analyzer import MacroSentimentScanner
@@ -149,6 +151,7 @@ def compose_paper_worker(repository, config, *, fetcher=None, clock=None, strate
         return {"charts": charts, "context_charts": context_charts,
                 "swing_technical": swing_technical,
                 "swing_technical_definition": technical_definition,
+                "swing_policy_definition": policy_definition,
                 "swing_history_evidence": swing_evidence,
                 "news": persisted_news(repository, observed_at),
                 "source_signature": source_signature, "completed_sessions": sessions}
@@ -304,6 +307,7 @@ def paper_status(repository, config):
                                    "decision_count": decision_count},
             "strategy_learning": strategy_learning,
             "swing_technical_learning": snapshot.get("swing_technical_learning") if snapshot else None,
+            "swing_policy_shadow": snapshot.get("swing_policy_shadow") if snapshot else None,
             "swing_technical": snapshot.get("swing_technical") if snapshot else None,
             "decision_brief": snapshot.get("decision_brief") if snapshot else None,
             "etf_research": snapshot.get("etf_research") if snapshot else None,

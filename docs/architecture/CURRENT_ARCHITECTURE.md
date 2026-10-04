@@ -1,5 +1,17 @@
 # Current Architecture — Observed Repository Baseline
 
+## 2026-10-04 Daily Swing shadow policy
+
+ADR 0038 adds cash-only 1.2.0 research/shadow policy and append-only daily OHLC
+replay beside the unchanged 1.0.1 ranking/paper benchmark and 1.1.0 feature
+cohorts. New jobs freeze definition/rules before acquisition. Later-close entry,
+fixed structural/ATR stop, 2R target, gap/ambiguous handling and separate 3/4/5
+session exits produce unit-price hypothetical cost scenarios, not orders.
+Observed entries/path bars and terminal outcomes survive retries/revisions.
+Old jobs opt out. Portfolio/status expose separate descriptive policy evidence.
+No schema migration, learning promotion or broker activation. Actual liquidity,
+calendar, costs/account feasibility/M15 and walk-forward gates remain open.
+
 ## 2026-10-03 Swing technical/horizon shadow
 
 ADR 0037 adds `application.opportunities.swing_technical`: real daily OHLCV,

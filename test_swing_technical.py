@@ -135,6 +135,7 @@ class SwingTechnicalTests(unittest.TestCase):
                 self.assertEqual(len(data["charts"]["TFMJ"]["bars"]), 60)
                 self.assertEqual(data["swing_technical"]["TFMJ"]["source_bars"], 120)
                 self.assertIn("high", data["charts"]["TFMJ"]["bars"][0])
+                self.assertEqual(data["swing_policy_definition"]["strategy_profile_version"], "1.2.0")
                 candidate = candidate_from_chart("TFMJ", data["charts"]["TFMJ"], evaluated_at=now,
                     swing_technical_evidence=data["swing_technical"]["TFMJ"])
                 self.assertEqual(candidate.input_evidence["swing_technical"]["source_bars"], 120)
@@ -143,6 +144,7 @@ class SwingTechnicalTests(unittest.TestCase):
                 result = handler(job)
                 saved = repo.paper_record(result["ranking_record_id"])
                 self.assertEqual(saved["swing_technical"]["TFMJ"]["source_bars"], 120)
+                self.assertEqual(saved["swing_policy_shadow"]["decision_count"], 1)  # Cash only, no ETF policy.
                 decisions = repo.paper_records(config.account_id, DECISION_KIND, as_of=now.isoformat())
                 self.assertEqual(len(decisions), 5)  # Cash instrument and four mandatory ETFs.
                 self.assertEqual({reference(row).strategy_profile_version for row in decisions}, {"1.1.0"})

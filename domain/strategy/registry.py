@@ -115,6 +115,19 @@ _technical_swing = replace(_attributed_swing,
         "Sector alignment, catalysts/calendar, ATR execution geometry, trailing and actual OST costs remain gates.",
         "Curated cash and index ETF research scope is not certified liquid or admitted for execution.",
         "Actual OST cash, fees and spreads remain unconfigured; no validated profitability or broker execution."))
-DEFAULT_STRATEGY_REGISTRY = StrategyProfileRegistry((*_defaults, _attributed_swing, _technical_swing), current_versions={
+_policy_swing = replace(_technical_swing,
+    reference=StrategyProfileRef("jse_swing_3_5d", "1.2.0"),
+    universe_scope=("JSE_CASH_EQUITIES",),
+    allowed_research_modes=("RESEARCH", "SHADOW"),
+    capabilities=(*_technical_swing.capabilities,
+        Capability("daily_shadow_policy", C.IMPLEMENTED_REUSABLE,
+            "Separate cash LONG shadow: first later observable close within seven calendar days; fixed structural/ATR stop, entry-based 2R target, no trailing, 3/4/5 observed-session exits; conservative daily OHLC replay and hypothetical 10/25/50 bps costs. No orders or risk approval.",
+            ("domain.policy.swing_shadow", "application.opportunities.swing_policy"))),
+    limitations=("Shadow policy version only; current ranking and paper benchmark stay pinned to 1.0.1.",
+        "Completed-close proxy and daily OHLC replay are hypotheses, not actual broker fills or validated profitability.",
+        "Liquidity, verified exchange calendar, sector/catalysts, corporate-action quality and actual OST costs/account feasibility remain unresolved; M15 approval is not granted.",
+        "Overlapping per-signal horizons are research samples, not an executable portfolio or walk-forward proof.",
+        "ETFs retain separate 1.1.0 technical research; no ETF policy or trading admission."))
+DEFAULT_STRATEGY_REGISTRY = StrategyProfileRegistry((*_defaults, _attributed_swing, _technical_swing, _policy_swing), current_versions={
     **{profile.reference.strategy_profile_id: profile.reference.strategy_profile_version for profile in _defaults},
     "jse_swing_3_5d": "1.0.1"})
