@@ -59,3 +59,5 @@ Six dashboard sections expose separate paper, strategy, canonical ranking, news,
 Read-only IG authentication/discovery is working, while tested JSE history is entitlement-blocked. Alpha Vantage repair logic exists but verified JSE coverage is unresolved and scheduled calls are disabled. Estimated display bars never become trade evidence. Intraday CFD and long-term cards remain truthful placeholders. Legacy multi-agent/60–30–10 benchmark code remains preserved without reconnecting it to canonical ranking. Broker Live execution remains disabled; Demo mutations require their own existing safety gates and authorization.
 
 The architecture's current limiting factor is admissible evidence, not proof of an AI edge: cloud replay has zero closed holdout samples and the first weekly-news scan has zero corroborated flags.
+
+Local research addition: isolated domain/backtest core and frozen-policy bridge; no runtime wiring. See docs/research/LOCAL_BACKTEST_IMPLEMENTATION.md for scoped acceptance.

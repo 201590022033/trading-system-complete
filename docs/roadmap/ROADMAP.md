@@ -33,3 +33,5 @@ Then, in order (each gate is a separate milestone):
 Do not collapse semantic news matching into measured price correlation, FX tick volume into traded-share volume, or historical holdout comparisons into prospective proof. Intraday CFD and long-term investment remain separate later programs. Live execution is outside this roadmap. Exactly one milestone may be ACTIVE; completed historical documents do not start another.
 
 Implementation update: B1 completed locally; see LOCAL_BACKTEST_IMPLEMENTATION.md for evidence. B2 remains next.
+
+B2 completed locally: deterministic replay/accounting with frozen benchmark reconciliation. B3 is next; B5 real-data acceptance remains separate.
