@@ -15,8 +15,10 @@ class SourceCatalogTests(unittest.TestCase):
         self.assertFalse(DEFAULT_SPECIALIST_SOURCES.poll_allowed(policy.source_id))
 
     def test_only_existing_permitted_collectors_are_enabled(self):
-        enabled = {item.source_id for item in DEFAULT_SPECIALIST_SOURCES.configured() if item.enabled}
+        enabled = {item.source_id for item in DEFAULT_SPECIALIST_SOURCES.configured()
+                   if item.enabled and item.access_mode != "manual_import"}
         self.assertEqual(enabled, {"moneyweb_sens", "moneyweb_rss"})
+        self.assertFalse(DEFAULT_SPECIALIST_SOURCES.poll_allowed("weekly_sa_brief"))
         self.assertEqual(
             DEFAULT_SPECIALIST_SOURCES.get("tradingview_ideas").status,
             "excluded_non_display_terms",

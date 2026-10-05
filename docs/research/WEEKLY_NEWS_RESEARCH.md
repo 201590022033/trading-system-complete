@@ -1,0 +1,40 @@
+# Monday brief and research flags
+
+Open Market AI / News → Sources → Monday market brief & research flags. Existing
+source controls also pause the local weekly scan. Import editions through the form
+after unlocking Portfolio controls, or use the private local importer:
+
+`python scripts/weekly_news_research.py --brief-file PATH --edition-date YYYY-MM-DD`
+
+Private local configuration reuses `SWING_RESEARCH_URL` and
+`SWING_DATA_UPLOAD_TOKEN`; do not paste them into chat. Set
+`WEEKLY_NEWS_RESEARCH_ENABLED=1` locally to include scans in the existing daily
+collector, after a successful OHLC upload. The scanner calls local Ollama only,
+using existing `OLLAMA_HOST` / `OLLAMA_LOCAL_MODEL`; an optional
+`WEEKLY_NEWS_OLLAMA_MODEL` selects an installed model for this scan alone.
+It requires the PC and model
+to be available. One attempt per UTC day; saved output retries cost no model call.
+An explicit `python scripts/weekly_news_research.py` performs the same bounded scan.
+
+Local briefs, attempt receipts, outboxes, provenance and category cases live in
+ignored `runtime/weekly-news-research/`. Raw daily prices remain in the existing
+local archive. Railway receives derived relationships and descriptive observations.
+The existing web source feed remains the source of current article inputs.
+
+Research priority receives up to five percentage points when linked articles
+come from distinct publishers and pass conservative duplicate checks. This does
+not change a trade's score. Semantic relationships are hypotheses; source
+independence and market correlations remain unproven. Historical flags start a
+local archive check, but meaningful statistics require a dated event archive.
+Initial waiting states are expected. Capitec and instruments outside the current
+cash-share research catalogue are not silently mapped to another stock.
+
+The imported brief has no verified publication timestamp/source links, so its
+claims remain unverified regardless of labels in its prose. Historical returns
+are calculated after actual local receipt, never backdated to the nominal edition
+or article date. The current screen is not the proposed six-family strategy
+backtest, a volume test, or a numerical correlation estimator.
+
+Future ChatGPT task editions need manual import. Automatic task-to-dashboard
+delivery, historical SENS/article collection, sector-adjusted return controls and
+the six-hypothesis workflow remain follow-up milestones.

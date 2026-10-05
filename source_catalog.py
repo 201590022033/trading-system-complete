@@ -29,6 +29,9 @@ class SourcePolicy:
 
 
 DEFAULT_SOURCE_POLICIES = (
+    SourcePolicy("weekly_sa_brief", "Monday South African market brief", "derived_research", 4,
+                 "manual_import", "user_provided_unverified", "", True, 604800,
+                 "AI-derived weekly context. 5% research-priority boost only; not independent news or a trading score. Future editions require import."),
     SourcePolicy("jse_market_data", "JSE Market Data", "market_data", 1,
                  "licensed_feed", "requires_license", "https://www.jse.co.za/market-data/data-agreements-policies",
                  notes="Use a licensed JSE product or registered distributor."),
@@ -91,7 +94,7 @@ class SpecialistSourceCatalog:
 
     def poll_allowed(self, source_id: str, now: Optional[datetime] = None) -> bool:
         policy = self.get(source_id)
-        if not policy.enabled:
+        if not policy.enabled or policy.access_mode == "manual_import":
             return False
         current = now or datetime.now(timezone.utc)
         if current.tzinfo is None:

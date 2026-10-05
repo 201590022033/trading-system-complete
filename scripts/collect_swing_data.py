@@ -73,6 +73,12 @@ def main():
             print(json.dumps({"state": "UPLOAD_FAILED_LOCAL_COPY_RETAINED", "http_status": response.status_code}))
             return 2
         print(json.dumps({"state": "LOCAL_DATA_STORED_AND_UPLOADED", "charts": len(dataset["charts"])}))
+        if env.get("WEEKLY_NEWS_RESEARCH_ENABLED") == "1":
+            from scripts.weekly_news_research import run
+            try:
+                print(json.dumps(run(env)))
+            except Exception:
+                print(json.dumps({"state": "WEEKLY_RESEARCH_UNAVAILABLE_LOCAL_DATA_RETAINED"}))
     else:
         print(json.dumps({"state": "LOCAL_DATA_STORED", "charts": len(dataset["charts"])}))
     return 0

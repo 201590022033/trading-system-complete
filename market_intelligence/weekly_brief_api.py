@@ -1,0 +1,96 @@
+"""Private manual import / local research ingress; public read-only dashboard."""
+from datetime import datetime, timedelta, timezone
+import hmac
+import os
+from flask import Blueprint, jsonify, request
+from shadow_learning import timestamp
+from .weekly_brief import ACCOUNT, VERSION, digest, import_brief, normalize_items, status, validate_matches, text
+
+
+def create_weekly_brief_blueprint(factory):
+    bp = Blueprint("weekly_brief", __name__)
+
+    def allowed():
+        from application.opportunities.operator_api import has_access
+        expected = os.environ.get("SWING_DATA_UPLOAD_TOKEN", "")
+        supplied = request.headers.get("Authorization", "").removeprefix("Bearer ")
+        return has_access() or bool(expected and hmac.compare_digest(expected.encode(), supplied.encode()))
+
+    @bp.get("/api/market-intelligence/weekly-brief")
+    def read():
+        repository = factory()
+        try:
+            from .source_registry import SourceRegistry
+            registry = SourceRegistry(repository.store)
+            registry.seed_defaults()
+            return jsonify(**status(repository, datetime.now(timezone.utc)),
+                           enabled=registry.get_policy("weekly_sa_brief").enabled)
+        finally:
+            repository.close()
+
+    @bp.post("/api/market-intelligence/weekly-brief/<kind>")
+    def write(kind):
+        if not allowed():
+            return jsonify(error="Unlock controls or use private local upload authentication"), 401
+        if request.content_length is None or request.content_length > 500_000:
+            return jsonify(error="Bounded body required"), 413
+        payload = request.get_json(silent=True)
+        repository = factory()
+        now = datetime.now(timezone.utc)
+        try:
+            if kind == "import":
+                return jsonify(import_brief(repository, payload, now)), 202
+            if kind != "scan":
+                return jsonify(error="Unknown operation"), 404
+            brief = repository.paper_record(payload["brief_id"])
+            if not brief or brief.get("source_id") != "weekly_sa_brief":
+                raise ValueError("Known brief required")
+            observed = timestamp(payload["received_at"])
+            if observed > now or now-observed > timedelta(days=4) or observed < timestamp(brief["received_at"]):
+                raise ValueError("Current local scan required")
+            from application.opportunities.public_research import public_share_catalog
+            items = normalize_items(payload["articles"], observed)
+            matches = validate_matches({"matches": payload["matches"]}, items, public_share_catalog())
+            if payload["provider"] != "ollama_local":
+                raise ValueError("Local Ollama attribution required")
+            model = text(payload["model"], 100)
+            cases = []
+            for match in matches:
+                cid = "weekly-case-"+digest({"brief": brief["brief_id"], "match": match, "version": VERSION})
+                # Uploaded results are descriptive, never evidence of a validated
+                # market relationship. Keep only bounded numeric close observations.
+                research = payload.get("research", {}).get(cid, {})
+                samples = research.get("samples", [])
+                if not isinstance(samples, list) or len(samples) > 300:
+                    raise ValueError("Bounded research observations required")
+                cleaned = []
+                import math
+                for sample in samples:
+                    value = sample["close_return"]
+                    if sample["sessions"] not in (3, 4, 5) or sample["instrument_id"] not in match["instrument_ids"] or isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value) or value < -1:
+                        raise ValueError("Invalid descriptive observation")
+                    cleaned.append({"case_id": text(sample["case_id"], 100), "instrument_id": sample["instrument_id"],
+                                    "sessions": sample["sessions"], "close_return": value})
+                state = ("DESCRIPTIVE_RETURNS_ONLY" if cleaned else "WAITING_FOR_DATED_HISTORY_OR_REAL_BARS") if match["research_flag"] else "SOURCE_REVIEW_REQUIRED"
+                cases.append({**match, "case_id": cid, "brief_id": brief["brief_id"], "received_at": observed.isoformat(),
+                              "articles": [items[r] for r in match["evidence_ids"]],
+                              "historical_research": {"state": state, "samples": cleaned}})
+            record = {"brief_id": brief["brief_id"], "received_at": observed.isoformat(), "provider": "ollama_local",
+                      "model": model, "cases": cases, "state": "LOCAL_OLLAMA_SCAN_COMPLETE", "version": VERSION,
+                      "live_execution": False, "trading_weight": 0}
+            rid = "weekly-scan-"+digest(record)
+            if not repository.paper_record(rid):
+                repository.save_paper_record(rid, ACCOUNT, "weekly-scan", observed.isoformat(), record)
+            return jsonify(state="LOCAL_RESEARCH_RECEIVED", cases=len(cases), trading_weight=0), 202
+        except (ValueError, KeyError, TypeError, AttributeError):
+            return jsonify(error="Invalid weekly research input"), 422
+        finally:
+            repository.close()
+
+    @bp.errorhandler(Exception)
+    def unavailable(exc):
+        from werkzeug.exceptions import HTTPException
+        if isinstance(exc, HTTPException):
+            return exc
+        return jsonify(error="Weekly research unavailable"), 503
+    return bp

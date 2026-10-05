@@ -1,6 +1,15 @@
 # Current Milestone
 
-## 2026-10-04 Local daily OHLC / online AI research — sole ACTIVE workspace
+## 2026-10-05 Monday brief / local research flags — sole ACTIVE workspace
+
+Start7144820. Owner-authorized source import, research priority and local Ollama
+semantic relationships. ADR0043 extends existing catalogue/dashboard and local
+collector. Separate append-only research records; no migration, production
+ranking/strategy change or live execution. Validation:34 focused /867 full safe tests pass,54 protected artifacts unchanged.
+JavaScript syntax and diff checks pass. Deployment/live import pending.
+Historical archive coverage and automatic ChatGPT brief delivery remain open.
+
+## 2026-10-04 Local daily OHLC / online AI research — completed workspace
 
 Owner clarified the intended adaptive goal and authorized the local/cloud split.
 Start5bd04f1. ADR0042 implements local dated raw storage, private bounded ingress,

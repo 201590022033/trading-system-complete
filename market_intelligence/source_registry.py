@@ -19,6 +19,7 @@ SOURCE_CATEGORY_MAP: Dict[str, str] = {
     "authoritative_event": "company_announcements",
     "financial_media": "financial_press",
     "community": "specialist_analysis",
+    "derived_research": "specialist_analysis",
 }
 
 
@@ -36,7 +37,7 @@ def _policy_to_row(policy: SourcePolicy) -> Dict[str, Any]:
         "status": policy.status,
         "url": policy.url,
         "enabled": int(policy.enabled),
-        "weight": 1.0,
+        "weight": .05 if policy.source_id == "weekly_sa_brief" else 1.0,
         "minimum_poll_seconds": policy.minimum_poll_seconds,
         "notes": policy.notes,
         "region": None,

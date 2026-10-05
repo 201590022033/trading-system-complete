@@ -65,6 +65,8 @@ from application.strategy_profiles import create_strategy_blueprint
 app.register_blueprint(create_strategy_blueprint())
 from application.opportunities.swing_research_api import create_research_blueprint
 app.register_blueprint(create_research_blueprint(runtime_repository))
+from market_intelligence.weekly_brief_api import create_weekly_brief_blueprint
+app.register_blueprint(create_weekly_brief_blueprint(runtime_repository))
 from application.opportunities.operator_api import create_operator_blueprint, has_access
 app.register_blueprint(create_operator_blueprint(runtime_repository, paper_config))
 from connected_portfolio_api import create_connected_blueprint

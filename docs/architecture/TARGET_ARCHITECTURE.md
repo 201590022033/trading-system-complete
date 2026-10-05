@@ -1,5 +1,10 @@
 # Target Architecture — Evolutionary Adaptive Intelligence Layer
 
+ADR0043 introduces weekly derived context → local semantic relationships → local
+historical archive screen → research flags. Later historical retrieval, dated
+SENS/economic events, sector controls and walk-forward testing must precede any
+market-correlation claim or trading-weight promotion.
+
 2026-10-04 owner-directed split: local daily OHLC archive → authenticated working
 snapshot → online scheduled AI hypothesis research → frozen experiment and
 chronological comparison → prospective validation → reviewed strategy version.

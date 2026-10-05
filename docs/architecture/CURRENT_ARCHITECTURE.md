@@ -1,5 +1,11 @@
 # Current Architecture — Observed Repository Baseline
 
+2026-10-05 ADR0043 adds a manually imported Monday brief source, authenticated
+local Ollama relationship ingress and research-only +0.05 attention flags.
+Local archive screens describe later close returns; no numerical correlation or
+trading-weight promotion. Existing daily collector optionally runs the scan.
+Future ChatGPT brief delivery and historical article retrieval are not connected.
+
 ADR0042 / research profile1.3.0 adds a local daily raw archive, authenticated
 bounded cloud snapshot and separate scheduled Ollama hypothesis/evaluation loop.
 LOCAL_UPLOAD paper source is explicit; public dashboard feeds remain separate.

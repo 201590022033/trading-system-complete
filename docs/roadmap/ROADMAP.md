@@ -1,5 +1,9 @@
 # Linear Fusion Roadmap
 
+2026-10-05: ADR0043 adds the owner's weekly brief to news resources, bounded local
+Ollama relationship scans and research-only attention flags. Historical archive
+retrieval, statistical/sector controls and six-family backtests remain follow-ups.
+
 2026-10-04: owner prioritizes local daily OHLC and online strategy hypothesis
 refinement. ADR0042 adds a bounded AI research loop with historical comparisons.
 Prospective scoring, calendar/source integrity and portfolio/cost validation
