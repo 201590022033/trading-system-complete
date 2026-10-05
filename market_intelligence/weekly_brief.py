@@ -128,6 +128,9 @@ def historical_screen(match, history, charts, now):
     for old in history:
         if old.get("category") != match["category"]:
             continue
+        if old.get("research_flag") is not True:
+            missing += 1
+            continue
         # Unknown publication times cannot supply historical entry information.
         articles = old.get("articles", [])
         if not articles or any(a.get("timestamp_kind") != "published" for a in articles):

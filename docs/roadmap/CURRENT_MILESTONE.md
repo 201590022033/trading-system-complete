@@ -1,13 +1,17 @@
 # Current Milestone
 
-## 2026-10-05 Monday brief / local research flags — sole ACTIVE workspace
+## 2026-10-05 Monday brief / local research flags — completed workspace
 
 Start7144820. Owner-authorized source import, research priority and local Ollama
 semantic relationships. ADR0043 extends existing catalogue/dashboard and local
 collector. Separate append-only research records; no migration, production
 ranking/strategy change or live execution. Validation:48 focused /869 full safe tests pass,54 protected artifacts unchanged.
 JavaScript syntax and diff checks pass. Web/worker source deployed;28 September and5 October editions imported.
-Local CUDA failure diagnosed; CPU-only structured-output repair under validation.
+Local CUDA failure diagnosed and CPU-only structured output verified. Actual
+local Ollama scan uploaded2 candidates, both SOURCE_REVIEW_REQUIRED with0 flags
+and0 boost because the articles share a publisher. Runtime was6m38s; no
+validated market correlation or historical sample is claimed. Uncorroborated
+prior cases cannot enter descriptive historical cohorts.
 Final live-run and deployment details belong in the workspace completion report.
 Historical archive coverage and automatic ChatGPT brief delivery remain open.
 

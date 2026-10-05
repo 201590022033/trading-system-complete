@@ -113,18 +113,21 @@ class WeeklyBriefTests(unittest.TestCase):
         self.assertEqual(local_scan(self.brief, [], {}, [], NOW, forbidden, {"FSR"})["state"], "WAITING_FOR_SOURCE_ARTICLES")
 
     def test_historical_returns_start_after_receipt_not_article_date(self):
-        old = {"category": "MONETARY_POLICY", "case_id": "old", "instrument_ids": ["FSR"],
+        old = {"category": "MONETARY_POLICY", "case_id": "old", "instrument_ids": ["FSR"], "research_flag": True,
                "received_at": "2026-09-20T10:00:00+00:00", "articles": [
                    {"evidence_id": "e", "timestamp": "2026-09-01T10:00:00+00:00", "timestamp_kind": "published"}]}
         bars = [{"timestamp": (datetime(2026, 9, 1)+timedelta(days=i)).date().isoformat(), "close": 100+i} for i in range(30)]
         result = historical_screen(old, [old, old], {"FSR": {"bars": bars}}, NOW)
         self.assertEqual(len(result["samples"]), 3)
         self.assertAlmostEqual(result["samples"][0]["close_return"], 122/119-1)
+        old["research_flag"] = False
+        self.assertFalse(historical_screen(old, [old], {"FSR": {"bars": bars}}, NOW)["samples"])
+        old["research_flag"] = True
         old["articles"][0]["timestamp_kind"] = "observed"
         self.assertFalse(historical_screen(old, [old], {"FSR": {"bars": bars}}, NOW)["samples"])
 
     def test_estimated_close_not_used(self):
-        old = {"category": "EARNINGS", "case_id": "old", "instrument_ids": ["FSR"],
+        old = {"category": "EARNINGS", "case_id": "old", "instrument_ids": ["FSR"], "research_flag": True,
                "received_at": "2026-09-20T10:00:00+00:00", "articles": [{"evidence_id": "e", "timestamp": "2026-09-20T00:00:00+00:00", "timestamp_kind": "published"}]}
         bars = [{"timestamp": f"2026-09-{20+i}", "close": 100, "estimated": True} for i in range(7)]
         self.assertFalse(historical_screen(old, [old], {"FSR": {"bars": bars}}, NOW)["samples"])

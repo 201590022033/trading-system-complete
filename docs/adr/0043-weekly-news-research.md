@@ -52,3 +52,6 @@ Generation uses an Ollama JSON schema with real article-ID and instrument enums,
 two-case/two-reference limits and required confidence/category fields. Independent
 validation remains mandatory. See https://docs.ollama.com/capabilities/structured-outputs.
 Rejected output remains private locally; it cannot earn attention or trading weight.
+
+Only previously flagged cases can enter descriptive historical cohorts; cases
+awaiting source review never become historical confirmation implicitly.
