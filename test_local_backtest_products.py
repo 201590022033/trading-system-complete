@@ -4,7 +4,7 @@ from datetime import timedelta
 from decimal import Decimal as D, localcontext
 import unittest
 from domain.backtest.engine import replay, Signal, Costs
-from domain.backtest.products import Forex, Gold, Conversion, reciprocal_bid_ask, theoretical_rand_gold
+from domain.backtest.products import Forex, Gold, GoldListed, Conversion, reciprocal_bid_ask, theoretical_rand_gold
 from research.fixtures.daily_oracle import fixture
 
 
@@ -43,6 +43,14 @@ class ForexTests(unittest.TestCase):
         bid,ask=reciprocal_bid_ask(18,20); self.assertEqual(bid,D('.05')); self.assertEqual(ask,D(1)/18)
 
 class GoldTests(unittest.TestCase):
+    def test_listed_gold_cash_units_no_share_volume_or_underlying_calendar(self):
+        m=fixture(product='GOLD_ETF'); m=replace(m,activity_basis='NONE',bars=tuple(replace(b,activity=None) for b in m.bars))
+        a=GoldListed('ZAR','ZAR',m.calendar_id,m.sessions,(),m.instrument)
+        s=Signal('listed',m.instrument,'0',m.sessions[0].close_at,D(90),D(1100),D(120))
+        r=run(m,s,a); self.assertEqual(D(r['cash']),2036)
+        with self.assertRaises(ValueError): run(replace(m,product='GOLD'),s,a)
+        with self.assertRaises(ValueError): run(replace(m,calendar_id='SPOT_UNDERLYING'),s,a)
+        self.assertEqual(run(m,replace(s,side=-1,stop=D(114)),a)['trades'],[])
     def test_multiplier_account_conversion_settlement_and_costs(self):
         m=fixture(product='GOLD',currency='USD'); m=replace(m,instrument='XAU/USD')
         conversions=tuple(Conversion(s.key,s.open_at,D(18) if s.key!='4' else D(19)) for s in m.sessions)

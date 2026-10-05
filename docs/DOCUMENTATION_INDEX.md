@@ -225,3 +225,7 @@ Current guides describe today's accepted code/settings. Module contracts retain 
 | [docs/ui/M20_TOP5_GUI.md](ui/M20_TOP5_GUI.md) | Module/design contract — original scope retained with current-context note |
 | [docs/ui/UI_RECOVERY_REPORT.md](ui/UI_RECOVERY_REPORT.md) | Frozen benchmark — unchanged |
 | [docs/ui/UI_REVIEW_CHECKLIST.md](ui/UI_REVIEW_CHECKLIST.md) | Current guide — rewritten; prior text archived |
+
+| [Local engine evidence](research/LOCAL_BACKTEST_IMPLEMENTATION.md) | B1–B5 local implementation, tests and external-data gates |
+| [Local engine operating guide](research/LOCAL_BACKTEST_OPERATING_GUIDE.md) | Offline commands, callable interface, accounting/adapters/experiments and limitations |
+| [ADR 0047](adr/0047-isolated-local-replay.md) | Separate deterministic research core preserving frozen production lineage |

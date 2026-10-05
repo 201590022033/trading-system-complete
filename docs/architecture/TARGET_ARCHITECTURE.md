@@ -39,3 +39,5 @@ Extend the existing registry, causal feature/evaluation infrastructure, paper le
 Current daily archives/uploads and the cloud 1.3.0 comparison loop are reusable foundations. They do not yet supply the complete local engine or adaptive event taxonomy. Parameter evaluation and event memory are distinct from LLM weight fine-tuning. An always-available web/database service can retain state while bounded workers run on schedule; continuous CPU inference is not required for a 3–5-day strategy.
 
 No automatic promotion, Live broker execution, ranking-weight changes, or legacy multi-agent reconnection belongs to this target without a separate milestone and evidence. Prospective walk-forward acceptance, sufficient independent outcomes, actual costs/liquidity and M15 veto remain required.
+
+Implementation update: B1–B4 are implemented locally; B5 software/audit work is delivered with unresolved real-data acceptance. The wider target flow above remains proposed. See [operating guide](../research/LOCAL_BACKTEST_OPERATING_GUIDE.md).

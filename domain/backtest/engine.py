@@ -1,5 +1,5 @@
 """Deterministic close-proxy daily cash replay, versioned away from Swing 1.2.0."""
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass, asdict, replace
 from datetime import datetime, timedelta
 from decimal import Decimal, ROUND_FLOOR, ROUND_HALF_UP, localcontext
 from domain.backtest.data import number as N
@@ -51,9 +51,13 @@ class Signal:
     trail_k: Decimal = Decimal('1.5')
     expiry_days: int = 7
     side: int = 1
+    strategy_profile_id: str | None = None
+    strategy_profile_version: str | None = None
 
     def __post_init__(self):
         object.__setattr__(self, 'decision_at', utc(self.decision_at, 'decision_at'))
+        if bool(self.strategy_profile_id)!=bool(self.strategy_profile_version):
+            raise ValueError('exact profile identity/version pair required')
         for name in ('stop', 'max_notional', 'risk_budget', 'trail_k'):
             value = N(getattr(self, name))
             if value <= 0: raise ValueError('positive geometry and budgets required')
@@ -187,13 +191,21 @@ def _replay(manifests, signals, *, as_of, initial_cash, account_currency,
             proceeds=notional
         else:
             proceeds=p['collateral']+(fill-p['entry'])*p['qty']*adapter.multiplier*s.side*rate
-        post(b.available_at,s.id,'EXIT',proceeds,reason=reason,price=str(fill),quantity=str(p['qty']))
+        post(b.available_at,s.id,'EXIT',proceeds,reason=reason,price=str(fill),quantity=str(p['qty']),
+             spread_impact=str(money(p['qty']*price*adapter.multiplier*rate*costs.spread_bps/20000)),
+             slippage_impact=str(money(p['qty']*price*adapter.multiplier*rate*costs.slippage_bps/10000)))
         post(b.available_at,s.id,'FEE',-fee)
         pnl=money(proceeds-p['capital']-fee-p['entry_fee']+p['distributions']-p['financing'])
+        entry_rate=p['entry_rate'] if adapter.margin_fraction==1 else rate
+        execution_cost=money(((p['entry']-p['entry_mid'])*entry_rate+(price-fill)*rate)*p['qty']*adapter.multiplier*s.side)
         trades.append(dict(id=s.id,instrument=key,side=s.side,entry_session=p['entry_session'],exit_session=b.session,
+                           strategy_profile_id=s.strategy_profile_id,strategy_profile_version=s.strategy_profile_version,
                            entry=str(p['entry']),exit=str(fill),quantity=str(p['qty']),held=p['held'],reason=reason,
                            ambiguous=ambiguous,net_pnl=str(pnl),fees=str(p['entry_fee']+fee),
-                           financing=str(p['financing']),distributions=str(p['distributions'])))
+                           financing=str(p['financing']),distributions=str(p['distributions']),execution_cost=str(execution_cost),
+                           gross_pnl=str(money(pnl+fee+p['entry_fee']+p['financing']+execution_cost)),
+                           favorable_daily_range_r_bound=str(p['mfe']),adverse_daily_range_r_bound=str(p['mae']),
+                           excursion_basis='DAILY_RANGE_BOUNDS_EXIT_BAR_ORDER_UNKNOWN'))
 
     # Group equal timestamps so carried exits across all instruments precede entries.
     times = sorted({e[0] for e in events})
@@ -203,19 +215,28 @@ def _replay(manifests, signals, *, as_of, initial_cash, account_currency,
         for key,b in bars:
             adapter=adapters[key]; rate=adapter.rate(b.session)
             marks[key]=(N(b.close),rate); history=histories[key]; history.append(b)
+            action=action_map.get((key,b.session))
+            if action and action.split!=1:
+                # Rebase prior raw feature history to current share units. Input
+                # manifest remains byte/semantically immutable.
+                history[:-1]=[replace(old,**{field:N(getattr(old,field))/action.split for field in ('open','high','low','close')},
+                                     activity=None if old.activity is None else N(old.activity)*action.split) for old in history[:-1]]
+                for sid,order in tuple(orders.items()):
+                    if order.instrument==key: orders[sid]=replace(order,stop=order.stop/action.split)
             if key not in positions: continue
             p=positions[key]; s=p['signal']; side=s.side; p['held']+=1
-            action=action_map.get((key,b.session))
             if action:
                 # Raw ex-action prices; adjust shares and frozen levels exactly once.
                 p['qty']*=action.split
-                for field in ('entry','stop','initial_r','best'): p[field]/=action.split
+                for field in ('entry','entry_mid','stop','initial_r','best'): p[field]/=action.split
                 if p['target'] is not None: p['target']/=action.split
                 dividend=money(p['qty']*action.dividend*adapter.multiplier*rate*side)
                 post(at,s.id,'DISTRIBUTION',dividend); p['distributions']+=dividend
             financing=money(adapter.financing(p,b.session,p['previous_session']))
             post(at,s.id,'FINANCING',-financing); p['financing']+=financing; p['previous_session']=b.session
             o,h,l,c=(N(getattr(b,k)) for k in ('open','high','low','close'))
+            p['mfe']=max(p['mfe'],((h-p['entry']) if side==1 else (p['entry']-l))/p['initial_r'])
+            p['mae']=max(p['mae'],((p['entry']-l) if side==1 else (h-p['entry']))/p['initial_r'])
             stop=p['stop']; target=p['target']
             hit_stop=l<=stop if side==1 else h>=stop
             hit_target=target is not None and (h>=target if side==1 else l<=target)
@@ -256,11 +277,13 @@ def _replay(manifests, signals, *, as_of, initial_cash, account_currency,
                 if qty<=0:
                     decisions.append(dict(id=sid,at=at.isoformat(),state='NO_CAPITAL')); continue
                 capital=money(qty*unit); fee=costs.fee(qty*fill*adapter.multiplier*rate)
-                post(at,sid,'ENTRY',-capital,price=str(fill),quantity=str(qty)); post(at,sid,'FEE',-fee)
-                positions[key]=dict(signal=s,qty=qty,entry=fill,stop=s.stop,initial_r=risk,
+                post(at,sid,'ENTRY',-capital,price=str(fill),quantity=str(qty),
+                     spread_impact=str(money(qty*close_price*adapter.multiplier*rate*costs.spread_bps/20000)),
+                     slippage_impact=str(money(qty*close_price*adapter.multiplier*rate*costs.slippage_bps/10000))); post(at,sid,'FEE',-fee)
+                positions[key]=dict(signal=s,qty=qty,entry=fill,entry_mid=close_price,entry_rate=rate,stop=s.stop,initial_r=risk,
                     target=None if s.target_r is None else fill+side*s.target_r*risk,
                     capital=capital,collateral=capital,entry_fee=fee,held=0,entry_session=b.session,
-                    previous_session=b.session,best=fill,armed=False,invalidation=False,financing=ZERO,distributions=ZERO)
+                    previous_session=b.session,best=fill,armed=False,invalidation=False,financing=ZERO,distributions=ZERO,mfe=ZERO,mae=ZERO)
                 decisions.append(dict(id=sid,at=at.isoformat(),state='FILLED'))
         for _,kind,_,s in group:
             if kind!=2: continue

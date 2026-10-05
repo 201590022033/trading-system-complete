@@ -17,7 +17,7 @@ def main():
     mutations={
         'future_access':("for b in rows[m.instrument])", "for b in m.bars)"),
         'stop_order':("elif hit_stop:", "elif hit_stop and not hit_target:"),
-        'duplicate_fill':("post(at,sid,'ENTRY',-capital,price=str(fill),quantity=str(qty));", "post(at,sid,'ENTRY',-capital,price=str(fill),quantity=str(qty)); post(at,sid,'ENTRY',-capital);"),
+        'duplicate_fill':("post(at,sid,'FEE',-fee)", "post(at,sid,'ENTRY',-capital); post(at,sid,'FEE',-fee)"),
         'removed_fee':("post(at,sid,'FEE',-fee)", "post(at,sid,'FEE',ZERO)"),
     }
     killed=[]

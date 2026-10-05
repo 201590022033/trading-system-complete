@@ -12,7 +12,7 @@ from domain.backtest.engine import replay, Signal, Costs, atr
 from domain.evaluation.experiment import configuration_hash, utc, ExperimentRun, ExperimentResult, ExperimentStage
 from domain.evaluation.metrics import expectancy
 from domain.contracts.trade import MetricContext
-from domain.strategy.attribution import fields
+from domain.strategy.attribution import fields, reference
 
 VERSION='local-indicator-selection-v1'
 
@@ -113,6 +113,7 @@ def fit(candidate,manifests,fold):
     for id in candidate.indicators:
         values=[]
         for m in manifests:
+            if m.action_basis!='NONE_VERIFIED': raise ValueError('selection requires an independently adjusted action feature adapter; raw action histories refused')
             rows=m.admit(m.sessions[0].key,m.sessions[-1].key,fold.train_end)
             for i,b in enumerate(rows):
                 if fold.train_start<=b.available_at<fold.train_end:
@@ -134,6 +135,7 @@ def observations(candidate,normal,manifests,start,end,*,costs,embargo_days=1,ada
     records=[]
     cutoff=end-timedelta(days=embargo_days)
     for m in manifests:
+        if m.action_basis!='NONE_VERIFIED': raise ValueError('action-free verified indicator window required')
         rows=m.admit(m.sessions[0].key,m.sessions[-1].key,end)
         for i,b in enumerate(rows):
             if not start<=b.available_at<end: continue
@@ -164,6 +166,7 @@ def observations(candidate,normal,manifests,start,end,*,costs,embargo_days=1,ada
                         if r['trades']:
                             t=r['trades'][0]; capital=-sum(D(x['amount']) for x in r['ledger'] if x['kind']=='ENTRY')
                             row['outcomes'][str(h)]={'net_return':float(D(t['net_pnl'])/capital),'net_pnl':t['net_pnl'],
+                                'gross_return':float(D(t['gross_pnl'])/capital),'gross_pnl':t['gross_pnl'],
                                 'reason':t['reason'],'ambiguous':t['ambiguous'],'exit_session':t['exit_session']}
                         else: row['outcomes'][str(h)]={'net_return':None,'state':'UNRESOLVED_OR_INVALIDATED'}
             records.append(row)
@@ -190,6 +193,10 @@ def summarize(records):
                  'radar':values(lambda r:r['state']=='SELECTED' and r['radar'] is True),
                  'non_radar':values(lambda r:r['state']=='SELECTED' and r['radar'] is False)}
         result['horizons'][h]={k:dict(count=len(v),net_expectancy=mean(v) if v else None,hit_rate=sum(x>0 for x in v)/len(v) if v else None) for k,v in cohorts.items()}
+        gross=[r['outcomes'][h]['gross_return'] for r in records if r['state']=='SELECTED' and h in r['outcomes'] and r['outcomes'][h].get('gross_return') is not None]
+        result['horizons'][h]['selected']['gross_expectancy']=mean(gross) if gross else None
+        winners=[v for v in selected if v>0]; losers=[v for v in selected if v<0]
+        result['horizons'][h]['selected']['payoff_ratio']=mean(winners)/abs(mean(losers)) if winners and losers else None
         if len(groups)>=3:
             means=[mean([r['outcomes'][h]['net_return'] for r in g[2] if h in r['outcomes'] and r['outcomes'][h]['net_return'] is not None]) for g in groups if any(h in r['outcomes'] and r['outcomes'][h]['net_return'] is not None for r in g[2])]
             if len(means)>=3:
@@ -230,6 +237,7 @@ def run_study(study_id,manifests,candidates,folds,*,final_start,final_end,journa
     if len({m.product for m in manifests})!=1 or len({d.strategy_family for d in definitions.values()})!=1:
         raise ValueError('independent hypothesis/product studies required')
     for c in candidates:
+        if reference(definitions[c.id]) is None: raise ValueError('exact research profile lineage required')
         if definitions[c.id].treatment_config_hash!=c.sha256: raise ValueError('candidate differs from registered definition')
         if set(m.instrument for m in manifests)-set(definitions[c.id].instrument_scope): raise ValueError('instrument scope outside registry')
         # Registry carries exact lineage; runner enforces training/validation/OOS boundaries additionally.
@@ -240,10 +248,13 @@ def run_study(study_id,manifests,candidates,folds,*,final_start,final_end,journa
                     raise ValueError('every dataset/fold must match registered boundaries')
             if not any(b.oos_start==final_start and b.oos_end==final_end for b in bounds):
                 raise ValueError('registered locked final boundary required')
-    config=configuration_hash(dict(version=VERSION,datasets={m.instrument:m.sha256 for m in manifests},candidates=[asdict(c) for c in candidates],folds=[asdict(f) for f in folds],final_start=final_start,final_end=final_end,costs=asdict(costs),code_commit=code_commit,adapters={k:a.configuration() for k,a in (adapters or {}).items()}))
+    definition_hashes={key:configuration_hash(asdict(d)) for key,d in definitions.items()}
+    config=configuration_hash(dict(version=VERSION,datasets={m.instrument:m.sha256 for m in manifests},definitions=definition_hashes,candidates=[asdict(c) for c in candidates],folds=[asdict(f) for f in folds],final_start=final_start,final_end=final_end,costs=asdict(costs),code_commit=code_commit,adapters={k:a.configuration() for k,a in (adapters or {}).items()}))
     cached=journal.freeze(study_id,config,trial_budget*len(folds))
     if cached: return cached
     report={'version':VERSION,'study_id':study_id,'config_hash':config,'code_commit':code_commit,'folds':[],
+            'candidates':[asdict(c) for c in candidates],'definition_hashes':definition_hashes,
+            'profile_lineage':{key:fields(d) for key,d in definitions.items()},'cost_model':asdict(costs),
             'diagnostic_event_study':True,'execution_enabled':False,'promotion':'NONE',
             'multiplicity':'BOUNDED_EXPLORATORY_ALL_TRIALS_RETAINED_NO_SIGNIFICANCE_CLAIM','dataset_hashes':{m.instrument:m.sha256 for m in manifests}}
     for fold in folds:
@@ -285,5 +296,7 @@ def run_study(study_id,manifests,candidates,folds,*,final_start,final_end,journa
             ('OVERLAPPING_EVENT_STUDY_NOT_PORTFOLIO','BOUNDED_EXPLORATORY_NOT_PROMOTABLE'),('HYPOTHETICAL_COSTS',),canonical_metrics=(metric,),**attribution)
         registry.record_result(result)
     report['trials']=[list(r) for r in journal.trials(study_id)]
+    # Canonical JSON primitives keep restart reports identical (Decimal -> str).
+    report=json.loads(json.dumps(report,sort_keys=True,default=str,allow_nan=False))
     report['semantic_hash']=configuration_hash(report); journal.save(study_id,report)
     return report

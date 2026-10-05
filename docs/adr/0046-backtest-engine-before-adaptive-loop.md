@@ -17,3 +17,5 @@ See [engine contract and gates B0–B5](../research/LOCAL_BACKTEST_ENGINE_SPEC.m
 ## Consequences
 
 More verification before feature rollout; clean separation between software correctness, retrospective strategy evidence and prospective validation. “Bulletproof” is bounded testable correctness, not guaranteed profitability. Real-data/provider limitations can block execution-ready acceptance without blocking offline fixture development. Current canonical workflow, local uploads, cloud comparisons, protected benchmarks and broker gates remain unchanged.
+
+Implementation update (5 October 2026): subsequent owner authorization enabled B1–B5. B1–B4 now implemented locally under ADR 0047; B5 external-data acceptance blocked. Original design and safety decisions remain governing. See [implementation record](../research/LOCAL_BACKTEST_IMPLEMENTATION.md).

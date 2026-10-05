@@ -16,7 +16,7 @@ This is the current dependency sequence. [Current state](../CURRENT_STATE.md) is
 
 ## Recommended next milestone
 
-**B1: local backtest data/time contracts and independent oracle harness** — proposed, not ACTIVE. The owner has prioritised proving the engine before the wider loop. The [engine specification](../research/LOCAL_BACKTEST_ENGINE_SPEC.md) inventories reusable code and defines B1–B5 acceptance. First freeze offline fixtures, session/availability manifests, admission rules and independently hand-calculated daily replay expectations. Six-family input requirements inform these contracts; strategy optimisation and new cloud behaviour wait.
+**B5: real-data engine acceptance — BLOCKED.** B1–B4 are implemented in an isolated local lane. Final software verification passes 900 safe tests, seven killed defects and 54 protected artifacts. The verified real-data trade audit, actual costs/liquidity/product evidence and intraday comparison remain unresolved. See [operating guide](../research/LOCAL_BACKTEST_OPERATING_GUIDE.md) and [implementation evidence](../research/LOCAL_BACKTEST_IMPLEMENTATION.md). Integration review/data acquisition is next; no adaptive-loop rollout is active.
 
 [Refinement 0.2](../research/SWING_RULE_REFINEMENT.md) now specifies the candidate entry/trailing/exit matrix, volume contribution controls and pooled momentum-personality tests. These proposed parameters still require data admission and implementation; none is an installed or validated rule.
 
@@ -39,3 +39,5 @@ B2 completed locally: deterministic replay/accounting with frozen benchmark reco
 B3 completed locally with market-specific synthetic verification. B4 chronological experiments next; real FX/gold execution evidence remains unresolved.
 
 B4 completed locally: bounded indicator trials and chronological locked evaluation. B5 audit/acceptance next. No strategy adopted.
+
+B5 software/audit delivery complete; external-data acceptance BLOCKED. No subsequent milestone activated. 900 safe tests and 54 protected artifacts pass; seven defects killed.

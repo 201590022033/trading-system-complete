@@ -1,7 +1,7 @@
 """Bridge existing frozen technical/policy output without changing installed profiles."""
 from decimal import Decimal
 from domain.policy.swing_shadow import PROFILE, VERSION, rules
-from domain.strategy.attribution import reference
+from domain.strategy.attribution import reference, fields
 from domain.backtest.engine import Signal
 from shadow_learning import timestamp
 
@@ -16,4 +16,4 @@ def from_frozen_policy(policy, manifest, *, max_notional, risk_budget, horizon=3
         raise ValueError('signal provenance mismatch')
     return Signal(policy['source_feature_sha256'],manifest.instrument,policy['signal_session'],
                   timestamp(policy['decision_at']),Decimal(str(policy['stop_price'])),
-                  Decimal(str(max_notional)),Decimal(str(risk_budget)),horizon=horizon)
+                  Decimal(str(max_notional)),Decimal(str(risk_budget)),horizon=horizon,**fields(policy))

@@ -117,3 +117,45 @@ def theoretical_rand_gold(usd_gold,usd_zar,*,gold_at,fx_at):
         raise ValueError('positive exactly aligned quotes required')
     return {'value':str(N(usd_gold)*N(usd_zar)),'at':gold_at.isoformat(),
             'product':'XAU_ZAR_THEORETICAL','executable':False}
+
+@dataclass(frozen=True)
+class GoldListed:
+    """Cash-funded listed gold units, independent venue sessions/activity."""
+    account_currency: str
+    quote_currency: str
+    calendar_id: str
+    sessions: tuple
+    conversions: tuple[Conversion,...]
+    instrument: str
+    version: str = 'gold-listed-cash-v1'
+    multiplier: Decimal = Decimal(1)
+    lot: Decimal = Decimal(1)
+    margin_fraction: Decimal = Decimal(1)
+    allow_short: bool = False
+    activity_required: bool = False
+
+    def __post_init__(self):
+        if self.account_currency not in ('USD','ZAR') or self.quote_currency not in ('USD','ZAR'):
+            raise ValueError('explicit listed product currency required')
+        if not isinstance(self.sessions,tuple) or not isinstance(self.conversions,tuple) or not self.instrument:
+            raise ValueError('immutable instrument/session inputs required')
+        if self.multiplier!=1 or self.lot!=1 or self.margin_fraction!=1 or self.allow_short or self.activity_required:
+            raise ValueError('cash LONG listed units without share-volume gate required')
+        if len({c.session for c in self.conversions})!=len(self.conversions): raise ValueError('duplicate conversion')
+        for c in self.conversions:
+            matches=[s for s in self.sessions if s.key==c.session]
+            if len(matches)!=1 or c.available_at>matches[0].open_at: raise ValueError('listed conversion unavailable before open')
+
+    def validate(self,m):
+        if m.product!='GOLD_ETF' or m.instrument!=self.instrument or m.currency!=self.quote_currency or m.sessions!=self.sessions or m.calendar_id!=self.calendar_id:
+            raise ValueError('actual listed vehicle identity/session required')
+        if m.activity_basis not in ('NONE','TRADED_UNITS'): raise ValueError('listed units are not underlying spot/futures activity')
+
+    def rate(self,session):
+        if self.account_currency==self.quote_currency: return Decimal(1)
+        values=[c.account_per_quote for c in self.conversions if c.session==session]
+        if len(values)!=1: raise ValueError('listed conversion required')
+        return values[0]
+
+    def financing(self,p,session,previous): return Decimal(0)
+    def configuration(self): return asdict(self)

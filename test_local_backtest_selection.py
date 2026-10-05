@@ -14,23 +14,7 @@ from domain.evaluation.experiment import InMemoryExperimentRepository,DataBounda
 import test_experiment_registry as registry_fixtures
 
 
-def setup():
-    start=datetime(2020,1,1,tzinfo=timezone.utc)
-    sessions=tuple(Session(str(i),start+timedelta(days=i,hours=7),start+timedelta(days=i,hours=15)) for i in range(130))
-    bars=tuple(Bar(s.key,s.close_at,D(100+i),D('100.2')+i,D('99.8')+i,D(100+i),D(1000 if i%3 else 2000)) for i,s in enumerate(sessions))
-    m=Manifest('TOY','EQUITY','ZAR','SYNTHETIC',sessions[-1].close_at,'RAW','TRADED_SHARES','TOY',True,'SYNTHETIC','FIXED','NONE_VERIFIED','1',sessions,bars)
-    candidates=(Candidate('base','base','1','BASELINE',('ROC3',)),Candidate('add','add','1','ADD',('ROC3','VOLUME20')),
-                Candidate('replace','replace','1','REPLACE',('RSI14',)),Candidate('remove','remove','1','REMOVE',()))
-    fold=Fold('f1',start,start+timedelta(days=30),start+timedelta(days=32),start+timedelta(days=60),
-              start+timedelta(days=62),start+timedelta(days=90))
-    final_start=start+timedelta(days=92); final_end=start+timedelta(days=125)
-    helper=registry_fixtures.ExperimentRegistryTests(); helper.setUp(); registry=InMemoryExperimentRepository()
-    boundary=DataBoundary('TOY',m.sha256,'SYNTHETIC',final_end,fold.train_start,fold.train_end,
-                          fold.validation_start,fold.validation_end,fold.outer_start,fold.outer_end,provenance='HAND_AUTHORED')
-    for c in candidates:
-        registry.register_definition(replace(helper.definition,experiment_id=c.experiment_id,experiment_version=c.experiment_version,
-            created_at=start-timedelta(days=1),instrument_scope=('TOY',),treatment_config_hash=c.sha256,data_boundaries=(boundary,DataBoundary('TOY',m.sha256,'SYNTHETIC',final_end,oos_start=final_start,oos_end=final_end,provenance='LOCKED_FINAL'))))
-    return m,candidates,fold,final_start,final_end,registry
+from research.fixtures.selection_oracle import study_fixture as setup
 
 class LocalSelectionTests(unittest.TestCase):
     def test_fixed_indicator_values_and_missing_volume(self):

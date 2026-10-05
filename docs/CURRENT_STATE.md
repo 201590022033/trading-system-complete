@@ -77,3 +77,7 @@ Before strategy promotion: obtain admissible real OHLCV, verify corporate action
 ## Documentation acceptance
 
 The baseline safe suite passed 869 tests. This documentation reconciliation changes descriptions/navigation only; the final acceptance record is in [the current milestone](roadmap/CURRENT_MILESTONE.md). Eleven protected Markdown benchmark reports remain byte-preserved and explicitly indexed as historical evidence.
+
+## Local engine implementation update — 5 October 2026
+
+B1–B4 now have an isolated local `domain.backtest` implementation: immutable data contracts, completed-close replay/accounting, independent FX/gold/listed-gold adapters and bounded chronological indicator trials. The [operating guide](research/LOCAL_BACKTEST_OPERATING_GUIDE.md) and [milestone evidence](research/LOCAL_BACKTEST_IMPLEMENTATION.md) distinguish completed synthetic verification from B5 external-data acceptance blockers. No running dashboard/Railway/paper/default strategy integration occurred. Real-market fills and profitability remain unverified.
