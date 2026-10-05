@@ -16,7 +16,7 @@ This is the current dependency sequence. [Current state](../CURRENT_STATE.md) is
 
 ## Recommended next milestone
 
-Owner decision, 5 October 2026: **B5 PARTIAL_CLOSED; R1 read-only research integration ACTIVE.** ADR 0051 supersedes the historical deferral statements below. R1 exposes verified software/report evidence and provisional source comparisons; it does not certify real-data replay or activate trading. Deferred RAW/action, intraday semantics and real-trade audit gates remain visible.
+Owner decision, 5 October 2026: **B5 PARTIAL_CLOSED; R1 read-only research integration COMPLETED LOCALLY.** ADR 0051 supersedes the historical deferral statements below. R1 exposes verified software/report evidence and provisional source comparisons; it does not certify real-data replay or activate trading. Deferred RAW/action, intraday semantics and real-trade audit gates remain visible. Verification: 926 safe tests, 54 protected checks and reviewed local browser preview. Deployment/configuration and runtime IG checks remain future work; no next milestone is active. See [R1 operating interface](../research/LOCAL_BACKTEST_RESEARCH_INTEGRATION.md).
 
 Latest B5 audit preparation adds an independent 36-case observed-price cash reference with 72 matching directional fee checks; it does not admit data or run engine replay. Source research corroborates dividends and identifies OST ordinary/ADR payment-date mixing. Mandatory cash-source RAW/action and intraday semantics remain unresolved. Execution readiness and unsupported FX/gold are separate from the specification's permitted scoped cash research acceptance. See ADR 0050 and the continuation record; B5 remains incomplete.
 
