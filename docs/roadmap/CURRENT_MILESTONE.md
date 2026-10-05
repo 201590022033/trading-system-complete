@@ -1,5 +1,9 @@
 # Current milestone — B5 real-data acceptance resumed
 
+Latest continuation: source research now includes 33 official Sasol SENS PDFs and issuer dividend corroboration. A separately written offline cash oracle prepares 36 conditional observed-price probes and passes 72 directional fee comparisons. No manifest/replay admission bypass occurred; real trades admitted remain zero. RAW/action and provider interval/volume contracts remain unresolved. Cash-only research scope is permitted by the original specification; real broker fills and historical invoices limit execution readiness, while unsupported real FX/gold can remain blocked. See ADR 0050 and the latest section of `LOCAL_BACKTEST_B5_CONTINUATION.md`. No following milestone is active.
+
+Verification for this continuation: 921 safe tests pass (87.686s), 54 protected artifacts pass, independent reference byte-identical on repeat, all 736 existing stress-report fees match its independent arithmetic, and two fixed hand fee answers pass. No engine/selection change; eight killed mutation results are retained from the earlier applicable run.
+
 ## Autonomous continuation — 5 October 2026
 
 Owner requested autonomous completion. This continuation resolved the official daily calendar/access gate and implemented the outstanding directional cash fee adapter; **full B5 remains BLOCKED on external evidence**, with zero admitted real trades. No following milestone is active.

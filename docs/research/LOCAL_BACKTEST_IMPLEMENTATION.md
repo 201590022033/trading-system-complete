@@ -1,5 +1,7 @@
 # Local engine implementation record
 
+Latest B5 continuation prepares an independent conditional observed-price cash reference through `scripts/reference_local_b5_cash.py`: 36 fixed dated/horizon/spread cases with 72 matching directional fee checks. The script does not construct a manifest or call replay; zero real trades are admitted. See ADR 0050 and `LOCAL_BACKTEST_B5_CONTINUATION.md`. No engine or runtime interface changes.
+
 B1 active: data/time contracts and independent oracle harness. Existing checkout verified clean at e6f47b0, master, expected origin. Baseline 869 offline safe tests passed (60.338s); protected verifier 54/54 passed. Authorization now covers B1–B5, superseding B0's planning-only scope.
 
 B1 interfaces: immutable `domain.backtest.data.Manifest`, `Session`, `Bar`; raw prices, explicit actions, timezone-aware availability, complete expected-session windows, immutable content hashes. Toy holiday calendar is explicitly synthetic. Reconstructed archives do not establish historical availability. New research modules do not wire into runtime.
