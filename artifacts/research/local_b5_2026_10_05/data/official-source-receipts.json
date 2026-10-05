@@ -1,0 +1,30 @@
+[
+  {
+    "id": "jse-library",
+    "url": "https://clientportal.jse.co.za/technical-library/trading-and-market-data-documentation",
+    "status": 403,
+    "retrieved_at": "2026-10-05T14:42:19.435263+00:00"
+  },
+  {
+    "id": "jse-calendar",
+    "url": "https://clientportal.jse.co.za/reports/trading-calendars",
+    "status": 403,
+    "retrieved_at": "2026-10-05T14:42:19.919263+00:00"
+  },
+  {
+    "id": "sasol-identity",
+    "url": "https://www.sasol.com/sasol-sens/202609010005a-s602420",
+    "status": 200,
+    "retrieved_at": "2026-10-05T14:42:22.616403+00:00",
+    "sha256": "9d594e0dc6f375b2f3cfda1218f8e557bf9eca4027cd1c3a647433f0228173d2",
+    "bytes": 216268
+  },
+  {
+    "id": "ost-fees",
+    "url": "https://onlinesharetrading.standardbank.co.za/standimg/OST/fees-and-costs.html",
+    "status": 200,
+    "retrieved_at": "2026-10-05T14:42:23.143405+00:00",
+    "sha256": "b105e6b596d082f199d97f9b9f57089bd0ca0dfb9e3c42998511df31c891997c",
+    "bytes": 86417
+  }
+]

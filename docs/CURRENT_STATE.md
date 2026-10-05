@@ -81,3 +81,5 @@ The baseline safe suite passed 869 tests. This documentation reconciliation chan
 ## Local engine implementation update — 5 October 2026
 
 B1–B4 now have an isolated local `domain.backtest` implementation: immutable data contracts, completed-close replay/accounting, independent FX/gold/listed-gold adapters and bounded chronological indicator trials. The [operating guide](research/LOCAL_BACKTEST_OPERATING_GUIDE.md) and [milestone evidence](research/LOCAL_BACKTEST_IMPLEMENTATION.md) distinguish completed synthetic verification from B5 external-data acceptance blockers. No running dashboard/Railway/paper/default strategy integration occurred. Real-market fills and profitability remain unverified.
+
+The [resumed full B5 provider attempt](research/LOCAL_BACKTEST_REAL_DATA_ACCEPTANCE.md) now preserves fresh Yahoo SOL daily/30-minute observations, Alpha coverage/budget findings, IG configuration absence and public cost sensitivity. Final safe verification is 906 tests, seven killed defects and 54 protected artifacts. Calendar/actions and complete execution/product evidence still block real-market acceptance and the following integration milestone.

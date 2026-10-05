@@ -1,0 +1,33 @@
+{
+  "matches": [
+    {
+      "1. symbol": "SASOF",
+      "2. name": "Sasol Ltd",
+      "3. type": "Equity",
+      "4. region": "United States",
+      "8. currency": "USD"
+    },
+    {
+      "1. symbol": "SSL",
+      "2. name": "Sasol Ltd",
+      "3. type": "Equity",
+      "4. region": "United States",
+      "8. currency": "USD"
+    },
+    {
+      "1. symbol": "SAO.FRK",
+      "2. name": "Sasol Ltd",
+      "3. type": "Equity",
+      "4. region": "Frankfurt",
+      "8. currency": "EUR"
+    },
+    {
+      "1. symbol": "SAOA.FRK",
+      "2. name": "Sasol Limited",
+      "3. type": "Equity",
+      "4. region": "Frankfurt",
+      "8. currency": "EUR"
+    }
+  ],
+  "state": "AVAILABLE"
+}

@@ -16,7 +16,7 @@ This is the current dependency sequence. [Current state](../CURRENT_STATE.md) is
 
 ## Recommended next milestone
 
-**B5: real-data engine acceptance — BLOCKED.** B1–B4 are implemented in an isolated local lane. Final software verification passes 900 safe tests, seven killed defects and 54 protected artifacts. The verified real-data trade audit, actual costs/liquidity/product evidence and intraday comparison remain unresolved. See [operating guide](../research/LOCAL_BACKTEST_OPERATING_GUIDE.md) and [implementation evidence](../research/LOCAL_BACKTEST_IMPLEMENTATION.md). Integration review/data acquisition is next; no adaptive-loop rollout is active.
+**B5: real-data engine acceptance — BLOCKED.** B1–B4 are implemented in an isolated local lane. The resumed full B5 attempt froze 23 daily/368 actual intraday Yahoo SOL bars, verified issuer identity, investigated Alpha/IG and stressed published fees. No complete daily/intraday aggregates reconcile; calendar/action/product/fill evidence still blocks admission and independent real trades. Final software verification passes 906 safe tests, seven killed defects and 54 protected artifacts. See [dated B5 evidence and precise blockers](../research/LOCAL_BACKTEST_REAL_DATA_ACCEPTANCE.md). Complete these gates before the following integration milestone; no adaptive-loop rollout is active.
 
 [Refinement 0.2](../research/SWING_RULE_REFINEMENT.md) now specifies the candidate entry/trailing/exit matrix, volume contribution controls and pooled momentum-personality tests. These proposed parameters still require data admission and implementation; none is an installed or validated rule.
 

@@ -1,0 +1,1002 @@
+{
+  "availability_basis": "RETRIEVAL_ONLY_NOT_POINT_IN_TIME",
+  "calendar_basis": "OBSERVED_DATES_NOT_VERIFIED_EXCHANGE_CALENDAR",
+  "cash_share_cost_sensitivity": [
+    {
+      "basis": "SENSITIVITY_ONLY_NOT_REPLAYED_OR_VERIFIED_FILLS",
+      "buy": {
+        "basis": "CURRENT_PUBLISHED_OST_SCHEDULE_ASSUMED_VAT_AND_COMPONENT_ROUNDING",
+        "components": {
+          "brokerage": "110.00",
+          "levy": "0.00",
+          "purchase_tax": "2.50",
+          "strate": "6.29",
+          "vat": "17.44"
+        },
+        "historical_invoice_verified": false,
+        "total": "136.23"
+      },
+      "flat_price_total_cost_ZAR": "269.96",
+      "full_spread_bps": 0,
+      "notional_ZAR": 1000,
+      "per_side_slippage_bps": 0,
+      "price_drag_ZAR": "0.00",
+      "roundtrip_fee_ZAR": "269.96",
+      "sell": {
+        "basis": "CURRENT_PUBLISHED_OST_SCHEDULE_ASSUMED_VAT_AND_COMPONENT_ROUNDING",
+        "components": {
+          "brokerage": "110.00",
+          "levy": "0.00",
+          "purchase_tax": "0.00",
+          "strate": "6.29",
+          "vat": "17.44"
+        },
+        "historical_invoice_verified": false,
+        "total": "133.73"
+      }
+    },
+    {
+      "basis": "SENSITIVITY_ONLY_NOT_REPLAYED_OR_VERIFIED_FILLS",
+      "buy": {
+        "basis": "CURRENT_PUBLISHED_OST_SCHEDULE_ASSUMED_VAT_AND_COMPONENT_ROUNDING",
+        "components": {
+          "brokerage": "110.00",
+          "levy": "0.00",
+          "purchase_tax": "2.50",
+          "strate": "6.29",
+          "vat": "17.44"
+        },
+        "historical_invoice_verified": false,
+        "total": "136.23"
+      },
+      "flat_price_total_cost_ZAR": "272.96",
+      "full_spread_bps": 10,
+      "notional_ZAR": 1000,
+      "per_side_slippage_bps": 10,
+      "price_drag_ZAR": "3.00",
+      "roundtrip_fee_ZAR": "269.96",
+      "sell": {
+        "basis": "CURRENT_PUBLISHED_OST_SCHEDULE_ASSUMED_VAT_AND_COMPONENT_ROUNDING",
+        "components": {
+          "brokerage": "110.00",
+          "levy": "0.00",
+          "purchase_tax": "0.00",
+          "strate": "6.29",
+          "vat": "17.44"
+        },
+        "historical_invoice_verified": false,
+        "total": "133.73"
+      }
+    },
+    {
+      "basis": "SENSITIVITY_ONLY_NOT_REPLAYED_OR_VERIFIED_FILLS",
+      "buy": {
+        "basis": "CURRENT_PUBLISHED_OST_SCHEDULE_ASSUMED_VAT_AND_COMPONENT_ROUNDING",
+        "components": {
+          "brokerage": "110.00",
+          "levy": "0.00",
+          "purchase_tax": "2.50",
+          "strate": "6.29",
+          "vat": "17.44"
+        },
+        "historical_invoice_verified": false,
+        "total": "136.23"
+      },
+      "flat_price_total_cost_ZAR": "274.46",
+      "full_spread_bps": 25,
+      "notional_ZAR": 1000,
+      "per_side_slippage_bps": 10,
+      "price_drag_ZAR": "4.50",
+      "roundtrip_fee_ZAR": "269.96",
+      "sell": {
+        "basis": "CURRENT_PUBLISHED_OST_SCHEDULE_ASSUMED_VAT_AND_COMPONENT_ROUNDING",
+        "components": {
+          "brokerage": "110.00",
+          "levy": "0.00",
+          "purchase_tax": "0.00",
+          "strate": "6.29",
+          "vat": "17.44"
+        },
+        "historical_invoice_verified": false,
+        "total": "133.73"
+      }
+    },
+    {
+      "basis": "SENSITIVITY_ONLY_NOT_REPLAYED_OR_VERIFIED_FILLS",
+      "buy": {
+        "basis": "CURRENT_PUBLISHED_OST_SCHEDULE_ASSUMED_VAT_AND_COMPONENT_ROUNDING",
+        "components": {
+          "brokerage": "110.00",
+          "levy": "0.00",
+          "purchase_tax": "2.50",
+          "strate": "6.29",
+          "vat": "17.44"
+        },
+        "historical_invoice_verified": false,
+        "total": "136.23"
+      },
+      "flat_price_total_cost_ZAR": "279.96",
+      "full_spread_bps": 50,
+      "notional_ZAR": 1000,
+      "per_side_slippage_bps": 25,
+      "price_drag_ZAR": "10.00",
+      "roundtrip_fee_ZAR": "269.96",
+      "sell": {
+        "basis": "CURRENT_PUBLISHED_OST_SCHEDULE_ASSUMED_VAT_AND_COMPONENT_ROUNDING",
+        "components": {
+          "brokerage": "110.00",
+          "levy": "0.00",
+          "purchase_tax": "0.00",
+          "strate": "6.29",
+          "vat": "17.44"
+        },
+        "historical_invoice_verified": false,
+        "total": "133.73"
+      }
+    },
+    {
+      "basis": "SENSITIVITY_ONLY_NOT_REPLAYED_OR_VERIFIED_FILLS",
+      "buy": {
+        "basis": "CURRENT_PUBLISHED_OST_SCHEDULE_ASSUMED_VAT_AND_COMPONENT_ROUNDING",
+        "components": {
+          "brokerage": "110.00",
+          "levy": "0.03",
+          "purchase_tax": "25.00",
+          "strate": "6.29",
+          "vat": "17.44"
+        },
+        "historical_invoice_verified": false,
+        "total": "158.76"
+      },
+      "flat_price_total_cost_ZAR": "292.52",
+      "full_spread_bps": 0,
+      "notional_ZAR": 10000,
+      "per_side_slippage_bps": 0,
+      "price_drag_ZAR": "0.00",
+      "roundtrip_fee_ZAR": "292.52",
+      "sell": {
+        "basis": "CURRENT_PUBLISHED_OST_SCHEDULE_ASSUMED_VAT_AND_COMPONENT_ROUNDING",
+        "components": {
+          "brokerage": "110.00",
+          "levy": "0.03",
+          "purchase_tax": "0.00",
+          "strate": "6.29",
+          "vat": "17.44"
+        },
+        "historical_invoice_verified": false,
+        "total": "133.76"
+      }
+    },
+    {
+      "basis": "SENSITIVITY_ONLY_NOT_REPLAYED_OR_VERIFIED_FILLS",
+      "buy": {
+        "basis": "CURRENT_PUBLISHED_OST_SCHEDULE_ASSUMED_VAT_AND_COMPONENT_ROUNDING",
+        "components": {
+          "brokerage": "110.00",
+          "levy": "0.03",
+          "purchase_tax": "25.00",
+          "strate": "6.29",
+          "vat": "17.44"
+        },
+        "historical_invoice_verified": false,
+        "total": "158.76"
+      },
+      "flat_price_total_cost_ZAR": "322.52",
+      "full_spread_bps": 10,
+      "notional_ZAR": 10000,
+      "per_side_slippage_bps": 10,
+      "price_drag_ZAR": "30.00",
+      "roundtrip_fee_ZAR": "292.52",
+      "sell": {
+        "basis": "CURRENT_PUBLISHED_OST_SCHEDULE_ASSUMED_VAT_AND_COMPONENT_ROUNDING",
+        "components": {
+          "brokerage": "110.00",
+          "levy": "0.03",
+          "purchase_tax": "0.00",
+          "strate": "6.29",
+          "vat": "17.44"
+        },
+        "historical_invoice_verified": false,
+        "total": "133.76"
+      }
+    },
+    {
+      "basis": "SENSITIVITY_ONLY_NOT_REPLAYED_OR_VERIFIED_FILLS",
+      "buy": {
+        "basis": "CURRENT_PUBLISHED_OST_SCHEDULE_ASSUMED_VAT_AND_COMPONENT_ROUNDING",
+        "components": {
+          "brokerage": "110.00",
+          "levy": "0.03",
+          "purchase_tax": "25.00",
+          "strate": "6.29",
+          "vat": "17.44"
+        },
+        "historical_invoice_verified": false,
+        "total": "158.76"
+      },
+      "flat_price_total_cost_ZAR": "337.52",
+      "full_spread_bps": 25,
+      "notional_ZAR": 10000,
+      "per_side_slippage_bps": 10,
+      "price_drag_ZAR": "45.00",
+      "roundtrip_fee_ZAR": "292.52",
+      "sell": {
+        "basis": "CURRENT_PUBLISHED_OST_SCHEDULE_ASSUMED_VAT_AND_COMPONENT_ROUNDING",
+        "components": {
+          "brokerage": "110.00",
+          "levy": "0.03",
+          "purchase_tax": "0.00",
+          "strate": "6.29",
+          "vat": "17.44"
+        },
+        "historical_invoice_verified": false,
+        "total": "133.76"
+      }
+    },
+    {
+      "basis": "SENSITIVITY_ONLY_NOT_REPLAYED_OR_VERIFIED_FILLS",
+      "buy": {
+        "basis": "CURRENT_PUBLISHED_OST_SCHEDULE_ASSUMED_VAT_AND_COMPONENT_ROUNDING",
+        "components": {
+          "brokerage": "110.00",
+          "levy": "0.03",
+          "purchase_tax": "25.00",
+          "strate": "6.29",
+          "vat": "17.44"
+        },
+        "historical_invoice_verified": false,
+        "total": "158.76"
+      },
+      "flat_price_total_cost_ZAR": "392.52",
+      "full_spread_bps": 50,
+      "notional_ZAR": 10000,
+      "per_side_slippage_bps": 25,
+      "price_drag_ZAR": "100.00",
+      "roundtrip_fee_ZAR": "292.52",
+      "sell": {
+        "basis": "CURRENT_PUBLISHED_OST_SCHEDULE_ASSUMED_VAT_AND_COMPONENT_ROUNDING",
+        "components": {
+          "brokerage": "110.00",
+          "levy": "0.03",
+          "purchase_tax": "0.00",
+          "strate": "6.29",
+          "vat": "17.44"
+        },
+        "historical_invoice_verified": false,
+        "total": "133.76"
+      }
+    },
+    {
+      "basis": "SENSITIVITY_ONLY_NOT_REPLAYED_OR_VERIFIED_FILLS",
+      "buy": {
+        "basis": "CURRENT_PUBLISHED_OST_SCHEDULE_ASSUMED_VAT_AND_COMPONENT_ROUNDING",
+        "components": {
+          "brokerage": "250.00",
+          "levy": "0.17",
+          "purchase_tax": "125.00",
+          "strate": "6.29",
+          "vat": "38.47"
+        },
+        "historical_invoice_verified": false,
+        "total": "419.93"
+      },
+      "flat_price_total_cost_ZAR": "714.86",
+      "full_spread_bps": 0,
+      "notional_ZAR": 50000,
+      "per_side_slippage_bps": 0,
+      "price_drag_ZAR": "0.00",
+      "roundtrip_fee_ZAR": "714.86",
+      "sell": {
+        "basis": "CURRENT_PUBLISHED_OST_SCHEDULE_ASSUMED_VAT_AND_COMPONENT_ROUNDING",
+        "components": {
+          "brokerage": "250.00",
+          "levy": "0.17",
+          "purchase_tax": "0.00",
+          "strate": "6.29",
+          "vat": "38.47"
+        },
+        "historical_invoice_verified": false,
+        "total": "294.93"
+      }
+    },
+    {
+      "basis": "SENSITIVITY_ONLY_NOT_REPLAYED_OR_VERIFIED_FILLS",
+      "buy": {
+        "basis": "CURRENT_PUBLISHED_OST_SCHEDULE_ASSUMED_VAT_AND_COMPONENT_ROUNDING",
+        "components": {
+          "brokerage": "250.00",
+          "levy": "0.17",
+          "purchase_tax": "125.00",
+          "strate": "6.29",
+          "vat": "38.47"
+        },
+        "historical_invoice_verified": false,
+        "total": "419.93"
+      },
+      "flat_price_total_cost_ZAR": "864.86",
+      "full_spread_bps": 10,
+      "notional_ZAR": 50000,
+      "per_side_slippage_bps": 10,
+      "price_drag_ZAR": "150.00",
+      "roundtrip_fee_ZAR": "714.86",
+      "sell": {
+        "basis": "CURRENT_PUBLISHED_OST_SCHEDULE_ASSUMED_VAT_AND_COMPONENT_ROUNDING",
+        "components": {
+          "brokerage": "250.00",
+          "levy": "0.17",
+          "purchase_tax": "0.00",
+          "strate": "6.29",
+          "vat": "38.47"
+        },
+        "historical_invoice_verified": false,
+        "total": "294.93"
+      }
+    },
+    {
+      "basis": "SENSITIVITY_ONLY_NOT_REPLAYED_OR_VERIFIED_FILLS",
+      "buy": {
+        "basis": "CURRENT_PUBLISHED_OST_SCHEDULE_ASSUMED_VAT_AND_COMPONENT_ROUNDING",
+        "components": {
+          "brokerage": "250.00",
+          "levy": "0.17",
+          "purchase_tax": "125.00",
+          "strate": "6.29",
+          "vat": "38.47"
+        },
+        "historical_invoice_verified": false,
+        "total": "419.93"
+      },
+      "flat_price_total_cost_ZAR": "939.86",
+      "full_spread_bps": 25,
+      "notional_ZAR": 50000,
+      "per_side_slippage_bps": 10,
+      "price_drag_ZAR": "225.00",
+      "roundtrip_fee_ZAR": "714.86",
+      "sell": {
+        "basis": "CURRENT_PUBLISHED_OST_SCHEDULE_ASSUMED_VAT_AND_COMPONENT_ROUNDING",
+        "components": {
+          "brokerage": "250.00",
+          "levy": "0.17",
+          "purchase_tax": "0.00",
+          "strate": "6.29",
+          "vat": "38.47"
+        },
+        "historical_invoice_verified": false,
+        "total": "294.93"
+      }
+    },
+    {
+      "basis": "SENSITIVITY_ONLY_NOT_REPLAYED_OR_VERIFIED_FILLS",
+      "buy": {
+        "basis": "CURRENT_PUBLISHED_OST_SCHEDULE_ASSUMED_VAT_AND_COMPONENT_ROUNDING",
+        "components": {
+          "brokerage": "250.00",
+          "levy": "0.17",
+          "purchase_tax": "125.00",
+          "strate": "6.29",
+          "vat": "38.47"
+        },
+        "historical_invoice_verified": false,
+        "total": "419.93"
+      },
+      "flat_price_total_cost_ZAR": "1214.86",
+      "full_spread_bps": 50,
+      "notional_ZAR": 50000,
+      "per_side_slippage_bps": 25,
+      "price_drag_ZAR": "500.00",
+      "roundtrip_fee_ZAR": "714.86",
+      "sell": {
+        "basis": "CURRENT_PUBLISHED_OST_SCHEDULE_ASSUMED_VAT_AND_COMPONENT_ROUNDING",
+        "components": {
+          "brokerage": "250.00",
+          "levy": "0.17",
+          "purchase_tax": "0.00",
+          "strate": "6.29",
+          "vat": "38.47"
+        },
+        "historical_invoice_verified": false,
+        "total": "294.93"
+      }
+    },
+    {
+      "basis": "SENSITIVITY_ONLY_NOT_REPLAYED_OR_VERIFIED_FILLS",
+      "buy": {
+        "basis": "CURRENT_PUBLISHED_OST_SCHEDULE_ASSUMED_VAT_AND_COMPONENT_ROUNDING",
+        "components": {
+          "brokerage": "500.00",
+          "levy": "0.33",
+          "purchase_tax": "250.00",
+          "strate": "6.29",
+          "vat": "75.99"
+        },
+        "historical_invoice_verified": false,
+        "total": "832.61"
+      },
+      "flat_price_total_cost_ZAR": "1415.22",
+      "full_spread_bps": 0,
+      "notional_ZAR": 100000,
+      "per_side_slippage_bps": 0,
+      "price_drag_ZAR": "0.00",
+      "roundtrip_fee_ZAR": "1415.22",
+      "sell": {
+        "basis": "CURRENT_PUBLISHED_OST_SCHEDULE_ASSUMED_VAT_AND_COMPONENT_ROUNDING",
+        "components": {
+          "brokerage": "500.00",
+          "levy": "0.33",
+          "purchase_tax": "0.00",
+          "strate": "6.29",
+          "vat": "75.99"
+        },
+        "historical_invoice_verified": false,
+        "total": "582.61"
+      }
+    },
+    {
+      "basis": "SENSITIVITY_ONLY_NOT_REPLAYED_OR_VERIFIED_FILLS",
+      "buy": {
+        "basis": "CURRENT_PUBLISHED_OST_SCHEDULE_ASSUMED_VAT_AND_COMPONENT_ROUNDING",
+        "components": {
+          "brokerage": "500.00",
+          "levy": "0.33",
+          "purchase_tax": "250.00",
+          "strate": "6.29",
+          "vat": "75.99"
+        },
+        "historical_invoice_verified": false,
+        "total": "832.61"
+      },
+      "flat_price_total_cost_ZAR": "1715.22",
+      "full_spread_bps": 10,
+      "notional_ZAR": 100000,
+      "per_side_slippage_bps": 10,
+      "price_drag_ZAR": "300.00",
+      "roundtrip_fee_ZAR": "1415.22",
+      "sell": {
+        "basis": "CURRENT_PUBLISHED_OST_SCHEDULE_ASSUMED_VAT_AND_COMPONENT_ROUNDING",
+        "components": {
+          "brokerage": "500.00",
+          "levy": "0.33",
+          "purchase_tax": "0.00",
+          "strate": "6.29",
+          "vat": "75.99"
+        },
+        "historical_invoice_verified": false,
+        "total": "582.61"
+      }
+    },
+    {
+      "basis": "SENSITIVITY_ONLY_NOT_REPLAYED_OR_VERIFIED_FILLS",
+      "buy": {
+        "basis": "CURRENT_PUBLISHED_OST_SCHEDULE_ASSUMED_VAT_AND_COMPONENT_ROUNDING",
+        "components": {
+          "brokerage": "500.00",
+          "levy": "0.33",
+          "purchase_tax": "250.00",
+          "strate": "6.29",
+          "vat": "75.99"
+        },
+        "historical_invoice_verified": false,
+        "total": "832.61"
+      },
+      "flat_price_total_cost_ZAR": "1865.22",
+      "full_spread_bps": 25,
+      "notional_ZAR": 100000,
+      "per_side_slippage_bps": 10,
+      "price_drag_ZAR": "450.00",
+      "roundtrip_fee_ZAR": "1415.22",
+      "sell": {
+        "basis": "CURRENT_PUBLISHED_OST_SCHEDULE_ASSUMED_VAT_AND_COMPONENT_ROUNDING",
+        "components": {
+          "brokerage": "500.00",
+          "levy": "0.33",
+          "purchase_tax": "0.00",
+          "strate": "6.29",
+          "vat": "75.99"
+        },
+        "historical_invoice_verified": false,
+        "total": "582.61"
+      }
+    },
+    {
+      "basis": "SENSITIVITY_ONLY_NOT_REPLAYED_OR_VERIFIED_FILLS",
+      "buy": {
+        "basis": "CURRENT_PUBLISHED_OST_SCHEDULE_ASSUMED_VAT_AND_COMPONENT_ROUNDING",
+        "components": {
+          "brokerage": "500.00",
+          "levy": "0.33",
+          "purchase_tax": "250.00",
+          "strate": "6.29",
+          "vat": "75.99"
+        },
+        "historical_invoice_verified": false,
+        "total": "832.61"
+      },
+      "flat_price_total_cost_ZAR": "2415.22",
+      "full_spread_bps": 50,
+      "notional_ZAR": 100000,
+      "per_side_slippage_bps": 25,
+      "price_drag_ZAR": "1000.00",
+      "roundtrip_fee_ZAR": "1415.22",
+      "sell": {
+        "basis": "CURRENT_PUBLISHED_OST_SCHEDULE_ASSUMED_VAT_AND_COMPONENT_ROUNDING",
+        "components": {
+          "brokerage": "500.00",
+          "levy": "0.33",
+          "purchase_tax": "0.00",
+          "strate": "6.29",
+          "vat": "75.99"
+        },
+        "historical_invoice_verified": false,
+        "total": "582.61"
+      }
+    }
+  ],
+  "comparison_state": "BLOCKED_INCOMPLETE_OR_DIFFERENT_INTRADAY_AGGREGATES",
+  "corporate_actions": {
+    "issuer_evidence": "2026_09_01_RESULTS_IDENTIFY_SOL_ISIN_ZAE000006896_AND_NO_FINAL_DIVIDEND",
+    "provider_action_rows": 0,
+    "status": "COMPLETE_HISTORICAL_ACTION_COVERAGE_NOT_VERIFIED"
+  },
+  "cost_exclusions": [
+    "Monthly account charge",
+    "Market-data subscriptions",
+    "Actual historical tariff/tier",
+    "Verified invoice VAT and rounding",
+    "Partial fills/market impact/settlement availability"
+  ],
+  "daily_defects": [],
+  "daily_fingerprint": "9894797477a677de137eae3c9b4b727b6a85ff69706fb85f69c485b6c7df901b",
+  "daily_rows": 23,
+  "extra_intraday_dates": [],
+  "gates": {
+    "cost_liquidity_full_fills": "PARTIAL_CURRENT_FEES_STRESSED_ACTUAL_QUOTES_AUCTION_AND_CAPACITY_MISSING",
+    "daily_OHLC_consistency": "PASS_OBSERVED_SLICE",
+    "daily_intraday_comparison": "BLOCKED_INCOMPLETE_OR_DIFFERENT_INTRADAY_AGGREGATES",
+    "fx_gold_products": "BLOCKED_BROKER_CONTRACT_MARGIN_CARRY_CONVERSION_AND_EXECUTABLE_PRICES_UNVERIFIED",
+    "historical_availability": "PARTIAL_RECONSTRUCTED_ONLY_CONSERVATIVE_AVAILABILITY_CONTRACT_REQUIRED",
+    "independent_admitted_real_trades": "BLOCKED_NO_FULLY_ADMITTED_WINDOW_ZERO_TRADES_AUDITED",
+    "raw_actions_historical_universe": "BLOCKED_COMPLETE_ACTION_AND_DATED_UNIVERSE_EVIDENCE_MISSING",
+    "session_calendar": "BLOCKED_OFFICIAL_JSE_CALENDAR_AND_SESSION_LIBRARY_HTTP_403",
+    "source_identity": "PARTIAL_ISSUER_CASH_SOL_IDENTIFIED_SEPARATE_FROM_US_ADR"
+  },
+  "identity_match": true,
+  "input_files": {
+    "alpha_search": {
+      "filename": "alpha-sasol-search.json",
+      "sha256": "83cb64847731bd9706ee10f3abe315e51e1d3b0982a782a45708b61a5c38d36b"
+    },
+    "daily": {
+      "filename": "yahoo-SOL-daily.json",
+      "sha256": "e964cc97ad4d59ed34aa6d2f2db4f6e29992e2d324b691191f7ee74b6fc5b006"
+    },
+    "intraday": {
+      "filename": "yahoo-SOL-30m.json",
+      "sha256": "3f40960330d7174e26004a15712be44ba4c510b02b0229e210584a1f1c7c6ef0"
+    },
+    "receipts": {
+      "filename": "official-source-receipts.json",
+      "sha256": "58cc798d87ce1b5f137b59c497707ba662e7a0d2a134cf818fa62be3cc8be7f2"
+    }
+  },
+  "intraday_defects": [],
+  "intraday_fingerprint": "6b5624a7cb0392314824601cc9c78e6588ecb42aa07f5dc65604b34343d7bd56",
+  "intraday_rows": 368,
+  "matched_sessions": 0,
+  "metadata_match": false,
+  "metadata_state": "INTRADAY_UNITS_OR_TIMEZONE_UNVERIFIED",
+  "next_evidence_required": [
+    "Official JSE calendar/session document for the explicit window, plus SOL trading segment.",
+    "Complete action ledger and dated identity/universe evidence for that window.",
+    "An explicit conservative historical availability contract; label reconstructed research honestly.",
+    "Complete intraday observations including closing sessions, with own currency/timezone metadata.",
+    "Dated cash-share tariff/quotes and capacity envelope; independent replay cash/trade reconciliation.",
+    "Own executable FX/gold product, conversion, margin and carry sources; no ADR or continuous-futures substitution."
+  ],
+  "provider_findings": {
+    "alpha_vantage": {
+      "admission": "NO_VERIFIED_JSE_SASOL_MAPPING",
+      "fx_gold_probe": "NOT_CALLED_AFTER_BUDGET_EXHAUSTION",
+      "local_rolling_five_call_budget": "EXHAUSTED_AT_PROBE",
+      "matches": [
+        {
+          "1. symbol": "SASOF",
+          "2. name": "Sasol Ltd",
+          "3. type": "Equity",
+          "4. region": "United States",
+          "8. currency": "USD"
+        },
+        {
+          "1. symbol": "SSL",
+          "2. name": "Sasol Ltd",
+          "3. type": "Equity",
+          "4. region": "United States",
+          "8. currency": "USD"
+        },
+        {
+          "1. symbol": "SAO.FRK",
+          "2. name": "Sasol Ltd",
+          "3. type": "Equity",
+          "4. region": "Frankfurt",
+          "8. currency": "EUR"
+        },
+        {
+          "1. symbol": "SAOA.FRK",
+          "2. name": "Sasol Limited",
+          "3. type": "Equity",
+          "4. region": "Frankfurt",
+          "8. currency": "EUR"
+        }
+      ],
+      "search_state": "AVAILABLE"
+    },
+    "ig": "CREDENTIALS_UNAVAILABLE_IN_THIS_CHECKOUT_NO_AUTH_OR_HISTORY_CALL",
+    "yahoo": "FRESH_DAILY_AND_30M_OBSERVATIONS_FROZEN_SEPARATELY"
+  },
+  "provider_requests_during_audit": 0,
+  "real_data_accepted": false,
+  "real_trade_audit": null,
+  "resolution": "B5_REAL_MARKET_ACCEPTANCE_BLOCKED_NO_FOLLOWING_MILESTONE_STARTED",
+  "scope": "SASOL_JSE_OBSERVATIONS_2026_09_01_TO_2026_10_02_NOT_ADMITTED",
+  "sessions": [
+    {
+      "date": "2026-09-01",
+      "differences_in_provider_units": {
+        "Close": "-55.0",
+        "High": "0.0",
+        "Low": "0.0",
+        "Open": "0.0",
+        "Volume": "-1099779.0"
+      },
+      "first_at": "2026-09-01T09:00:00+02:00",
+      "intraday_rows": 16,
+      "last_at": "2026-09-01T16:30:00+02:00",
+      "state": "OBSERVED_AGGREGATE_MISMATCH"
+    },
+    {
+      "date": "2026-09-02",
+      "differences_in_provider_units": {
+        "Close": "80.0",
+        "High": "0.0",
+        "Low": "0.0",
+        "Open": "0.0",
+        "Volume": "-1504005.0"
+      },
+      "first_at": "2026-09-02T09:00:00+02:00",
+      "intraday_rows": 16,
+      "last_at": "2026-09-02T16:30:00+02:00",
+      "state": "OBSERVED_AGGREGATE_MISMATCH"
+    },
+    {
+      "date": "2026-09-03",
+      "differences_in_provider_units": {
+        "Close": "-48.0",
+        "High": "0.0",
+        "Low": "0.0",
+        "Open": "0.0",
+        "Volume": "-407431.0"
+      },
+      "first_at": "2026-09-03T09:00:00+02:00",
+      "intraday_rows": 16,
+      "last_at": "2026-09-03T16:30:00+02:00",
+      "state": "OBSERVED_AGGREGATE_MISMATCH"
+    },
+    {
+      "date": "2026-09-04",
+      "differences_in_provider_units": {
+        "Close": "-62.0",
+        "High": "0.0",
+        "Low": "0.0",
+        "Open": "0.0",
+        "Volume": "-419842.0"
+      },
+      "first_at": "2026-09-04T09:00:00+02:00",
+      "intraday_rows": 16,
+      "last_at": "2026-09-04T16:30:00+02:00",
+      "state": "OBSERVED_AGGREGATE_MISMATCH"
+    },
+    {
+      "date": "2026-09-07",
+      "differences_in_provider_units": {
+        "Close": "-54.0",
+        "High": "0.0",
+        "Low": "0.0",
+        "Open": "0.0",
+        "Volume": "-508799.0"
+      },
+      "first_at": "2026-09-07T09:00:00+02:00",
+      "intraday_rows": 16,
+      "last_at": "2026-09-07T16:30:00+02:00",
+      "state": "OBSERVED_AGGREGATE_MISMATCH"
+    },
+    {
+      "date": "2026-09-08",
+      "differences_in_provider_units": {
+        "Close": "-66.0",
+        "High": "0.0",
+        "Low": "0.0",
+        "Open": "0.0",
+        "Volume": "-947495.0"
+      },
+      "first_at": "2026-09-08T09:00:00+02:00",
+      "intraday_rows": 16,
+      "last_at": "2026-09-08T16:30:00+02:00",
+      "state": "OBSERVED_AGGREGATE_MISMATCH"
+    },
+    {
+      "date": "2026-09-09",
+      "differences_in_provider_units": {
+        "Close": "-198.0",
+        "High": "0.0",
+        "Low": "374.0",
+        "Open": "0.0",
+        "Volume": "-1193007.0"
+      },
+      "first_at": "2026-09-09T09:00:00+02:00",
+      "intraday_rows": 16,
+      "last_at": "2026-09-09T16:30:00+02:00",
+      "state": "OBSERVED_AGGREGATE_MISMATCH"
+    },
+    {
+      "date": "2026-09-10",
+      "differences_in_provider_units": {
+        "Close": "-189.0",
+        "High": "0.0",
+        "Low": "0.0",
+        "Open": "0.0",
+        "Volume": "-1172371.0"
+      },
+      "first_at": "2026-09-10T09:00:00+02:00",
+      "intraday_rows": 16,
+      "last_at": "2026-09-10T16:30:00+02:00",
+      "state": "OBSERVED_AGGREGATE_MISMATCH"
+    },
+    {
+      "date": "2026-09-11",
+      "differences_in_provider_units": {
+        "Close": "-78.0",
+        "High": "-335.0",
+        "Low": "0.0",
+        "Open": "0.0",
+        "Volume": "-890555.0"
+      },
+      "first_at": "2026-09-11T09:00:00+02:00",
+      "intraday_rows": 16,
+      "last_at": "2026-09-11T16:30:00+02:00",
+      "state": "OBSERVED_AGGREGATE_MISMATCH"
+    },
+    {
+      "date": "2026-09-14",
+      "differences_in_provider_units": {
+        "Close": "-30.0",
+        "High": "0.0",
+        "Low": "0.0",
+        "Open": "0.0",
+        "Volume": "-682733.0"
+      },
+      "first_at": "2026-09-14T09:00:00+02:00",
+      "intraday_rows": 16,
+      "last_at": "2026-09-14T16:30:00+02:00",
+      "state": "OBSERVED_AGGREGATE_MISMATCH"
+    },
+    {
+      "date": "2026-09-15",
+      "differences_in_provider_units": {
+        "Close": "-182.0",
+        "High": "0.0",
+        "Low": "0.0",
+        "Open": "0.0",
+        "Volume": "-538784.0"
+      },
+      "first_at": "2026-09-15T09:00:00+02:00",
+      "intraday_rows": 16,
+      "last_at": "2026-09-15T16:30:00+02:00",
+      "state": "OBSERVED_AGGREGATE_MISMATCH"
+    },
+    {
+      "date": "2026-09-16",
+      "differences_in_provider_units": {
+        "Close": "69.0",
+        "High": "-397.0",
+        "Low": "2.0",
+        "Open": "0.0",
+        "Volume": "-702628.0"
+      },
+      "first_at": "2026-09-16T09:00:00+02:00",
+      "intraday_rows": 16,
+      "last_at": "2026-09-16T16:30:00+02:00",
+      "state": "OBSERVED_AGGREGATE_MISMATCH"
+    },
+    {
+      "date": "2026-09-17",
+      "differences_in_provider_units": {
+        "Close": "-114.0",
+        "High": "0.0",
+        "Low": "0.0",
+        "Open": "0.0",
+        "Volume": "-1223755.0"
+      },
+      "first_at": "2026-09-17T09:00:00+02:00",
+      "intraday_rows": 16,
+      "last_at": "2026-09-17T16:30:00+02:00",
+      "state": "OBSERVED_AGGREGATE_MISMATCH"
+    },
+    {
+      "date": "2026-09-18",
+      "differences_in_provider_units": {
+        "Close": "46.0",
+        "High": "0.0",
+        "Low": "0.0",
+        "Open": "0.0",
+        "Volume": "-4467246.0"
+      },
+      "first_at": "2026-09-18T09:00:00+02:00",
+      "intraday_rows": 16,
+      "last_at": "2026-09-18T16:30:00+02:00",
+      "state": "OBSERVED_AGGREGATE_MISMATCH"
+    },
+    {
+      "date": "2026-09-21",
+      "differences_in_provider_units": {
+        "Close": "-33.0",
+        "High": "0.0",
+        "Low": "0.0",
+        "Open": "0.0",
+        "Volume": "-824297.0"
+      },
+      "first_at": "2026-09-21T09:00:00+02:00",
+      "intraday_rows": 16,
+      "last_at": "2026-09-21T16:30:00+02:00",
+      "state": "OBSERVED_AGGREGATE_MISMATCH"
+    },
+    {
+      "date": "2026-09-22",
+      "differences_in_provider_units": {
+        "Close": "-146.0",
+        "High": "-450.0",
+        "Low": "0.0",
+        "Open": "0.0",
+        "Volume": "-7996793.0"
+      },
+      "first_at": "2026-09-22T09:00:00+02:00",
+      "intraday_rows": 16,
+      "last_at": "2026-09-22T16:30:00+02:00",
+      "state": "OBSERVED_AGGREGATE_MISMATCH"
+    },
+    {
+      "date": "2026-09-23",
+      "differences_in_provider_units": {
+        "Close": "4.0",
+        "High": "0.0",
+        "Low": "0.0",
+        "Open": "0.0",
+        "Volume": "-1027039.0"
+      },
+      "first_at": "2026-09-23T09:00:00+02:00",
+      "intraday_rows": 16,
+      "last_at": "2026-09-23T16:30:00+02:00",
+      "state": "OBSERVED_AGGREGATE_MISMATCH"
+    },
+    {
+      "date": "2026-09-25",
+      "differences_in_provider_units": {
+        "Close": "-156.0",
+        "High": "0.0",
+        "Low": "0.0",
+        "Open": "0.0",
+        "Volume": "-689494.0"
+      },
+      "first_at": "2026-09-25T09:00:00+02:00",
+      "intraday_rows": 16,
+      "last_at": "2026-09-25T16:30:00+02:00",
+      "state": "OBSERVED_AGGREGATE_MISMATCH"
+    },
+    {
+      "date": "2026-09-28",
+      "differences_in_provider_units": {
+        "Close": "83.0",
+        "High": "0.0",
+        "Low": "0.0",
+        "Open": "0.0",
+        "Volume": "-533998.0"
+      },
+      "first_at": "2026-09-28T09:00:00+02:00",
+      "intraday_rows": 16,
+      "last_at": "2026-09-28T16:30:00+02:00",
+      "state": "OBSERVED_AGGREGATE_MISMATCH"
+    },
+    {
+      "date": "2026-09-29",
+      "differences_in_provider_units": {
+        "Close": "-114.0",
+        "High": "0.0",
+        "Low": "0.0",
+        "Open": "0.0",
+        "Volume": "-721837.0"
+      },
+      "first_at": "2026-09-29T09:00:00+02:00",
+      "intraday_rows": 16,
+      "last_at": "2026-09-29T16:30:00+02:00",
+      "state": "OBSERVED_AGGREGATE_MISMATCH"
+    },
+    {
+      "date": "2026-09-30",
+      "differences_in_provider_units": {
+        "Close": "-97.0",
+        "High": "-61.0",
+        "Low": "0.0",
+        "Open": "0.0",
+        "Volume": "-1019943.0"
+      },
+      "first_at": "2026-09-30T09:00:00+02:00",
+      "intraday_rows": 16,
+      "last_at": "2026-09-30T16:30:00+02:00",
+      "state": "OBSERVED_AGGREGATE_MISMATCH"
+    },
+    {
+      "date": "2026-10-01",
+      "differences_in_provider_units": {
+        "Close": "-200.0",
+        "High": "0.0",
+        "Low": "0.0",
+        "Open": "0.0",
+        "Volume": "-1025178.0"
+      },
+      "first_at": "2026-10-01T09:00:00+02:00",
+      "intraday_rows": 16,
+      "last_at": "2026-10-01T16:30:00+02:00",
+      "state": "OBSERVED_AGGREGATE_MISMATCH"
+    },
+    {
+      "date": "2026-10-02",
+      "differences_in_provider_units": {
+        "Close": "-71.0",
+        "High": "0.0",
+        "Low": "0.0",
+        "Open": "0.0",
+        "Volume": "-722988.0"
+      },
+      "first_at": "2026-10-02T09:00:00+02:00",
+      "intraday_rows": 16,
+      "last_at": "2026-10-02T16:30:00+02:00",
+      "state": "OBSERVED_AGGREGATE_MISMATCH"
+    }
+  ],
+  "source_receipts": [
+    {
+      "id": "jse-library",
+      "retrieved_at": "2026-10-05T14:42:19.435263+00:00",
+      "status": 403,
+      "url": "https://clientportal.jse.co.za/technical-library/trading-and-market-data-documentation"
+    },
+    {
+      "id": "jse-calendar",
+      "retrieved_at": "2026-10-05T14:42:19.919263+00:00",
+      "status": 403,
+      "url": "https://clientportal.jse.co.za/reports/trading-calendars"
+    },
+    {
+      "bytes": 216268,
+      "id": "sasol-identity",
+      "retrieved_at": "2026-10-05T14:42:22.616403+00:00",
+      "sha256": "9d594e0dc6f375b2f3cfda1218f8e557bf9eca4027cd1c3a647433f0228173d2",
+      "status": 200,
+      "url": "https://www.sasol.com/sasol-sens/202609010005a-s602420"
+    },
+    {
+      "bytes": 86417,
+      "id": "ost-fees",
+      "retrieved_at": "2026-10-05T14:42:23.143405+00:00",
+      "sha256": "b105e6b596d082f199d97f9b9f57089bd0ca0dfb9e3c42998511df31c891997c",
+      "status": 200,
+      "url": "https://onlinesharetrading.standardbank.co.za/standimg/OST/fees-and-costs.html"
+    }
+  ],
+  "unit_evidence": {
+    "daily_ZAR_price_multiplier": "0.01",
+    "daily_currency": "ZAc",
+    "daily_timezone": "Africa/Johannesburg",
+    "intraday_currency": null,
+    "intraday_currency_status": "NOT_CAPTURED_IN_RAW_RECEIPT_NO_SCALE_GUESSED"
+  },
+  "version": "local-real-source-audit-v1"
+}

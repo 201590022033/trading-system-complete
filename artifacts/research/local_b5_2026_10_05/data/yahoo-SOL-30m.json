@@ -1,0 +1,3689 @@
+{
+  "bars": [
+    {
+      "Close": 19521.0,
+      "Dividends": 0.0,
+      "High": 19764.0,
+      "Low": 19211.0,
+      "Open": 19650.0,
+      "Stock Splits": 0.0,
+      "Volume": 114355.0,
+      "timestamp": "2026-09-01T09:00:00+02:00"
+    },
+    {
+      "Close": 19350.0,
+      "Dividends": 0.0,
+      "High": 19645.0,
+      "Low": 19344.0,
+      "Open": 19515.0,
+      "Stock Splits": 0.0,
+      "Volume": 113196.0,
+      "timestamp": "2026-09-01T09:30:00+02:00"
+    },
+    {
+      "Close": 19803.0,
+      "Dividends": 0.0,
+      "High": 19916.0,
+      "Low": 19367.0,
+      "Open": 19384.0,
+      "Stock Splits": 0.0,
+      "Volume": 372676.0,
+      "timestamp": "2026-09-01T10:00:00+02:00"
+    },
+    {
+      "Close": 19488.0,
+      "Dividends": 0.0,
+      "High": 19926.0,
+      "Low": 19449.0,
+      "Open": 19811.0,
+      "Stock Splits": 0.0,
+      "Volume": 292266.0,
+      "timestamp": "2026-09-01T10:30:00+02:00"
+    },
+    {
+      "Close": 19519.0,
+      "Dividends": 0.0,
+      "High": 19571.0,
+      "Low": 19414.0,
+      "Open": 19488.0,
+      "Stock Splits": 0.0,
+      "Volume": 107039.0,
+      "timestamp": "2026-09-01T11:00:00+02:00"
+    },
+    {
+      "Close": 19773.0,
+      "Dividends": 0.0,
+      "High": 19906.0,
+      "Low": 19524.0,
+      "Open": 19524.0,
+      "Stock Splits": 0.0,
+      "Volume": 173036.0,
+      "timestamp": "2026-09-01T11:30:00+02:00"
+    },
+    {
+      "Close": 19550.0,
+      "Dividends": 0.0,
+      "High": 19785.0,
+      "Low": 19515.0,
+      "Open": 19761.0,
+      "Stock Splits": 0.0,
+      "Volume": 111762.0,
+      "timestamp": "2026-09-01T12:00:00+02:00"
+    },
+    {
+      "Close": 19520.0,
+      "Dividends": 0.0,
+      "High": 19612.0,
+      "Low": 19265.0,
+      "Open": 19535.0,
+      "Stock Splits": 0.0,
+      "Volume": 88511.0,
+      "timestamp": "2026-09-01T12:30:00+02:00"
+    },
+    {
+      "Close": 19250.0,
+      "Dividends": 0.0,
+      "High": 19519.0,
+      "Low": 19200.0,
+      "Open": 19502.0,
+      "Stock Splits": 0.0,
+      "Volume": 126911.0,
+      "timestamp": "2026-09-01T13:00:00+02:00"
+    },
+    {
+      "Close": 19215.0,
+      "Dividends": 0.0,
+      "High": 19341.0,
+      "Low": 19104.0,
+      "Open": 19228.0,
+      "Stock Splits": 0.0,
+      "Volume": 162467.0,
+      "timestamp": "2026-09-01T13:30:00+02:00"
+    },
+    {
+      "Close": 19324.0,
+      "Dividends": 0.0,
+      "High": 19324.0,
+      "Low": 19124.0,
+      "Open": 19201.0,
+      "Stock Splits": 0.0,
+      "Volume": 103549.0,
+      "timestamp": "2026-09-01T14:00:00+02:00"
+    },
+    {
+      "Close": 19372.0,
+      "Dividends": 0.0,
+      "High": 19432.0,
+      "Low": 19277.0,
+      "Open": 19322.0,
+      "Stock Splits": 0.0,
+      "Volume": 54123.0,
+      "timestamp": "2026-09-01T14:30:00+02:00"
+    },
+    {
+      "Close": 19229.0,
+      "Dividends": 0.0,
+      "High": 19460.0,
+      "Low": 19153.0,
+      "Open": 19361.0,
+      "Stock Splits": 0.0,
+      "Volume": 149107.0,
+      "timestamp": "2026-09-01T15:00:00+02:00"
+    },
+    {
+      "Close": 19364.0,
+      "Dividends": 0.0,
+      "High": 19540.0,
+      "Low": 19196.0,
+      "Open": 19247.0,
+      "Stock Splits": 0.0,
+      "Volume": 236039.0,
+      "timestamp": "2026-09-01T15:30:00+02:00"
+    },
+    {
+      "Close": 19281.0,
+      "Dividends": 0.0,
+      "High": 19412.0,
+      "Low": 19245.0,
+      "Open": 19365.0,
+      "Stock Splits": 0.0,
+      "Volume": 184381.0,
+      "timestamp": "2026-09-01T16:00:00+02:00"
+    },
+    {
+      "Close": 19385.0,
+      "Dividends": 0.0,
+      "High": 19398.0,
+      "Low": 19182.0,
+      "Open": 19281.0,
+      "Stock Splits": 0.0,
+      "Volume": 160804.0,
+      "timestamp": "2026-09-01T16:30:00+02:00"
+    },
+    {
+      "Close": 19799.0,
+      "Dividends": 0.0,
+      "High": 20453.0,
+      "Low": 19746.0,
+      "Open": 20100.0,
+      "Stock Splits": 0.0,
+      "Volume": 122812.0,
+      "timestamp": "2026-09-02T09:00:00+02:00"
+    },
+    {
+      "Close": 19756.0,
+      "Dividends": 0.0,
+      "High": 19880.0,
+      "Low": 19696.0,
+      "Open": 19809.0,
+      "Stock Splits": 0.0,
+      "Volume": 166355.0,
+      "timestamp": "2026-09-02T09:30:00+02:00"
+    },
+    {
+      "Close": 19580.0,
+      "Dividends": 0.0,
+      "High": 19768.0,
+      "Low": 19560.0,
+      "Open": 19756.0,
+      "Stock Splits": 0.0,
+      "Volume": 87118.0,
+      "timestamp": "2026-09-02T10:00:00+02:00"
+    },
+    {
+      "Close": 19607.0,
+      "Dividends": 0.0,
+      "High": 19640.0,
+      "Low": 19486.0,
+      "Open": 19586.0,
+      "Stock Splits": 0.0,
+      "Volume": 130363.0,
+      "timestamp": "2026-09-02T10:30:00+02:00"
+    },
+    {
+      "Close": 19601.0,
+      "Dividends": 0.0,
+      "High": 19661.0,
+      "Low": 19531.0,
+      "Open": 19596.0,
+      "Stock Splits": 0.0,
+      "Volume": 38552.0,
+      "timestamp": "2026-09-02T11:00:00+02:00"
+    },
+    {
+      "Close": 19495.0,
+      "Dividends": 0.0,
+      "High": 19636.0,
+      "Low": 19492.0,
+      "Open": 19636.0,
+      "Stock Splits": 0.0,
+      "Volume": 67937.0,
+      "timestamp": "2026-09-02T11:30:00+02:00"
+    },
+    {
+      "Close": 19532.0,
+      "Dividends": 0.0,
+      "High": 19539.0,
+      "Low": 19483.0,
+      "Open": 19496.0,
+      "Stock Splits": 0.0,
+      "Volume": 43617.0,
+      "timestamp": "2026-09-02T12:00:00+02:00"
+    },
+    {
+      "Close": 19400.0,
+      "Dividends": 0.0,
+      "High": 19617.0,
+      "Low": 19377.0,
+      "Open": 19538.0,
+      "Stock Splits": 0.0,
+      "Volume": 66683.0,
+      "timestamp": "2026-09-02T12:30:00+02:00"
+    },
+    {
+      "Close": 19400.0,
+      "Dividends": 0.0,
+      "High": 19452.0,
+      "Low": 19331.0,
+      "Open": 19406.0,
+      "Stock Splits": 0.0,
+      "Volume": 51795.0,
+      "timestamp": "2026-09-02T13:00:00+02:00"
+    },
+    {
+      "Close": 19290.0,
+      "Dividends": 0.0,
+      "High": 19417.0,
+      "Low": 19274.0,
+      "Open": 19400.0,
+      "Stock Splits": 0.0,
+      "Volume": 61234.0,
+      "timestamp": "2026-09-02T13:30:00+02:00"
+    },
+    {
+      "Close": 19287.0,
+      "Dividends": 0.0,
+      "High": 19304.0,
+      "Low": 19050.0,
+      "Open": 19302.0,
+      "Stock Splits": 0.0,
+      "Volume": 158026.0,
+      "timestamp": "2026-09-02T14:00:00+02:00"
+    },
+    {
+      "Close": 19321.0,
+      "Dividends": 0.0,
+      "High": 19336.0,
+      "Low": 19197.0,
+      "Open": 19271.0,
+      "Stock Splits": 0.0,
+      "Volume": 72113.0,
+      "timestamp": "2026-09-02T14:30:00+02:00"
+    },
+    {
+      "Close": 19550.0,
+      "Dividends": 0.0,
+      "High": 19685.0,
+      "Low": 19270.0,
+      "Open": 19333.0,
+      "Stock Splits": 0.0,
+      "Volume": 192356.0,
+      "timestamp": "2026-09-02T15:00:00+02:00"
+    },
+    {
+      "Close": 19688.0,
+      "Dividends": 0.0,
+      "High": 19804.0,
+      "Low": 19553.0,
+      "Open": 19577.0,
+      "Stock Splits": 0.0,
+      "Volume": 341831.0,
+      "timestamp": "2026-09-02T15:30:00+02:00"
+    },
+    {
+      "Close": 20069.0,
+      "Dividends": 0.0,
+      "High": 20114.0,
+      "Low": 19685.0,
+      "Open": 19686.0,
+      "Stock Splits": 0.0,
+      "Volume": 543875.0,
+      "timestamp": "2026-09-02T16:00:00+02:00"
+    },
+    {
+      "Close": 20180.0,
+      "Dividends": 0.0,
+      "High": 20190.0,
+      "Low": 19998.0,
+      "Open": 20070.0,
+      "Stock Splits": 0.0,
+      "Volume": 485729.0,
+      "timestamp": "2026-09-02T16:30:00+02:00"
+    },
+    {
+      "Close": 19839.0,
+      "Dividends": 0.0,
+      "High": 19949.0,
+      "Low": 19634.0,
+      "Open": 19917.0,
+      "Stock Splits": 0.0,
+      "Volume": 92201.0,
+      "timestamp": "2026-09-03T09:00:00+02:00"
+    },
+    {
+      "Close": 19956.0,
+      "Dividends": 0.0,
+      "High": 20085.0,
+      "Low": 19834.0,
+      "Open": 19846.0,
+      "Stock Splits": 0.0,
+      "Volume": 52857.0,
+      "timestamp": "2026-09-03T09:30:00+02:00"
+    },
+    {
+      "Close": 19825.0,
+      "Dividends": 0.0,
+      "High": 20051.0,
+      "Low": 19736.0,
+      "Open": 19979.0,
+      "Stock Splits": 0.0,
+      "Volume": 87247.0,
+      "timestamp": "2026-09-03T10:00:00+02:00"
+    },
+    {
+      "Close": 19813.0,
+      "Dividends": 0.0,
+      "High": 19862.0,
+      "Low": 19765.0,
+      "Open": 19829.0,
+      "Stock Splits": 0.0,
+      "Volume": 35327.0,
+      "timestamp": "2026-09-03T10:30:00+02:00"
+    },
+    {
+      "Close": 19900.0,
+      "Dividends": 0.0,
+      "High": 20019.0,
+      "Low": 19619.0,
+      "Open": 19813.0,
+      "Stock Splits": 0.0,
+      "Volume": 120539.0,
+      "timestamp": "2026-09-03T11:00:00+02:00"
+    },
+    {
+      "Close": 20160.0,
+      "Dividends": 0.0,
+      "High": 20170.0,
+      "Low": 19908.0,
+      "Open": 19918.0,
+      "Stock Splits": 0.0,
+      "Volume": 87149.0,
+      "timestamp": "2026-09-03T11:30:00+02:00"
+    },
+    {
+      "Close": 19937.0,
+      "Dividends": 0.0,
+      "High": 20253.0,
+      "Low": 19937.0,
+      "Open": 20157.0,
+      "Stock Splits": 0.0,
+      "Volume": 82645.0,
+      "timestamp": "2026-09-03T12:00:00+02:00"
+    },
+    {
+      "Close": 19907.0,
+      "Dividends": 0.0,
+      "High": 20079.0,
+      "Low": 19901.0,
+      "Open": 19972.0,
+      "Stock Splits": 0.0,
+      "Volume": 50164.0,
+      "timestamp": "2026-09-03T12:30:00+02:00"
+    },
+    {
+      "Close": 19926.0,
+      "Dividends": 0.0,
+      "High": 19950.0,
+      "Low": 19756.0,
+      "Open": 19903.0,
+      "Stock Splits": 0.0,
+      "Volume": 93421.0,
+      "timestamp": "2026-09-03T13:00:00+02:00"
+    },
+    {
+      "Close": 20020.0,
+      "Dividends": 0.0,
+      "High": 20045.0,
+      "Low": 19868.0,
+      "Open": 19930.0,
+      "Stock Splits": 0.0,
+      "Volume": 75879.0,
+      "timestamp": "2026-09-03T13:30:00+02:00"
+    },
+    {
+      "Close": 19856.0,
+      "Dividends": 0.0,
+      "High": 20051.0,
+      "Low": 19827.0,
+      "Open": 20020.0,
+      "Stock Splits": 0.0,
+      "Volume": 79115.0,
+      "timestamp": "2026-09-03T14:00:00+02:00"
+    },
+    {
+      "Close": 19873.0,
+      "Dividends": 0.0,
+      "High": 20031.0,
+      "Low": 19702.0,
+      "Open": 19858.0,
+      "Stock Splits": 0.0,
+      "Volume": 114230.0,
+      "timestamp": "2026-09-03T14:30:00+02:00"
+    },
+    {
+      "Close": 19941.0,
+      "Dividends": 0.0,
+      "High": 19941.0,
+      "Low": 19814.0,
+      "Open": 19882.0,
+      "Stock Splits": 0.0,
+      "Volume": 73793.0,
+      "timestamp": "2026-09-03T15:00:00+02:00"
+    },
+    {
+      "Close": 19999.0,
+      "Dividends": 0.0,
+      "High": 20180.0,
+      "Low": 19941.0,
+      "Open": 19941.0,
+      "Stock Splits": 0.0,
+      "Volume": 179532.0,
+      "timestamp": "2026-09-03T15:30:00+02:00"
+    },
+    {
+      "Close": 20043.0,
+      "Dividends": 0.0,
+      "High": 20050.0,
+      "Low": 19958.0,
+      "Open": 20011.0,
+      "Stock Splits": 0.0,
+      "Volume": 115120.0,
+      "timestamp": "2026-09-03T16:00:00+02:00"
+    },
+    {
+      "Close": 20012.0,
+      "Dividends": 0.0,
+      "High": 20051.0,
+      "Low": 19994.0,
+      "Open": 20043.0,
+      "Stock Splits": 0.0,
+      "Volume": 150134.0,
+      "timestamp": "2026-09-03T16:30:00+02:00"
+    },
+    {
+      "Close": 19539.0,
+      "Dividends": 0.0,
+      "High": 19720.0,
+      "Low": 19410.0,
+      "Open": 19720.0,
+      "Stock Splits": 0.0,
+      "Volume": 262202.0,
+      "timestamp": "2026-09-04T09:00:00+02:00"
+    },
+    {
+      "Close": 19625.0,
+      "Dividends": 0.0,
+      "High": 19749.0,
+      "Low": 19517.0,
+      "Open": 19552.0,
+      "Stock Splits": 0.0,
+      "Volume": 217001.0,
+      "timestamp": "2026-09-04T09:30:00+02:00"
+    },
+    {
+      "Close": 19652.0,
+      "Dividends": 0.0,
+      "High": 19686.0,
+      "Low": 19575.0,
+      "Open": 19632.0,
+      "Stock Splits": 0.0,
+      "Volume": 269057.0,
+      "timestamp": "2026-09-04T10:00:00+02:00"
+    },
+    {
+      "Close": 19783.0,
+      "Dividends": 0.0,
+      "High": 19807.0,
+      "Low": 19650.0,
+      "Open": 19652.0,
+      "Stock Splits": 0.0,
+      "Volume": 275110.0,
+      "timestamp": "2026-09-04T10:30:00+02:00"
+    },
+    {
+      "Close": 19737.0,
+      "Dividends": 0.0,
+      "High": 19786.0,
+      "Low": 19696.0,
+      "Open": 19783.0,
+      "Stock Splits": 0.0,
+      "Volume": 27268.0,
+      "timestamp": "2026-09-04T11:00:00+02:00"
+    },
+    {
+      "Close": 19687.0,
+      "Dividends": 0.0,
+      "High": 19780.0,
+      "Low": 19674.0,
+      "Open": 19738.0,
+      "Stock Splits": 0.0,
+      "Volume": 60974.0,
+      "timestamp": "2026-09-04T11:30:00+02:00"
+    },
+    {
+      "Close": 19657.0,
+      "Dividends": 0.0,
+      "High": 19701.0,
+      "Low": 19598.0,
+      "Open": 19686.0,
+      "Stock Splits": 0.0,
+      "Volume": 98561.0,
+      "timestamp": "2026-09-04T12:00:00+02:00"
+    },
+    {
+      "Close": 19723.0,
+      "Dividends": 0.0,
+      "High": 19742.0,
+      "Low": 19600.0,
+      "Open": 19662.0,
+      "Stock Splits": 0.0,
+      "Volume": 165469.0,
+      "timestamp": "2026-09-04T12:30:00+02:00"
+    },
+    {
+      "Close": 19690.0,
+      "Dividends": 0.0,
+      "High": 19783.0,
+      "Low": 19631.0,
+      "Open": 19714.0,
+      "Stock Splits": 0.0,
+      "Volume": 463490.0,
+      "timestamp": "2026-09-04T13:00:00+02:00"
+    },
+    {
+      "Close": 19720.0,
+      "Dividends": 0.0,
+      "High": 19735.0,
+      "Low": 19650.0,
+      "Open": 19686.0,
+      "Stock Splits": 0.0,
+      "Volume": 240626.0,
+      "timestamp": "2026-09-04T13:30:00+02:00"
+    },
+    {
+      "Close": 19712.0,
+      "Dividends": 0.0,
+      "High": 19723.0,
+      "Low": 19679.0,
+      "Open": 19714.0,
+      "Stock Splits": 0.0,
+      "Volume": 82947.0,
+      "timestamp": "2026-09-04T14:00:00+02:00"
+    },
+    {
+      "Close": 19573.0,
+      "Dividends": 0.0,
+      "High": 19717.0,
+      "Low": 19485.0,
+      "Open": 19707.0,
+      "Stock Splits": 0.0,
+      "Volume": 298465.0,
+      "timestamp": "2026-09-04T14:30:00+02:00"
+    },
+    {
+      "Close": 19596.0,
+      "Dividends": 0.0,
+      "High": 19641.0,
+      "Low": 19550.0,
+      "Open": 19573.0,
+      "Stock Splits": 0.0,
+      "Volume": 130802.0,
+      "timestamp": "2026-09-04T15:00:00+02:00"
+    },
+    {
+      "Close": 19420.0,
+      "Dividends": 0.0,
+      "High": 19683.0,
+      "Low": 19400.0,
+      "Open": 19596.0,
+      "Stock Splits": 0.0,
+      "Volume": 339710.0,
+      "timestamp": "2026-09-04T15:30:00+02:00"
+    },
+    {
+      "Close": 19569.0,
+      "Dividends": 0.0,
+      "High": 19590.0,
+      "Low": 19423.0,
+      "Open": 19445.0,
+      "Stock Splits": 0.0,
+      "Volume": 139235.0,
+      "timestamp": "2026-09-04T16:00:00+02:00"
+    },
+    {
+      "Close": 19638.0,
+      "Dividends": 0.0,
+      "High": 19690.0,
+      "Low": 19552.0,
+      "Open": 19587.0,
+      "Stock Splits": 0.0,
+      "Volume": 108894.0,
+      "timestamp": "2026-09-04T16:30:00+02:00"
+    },
+    {
+      "Close": 20194.0,
+      "Dividends": 0.0,
+      "High": 20596.0,
+      "Low": 19974.0,
+      "Open": 20000.0,
+      "Stock Splits": 0.0,
+      "Volume": 237963.0,
+      "timestamp": "2026-09-07T09:00:00+02:00"
+    },
+    {
+      "Close": 20306.0,
+      "Dividends": 0.0,
+      "High": 20457.0,
+      "Low": 20150.0,
+      "Open": 20183.0,
+      "Stock Splits": 0.0,
+      "Volume": 579126.0,
+      "timestamp": "2026-09-07T09:30:00+02:00"
+    },
+    {
+      "Close": 20112.0,
+      "Dividends": 0.0,
+      "High": 20322.0,
+      "Low": 20080.0,
+      "Open": 20304.0,
+      "Stock Splits": 0.0,
+      "Volume": 176069.0,
+      "timestamp": "2026-09-07T10:00:00+02:00"
+    },
+    {
+      "Close": 20260.0,
+      "Dividends": 0.0,
+      "High": 20323.0,
+      "Low": 20100.0,
+      "Open": 20132.0,
+      "Stock Splits": 0.0,
+      "Volume": 78972.0,
+      "timestamp": "2026-09-07T10:30:00+02:00"
+    },
+    {
+      "Close": 20263.0,
+      "Dividends": 0.0,
+      "High": 20344.0,
+      "Low": 20245.0,
+      "Open": 20276.0,
+      "Stock Splits": 0.0,
+      "Volume": 454880.0,
+      "timestamp": "2026-09-07T11:00:00+02:00"
+    },
+    {
+      "Close": 20403.0,
+      "Dividends": 0.0,
+      "High": 20499.0,
+      "Low": 20227.0,
+      "Open": 20256.0,
+      "Stock Splits": 0.0,
+      "Volume": 418306.0,
+      "timestamp": "2026-09-07T11:30:00+02:00"
+    },
+    {
+      "Close": 20356.0,
+      "Dividends": 0.0,
+      "High": 20405.0,
+      "Low": 20322.0,
+      "Open": 20404.0,
+      "Stock Splits": 0.0,
+      "Volume": 50770.0,
+      "timestamp": "2026-09-07T12:00:00+02:00"
+    },
+    {
+      "Close": 20367.0,
+      "Dividends": 0.0,
+      "High": 20400.0,
+      "Low": 20329.0,
+      "Open": 20361.0,
+      "Stock Splits": 0.0,
+      "Volume": 155089.0,
+      "timestamp": "2026-09-07T12:30:00+02:00"
+    },
+    {
+      "Close": 20411.0,
+      "Dividends": 0.0,
+      "High": 20445.0,
+      "Low": 20365.0,
+      "Open": 20381.0,
+      "Stock Splits": 0.0,
+      "Volume": 220249.0,
+      "timestamp": "2026-09-07T13:00:00+02:00"
+    },
+    {
+      "Close": 20397.0,
+      "Dividends": 0.0,
+      "High": 20421.0,
+      "Low": 20351.0,
+      "Open": 20421.0,
+      "Stock Splits": 0.0,
+      "Volume": 74692.0,
+      "timestamp": "2026-09-07T13:30:00+02:00"
+    },
+    {
+      "Close": 20405.0,
+      "Dividends": 0.0,
+      "High": 20412.0,
+      "Low": 20364.0,
+      "Open": 20388.0,
+      "Stock Splits": 0.0,
+      "Volume": 27804.0,
+      "timestamp": "2026-09-07T14:00:00+02:00"
+    },
+    {
+      "Close": 20424.0,
+      "Dividends": 0.0,
+      "High": 20452.0,
+      "Low": 20390.0,
+      "Open": 20410.0,
+      "Stock Splits": 0.0,
+      "Volume": 114997.0,
+      "timestamp": "2026-09-07T14:30:00+02:00"
+    },
+    {
+      "Close": 20367.0,
+      "Dividends": 0.0,
+      "High": 20499.0,
+      "Low": 20358.0,
+      "Open": 20425.0,
+      "Stock Splits": 0.0,
+      "Volume": 285935.0,
+      "timestamp": "2026-09-07T15:00:00+02:00"
+    },
+    {
+      "Close": 20365.0,
+      "Dividends": 0.0,
+      "High": 20417.0,
+      "Low": 20225.0,
+      "Open": 20366.0,
+      "Stock Splits": 0.0,
+      "Volume": 99079.0,
+      "timestamp": "2026-09-07T15:30:00+02:00"
+    },
+    {
+      "Close": 20359.0,
+      "Dividends": 0.0,
+      "High": 20410.0,
+      "Low": 20335.0,
+      "Open": 20375.0,
+      "Stock Splits": 0.0,
+      "Volume": 65358.0,
+      "timestamp": "2026-09-07T16:00:00+02:00"
+    },
+    {
+      "Close": 20293.0,
+      "Dividends": 0.0,
+      "High": 20377.0,
+      "Low": 20257.0,
+      "Open": 20360.0,
+      "Stock Splits": 0.0,
+      "Volume": 54783.0,
+      "timestamp": "2026-09-07T16:30:00+02:00"
+    },
+    {
+      "Close": 20970.0,
+      "Dividends": 0.0,
+      "High": 20999.0,
+      "Low": 20532.0,
+      "Open": 20650.0,
+      "Stock Splits": 0.0,
+      "Volume": 704487.0,
+      "timestamp": "2026-09-08T09:00:00+02:00"
+    },
+    {
+      "Close": 21120.0,
+      "Dividends": 0.0,
+      "High": 21242.0,
+      "Low": 20957.0,
+      "Open": 20976.0,
+      "Stock Splits": 0.0,
+      "Volume": 707775.0,
+      "timestamp": "2026-09-08T09:30:00+02:00"
+    },
+    {
+      "Close": 21142.0,
+      "Dividends": 0.0,
+      "High": 21250.0,
+      "Low": 21049.0,
+      "Open": 21105.0,
+      "Stock Splits": 0.0,
+      "Volume": 214310.0,
+      "timestamp": "2026-09-08T10:00:00+02:00"
+    },
+    {
+      "Close": 21033.0,
+      "Dividends": 0.0,
+      "High": 21160.0,
+      "Low": 20933.0,
+      "Open": 21142.0,
+      "Stock Splits": 0.0,
+      "Volume": 280131.0,
+      "timestamp": "2026-09-08T10:30:00+02:00"
+    },
+    {
+      "Close": 20979.0,
+      "Dividends": 0.0,
+      "High": 21051.0,
+      "Low": 20941.0,
+      "Open": 21020.0,
+      "Stock Splits": 0.0,
+      "Volume": 76819.0,
+      "timestamp": "2026-09-08T11:00:00+02:00"
+    },
+    {
+      "Close": 21070.0,
+      "Dividends": 0.0,
+      "High": 21070.0,
+      "Low": 20931.0,
+      "Open": 20978.0,
+      "Stock Splits": 0.0,
+      "Volume": 112467.0,
+      "timestamp": "2026-09-08T11:30:00+02:00"
+    },
+    {
+      "Close": 21021.0,
+      "Dividends": 0.0,
+      "High": 21100.0,
+      "Low": 20991.0,
+      "Open": 21072.0,
+      "Stock Splits": 0.0,
+      "Volume": 68236.0,
+      "timestamp": "2026-09-08T12:00:00+02:00"
+    },
+    {
+      "Close": 21056.0,
+      "Dividends": 0.0,
+      "High": 21058.0,
+      "Low": 20971.0,
+      "Open": 21016.0,
+      "Stock Splits": 0.0,
+      "Volume": 58795.0,
+      "timestamp": "2026-09-08T12:30:00+02:00"
+    },
+    {
+      "Close": 21111.0,
+      "Dividends": 0.0,
+      "High": 21151.0,
+      "Low": 21032.0,
+      "Open": 21058.0,
+      "Stock Splits": 0.0,
+      "Volume": 41120.0,
+      "timestamp": "2026-09-08T13:00:00+02:00"
+    },
+    {
+      "Close": 21079.0,
+      "Dividends": 0.0,
+      "High": 21124.0,
+      "Low": 21038.0,
+      "Open": 21105.0,
+      "Stock Splits": 0.0,
+      "Volume": 28264.0,
+      "timestamp": "2026-09-08T13:30:00+02:00"
+    },
+    {
+      "Close": 21051.0,
+      "Dividends": 0.0,
+      "High": 21079.0,
+      "Low": 21051.0,
+      "Open": 21072.0,
+      "Stock Splits": 0.0,
+      "Volume": 21560.0,
+      "timestamp": "2026-09-08T14:00:00+02:00"
+    },
+    {
+      "Close": 21074.0,
+      "Dividends": 0.0,
+      "High": 21105.0,
+      "Low": 20995.0,
+      "Open": 21051.0,
+      "Stock Splits": 0.0,
+      "Volume": 78151.0,
+      "timestamp": "2026-09-08T14:30:00+02:00"
+    },
+    {
+      "Close": 21017.0,
+      "Dividends": 0.0,
+      "High": 21085.0,
+      "Low": 21010.0,
+      "Open": 21074.0,
+      "Stock Splits": 0.0,
+      "Volume": 121828.0,
+      "timestamp": "2026-09-08T15:00:00+02:00"
+    },
+    {
+      "Close": 20966.0,
+      "Dividends": 0.0,
+      "High": 21162.0,
+      "Low": 20937.0,
+      "Open": 21018.0,
+      "Stock Splits": 0.0,
+      "Volume": 161696.0,
+      "timestamp": "2026-09-08T15:30:00+02:00"
+    },
+    {
+      "Close": 21120.0,
+      "Dividends": 0.0,
+      "High": 21125.0,
+      "Low": 20964.0,
+      "Open": 20964.0,
+      "Stock Splits": 0.0,
+      "Volume": 103094.0,
+      "timestamp": "2026-09-08T16:00:00+02:00"
+    },
+    {
+      "Close": 21122.0,
+      "Dividends": 0.0,
+      "High": 21154.0,
+      "Low": 21059.0,
+      "Open": 21120.0,
+      "Stock Splits": 0.0,
+      "Volume": 77765.0,
+      "timestamp": "2026-09-08T16:30:00+02:00"
+    },
+    {
+      "Close": 22462.0,
+      "Dividends": 0.0,
+      "High": 22550.0,
+      "Low": 21507.0,
+      "Open": 21796.0,
+      "Stock Splits": 0.0,
+      "Volume": 798194.0,
+      "timestamp": "2026-09-09T09:00:00+02:00"
+    },
+    {
+      "Close": 22570.0,
+      "Dividends": 0.0,
+      "High": 22884.0,
+      "Low": 22388.0,
+      "Open": 22456.0,
+      "Stock Splits": 0.0,
+      "Volume": 682678.0,
+      "timestamp": "2026-09-09T09:30:00+02:00"
+    },
+    {
+      "Close": 22662.0,
+      "Dividends": 0.0,
+      "High": 22850.0,
+      "Low": 22504.0,
+      "Open": 22562.0,
+      "Stock Splits": 0.0,
+      "Volume": 341079.0,
+      "timestamp": "2026-09-09T10:00:00+02:00"
+    },
+    {
+      "Close": 22514.0,
+      "Dividends": 0.0,
+      "High": 22691.0,
+      "Low": 22499.0,
+      "Open": 22653.0,
+      "Stock Splits": 0.0,
+      "Volume": 367809.0,
+      "timestamp": "2026-09-09T10:30:00+02:00"
+    },
+    {
+      "Close": 22719.0,
+      "Dividends": 0.0,
+      "High": 22723.0,
+      "Low": 22508.0,
+      "Open": 22514.0,
+      "Stock Splits": 0.0,
+      "Volume": 352176.0,
+      "timestamp": "2026-09-09T11:00:00+02:00"
+    },
+    {
+      "Close": 22825.0,
+      "Dividends": 0.0,
+      "High": 22825.0,
+      "Low": 22595.0,
+      "Open": 22715.0,
+      "Stock Splits": 0.0,
+      "Volume": 264615.0,
+      "timestamp": "2026-09-09T11:30:00+02:00"
+    },
+    {
+      "Close": 22949.0,
+      "Dividends": 0.0,
+      "High": 22949.0,
+      "Low": 22688.0,
+      "Open": 22831.0,
+      "Stock Splits": 0.0,
+      "Volume": 215187.0,
+      "timestamp": "2026-09-09T12:00:00+02:00"
+    },
+    {
+      "Close": 22775.0,
+      "Dividends": 0.0,
+      "High": 23000.0,
+      "Low": 22770.0,
+      "Open": 22950.0,
+      "Stock Splits": 0.0,
+      "Volume": 226159.0,
+      "timestamp": "2026-09-09T12:30:00+02:00"
+    },
+    {
+      "Close": 22745.0,
+      "Dividends": 0.0,
+      "High": 22812.0,
+      "Low": 22666.0,
+      "Open": 22761.0,
+      "Stock Splits": 0.0,
+      "Volume": 189905.0,
+      "timestamp": "2026-09-09T13:00:00+02:00"
+    },
+    {
+      "Close": 22642.0,
+      "Dividends": 0.0,
+      "High": 22790.0,
+      "Low": 22626.0,
+      "Open": 22745.0,
+      "Stock Splits": 0.0,
+      "Volume": 127325.0,
+      "timestamp": "2026-09-09T13:30:00+02:00"
+    },
+    {
+      "Close": 22591.0,
+      "Dividends": 0.0,
+      "High": 22626.0,
+      "Low": 22487.0,
+      "Open": 22621.0,
+      "Stock Splits": 0.0,
+      "Volume": 128443.0,
+      "timestamp": "2026-09-09T14:00:00+02:00"
+    },
+    {
+      "Close": 22688.0,
+      "Dividends": 0.0,
+      "High": 22690.0,
+      "Low": 22545.0,
+      "Open": 22579.0,
+      "Stock Splits": 0.0,
+      "Volume": 123928.0,
+      "timestamp": "2026-09-09T14:30:00+02:00"
+    },
+    {
+      "Close": 22720.0,
+      "Dividends": 0.0,
+      "High": 22738.0,
+      "Low": 22626.0,
+      "Open": 22688.0,
+      "Stock Splits": 0.0,
+      "Volume": 139744.0,
+      "timestamp": "2026-09-09T15:00:00+02:00"
+    },
+    {
+      "Close": 22906.0,
+      "Dividends": 0.0,
+      "High": 23280.0,
+      "Low": 22710.0,
+      "Open": 22718.0,
+      "Stock Splits": 0.0,
+      "Volume": 719958.0,
+      "timestamp": "2026-09-09T15:30:00+02:00"
+    },
+    {
+      "Close": 22932.0,
+      "Dividends": 0.0,
+      "High": 22981.0,
+      "Low": 22810.0,
+      "Open": 22906.0,
+      "Stock Splits": 0.0,
+      "Volume": 532191.0,
+      "timestamp": "2026-09-09T16:00:00+02:00"
+    },
+    {
+      "Close": 23077.0,
+      "Dividends": 0.0,
+      "High": 23141.0,
+      "Low": 22880.0,
+      "Open": 22932.0,
+      "Stock Splits": 0.0,
+      "Volume": 476675.0,
+      "timestamp": "2026-09-09T16:30:00+02:00"
+    },
+    {
+      "Close": 22816.0,
+      "Dividends": 0.0,
+      "High": 23300.0,
+      "Low": 22710.0,
+      "Open": 23300.0,
+      "Stock Splits": 0.0,
+      "Volume": 163211.0,
+      "timestamp": "2026-09-10T09:00:00+02:00"
+    },
+    {
+      "Close": 22731.0,
+      "Dividends": 0.0,
+      "High": 22911.0,
+      "Low": 22727.0,
+      "Open": 22848.0,
+      "Stock Splits": 0.0,
+      "Volume": 56826.0,
+      "timestamp": "2026-09-10T09:30:00+02:00"
+    },
+    {
+      "Close": 23040.0,
+      "Dividends": 0.0,
+      "High": 23040.0,
+      "Low": 22661.0,
+      "Open": 22732.0,
+      "Stock Splits": 0.0,
+      "Volume": 621210.0,
+      "timestamp": "2026-09-10T10:00:00+02:00"
+    },
+    {
+      "Close": 23209.0,
+      "Dividends": 0.0,
+      "High": 23252.0,
+      "Low": 23031.0,
+      "Open": 23042.0,
+      "Stock Splits": 0.0,
+      "Volume": 79421.0,
+      "timestamp": "2026-09-10T10:30:00+02:00"
+    },
+    {
+      "Close": 23278.0,
+      "Dividends": 0.0,
+      "High": 23296.0,
+      "Low": 23118.0,
+      "Open": 23222.0,
+      "Stock Splits": 0.0,
+      "Volume": 76792.0,
+      "timestamp": "2026-09-10T11:00:00+02:00"
+    },
+    {
+      "Close": 23036.0,
+      "Dividends": 0.0,
+      "High": 23312.0,
+      "Low": 23009.0,
+      "Open": 23274.0,
+      "Stock Splits": 0.0,
+      "Volume": 114986.0,
+      "timestamp": "2026-09-10T11:30:00+02:00"
+    },
+    {
+      "Close": 22828.0,
+      "Dividends": 0.0,
+      "High": 23067.0,
+      "Low": 22816.0,
+      "Open": 23036.0,
+      "Stock Splits": 0.0,
+      "Volume": 80962.0,
+      "timestamp": "2026-09-10T12:00:00+02:00"
+    },
+    {
+      "Close": 22817.0,
+      "Dividends": 0.0,
+      "High": 22859.0,
+      "Low": 22707.0,
+      "Open": 22834.0,
+      "Stock Splits": 0.0,
+      "Volume": 93392.0,
+      "timestamp": "2026-09-10T12:30:00+02:00"
+    },
+    {
+      "Close": 22824.0,
+      "Dividends": 0.0,
+      "High": 22869.0,
+      "Low": 22765.0,
+      "Open": 22817.0,
+      "Stock Splits": 0.0,
+      "Volume": 86143.0,
+      "timestamp": "2026-09-10T13:00:00+02:00"
+    },
+    {
+      "Close": 22740.0,
+      "Dividends": 0.0,
+      "High": 22821.0,
+      "Low": 22673.0,
+      "Open": 22821.0,
+      "Stock Splits": 0.0,
+      "Volume": 105451.0,
+      "timestamp": "2026-09-10T13:30:00+02:00"
+    },
+    {
+      "Close": 23297.0,
+      "Dividends": 0.0,
+      "High": 23373.0,
+      "Low": 22737.0,
+      "Open": 22741.0,
+      "Stock Splits": 0.0,
+      "Volume": 216328.0,
+      "timestamp": "2026-09-10T14:00:00+02:00"
+    },
+    {
+      "Close": 23625.0,
+      "Dividends": 0.0,
+      "High": 23689.0,
+      "Low": 23213.0,
+      "Open": 23298.0,
+      "Stock Splits": 0.0,
+      "Volume": 327615.0,
+      "timestamp": "2026-09-10T14:30:00+02:00"
+    },
+    {
+      "Close": 23575.0,
+      "Dividends": 0.0,
+      "High": 23749.0,
+      "Low": 23557.0,
+      "Open": 23633.0,
+      "Stock Splits": 0.0,
+      "Volume": 212447.0,
+      "timestamp": "2026-09-10T15:00:00+02:00"
+    },
+    {
+      "Close": 23609.0,
+      "Dividends": 0.0,
+      "High": 23865.0,
+      "Low": 23546.0,
+      "Open": 23575.0,
+      "Stock Splits": 0.0,
+      "Volume": 468606.0,
+      "timestamp": "2026-09-10T15:30:00+02:00"
+    },
+    {
+      "Close": 23376.0,
+      "Dividends": 0.0,
+      "High": 23756.0,
+      "Low": 23213.0,
+      "Open": 23619.0,
+      "Stock Splits": 0.0,
+      "Volume": 546745.0,
+      "timestamp": "2026-09-10T16:00:00+02:00"
+    },
+    {
+      "Close": 23549.0,
+      "Dividends": 0.0,
+      "High": 23692.0,
+      "Low": 23349.0,
+      "Open": 23371.0,
+      "Stock Splits": 0.0,
+      "Volume": 332842.0,
+      "timestamp": "2026-09-10T16:30:00+02:00"
+    },
+    {
+      "Close": 23388.0,
+      "Dividends": 0.0,
+      "High": 23579.0,
+      "Low": 23210.0,
+      "Open": 23400.0,
+      "Stock Splits": 0.0,
+      "Volume": 172969.0,
+      "timestamp": "2026-09-11T09:00:00+02:00"
+    },
+    {
+      "Close": 23463.0,
+      "Dividends": 0.0,
+      "High": 23568.0,
+      "Low": 23338.0,
+      "Open": 23390.0,
+      "Stock Splits": 0.0,
+      "Volume": 101378.0,
+      "timestamp": "2026-09-11T09:30:00+02:00"
+    },
+    {
+      "Close": 23324.0,
+      "Dividends": 0.0,
+      "High": 23460.0,
+      "Low": 23239.0,
+      "Open": 23460.0,
+      "Stock Splits": 0.0,
+      "Volume": 103531.0,
+      "timestamp": "2026-09-11T10:00:00+02:00"
+    },
+    {
+      "Close": 23315.0,
+      "Dividends": 0.0,
+      "High": 23332.0,
+      "Low": 23232.0,
+      "Open": 23330.0,
+      "Stock Splits": 0.0,
+      "Volume": 63938.0,
+      "timestamp": "2026-09-11T10:30:00+02:00"
+    },
+    {
+      "Close": 23283.0,
+      "Dividends": 0.0,
+      "High": 23344.0,
+      "Low": 23232.0,
+      "Open": 23320.0,
+      "Stock Splits": 0.0,
+      "Volume": 119958.0,
+      "timestamp": "2026-09-11T11:00:00+02:00"
+    },
+    {
+      "Close": 23200.0,
+      "Dividends": 0.0,
+      "High": 23283.0,
+      "Low": 23172.0,
+      "Open": 23271.0,
+      "Stock Splits": 0.0,
+      "Volume": 136969.0,
+      "timestamp": "2026-09-11T11:30:00+02:00"
+    },
+    {
+      "Close": 23226.0,
+      "Dividends": 0.0,
+      "High": 23272.0,
+      "Low": 23172.0,
+      "Open": 23197.0,
+      "Stock Splits": 0.0,
+      "Volume": 71301.0,
+      "timestamp": "2026-09-11T12:00:00+02:00"
+    },
+    {
+      "Close": 23142.0,
+      "Dividends": 0.0,
+      "High": 23235.0,
+      "Low": 23091.0,
+      "Open": 23223.0,
+      "Stock Splits": 0.0,
+      "Volume": 133480.0,
+      "timestamp": "2026-09-11T12:30:00+02:00"
+    },
+    {
+      "Close": 23114.0,
+      "Dividends": 0.0,
+      "High": 23173.0,
+      "Low": 23100.0,
+      "Open": 23142.0,
+      "Stock Splits": 0.0,
+      "Volume": 120787.0,
+      "timestamp": "2026-09-11T13:00:00+02:00"
+    },
+    {
+      "Close": 23250.0,
+      "Dividends": 0.0,
+      "High": 23270.0,
+      "Low": 23108.0,
+      "Open": 23110.0,
+      "Stock Splits": 0.0,
+      "Volume": 85181.0,
+      "timestamp": "2026-09-11T13:30:00+02:00"
+    },
+    {
+      "Close": 23135.0,
+      "Dividends": 0.0,
+      "High": 23256.0,
+      "Low": 23105.0,
+      "Open": 23250.0,
+      "Stock Splits": 0.0,
+      "Volume": 140551.0,
+      "timestamp": "2026-09-11T14:00:00+02:00"
+    },
+    {
+      "Close": 23019.0,
+      "Dividends": 0.0,
+      "High": 23270.0,
+      "Low": 23010.0,
+      "Open": 23140.0,
+      "Stock Splits": 0.0,
+      "Volume": 101027.0,
+      "timestamp": "2026-09-11T14:30:00+02:00"
+    },
+    {
+      "Close": 23029.0,
+      "Dividends": 0.0,
+      "High": 23120.0,
+      "Low": 22950.0,
+      "Open": 23018.0,
+      "Stock Splits": 0.0,
+      "Volume": 270033.0,
+      "timestamp": "2026-09-11T15:00:00+02:00"
+    },
+    {
+      "Close": 23341.0,
+      "Dividends": 0.0,
+      "High": 23375.0,
+      "Low": 23021.0,
+      "Open": 23027.0,
+      "Stock Splits": 0.0,
+      "Volume": 232255.0,
+      "timestamp": "2026-09-11T15:30:00+02:00"
+    },
+    {
+      "Close": 23366.0,
+      "Dividends": 0.0,
+      "High": 23445.0,
+      "Low": 23258.0,
+      "Open": 23334.0,
+      "Stock Splits": 0.0,
+      "Volume": 211983.0,
+      "timestamp": "2026-09-11T16:00:00+02:00"
+    },
+    {
+      "Close": 23252.0,
+      "Dividends": 0.0,
+      "High": 23387.0,
+      "Low": 23188.0,
+      "Open": 23365.0,
+      "Stock Splits": 0.0,
+      "Volume": 171929.0,
+      "timestamp": "2026-09-11T16:30:00+02:00"
+    },
+    {
+      "Close": 23623.0,
+      "Dividends": 0.0,
+      "High": 24149.0,
+      "Low": 23572.0,
+      "Open": 23973.0,
+      "Stock Splits": 0.0,
+      "Volume": 429248.0,
+      "timestamp": "2026-09-14T09:00:00+02:00"
+    },
+    {
+      "Close": 23720.0,
+      "Dividends": 0.0,
+      "High": 23800.0,
+      "Low": 23572.0,
+      "Open": 23609.0,
+      "Stock Splits": 0.0,
+      "Volume": 122444.0,
+      "timestamp": "2026-09-14T09:30:00+02:00"
+    },
+    {
+      "Close": 23774.0,
+      "Dividends": 0.0,
+      "High": 23800.0,
+      "Low": 23624.0,
+      "Open": 23718.0,
+      "Stock Splits": 0.0,
+      "Volume": 93206.0,
+      "timestamp": "2026-09-14T10:00:00+02:00"
+    },
+    {
+      "Close": 23710.0,
+      "Dividends": 0.0,
+      "High": 23774.0,
+      "Low": 23614.0,
+      "Open": 23771.0,
+      "Stock Splits": 0.0,
+      "Volume": 100412.0,
+      "timestamp": "2026-09-14T10:30:00+02:00"
+    },
+    {
+      "Close": 23653.0,
+      "Dividends": 0.0,
+      "High": 23760.0,
+      "Low": 23620.0,
+      "Open": 23712.0,
+      "Stock Splits": 0.0,
+      "Volume": 84148.0,
+      "timestamp": "2026-09-14T11:00:00+02:00"
+    },
+    {
+      "Close": 23746.0,
+      "Dividends": 0.0,
+      "High": 23768.0,
+      "Low": 23628.0,
+      "Open": 23643.0,
+      "Stock Splits": 0.0,
+      "Volume": 69244.0,
+      "timestamp": "2026-09-14T11:30:00+02:00"
+    },
+    {
+      "Close": 23727.0,
+      "Dividends": 0.0,
+      "High": 23800.0,
+      "Low": 23664.0,
+      "Open": 23746.0,
+      "Stock Splits": 0.0,
+      "Volume": 120967.0,
+      "timestamp": "2026-09-14T12:00:00+02:00"
+    },
+    {
+      "Close": 23728.0,
+      "Dividends": 0.0,
+      "High": 23785.0,
+      "Low": 23659.0,
+      "Open": 23728.0,
+      "Stock Splits": 0.0,
+      "Volume": 50517.0,
+      "timestamp": "2026-09-14T12:30:00+02:00"
+    },
+    {
+      "Close": 23752.0,
+      "Dividends": 0.0,
+      "High": 23800.0,
+      "Low": 23700.0,
+      "Open": 23720.0,
+      "Stock Splits": 0.0,
+      "Volume": 48214.0,
+      "timestamp": "2026-09-14T13:00:00+02:00"
+    },
+    {
+      "Close": 23744.0,
+      "Dividends": 0.0,
+      "High": 23774.0,
+      "Low": 23656.0,
+      "Open": 23752.0,
+      "Stock Splits": 0.0,
+      "Volume": 70898.0,
+      "timestamp": "2026-09-14T13:30:00+02:00"
+    },
+    {
+      "Close": 23754.0,
+      "Dividends": 0.0,
+      "High": 23796.0,
+      "Low": 23718.0,
+      "Open": 23741.0,
+      "Stock Splits": 0.0,
+      "Volume": 61365.0,
+      "timestamp": "2026-09-14T14:00:00+02:00"
+    },
+    {
+      "Close": 23731.0,
+      "Dividends": 0.0,
+      "High": 23900.0,
+      "Low": 23725.0,
+      "Open": 23751.0,
+      "Stock Splits": 0.0,
+      "Volume": 136059.0,
+      "timestamp": "2026-09-14T14:30:00+02:00"
+    },
+    {
+      "Close": 23850.0,
+      "Dividends": 0.0,
+      "High": 23873.0,
+      "Low": 23700.0,
+      "Open": 23739.0,
+      "Stock Splits": 0.0,
+      "Volume": 122576.0,
+      "timestamp": "2026-09-14T15:00:00+02:00"
+    },
+    {
+      "Close": 23846.0,
+      "Dividends": 0.0,
+      "High": 23900.0,
+      "Low": 23657.0,
+      "Open": 23845.0,
+      "Stock Splits": 0.0,
+      "Volume": 221961.0,
+      "timestamp": "2026-09-14T15:30:00+02:00"
+    },
+    {
+      "Close": 23801.0,
+      "Dividends": 0.0,
+      "High": 23989.0,
+      "Low": 23787.0,
+      "Open": 23843.0,
+      "Stock Splits": 0.0,
+      "Volume": 285041.0,
+      "timestamp": "2026-09-14T16:00:00+02:00"
+    },
+    {
+      "Close": 23886.0,
+      "Dividends": 0.0,
+      "High": 23950.0,
+      "Low": 23735.0,
+      "Open": 23800.0,
+      "Stock Splits": 0.0,
+      "Volume": 208013.0,
+      "timestamp": "2026-09-14T16:30:00+02:00"
+    },
+    {
+      "Close": 23775.0,
+      "Dividends": 0.0,
+      "High": 24200.0,
+      "Low": 23474.0,
+      "Open": 23600.0,
+      "Stock Splits": 0.0,
+      "Volume": 178745.0,
+      "timestamp": "2026-09-15T09:00:00+02:00"
+    },
+    {
+      "Close": 23697.0,
+      "Dividends": 0.0,
+      "High": 23752.0,
+      "Low": 23631.0,
+      "Open": 23744.0,
+      "Stock Splits": 0.0,
+      "Volume": 83932.0,
+      "timestamp": "2026-09-15T09:30:00+02:00"
+    },
+    {
+      "Close": 23537.0,
+      "Dividends": 0.0,
+      "High": 23682.0,
+      "Low": 23514.0,
+      "Open": 23681.0,
+      "Stock Splits": 0.0,
+      "Volume": 101064.0,
+      "timestamp": "2026-09-15T10:00:00+02:00"
+    },
+    {
+      "Close": 23546.0,
+      "Dividends": 0.0,
+      "High": 23629.0,
+      "Low": 23500.0,
+      "Open": 23536.0,
+      "Stock Splits": 0.0,
+      "Volume": 65751.0,
+      "timestamp": "2026-09-15T10:30:00+02:00"
+    },
+    {
+      "Close": 23549.0,
+      "Dividends": 0.0,
+      "High": 23598.0,
+      "Low": 23476.0,
+      "Open": 23543.0,
+      "Stock Splits": 0.0,
+      "Volume": 62900.0,
+      "timestamp": "2026-09-15T11:00:00+02:00"
+    },
+    {
+      "Close": 23482.0,
+      "Dividends": 0.0,
+      "High": 23612.0,
+      "Low": 23451.0,
+      "Open": 23535.0,
+      "Stock Splits": 0.0,
+      "Volume": 70475.0,
+      "timestamp": "2026-09-15T11:30:00+02:00"
+    },
+    {
+      "Close": 23607.0,
+      "Dividends": 0.0,
+      "High": 23635.0,
+      "Low": 23477.0,
+      "Open": 23482.0,
+      "Stock Splits": 0.0,
+      "Volume": 62178.0,
+      "timestamp": "2026-09-15T12:00:00+02:00"
+    },
+    {
+      "Close": 23587.0,
+      "Dividends": 0.0,
+      "High": 23669.0,
+      "Low": 23494.0,
+      "Open": 23595.0,
+      "Stock Splits": 0.0,
+      "Volume": 120046.0,
+      "timestamp": "2026-09-15T12:30:00+02:00"
+    },
+    {
+      "Close": 23508.0,
+      "Dividends": 0.0,
+      "High": 23585.0,
+      "Low": 23325.0,
+      "Open": 23585.0,
+      "Stock Splits": 0.0,
+      "Volume": 99378.0,
+      "timestamp": "2026-09-15T13:00:00+02:00"
+    },
+    {
+      "Close": 23411.0,
+      "Dividends": 0.0,
+      "High": 23545.0,
+      "Low": 23390.0,
+      "Open": 23488.0,
+      "Stock Splits": 0.0,
+      "Volume": 61770.0,
+      "timestamp": "2026-09-15T13:30:00+02:00"
+    },
+    {
+      "Close": 23445.0,
+      "Dividends": 0.0,
+      "High": 23496.0,
+      "Low": 23385.0,
+      "Open": 23410.0,
+      "Stock Splits": 0.0,
+      "Volume": 105454.0,
+      "timestamp": "2026-09-15T14:00:00+02:00"
+    },
+    {
+      "Close": 23198.0,
+      "Dividends": 0.0,
+      "High": 23458.0,
+      "Low": 23114.0,
+      "Open": 23447.0,
+      "Stock Splits": 0.0,
+      "Volume": 186224.0,
+      "timestamp": "2026-09-15T14:30:00+02:00"
+    },
+    {
+      "Close": 23444.0,
+      "Dividends": 0.0,
+      "High": 23445.0,
+      "Low": 23091.0,
+      "Open": 23198.0,
+      "Stock Splits": 0.0,
+      "Volume": 184547.0,
+      "timestamp": "2026-09-15T15:00:00+02:00"
+    },
+    {
+      "Close": 23751.0,
+      "Dividends": 0.0,
+      "High": 23806.0,
+      "Low": 23409.0,
+      "Open": 23418.0,
+      "Stock Splits": 0.0,
+      "Volume": 249581.0,
+      "timestamp": "2026-09-15T15:30:00+02:00"
+    },
+    {
+      "Close": 23824.0,
+      "Dividends": 0.0,
+      "High": 23867.0,
+      "Low": 23737.0,
+      "Open": 23755.0,
+      "Stock Splits": 0.0,
+      "Volume": 272965.0,
+      "timestamp": "2026-09-15T16:00:00+02:00"
+    },
+    {
+      "Close": 23899.0,
+      "Dividends": 0.0,
+      "High": 23925.0,
+      "Low": 23821.0,
+      "Open": 23821.0,
+      "Stock Splits": 0.0,
+      "Volume": 178815.0,
+      "timestamp": "2026-09-15T16:30:00+02:00"
+    },
+    {
+      "Close": 23797.0,
+      "Dividends": 0.0,
+      "High": 23947.0,
+      "Low": 23572.0,
+      "Open": 23947.0,
+      "Stock Splits": 0.0,
+      "Volume": 83829.0,
+      "timestamp": "2026-09-16T09:00:00+02:00"
+    },
+    {
+      "Close": 23468.0,
+      "Dividends": 0.0,
+      "High": 23817.0,
+      "Low": 23459.0,
+      "Open": 23807.0,
+      "Stock Splits": 0.0,
+      "Volume": 81308.0,
+      "timestamp": "2026-09-16T09:30:00+02:00"
+    },
+    {
+      "Close": 23616.0,
+      "Dividends": 0.0,
+      "High": 23673.0,
+      "Low": 23430.0,
+      "Open": 23464.0,
+      "Stock Splits": 0.0,
+      "Volume": 154572.0,
+      "timestamp": "2026-09-16T10:00:00+02:00"
+    },
+    {
+      "Close": 23575.0,
+      "Dividends": 0.0,
+      "High": 23653.0,
+      "Low": 23470.0,
+      "Open": 23616.0,
+      "Stock Splits": 0.0,
+      "Volume": 62015.0,
+      "timestamp": "2026-09-16T10:30:00+02:00"
+    },
+    {
+      "Close": 23557.0,
+      "Dividends": 0.0,
+      "High": 23627.0,
+      "Low": 23495.0,
+      "Open": 23575.0,
+      "Stock Splits": 0.0,
+      "Volume": 67165.0,
+      "timestamp": "2026-09-16T11:00:00+02:00"
+    },
+    {
+      "Close": 23549.0,
+      "Dividends": 0.0,
+      "High": 23614.0,
+      "Low": 23549.0,
+      "Open": 23556.0,
+      "Stock Splits": 0.0,
+      "Volume": 57407.0,
+      "timestamp": "2026-09-16T11:30:00+02:00"
+    },
+    {
+      "Close": 23677.0,
+      "Dividends": 0.0,
+      "High": 23687.0,
+      "Low": 23539.0,
+      "Open": 23546.0,
+      "Stock Splits": 0.0,
+      "Volume": 44898.0,
+      "timestamp": "2026-09-16T12:00:00+02:00"
+    },
+    {
+      "Close": 23732.0,
+      "Dividends": 0.0,
+      "High": 23753.0,
+      "Low": 23610.0,
+      "Open": 23678.0,
+      "Stock Splits": 0.0,
+      "Volume": 50990.0,
+      "timestamp": "2026-09-16T12:30:00+02:00"
+    },
+    {
+      "Close": 23643.0,
+      "Dividends": 0.0,
+      "High": 23729.0,
+      "Low": 23631.0,
+      "Open": 23729.0,
+      "Stock Splits": 0.0,
+      "Volume": 35682.0,
+      "timestamp": "2026-09-16T13:00:00+02:00"
+    },
+    {
+      "Close": 23617.0,
+      "Dividends": 0.0,
+      "High": 23679.0,
+      "Low": 23592.0,
+      "Open": 23630.0,
+      "Stock Splits": 0.0,
+      "Volume": 35708.0,
+      "timestamp": "2026-09-16T13:30:00+02:00"
+    },
+    {
+      "Close": 23532.0,
+      "Dividends": 0.0,
+      "High": 23629.0,
+      "Low": 23493.0,
+      "Open": 23616.0,
+      "Stock Splits": 0.0,
+      "Volume": 79372.0,
+      "timestamp": "2026-09-16T14:00:00+02:00"
+    },
+    {
+      "Close": 23538.0,
+      "Dividends": 0.0,
+      "High": 23588.0,
+      "Low": 23514.0,
+      "Open": 23514.0,
+      "Stock Splits": 0.0,
+      "Volume": 35767.0,
+      "timestamp": "2026-09-16T14:30:00+02:00"
+    },
+    {
+      "Close": 23680.0,
+      "Dividends": 0.0,
+      "High": 23707.0,
+      "Low": 23530.0,
+      "Open": 23533.0,
+      "Stock Splits": 0.0,
+      "Volume": 67936.0,
+      "timestamp": "2026-09-16T15:00:00+02:00"
+    },
+    {
+      "Close": 23598.0,
+      "Dividends": 0.0,
+      "High": 23748.0,
+      "Low": 23502.0,
+      "Open": 23684.0,
+      "Stock Splits": 0.0,
+      "Volume": 152388.0,
+      "timestamp": "2026-09-16T15:30:00+02:00"
+    },
+    {
+      "Close": 23533.0,
+      "Dividends": 0.0,
+      "High": 23823.0,
+      "Low": 23464.0,
+      "Open": 23598.0,
+      "Stock Splits": 0.0,
+      "Volume": 250988.0,
+      "timestamp": "2026-09-16T16:00:00+02:00"
+    },
+    {
+      "Close": 23395.0,
+      "Dividends": 0.0,
+      "High": 23579.0,
+      "Low": 23328.0,
+      "Open": 23532.0,
+      "Stock Splits": 0.0,
+      "Volume": 185248.0,
+      "timestamp": "2026-09-16T16:30:00+02:00"
+    },
+    {
+      "Close": 22843.0,
+      "Dividends": 0.0,
+      "High": 22929.0,
+      "Low": 22703.0,
+      "Open": 22929.0,
+      "Stock Splits": 0.0,
+      "Volume": 92728.0,
+      "timestamp": "2026-09-17T09:00:00+02:00"
+    },
+    {
+      "Close": 22989.0,
+      "Dividends": 0.0,
+      "High": 23000.0,
+      "Low": 22821.0,
+      "Open": 22824.0,
+      "Stock Splits": 0.0,
+      "Volume": 64678.0,
+      "timestamp": "2026-09-17T09:30:00+02:00"
+    },
+    {
+      "Close": 22959.0,
+      "Dividends": 0.0,
+      "High": 22996.0,
+      "Low": 22837.0,
+      "Open": 22989.0,
+      "Stock Splits": 0.0,
+      "Volume": 44629.0,
+      "timestamp": "2026-09-17T10:00:00+02:00"
+    },
+    {
+      "Close": 22855.0,
+      "Dividends": 0.0,
+      "High": 22995.0,
+      "Low": 22835.0,
+      "Open": 22928.0,
+      "Stock Splits": 0.0,
+      "Volume": 76378.0,
+      "timestamp": "2026-09-17T10:30:00+02:00"
+    },
+    {
+      "Close": 22902.0,
+      "Dividends": 0.0,
+      "High": 22930.0,
+      "Low": 22818.0,
+      "Open": 22852.0,
+      "Stock Splits": 0.0,
+      "Volume": 36095.0,
+      "timestamp": "2026-09-17T11:00:00+02:00"
+    },
+    {
+      "Close": 22859.0,
+      "Dividends": 0.0,
+      "High": 22903.0,
+      "Low": 22786.0,
+      "Open": 22903.0,
+      "Stock Splits": 0.0,
+      "Volume": 79185.0,
+      "timestamp": "2026-09-17T11:30:00+02:00"
+    },
+    {
+      "Close": 22924.0,
+      "Dividends": 0.0,
+      "High": 23165.0,
+      "Low": 22813.0,
+      "Open": 22813.0,
+      "Stock Splits": 0.0,
+      "Volume": 2610948.0,
+      "timestamp": "2026-09-17T12:00:00+02:00"
+    },
+    {
+      "Close": 22827.0,
+      "Dividends": 0.0,
+      "High": 22921.0,
+      "Low": 22779.0,
+      "Open": 22921.0,
+      "Stock Splits": 0.0,
+      "Volume": 68238.0,
+      "timestamp": "2026-09-17T12:30:00+02:00"
+    },
+    {
+      "Close": 22843.0,
+      "Dividends": 0.0,
+      "High": 22899.0,
+      "Low": 22772.0,
+      "Open": 22830.0,
+      "Stock Splits": 0.0,
+      "Volume": 45519.0,
+      "timestamp": "2026-09-17T13:00:00+02:00"
+    },
+    {
+      "Close": 22525.0,
+      "Dividends": 0.0,
+      "High": 22864.0,
+      "Low": 22500.0,
+      "Open": 22864.0,
+      "Stock Splits": 0.0,
+      "Volume": 67843.0,
+      "timestamp": "2026-09-17T13:30:00+02:00"
+    },
+    {
+      "Close": 22371.0,
+      "Dividends": 0.0,
+      "High": 22660.0,
+      "Low": 22229.0,
+      "Open": 22500.0,
+      "Stock Splits": 0.0,
+      "Volume": 191559.0,
+      "timestamp": "2026-09-17T14:00:00+02:00"
+    },
+    {
+      "Close": 22199.0,
+      "Dividends": 0.0,
+      "High": 22355.0,
+      "Low": 22191.0,
+      "Open": 22355.0,
+      "Stock Splits": 0.0,
+      "Volume": 150948.0,
+      "timestamp": "2026-09-17T14:30:00+02:00"
+    },
+    {
+      "Close": 22248.0,
+      "Dividends": 0.0,
+      "High": 22270.0,
+      "Low": 22079.0,
+      "Open": 22200.0,
+      "Stock Splits": 0.0,
+      "Volume": 311404.0,
+      "timestamp": "2026-09-17T15:00:00+02:00"
+    },
+    {
+      "Close": 22571.0,
+      "Dividends": 0.0,
+      "High": 22634.0,
+      "Low": 22227.0,
+      "Open": 22249.0,
+      "Stock Splits": 0.0,
+      "Volume": 552344.0,
+      "timestamp": "2026-09-17T15:30:00+02:00"
+    },
+    {
+      "Close": 22789.0,
+      "Dividends": 0.0,
+      "High": 22799.0,
+      "Low": 22580.0,
+      "Open": 22580.0,
+      "Stock Splits": 0.0,
+      "Volume": 169276.0,
+      "timestamp": "2026-09-17T16:00:00+02:00"
+    },
+    {
+      "Close": 22795.0,
+      "Dividends": 0.0,
+      "High": 22798.0,
+      "Low": 22677.0,
+      "Open": 22791.0,
+      "Stock Splits": 0.0,
+      "Volume": 615941.0,
+      "timestamp": "2026-09-17T16:30:00+02:00"
+    },
+    {
+      "Close": 22190.0,
+      "Dividends": 0.0,
+      "High": 22526.0,
+      "Low": 22130.0,
+      "Open": 22460.0,
+      "Stock Splits": 0.0,
+      "Volume": 94256.0,
+      "timestamp": "2026-09-18T09:00:00+02:00"
+    },
+    {
+      "Close": 22197.0,
+      "Dividends": 0.0,
+      "High": 22222.0,
+      "Low": 22072.0,
+      "Open": 22190.0,
+      "Stock Splits": 0.0,
+      "Volume": 73562.0,
+      "timestamp": "2026-09-18T09:30:00+02:00"
+    },
+    {
+      "Close": 22158.0,
+      "Dividends": 0.0,
+      "High": 22230.0,
+      "Low": 22104.0,
+      "Open": 22224.0,
+      "Stock Splits": 0.0,
+      "Volume": 48544.0,
+      "timestamp": "2026-09-18T10:00:00+02:00"
+    },
+    {
+      "Close": 22060.0,
+      "Dividends": 0.0,
+      "High": 22209.0,
+      "Low": 22022.0,
+      "Open": 22158.0,
+      "Stock Splits": 0.0,
+      "Volume": 102646.0,
+      "timestamp": "2026-09-18T10:30:00+02:00"
+    },
+    {
+      "Close": 22024.0,
+      "Dividends": 0.0,
+      "High": 22095.0,
+      "Low": 22001.0,
+      "Open": 22062.0,
+      "Stock Splits": 0.0,
+      "Volume": 76770.0,
+      "timestamp": "2026-09-18T11:00:00+02:00"
+    },
+    {
+      "Close": 22150.0,
+      "Dividends": 0.0,
+      "High": 22150.0,
+      "Low": 22026.0,
+      "Open": 22032.0,
+      "Stock Splits": 0.0,
+      "Volume": 99028.0,
+      "timestamp": "2026-09-18T11:30:00+02:00"
+    },
+    {
+      "Close": 22228.0,
+      "Dividends": 0.0,
+      "High": 22385.0,
+      "Low": 22111.0,
+      "Open": 22156.0,
+      "Stock Splits": 0.0,
+      "Volume": 80303.0,
+      "timestamp": "2026-09-18T12:00:00+02:00"
+    },
+    {
+      "Close": 22332.0,
+      "Dividends": 0.0,
+      "High": 22362.0,
+      "Low": 22160.0,
+      "Open": 22226.0,
+      "Stock Splits": 0.0,
+      "Volume": 95167.0,
+      "timestamp": "2026-09-18T12:30:00+02:00"
+    },
+    {
+      "Close": 22332.0,
+      "Dividends": 0.0,
+      "High": 22435.0,
+      "Low": 22309.0,
+      "Open": 22349.0,
+      "Stock Splits": 0.0,
+      "Volume": 107055.0,
+      "timestamp": "2026-09-18T13:00:00+02:00"
+    },
+    {
+      "Close": 22517.0,
+      "Dividends": 0.0,
+      "High": 22539.0,
+      "Low": 22332.0,
+      "Open": 22345.0,
+      "Stock Splits": 0.0,
+      "Volume": 53955.0,
+      "timestamp": "2026-09-18T13:30:00+02:00"
+    },
+    {
+      "Close": 22426.0,
+      "Dividends": 0.0,
+      "High": 22518.0,
+      "Low": 22366.0,
+      "Open": 22518.0,
+      "Stock Splits": 0.0,
+      "Volume": 117422.0,
+      "timestamp": "2026-09-18T14:00:00+02:00"
+    },
+    {
+      "Close": 22426.0,
+      "Dividends": 0.0,
+      "High": 22440.0,
+      "Low": 22323.0,
+      "Open": 22425.0,
+      "Stock Splits": 0.0,
+      "Volume": 246993.0,
+      "timestamp": "2026-09-18T14:30:00+02:00"
+    },
+    {
+      "Close": 22544.0,
+      "Dividends": 0.0,
+      "High": 22633.0,
+      "Low": 22424.0,
+      "Open": 22426.0,
+      "Stock Splits": 0.0,
+      "Volume": 186226.0,
+      "timestamp": "2026-09-18T15:00:00+02:00"
+    },
+    {
+      "Close": 22489.0,
+      "Dividends": 0.0,
+      "High": 22600.0,
+      "Low": 22388.0,
+      "Open": 22543.0,
+      "Stock Splits": 0.0,
+      "Volume": 362808.0,
+      "timestamp": "2026-09-18T15:30:00+02:00"
+    },
+    {
+      "Close": 22358.0,
+      "Dividends": 0.0,
+      "High": 22600.0,
+      "Low": 22341.0,
+      "Open": 22496.0,
+      "Stock Splits": 0.0,
+      "Volume": 139343.0,
+      "timestamp": "2026-09-18T16:00:00+02:00"
+    },
+    {
+      "Close": 22402.0,
+      "Dividends": 0.0,
+      "High": 22424.0,
+      "Low": 22334.0,
+      "Open": 22356.0,
+      "Stock Splits": 0.0,
+      "Volume": 91307.0,
+      "timestamp": "2026-09-18T16:30:00+02:00"
+    },
+    {
+      "Close": 21928.0,
+      "Dividends": 0.0,
+      "High": 22033.0,
+      "Low": 21750.0,
+      "Open": 21995.0,
+      "Stock Splits": 0.0,
+      "Volume": 72387.0,
+      "timestamp": "2026-09-21T09:00:00+02:00"
+    },
+    {
+      "Close": 22297.0,
+      "Dividends": 0.0,
+      "High": 22323.0,
+      "Low": 21929.0,
+      "Open": 21929.0,
+      "Stock Splits": 0.0,
+      "Volume": 86040.0,
+      "timestamp": "2026-09-21T09:30:00+02:00"
+    },
+    {
+      "Close": 22319.0,
+      "Dividends": 0.0,
+      "High": 22368.0,
+      "Low": 22267.0,
+      "Open": 22304.0,
+      "Stock Splits": 0.0,
+      "Volume": 64896.0,
+      "timestamp": "2026-09-21T10:00:00+02:00"
+    },
+    {
+      "Close": 22429.0,
+      "Dividends": 0.0,
+      "High": 22450.0,
+      "Low": 22286.0,
+      "Open": 22330.0,
+      "Stock Splits": 0.0,
+      "Volume": 70591.0,
+      "timestamp": "2026-09-21T10:30:00+02:00"
+    },
+    {
+      "Close": 22422.0,
+      "Dividends": 0.0,
+      "High": 22481.0,
+      "Low": 22353.0,
+      "Open": 22446.0,
+      "Stock Splits": 0.0,
+      "Volume": 42216.0,
+      "timestamp": "2026-09-21T11:00:00+02:00"
+    },
+    {
+      "Close": 22329.0,
+      "Dividends": 0.0,
+      "High": 22474.0,
+      "Low": 22329.0,
+      "Open": 22436.0,
+      "Stock Splits": 0.0,
+      "Volume": 68638.0,
+      "timestamp": "2026-09-21T11:30:00+02:00"
+    },
+    {
+      "Close": 22408.0,
+      "Dividends": 0.0,
+      "High": 22452.0,
+      "Low": 22329.0,
+      "Open": 22343.0,
+      "Stock Splits": 0.0,
+      "Volume": 44081.0,
+      "timestamp": "2026-09-21T12:00:00+02:00"
+    },
+    {
+      "Close": 22427.0,
+      "Dividends": 0.0,
+      "High": 22469.0,
+      "Low": 22381.0,
+      "Open": 22427.0,
+      "Stock Splits": 0.0,
+      "Volume": 29560.0,
+      "timestamp": "2026-09-21T12:30:00+02:00"
+    },
+    {
+      "Close": 22397.0,
+      "Dividends": 0.0,
+      "High": 22457.0,
+      "Low": 22395.0,
+      "Open": 22433.0,
+      "Stock Splits": 0.0,
+      "Volume": 25186.0,
+      "timestamp": "2026-09-21T13:00:00+02:00"
+    },
+    {
+      "Close": 22341.0,
+      "Dividends": 0.0,
+      "High": 22404.0,
+      "Low": 22050.0,
+      "Open": 22397.0,
+      "Stock Splits": 0.0,
+      "Volume": 131884.0,
+      "timestamp": "2026-09-21T13:30:00+02:00"
+    },
+    {
+      "Close": 22499.0,
+      "Dividends": 0.0,
+      "High": 22499.0,
+      "Low": 22320.0,
+      "Open": 22327.0,
+      "Stock Splits": 0.0,
+      "Volume": 102943.0,
+      "timestamp": "2026-09-21T14:00:00+02:00"
+    },
+    {
+      "Close": 22621.0,
+      "Dividends": 0.0,
+      "High": 22629.0,
+      "Low": 22491.0,
+      "Open": 22498.0,
+      "Stock Splits": 0.0,
+      "Volume": 131398.0,
+      "timestamp": "2026-09-21T14:30:00+02:00"
+    },
+    {
+      "Close": 22515.0,
+      "Dividends": 0.0,
+      "High": 22685.0,
+      "Low": 22478.0,
+      "Open": 22621.0,
+      "Stock Splits": 0.0,
+      "Volume": 81274.0,
+      "timestamp": "2026-09-21T15:00:00+02:00"
+    },
+    {
+      "Close": 22452.0,
+      "Dividends": 0.0,
+      "High": 22644.0,
+      "Low": 22365.0,
+      "Open": 22495.0,
+      "Stock Splits": 0.0,
+      "Volume": 182782.0,
+      "timestamp": "2026-09-21T15:30:00+02:00"
+    },
+    {
+      "Close": 22297.0,
+      "Dividends": 0.0,
+      "High": 22448.0,
+      "Low": 22288.0,
+      "Open": 22440.0,
+      "Stock Splits": 0.0,
+      "Volume": 258885.0,
+      "timestamp": "2026-09-21T16:00:00+02:00"
+    },
+    {
+      "Close": 22172.0,
+      "Dividends": 0.0,
+      "High": 22304.0,
+      "Low": 22110.0,
+      "Open": 22301.0,
+      "Stock Splits": 0.0,
+      "Volume": 215210.0,
+      "timestamp": "2026-09-21T16:30:00+02:00"
+    },
+    {
+      "Close": 22261.0,
+      "Dividends": 0.0,
+      "High": 22550.0,
+      "Low": 22185.0,
+      "Open": 22320.0,
+      "Stock Splits": 0.0,
+      "Volume": 70971.0,
+      "timestamp": "2026-09-22T09:00:00+02:00"
+    },
+    {
+      "Close": 22236.0,
+      "Dividends": 0.0,
+      "High": 22344.0,
+      "Low": 22198.0,
+      "Open": 22265.0,
+      "Stock Splits": 0.0,
+      "Volume": 48530.0,
+      "timestamp": "2026-09-22T09:30:00+02:00"
+    },
+    {
+      "Close": 22058.0,
+      "Dividends": 0.0,
+      "High": 22244.0,
+      "Low": 21998.0,
+      "Open": 22236.0,
+      "Stock Splits": 0.0,
+      "Volume": 76329.0,
+      "timestamp": "2026-09-22T10:00:00+02:00"
+    },
+    {
+      "Close": 21737.0,
+      "Dividends": 0.0,
+      "High": 22084.0,
+      "Low": 21552.0,
+      "Open": 22065.0,
+      "Stock Splits": 0.0,
+      "Volume": 146696.0,
+      "timestamp": "2026-09-22T10:30:00+02:00"
+    },
+    {
+      "Close": 21597.0,
+      "Dividends": 0.0,
+      "High": 21750.0,
+      "Low": 21504.0,
+      "Open": 21750.0,
+      "Stock Splits": 0.0,
+      "Volume": 239617.0,
+      "timestamp": "2026-09-22T11:00:00+02:00"
+    },
+    {
+      "Close": 21300.0,
+      "Dividends": 0.0,
+      "High": 21628.0,
+      "Low": 21300.0,
+      "Open": 21597.0,
+      "Stock Splits": 0.0,
+      "Volume": 340695.0,
+      "timestamp": "2026-09-22T11:30:00+02:00"
+    },
+    {
+      "Close": 21229.0,
+      "Dividends": 0.0,
+      "High": 21380.0,
+      "Low": 21044.0,
+      "Open": 21277.0,
+      "Stock Splits": 0.0,
+      "Volume": 126753.0,
+      "timestamp": "2026-09-22T12:00:00+02:00"
+    },
+    {
+      "Close": 21254.0,
+      "Dividends": 0.0,
+      "High": 21409.0,
+      "Low": 21188.0,
+      "Open": 21213.0,
+      "Stock Splits": 0.0,
+      "Volume": 111588.0,
+      "timestamp": "2026-09-22T12:30:00+02:00"
+    },
+    {
+      "Close": 21449.0,
+      "Dividends": 0.0,
+      "High": 21569.0,
+      "Low": 21166.0,
+      "Open": 21254.0,
+      "Stock Splits": 0.0,
+      "Volume": 330414.0,
+      "timestamp": "2026-09-22T13:00:00+02:00"
+    },
+    {
+      "Close": 21614.0,
+      "Dividends": 0.0,
+      "High": 21661.0,
+      "Low": 21427.0,
+      "Open": 21449.0,
+      "Stock Splits": 0.0,
+      "Volume": 219894.0,
+      "timestamp": "2026-09-22T13:30:00+02:00"
+    },
+    {
+      "Close": 21642.0,
+      "Dividends": 0.0,
+      "High": 21689.0,
+      "Low": 21536.0,
+      "Open": 21602.0,
+      "Stock Splits": 0.0,
+      "Volume": 132080.0,
+      "timestamp": "2026-09-22T14:00:00+02:00"
+    },
+    {
+      "Close": 21636.0,
+      "Dividends": 0.0,
+      "High": 21678.0,
+      "Low": 21520.0,
+      "Open": 21628.0,
+      "Stock Splits": 0.0,
+      "Volume": 207950.0,
+      "timestamp": "2026-09-22T14:30:00+02:00"
+    },
+    {
+      "Close": 21625.0,
+      "Dividends": 0.0,
+      "High": 21693.0,
+      "Low": 21579.0,
+      "Open": 21637.0,
+      "Stock Splits": 0.0,
+      "Volume": 129995.0,
+      "timestamp": "2026-09-22T15:00:00+02:00"
+    },
+    {
+      "Close": 21838.0,
+      "Dividends": 0.0,
+      "High": 21883.0,
+      "Low": 21569.0,
+      "Open": 21620.0,
+      "Stock Splits": 0.0,
+      "Volume": 419123.0,
+      "timestamp": "2026-09-22T15:30:00+02:00"
+    },
+    {
+      "Close": 21939.0,
+      "Dividends": 0.0,
+      "High": 21981.0,
+      "Low": 21774.0,
+      "Open": 21868.0,
+      "Stock Splits": 0.0,
+      "Volume": 850832.0,
+      "timestamp": "2026-09-22T16:00:00+02:00"
+    },
+    {
+      "Close": 21954.0,
+      "Dividends": 0.0,
+      "High": 21995.0,
+      "Low": 21770.0,
+      "Open": 21929.0,
+      "Stock Splits": 0.0,
+      "Volume": 171469.0,
+      "timestamp": "2026-09-22T16:30:00+02:00"
+    },
+    {
+      "Close": 21735.0,
+      "Dividends": 0.0,
+      "High": 22145.0,
+      "Low": 21692.0,
+      "Open": 22000.0,
+      "Stock Splits": 0.0,
+      "Volume": 109156.0,
+      "timestamp": "2026-09-23T09:00:00+02:00"
+    },
+    {
+      "Close": 21707.0,
+      "Dividends": 0.0,
+      "High": 21807.0,
+      "Low": 21697.0,
+      "Open": 21742.0,
+      "Stock Splits": 0.0,
+      "Volume": 83354.0,
+      "timestamp": "2026-09-23T09:30:00+02:00"
+    },
+    {
+      "Close": 21931.0,
+      "Dividends": 0.0,
+      "High": 21948.0,
+      "Low": 21690.0,
+      "Open": 21706.0,
+      "Stock Splits": 0.0,
+      "Volume": 489013.0,
+      "timestamp": "2026-09-23T10:00:00+02:00"
+    },
+    {
+      "Close": 22060.0,
+      "Dividends": 0.0,
+      "High": 22066.0,
+      "Low": 21870.0,
+      "Open": 21934.0,
+      "Stock Splits": 0.0,
+      "Volume": 73976.0,
+      "timestamp": "2026-09-23T10:30:00+02:00"
+    },
+    {
+      "Close": 21977.0,
+      "Dividends": 0.0,
+      "High": 22102.0,
+      "Low": 21930.0,
+      "Open": 22066.0,
+      "Stock Splits": 0.0,
+      "Volume": 70250.0,
+      "timestamp": "2026-09-23T11:00:00+02:00"
+    },
+    {
+      "Close": 22021.0,
+      "Dividends": 0.0,
+      "High": 22055.0,
+      "Low": 21972.0,
+      "Open": 21981.0,
+      "Stock Splits": 0.0,
+      "Volume": 54628.0,
+      "timestamp": "2026-09-23T11:30:00+02:00"
+    },
+    {
+      "Close": 22006.0,
+      "Dividends": 0.0,
+      "High": 22089.0,
+      "Low": 21970.0,
+      "Open": 22014.0,
+      "Stock Splits": 0.0,
+      "Volume": 70539.0,
+      "timestamp": "2026-09-23T12:00:00+02:00"
+    },
+    {
+      "Close": 22080.0,
+      "Dividends": 0.0,
+      "High": 22087.0,
+      "Low": 21932.0,
+      "Open": 22014.0,
+      "Stock Splits": 0.0,
+      "Volume": 94975.0,
+      "timestamp": "2026-09-23T12:30:00+02:00"
+    },
+    {
+      "Close": 22237.0,
+      "Dividends": 0.0,
+      "High": 22324.0,
+      "Low": 22080.0,
+      "Open": 22080.0,
+      "Stock Splits": 0.0,
+      "Volume": 77396.0,
+      "timestamp": "2026-09-23T13:00:00+02:00"
+    },
+    {
+      "Close": 22205.0,
+      "Dividends": 0.0,
+      "High": 22320.0,
+      "Low": 22098.0,
+      "Open": 22222.0,
+      "Stock Splits": 0.0,
+      "Volume": 81273.0,
+      "timestamp": "2026-09-23T13:30:00+02:00"
+    },
+    {
+      "Close": 22337.0,
+      "Dividends": 0.0,
+      "High": 22359.0,
+      "Low": 22205.0,
+      "Open": 22205.0,
+      "Stock Splits": 0.0,
+      "Volume": 129864.0,
+      "timestamp": "2026-09-23T14:00:00+02:00"
+    },
+    {
+      "Close": 22648.0,
+      "Dividends": 0.0,
+      "High": 22665.0,
+      "Low": 22295.0,
+      "Open": 22326.0,
+      "Stock Splits": 0.0,
+      "Volume": 328874.0,
+      "timestamp": "2026-09-23T14:30:00+02:00"
+    },
+    {
+      "Close": 22730.0,
+      "Dividends": 0.0,
+      "High": 22834.0,
+      "Low": 22610.0,
+      "Open": 22649.0,
+      "Stock Splits": 0.0,
+      "Volume": 199980.0,
+      "timestamp": "2026-09-23T15:00:00+02:00"
+    },
+    {
+      "Close": 23260.0,
+      "Dividends": 0.0,
+      "High": 23272.0,
+      "Low": 22744.0,
+      "Open": 22744.0,
+      "Stock Splits": 0.0,
+      "Volume": 383320.0,
+      "timestamp": "2026-09-23T15:30:00+02:00"
+    },
+    {
+      "Close": 23303.0,
+      "Dividends": 0.0,
+      "High": 23369.0,
+      "Low": 23085.0,
+      "Open": 23243.0,
+      "Stock Splits": 0.0,
+      "Volume": 486758.0,
+      "timestamp": "2026-09-23T16:00:00+02:00"
+    },
+    {
+      "Close": 23153.0,
+      "Dividends": 0.0,
+      "High": 23302.0,
+      "Low": 23051.0,
+      "Open": 23302.0,
+      "Stock Splits": 0.0,
+      "Volume": 372005.0,
+      "timestamp": "2026-09-23T16:30:00+02:00"
+    },
+    {
+      "Close": 22965.0,
+      "Dividends": 0.0,
+      "High": 23352.0,
+      "Low": 22883.0,
+      "Open": 23300.0,
+      "Stock Splits": 0.0,
+      "Volume": 81379.0,
+      "timestamp": "2026-09-25T09:00:00+02:00"
+    },
+    {
+      "Close": 22911.0,
+      "Dividends": 0.0,
+      "High": 23050.0,
+      "Low": 22841.0,
+      "Open": 22980.0,
+      "Stock Splits": 0.0,
+      "Volume": 68496.0,
+      "timestamp": "2026-09-25T09:30:00+02:00"
+    },
+    {
+      "Close": 22835.0,
+      "Dividends": 0.0,
+      "High": 22935.0,
+      "Low": 22816.0,
+      "Open": 22913.0,
+      "Stock Splits": 0.0,
+      "Volume": 63861.0,
+      "timestamp": "2026-09-25T10:00:00+02:00"
+    },
+    {
+      "Close": 22798.0,
+      "Dividends": 0.0,
+      "High": 22882.0,
+      "Low": 22790.0,
+      "Open": 22814.0,
+      "Stock Splits": 0.0,
+      "Volume": 71108.0,
+      "timestamp": "2026-09-25T10:30:00+02:00"
+    },
+    {
+      "Close": 22946.0,
+      "Dividends": 0.0,
+      "High": 22980.0,
+      "Low": 22819.0,
+      "Open": 22819.0,
+      "Stock Splits": 0.0,
+      "Volume": 57456.0,
+      "timestamp": "2026-09-25T11:00:00+02:00"
+    },
+    {
+      "Close": 22868.0,
+      "Dividends": 0.0,
+      "High": 22995.0,
+      "Low": 22802.0,
+      "Open": 22958.0,
+      "Stock Splits": 0.0,
+      "Volume": 64095.0,
+      "timestamp": "2026-09-25T11:30:00+02:00"
+    },
+    {
+      "Close": 22875.0,
+      "Dividends": 0.0,
+      "High": 22887.0,
+      "Low": 22805.0,
+      "Open": 22868.0,
+      "Stock Splits": 0.0,
+      "Volume": 54146.0,
+      "timestamp": "2026-09-25T12:00:00+02:00"
+    },
+    {
+      "Close": 22936.0,
+      "Dividends": 0.0,
+      "High": 22954.0,
+      "Low": 22830.0,
+      "Open": 22861.0,
+      "Stock Splits": 0.0,
+      "Volume": 47546.0,
+      "timestamp": "2026-09-25T12:30:00+02:00"
+    },
+    {
+      "Close": 22944.0,
+      "Dividends": 0.0,
+      "High": 23000.0,
+      "Low": 22900.0,
+      "Open": 22935.0,
+      "Stock Splits": 0.0,
+      "Volume": 29453.0,
+      "timestamp": "2026-09-25T13:00:00+02:00"
+    },
+    {
+      "Close": 22911.0,
+      "Dividends": 0.0,
+      "High": 22949.0,
+      "Low": 22884.0,
+      "Open": 22949.0,
+      "Stock Splits": 0.0,
+      "Volume": 33393.0,
+      "timestamp": "2026-09-25T13:30:00+02:00"
+    },
+    {
+      "Close": 22921.0,
+      "Dividends": 0.0,
+      "High": 22966.0,
+      "Low": 22901.0,
+      "Open": 22909.0,
+      "Stock Splits": 0.0,
+      "Volume": 26975.0,
+      "timestamp": "2026-09-25T14:00:00+02:00"
+    },
+    {
+      "Close": 23000.0,
+      "Dividends": 0.0,
+      "High": 23007.0,
+      "Low": 22894.0,
+      "Open": 22916.0,
+      "Stock Splits": 0.0,
+      "Volume": 47210.0,
+      "timestamp": "2026-09-25T14:30:00+02:00"
+    },
+    {
+      "Close": 23001.0,
+      "Dividends": 0.0,
+      "High": 23033.0,
+      "Low": 22955.0,
+      "Open": 22990.0,
+      "Stock Splits": 0.0,
+      "Volume": 52002.0,
+      "timestamp": "2026-09-25T15:00:00+02:00"
+    },
+    {
+      "Close": 22984.0,
+      "Dividends": 0.0,
+      "High": 23080.0,
+      "Low": 22914.0,
+      "Open": 22993.0,
+      "Stock Splits": 0.0,
+      "Volume": 275847.0,
+      "timestamp": "2026-09-25T15:30:00+02:00"
+    },
+    {
+      "Close": 23001.0,
+      "Dividends": 0.0,
+      "High": 23055.0,
+      "Low": 22959.0,
+      "Open": 22983.0,
+      "Stock Splits": 0.0,
+      "Volume": 112049.0,
+      "timestamp": "2026-09-25T16:00:00+02:00"
+    },
+    {
+      "Close": 22944.0,
+      "Dividends": 0.0,
+      "High": 23025.0,
+      "Low": 22883.0,
+      "Open": 23000.0,
+      "Stock Splits": 0.0,
+      "Volume": 91344.0,
+      "timestamp": "2026-09-25T16:30:00+02:00"
+    },
+    {
+      "Close": 23551.0,
+      "Dividends": 0.0,
+      "High": 23599.0,
+      "Low": 23344.0,
+      "Open": 23400.0,
+      "Stock Splits": 0.0,
+      "Volume": 148985.0,
+      "timestamp": "2026-09-28T09:00:00+02:00"
+    },
+    {
+      "Close": 23400.0,
+      "Dividends": 0.0,
+      "High": 23535.0,
+      "Low": 23360.0,
+      "Open": 23535.0,
+      "Stock Splits": 0.0,
+      "Volume": 70478.0,
+      "timestamp": "2026-09-28T09:30:00+02:00"
+    },
+    {
+      "Close": 23254.0,
+      "Dividends": 0.0,
+      "High": 23466.0,
+      "Low": 23210.0,
+      "Open": 23400.0,
+      "Stock Splits": 0.0,
+      "Volume": 87691.0,
+      "timestamp": "2026-09-28T10:00:00+02:00"
+    },
+    {
+      "Close": 23246.0,
+      "Dividends": 0.0,
+      "High": 23321.0,
+      "Low": 23170.0,
+      "Open": 23253.0,
+      "Stock Splits": 0.0,
+      "Volume": 103054.0,
+      "timestamp": "2026-09-28T10:30:00+02:00"
+    },
+    {
+      "Close": 23240.0,
+      "Dividends": 0.0,
+      "High": 23263.0,
+      "Low": 23170.0,
+      "Open": 23237.0,
+      "Stock Splits": 0.0,
+      "Volume": 100872.0,
+      "timestamp": "2026-09-28T11:00:00+02:00"
+    },
+    {
+      "Close": 23278.0,
+      "Dividends": 0.0,
+      "High": 23310.0,
+      "Low": 23201.0,
+      "Open": 23248.0,
+      "Stock Splits": 0.0,
+      "Volume": 87269.0,
+      "timestamp": "2026-09-28T11:30:00+02:00"
+    },
+    {
+      "Close": 23220.0,
+      "Dividends": 0.0,
+      "High": 23289.0,
+      "Low": 23201.0,
+      "Open": 23275.0,
+      "Stock Splits": 0.0,
+      "Volume": 99323.0,
+      "timestamp": "2026-09-28T12:00:00+02:00"
+    },
+    {
+      "Close": 23229.0,
+      "Dividends": 0.0,
+      "High": 23259.0,
+      "Low": 23201.0,
+      "Open": 23224.0,
+      "Stock Splits": 0.0,
+      "Volume": 95861.0,
+      "timestamp": "2026-09-28T12:30:00+02:00"
+    },
+    {
+      "Close": 23207.0,
+      "Dividends": 0.0,
+      "High": 23338.0,
+      "Low": 23131.0,
+      "Open": 23228.0,
+      "Stock Splits": 0.0,
+      "Volume": 94614.0,
+      "timestamp": "2026-09-28T13:00:00+02:00"
+    },
+    {
+      "Close": 23232.0,
+      "Dividends": 0.0,
+      "High": 23259.0,
+      "Low": 23202.0,
+      "Open": 23230.0,
+      "Stock Splits": 0.0,
+      "Volume": 90097.0,
+      "timestamp": "2026-09-28T13:30:00+02:00"
+    },
+    {
+      "Close": 23200.0,
+      "Dividends": 0.0,
+      "High": 23242.0,
+      "Low": 23103.0,
+      "Open": 23231.0,
+      "Stock Splits": 0.0,
+      "Volume": 180799.0,
+      "timestamp": "2026-09-28T14:00:00+02:00"
+    },
+    {
+      "Close": 23164.0,
+      "Dividends": 0.0,
+      "High": 23229.0,
+      "Low": 23156.0,
+      "Open": 23213.0,
+      "Stock Splits": 0.0,
+      "Volume": 70295.0,
+      "timestamp": "2026-09-28T14:30:00+02:00"
+    },
+    {
+      "Close": 23174.0,
+      "Dividends": 0.0,
+      "High": 23213.0,
+      "Low": 23103.0,
+      "Open": 23171.0,
+      "Stock Splits": 0.0,
+      "Volume": 86658.0,
+      "timestamp": "2026-09-28T15:00:00+02:00"
+    },
+    {
+      "Close": 23009.0,
+      "Dividends": 0.0,
+      "High": 23215.0,
+      "Low": 23007.0,
+      "Open": 23166.0,
+      "Stock Splits": 0.0,
+      "Volume": 523551.0,
+      "timestamp": "2026-09-28T15:30:00+02:00"
+    },
+    {
+      "Close": 23089.0,
+      "Dividends": 0.0,
+      "High": 23099.0,
+      "Low": 22982.0,
+      "Open": 23010.0,
+      "Stock Splits": 0.0,
+      "Volume": 269289.0,
+      "timestamp": "2026-09-28T16:00:00+02:00"
+    },
+    {
+      "Close": 23107.0,
+      "Dividends": 0.0,
+      "High": 23212.0,
+      "Low": 23086.0,
+      "Open": 23095.0,
+      "Stock Splits": 0.0,
+      "Volume": 122106.0,
+      "timestamp": "2026-09-28T16:30:00+02:00"
+    },
+    {
+      "Close": 22874.0,
+      "Dividends": 0.0,
+      "High": 23104.0,
+      "Low": 22750.0,
+      "Open": 22930.0,
+      "Stock Splits": 0.0,
+      "Volume": 49937.0,
+      "timestamp": "2026-09-29T09:00:00+02:00"
+    },
+    {
+      "Close": 23001.0,
+      "Dividends": 0.0,
+      "High": 23033.0,
+      "Low": 22896.0,
+      "Open": 22896.0,
+      "Stock Splits": 0.0,
+      "Volume": 55923.0,
+      "timestamp": "2026-09-29T09:30:00+02:00"
+    },
+    {
+      "Close": 22948.0,
+      "Dividends": 0.0,
+      "High": 23083.0,
+      "Low": 22934.0,
+      "Open": 22981.0,
+      "Stock Splits": 0.0,
+      "Volume": 65449.0,
+      "timestamp": "2026-09-29T10:00:00+02:00"
+    },
+    {
+      "Close": 22853.0,
+      "Dividends": 0.0,
+      "High": 22945.0,
+      "Low": 22841.0,
+      "Open": 22934.0,
+      "Stock Splits": 0.0,
+      "Volume": 131159.0,
+      "timestamp": "2026-09-29T10:30:00+02:00"
+    },
+    {
+      "Close": 22838.0,
+      "Dividends": 0.0,
+      "High": 22910.0,
+      "Low": 22803.0,
+      "Open": 22866.0,
+      "Stock Splits": 0.0,
+      "Volume": 100330.0,
+      "timestamp": "2026-09-29T11:00:00+02:00"
+    },
+    {
+      "Close": 22848.0,
+      "Dividends": 0.0,
+      "High": 22880.0,
+      "Low": 22817.0,
+      "Open": 22833.0,
+      "Stock Splits": 0.0,
+      "Volume": 80146.0,
+      "timestamp": "2026-09-29T11:30:00+02:00"
+    },
+    {
+      "Close": 22832.0,
+      "Dividends": 0.0,
+      "High": 22849.0,
+      "Low": 22815.0,
+      "Open": 22834.0,
+      "Stock Splits": 0.0,
+      "Volume": 83400.0,
+      "timestamp": "2026-09-29T12:00:00+02:00"
+    },
+    {
+      "Close": 22702.0,
+      "Dividends": 0.0,
+      "High": 22831.0,
+      "Low": 22617.0,
+      "Open": 22831.0,
+      "Stock Splits": 0.0,
+      "Volume": 123177.0,
+      "timestamp": "2026-09-29T12:30:00+02:00"
+    },
+    {
+      "Close": 22691.0,
+      "Dividends": 0.0,
+      "High": 22732.0,
+      "Low": 22676.0,
+      "Open": 22702.0,
+      "Stock Splits": 0.0,
+      "Volume": 53192.0,
+      "timestamp": "2026-09-29T13:00:00+02:00"
+    },
+    {
+      "Close": 22625.0,
+      "Dividends": 0.0,
+      "High": 22716.0,
+      "Low": 22585.0,
+      "Open": 22679.0,
+      "Stock Splits": 0.0,
+      "Volume": 104789.0,
+      "timestamp": "2026-09-29T13:30:00+02:00"
+    },
+    {
+      "Close": 22554.0,
+      "Dividends": 0.0,
+      "High": 22624.0,
+      "Low": 22542.0,
+      "Open": 22624.0,
+      "Stock Splits": 0.0,
+      "Volume": 119735.0,
+      "timestamp": "2026-09-29T14:00:00+02:00"
+    },
+    {
+      "Close": 22647.0,
+      "Dividends": 0.0,
+      "High": 22655.0,
+      "Low": 22542.0,
+      "Open": 22555.0,
+      "Stock Splits": 0.0,
+      "Volume": 101780.0,
+      "timestamp": "2026-09-29T14:30:00+02:00"
+    },
+    {
+      "Close": 22684.0,
+      "Dividends": 0.0,
+      "High": 22702.0,
+      "Low": 22600.0,
+      "Open": 22641.0,
+      "Stock Splits": 0.0,
+      "Volume": 124163.0,
+      "timestamp": "2026-09-29T15:00:00+02:00"
+    },
+    {
+      "Close": 22804.0,
+      "Dividends": 0.0,
+      "High": 22823.0,
+      "Low": 22547.0,
+      "Open": 22684.0,
+      "Stock Splits": 0.0,
+      "Volume": 273806.0,
+      "timestamp": "2026-09-29T15:30:00+02:00"
+    },
+    {
+      "Close": 22831.0,
+      "Dividends": 0.0,
+      "High": 22873.0,
+      "Low": 22700.0,
+      "Open": 22804.0,
+      "Stock Splits": 0.0,
+      "Volume": 181999.0,
+      "timestamp": "2026-09-29T16:00:00+02:00"
+    },
+    {
+      "Close": 22748.0,
+      "Dividends": 0.0,
+      "High": 22841.0,
+      "Low": 22709.0,
+      "Open": 22822.0,
+      "Stock Splits": 0.0,
+      "Volume": 271676.0,
+      "timestamp": "2026-09-29T16:30:00+02:00"
+    },
+    {
+      "Close": 22508.0,
+      "Dividends": 0.0,
+      "High": 22735.0,
+      "Low": 22493.0,
+      "Open": 22500.0,
+      "Stock Splits": 0.0,
+      "Volume": 74772.0,
+      "timestamp": "2026-09-30T09:00:00+02:00"
+    },
+    {
+      "Close": 22548.0,
+      "Dividends": 0.0,
+      "High": 22596.0,
+      "Low": 22478.0,
+      "Open": 22527.0,
+      "Stock Splits": 0.0,
+      "Volume": 115488.0,
+      "timestamp": "2026-09-30T09:30:00+02:00"
+    },
+    {
+      "Close": 22520.0,
+      "Dividends": 0.0,
+      "High": 22597.0,
+      "Low": 22460.0,
+      "Open": 22522.0,
+      "Stock Splits": 0.0,
+      "Volume": 111427.0,
+      "timestamp": "2026-09-30T10:00:00+02:00"
+    },
+    {
+      "Close": 22623.0,
+      "Dividends": 0.0,
+      "High": 22634.0,
+      "Low": 22520.0,
+      "Open": 22520.0,
+      "Stock Splits": 0.0,
+      "Volume": 81550.0,
+      "timestamp": "2026-09-30T10:30:00+02:00"
+    },
+    {
+      "Close": 22620.0,
+      "Dividends": 0.0,
+      "High": 22677.0,
+      "Low": 22551.0,
+      "Open": 22610.0,
+      "Stock Splits": 0.0,
+      "Volume": 70054.0,
+      "timestamp": "2026-09-30T11:00:00+02:00"
+    },
+    {
+      "Close": 22509.0,
+      "Dividends": 0.0,
+      "High": 22638.0,
+      "Low": 22460.0,
+      "Open": 22607.0,
+      "Stock Splits": 0.0,
+      "Volume": 193987.0,
+      "timestamp": "2026-09-30T11:30:00+02:00"
+    },
+    {
+      "Close": 22541.0,
+      "Dividends": 0.0,
+      "High": 22597.0,
+      "Low": 22511.0,
+      "Open": 22516.0,
+      "Stock Splits": 0.0,
+      "Volume": 117198.0,
+      "timestamp": "2026-09-30T12:00:00+02:00"
+    },
+    {
+      "Close": 22624.0,
+      "Dividends": 0.0,
+      "High": 22652.0,
+      "Low": 22503.0,
+      "Open": 22545.0,
+      "Stock Splits": 0.0,
+      "Volume": 92932.0,
+      "timestamp": "2026-09-30T12:30:00+02:00"
+    },
+    {
+      "Close": 22567.0,
+      "Dividends": 0.0,
+      "High": 22660.0,
+      "Low": 22545.0,
+      "Open": 22621.0,
+      "Stock Splits": 0.0,
+      "Volume": 83789.0,
+      "timestamp": "2026-09-30T13:00:00+02:00"
+    },
+    {
+      "Close": 22602.0,
+      "Dividends": 0.0,
+      "High": 22627.0,
+      "Low": 22552.0,
+      "Open": 22578.0,
+      "Stock Splits": 0.0,
+      "Volume": 92735.0,
+      "timestamp": "2026-09-30T13:30:00+02:00"
+    },
+    {
+      "Close": 22643.0,
+      "Dividends": 0.0,
+      "High": 22657.0,
+      "Low": 22593.0,
+      "Open": 22602.0,
+      "Stock Splits": 0.0,
+      "Volume": 84350.0,
+      "timestamp": "2026-09-30T14:00:00+02:00"
+    },
+    {
+      "Close": 22649.0,
+      "Dividends": 0.0,
+      "High": 22698.0,
+      "Low": 22598.0,
+      "Open": 22643.0,
+      "Stock Splits": 0.0,
+      "Volume": 134252.0,
+      "timestamp": "2026-09-30T14:30:00+02:00"
+    },
+    {
+      "Close": 22674.0,
+      "Dividends": 0.0,
+      "High": 22724.0,
+      "Low": 22600.0,
+      "Open": 22649.0,
+      "Stock Splits": 0.0,
+      "Volume": 137466.0,
+      "timestamp": "2026-09-30T15:00:00+02:00"
+    },
+    {
+      "Close": 22682.0,
+      "Dividends": 0.0,
+      "High": 22692.0,
+      "Low": 22556.0,
+      "Open": 22679.0,
+      "Stock Splits": 0.0,
+      "Volume": 465857.0,
+      "timestamp": "2026-09-30T15:30:00+02:00"
+    },
+    {
+      "Close": 22732.0,
+      "Dividends": 0.0,
+      "High": 22754.0,
+      "Low": 22611.0,
+      "Open": 22691.0,
+      "Stock Splits": 0.0,
+      "Volume": 255525.0,
+      "timestamp": "2026-09-30T16:00:00+02:00"
+    },
+    {
+      "Close": 22819.0,
+      "Dividends": 0.0,
+      "High": 22855.0,
+      "Low": 22627.0,
+      "Open": 22721.0,
+      "Stock Splits": 0.0,
+      "Volume": 255354.0,
+      "timestamp": "2026-09-30T16:30:00+02:00"
+    },
+    {
+      "Close": 22946.0,
+      "Dividends": 0.0,
+      "High": 22954.0,
+      "Low": 22540.0,
+      "Open": 22547.0,
+      "Stock Splits": 0.0,
+      "Volume": 133702.0,
+      "timestamp": "2026-10-01T09:00:00+02:00"
+    },
+    {
+      "Close": 22989.0,
+      "Dividends": 0.0,
+      "High": 23005.0,
+      "Low": 22859.0,
+      "Open": 22946.0,
+      "Stock Splits": 0.0,
+      "Volume": 77881.0,
+      "timestamp": "2026-10-01T09:30:00+02:00"
+    },
+    {
+      "Close": 22936.0,
+      "Dividends": 0.0,
+      "High": 22999.0,
+      "Low": 22772.0,
+      "Open": 22992.0,
+      "Stock Splits": 0.0,
+      "Volume": 154525.0,
+      "timestamp": "2026-10-01T10:00:00+02:00"
+    },
+    {
+      "Close": 23412.0,
+      "Dividends": 0.0,
+      "High": 23483.0,
+      "Low": 22923.0,
+      "Open": 22923.0,
+      "Stock Splits": 0.0,
+      "Volume": 129686.0,
+      "timestamp": "2026-10-01T10:30:00+02:00"
+    },
+    {
+      "Close": 23296.0,
+      "Dividends": 0.0,
+      "High": 23438.0,
+      "Low": 23296.0,
+      "Open": 23404.0,
+      "Stock Splits": 0.0,
+      "Volume": 104872.0,
+      "timestamp": "2026-10-01T11:00:00+02:00"
+    },
+    {
+      "Close": 23147.0,
+      "Dividends": 0.0,
+      "High": 23314.0,
+      "Low": 23145.0,
+      "Open": 23297.0,
+      "Stock Splits": 0.0,
+      "Volume": 78071.0,
+      "timestamp": "2026-10-01T11:30:00+02:00"
+    },
+    {
+      "Close": 23066.0,
+      "Dividends": 0.0,
+      "High": 23216.0,
+      "Low": 23065.0,
+      "Open": 23144.0,
+      "Stock Splits": 0.0,
+      "Volume": 67579.0,
+      "timestamp": "2026-10-01T12:00:00+02:00"
+    },
+    {
+      "Close": 23064.0,
+      "Dividends": 0.0,
+      "High": 23172.0,
+      "Low": 22935.0,
+      "Open": 23082.0,
+      "Stock Splits": 0.0,
+      "Volume": 149846.0,
+      "timestamp": "2026-10-01T12:30:00+02:00"
+    },
+    {
+      "Close": 23146.0,
+      "Dividends": 0.0,
+      "High": 23212.0,
+      "Low": 23047.0,
+      "Open": 23059.0,
+      "Stock Splits": 0.0,
+      "Volume": 75220.0,
+      "timestamp": "2026-10-01T13:00:00+02:00"
+    },
+    {
+      "Close": 23043.0,
+      "Dividends": 0.0,
+      "High": 23153.0,
+      "Low": 23015.0,
+      "Open": 23143.0,
+      "Stock Splits": 0.0,
+      "Volume": 66656.0,
+      "timestamp": "2026-10-01T13:30:00+02:00"
+    },
+    {
+      "Close": 22891.0,
+      "Dividends": 0.0,
+      "High": 23066.0,
+      "Low": 22870.0,
+      "Open": 23025.0,
+      "Stock Splits": 0.0,
+      "Volume": 74155.0,
+      "timestamp": "2026-10-01T14:00:00+02:00"
+    },
+    {
+      "Close": 22804.0,
+      "Dividends": 0.0,
+      "High": 22900.0,
+      "Low": 22803.0,
+      "Open": 22884.0,
+      "Stock Splits": 0.0,
+      "Volume": 148488.0,
+      "timestamp": "2026-10-01T14:30:00+02:00"
+    },
+    {
+      "Close": 22823.0,
+      "Dividends": 0.0,
+      "High": 22838.0,
+      "Low": 22709.0,
+      "Open": 22802.0,
+      "Stock Splits": 0.0,
+      "Volume": 237344.0,
+      "timestamp": "2026-10-01T15:00:00+02:00"
+    },
+    {
+      "Close": 22867.0,
+      "Dividends": 0.0,
+      "High": 22955.0,
+      "Low": 22747.0,
+      "Open": 22828.0,
+      "Stock Splits": 0.0,
+      "Volume": 298826.0,
+      "timestamp": "2026-10-01T15:30:00+02:00"
+    },
+    {
+      "Close": 22939.0,
+      "Dividends": 0.0,
+      "High": 22985.0,
+      "Low": 22755.0,
+      "Open": 22863.0,
+      "Stock Splits": 0.0,
+      "Volume": 461505.0,
+      "timestamp": "2026-10-01T16:00:00+02:00"
+    },
+    {
+      "Close": 22951.0,
+      "Dividends": 0.0,
+      "High": 23032.0,
+      "Low": 22831.0,
+      "Open": 22940.0,
+      "Stock Splits": 0.0,
+      "Volume": 118360.0,
+      "timestamp": "2026-10-01T16:30:00+02:00"
+    },
+    {
+      "Close": 22869.0,
+      "Dividends": 0.0,
+      "High": 23188.0,
+      "Low": 22718.0,
+      "Open": 23000.0,
+      "Stock Splits": 0.0,
+      "Volume": 45031.0,
+      "timestamp": "2026-10-02T09:00:00+02:00"
+    },
+    {
+      "Close": 22832.0,
+      "Dividends": 0.0,
+      "High": 22939.0,
+      "Low": 22700.0,
+      "Open": 22866.0,
+      "Stock Splits": 0.0,
+      "Volume": 61921.0,
+      "timestamp": "2026-10-02T09:30:00+02:00"
+    },
+    {
+      "Close": 22908.0,
+      "Dividends": 0.0,
+      "High": 22987.0,
+      "Low": 22765.0,
+      "Open": 22832.0,
+      "Stock Splits": 0.0,
+      "Volume": 51345.0,
+      "timestamp": "2026-10-02T10:00:00+02:00"
+    },
+    {
+      "Close": 22922.0,
+      "Dividends": 0.0,
+      "High": 22925.0,
+      "Low": 22739.0,
+      "Open": 22906.0,
+      "Stock Splits": 0.0,
+      "Volume": 60791.0,
+      "timestamp": "2026-10-02T10:30:00+02:00"
+    },
+    {
+      "Close": 22928.0,
+      "Dividends": 0.0,
+      "High": 22992.0,
+      "Low": 22902.0,
+      "Open": 22941.0,
+      "Stock Splits": 0.0,
+      "Volume": 31977.0,
+      "timestamp": "2026-10-02T11:00:00+02:00"
+    },
+    {
+      "Close": 23070.0,
+      "Dividends": 0.0,
+      "High": 23113.0,
+      "Low": 22915.0,
+      "Open": 22922.0,
+      "Stock Splits": 0.0,
+      "Volume": 118320.0,
+      "timestamp": "2026-10-02T11:30:00+02:00"
+    },
+    {
+      "Close": 23060.0,
+      "Dividends": 0.0,
+      "High": 23103.0,
+      "Low": 23000.0,
+      "Open": 23077.0,
+      "Stock Splits": 0.0,
+      "Volume": 123166.0,
+      "timestamp": "2026-10-02T12:00:00+02:00"
+    },
+    {
+      "Close": 22979.0,
+      "Dividends": 0.0,
+      "High": 23121.0,
+      "Low": 22938.0,
+      "Open": 23065.0,
+      "Stock Splits": 0.0,
+      "Volume": 137202.0,
+      "timestamp": "2026-10-02T12:30:00+02:00"
+    },
+    {
+      "Close": 22897.0,
+      "Dividends": 0.0,
+      "High": 23044.0,
+      "Low": 22859.0,
+      "Open": 22968.0,
+      "Stock Splits": 0.0,
+      "Volume": 214979.0,
+      "timestamp": "2026-10-02T13:00:00+02:00"
+    },
+    {
+      "Close": 22948.0,
+      "Dividends": 0.0,
+      "High": 23018.0,
+      "Low": 22853.0,
+      "Open": 22898.0,
+      "Stock Splits": 0.0,
+      "Volume": 55064.0,
+      "timestamp": "2026-10-02T13:30:00+02:00"
+    },
+    {
+      "Close": 22966.0,
+      "Dividends": 0.0,
+      "High": 23043.0,
+      "Low": 22947.0,
+      "Open": 22954.0,
+      "Stock Splits": 0.0,
+      "Volume": 57665.0,
+      "timestamp": "2026-10-02T14:00:00+02:00"
+    },
+    {
+      "Close": 22863.0,
+      "Dividends": 0.0,
+      "High": 22959.0,
+      "Low": 22828.0,
+      "Open": 22959.0,
+      "Stock Splits": 0.0,
+      "Volume": 195913.0,
+      "timestamp": "2026-10-02T14:30:00+02:00"
+    },
+    {
+      "Close": 22875.0,
+      "Dividends": 0.0,
+      "High": 22894.0,
+      "Low": 22800.0,
+      "Open": 22859.0,
+      "Stock Splits": 0.0,
+      "Volume": 158157.0,
+      "timestamp": "2026-10-02T15:00:00+02:00"
+    },
+    {
+      "Close": 23133.0,
+      "Dividends": 0.0,
+      "High": 23191.0,
+      "Low": 22863.0,
+      "Open": 22869.0,
+      "Stock Splits": 0.0,
+      "Volume": 232900.0,
+      "timestamp": "2026-10-02T15:30:00+02:00"
+    },
+    {
+      "Close": 22909.0,
+      "Dividends": 0.0,
+      "High": 23184.0,
+      "Low": 22836.0,
+      "Open": 23142.0,
+      "Stock Splits": 0.0,
+      "Volume": 222101.0,
+      "timestamp": "2026-10-02T16:00:00+02:00"
+    },
+    {
+      "Close": 22969.0,
+      "Dividends": 0.0,
+      "High": 22982.0,
+      "Low": 22898.0,
+      "Open": 22909.0,
+      "Stock Splits": 0.0,
+      "Volume": 66895.0,
+      "timestamp": "2026-10-02T16:30:00+02:00"
+    }
+  ],
+  "interval": "30m",
+  "provider": "YAHOO",
+  "retrieved_at": "2026-10-05T14:36:52.045206+00:00",
+  "state": "OBSERVED",
+  "symbol": "SOL.JO"
+}

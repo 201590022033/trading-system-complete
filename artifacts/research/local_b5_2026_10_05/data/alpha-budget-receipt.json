@@ -1,0 +1,19 @@
+{
+  "cache_purpose": "ISOLATED_LOCAL_READ_ONLY_PROVIDER_DATA",
+  "configured_probe_daily_limit": 5,
+  "request_reservations": [
+    "2026-10-04T10:30:03.346724+00:00",
+    "2026-10-04T10:30:18.773372+00:00",
+    "2026-10-04T10:30:21.003473+00:00",
+    "2026-10-04T10:30:50.861251+00:00",
+    "2026-10-04T10:30:51.370793+00:00"
+  ],
+  "blocked_until": "2026-10-05T10:30:51.370793+00:00",
+  "cache_states": [
+    "AVAILABLE",
+    "PROVIDER_LIMITED_OR_PREMIUM_REQUIRED",
+    "AVAILABLE",
+    "AVAILABLE",
+    "AVAILABLE"
+  ]
+}
