@@ -62,4 +62,6 @@ The architecture's current limiting factor is admissible evidence, not proof of 
 
 Local research addition: isolated domain/backtest core and frozen-policy bridge; no runtime wiring. See docs/research/LOCAL_BACKTEST_IMPLEMENTATION.md for scoped acceptance.
 
+Historical SENS research extends the existing fetcher/evidence normalization with bounded ShareData/Moneyweb/Sharenet parsers and an optional event context sidecar. Actual receipt governs availability; source copies are one disclosure origin. No running collector or trade behavior is rewired. See [historic SENS pilot](../research/LOCAL_SENS_HISTORY.md) and ADR 0048.
+
 Local implementation navigation: [operating interface](../research/LOCAL_BACKTEST_OPERATING_GUIDE.md), [B1–B5 evidence and gates](../research/LOCAL_BACKTEST_IMPLEMENTATION.md). B1–B4 are implemented in an isolated local lane; B5 real-data acceptance is blocked. The architecture's running services and safety boundaries are unchanged.

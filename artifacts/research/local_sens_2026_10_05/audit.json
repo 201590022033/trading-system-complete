@@ -1,0 +1,231 @@
+{
+  "source_record_count": 21,
+  "eligible_as_of_count": 0,
+  "as_of": "2026-10-02T23:59:59+02:00",
+  "events": [
+    {
+      "event_family_id": "22ba1f25b86d5a8c89a4b7c9",
+      "published_at": "2026-09-01T05:05:00+00:00",
+      "headline": "SASOL LIMITED - Short Form Announcement: Audited Financial Results For The Year Ended 30 June 2026",
+      "evidence_ids": [
+        "f67c0dc546ed1039000a1663",
+        "d70eac6aea4dc542f37cc9f2"
+      ],
+      "sources": [
+        "sharedata_sens",
+        "moneyweb_sens"
+      ],
+      "content_versions": [
+        "f95c409ea4610282279820378617815f8143f86b7468d51160c05b1b45c352cd"
+      ],
+      "independent_origin_count": 1,
+      "automatic_corporate_action": false,
+      "observed_daily_date": "2026-09-01",
+      "first_observed_slot_start_at_or_after_release": "2026-09-01T09:00:00+02:00",
+      "basis": "POSTHOC_RELEASE_ALIGNMENT_NOT_TRADABLE_AVAILABILITY",
+      "historical_eligible_evidence_count": 0
+    },
+    {
+      "event_family_id": "d7f98fdf2d74d8ae40a04e09",
+      "published_at": "2026-09-01T05:05:00+00:00",
+      "headline": "SASOL LIMITED - Publication Of Sasol’s Annual Reports For The Financial Year Ended 30 June 2026",
+      "evidence_ids": [
+        "b6b155d58b31bf2f0f06e588",
+        "3008d2cf1aba3004ef3fb586"
+      ],
+      "sources": [
+        "sharedata_sens",
+        "moneyweb_sens"
+      ],
+      "content_versions": [
+        "d45297d43535e0b5e3efd1ac9850c3f882ddd109108795995018ad32bd7b20fa"
+      ],
+      "independent_origin_count": 1,
+      "automatic_corporate_action": false,
+      "observed_daily_date": "2026-09-01",
+      "first_observed_slot_start_at_or_after_release": "2026-09-01T09:00:00+02:00",
+      "basis": "POSTHOC_RELEASE_ALIGNMENT_NOT_TRADABLE_AVAILABILITY",
+      "historical_eligible_evidence_count": 0
+    },
+    {
+      "event_family_id": "f505b4acfe8f561ca8fc1ab9",
+      "published_at": "2026-09-09T15:45:00+00:00",
+      "headline": "SASOL LIMITED - Dealings In Securities By A Director Of A Major Subsidiary Of Sasol Limited",
+      "evidence_ids": [
+        "9866c6e28cc0d4fb52186e3c",
+        "e0ce77416b65a50a2f49740b",
+        "f61aed7a0f4996f999fe741b"
+      ],
+      "sources": [
+        "sharedata_sens",
+        "moneyweb_sens",
+        "sharenet_sens"
+      ],
+      "content_versions": [
+        "5fd1aaf55b9e3ca8f4553706a8035d1b7c7c9ac3ed90ac07cc150bd6a514b53e"
+      ],
+      "independent_origin_count": 1,
+      "automatic_corporate_action": false,
+      "observed_daily_date": "2026-09-09",
+      "first_observed_slot_start_at_or_after_release": "2026-09-10T09:00:00+02:00",
+      "basis": "POSTHOC_RELEASE_ALIGNMENT_NOT_TRADABLE_AVAILABILITY",
+      "historical_eligible_evidence_count": 0
+    },
+    {
+      "event_family_id": "be7ea3eff95c803f83d0478b",
+      "published_at": "2026-09-10T14:05:00+00:00",
+      "headline": "SASOL LIMITED - Dealings In Securities By Directors And Prescribed Officers Of Sasol Limited And Directors Of Major Subsidiaries Of Sasol Limited",
+      "evidence_ids": [
+        "1207012fa95bbdd9542b5089",
+        "2223d4b40d90e2800483fd08"
+      ],
+      "sources": [
+        "sharedata_sens",
+        "moneyweb_sens"
+      ],
+      "content_versions": [
+        "e263db4f3ccc0a8827d6b1ea31d20dcaa9e93a0cd58e700742602c67b52e4f68"
+      ],
+      "independent_origin_count": 1,
+      "automatic_corporate_action": false,
+      "observed_daily_date": "2026-09-10",
+      "first_observed_slot_start_at_or_after_release": "2026-09-10T16:30:00+02:00",
+      "basis": "POSTHOC_RELEASE_ALIGNMENT_NOT_TRADABLE_AVAILABILITY",
+      "historical_eligible_evidence_count": 0
+    },
+    {
+      "event_family_id": "014cb94dd42bb245d9c9e40c",
+      "published_at": "2026-09-17T14:15:00+00:00",
+      "headline": "SASOL LIMITED - Grant and Acceptance of Share Awards by Directors, Prescribed Officers and the Company Secretary of Sasol Limited and Directors and the Company Secretary of Major Subsidiaries of Sasol Limited",
+      "evidence_ids": [
+        "2a912435cc10f77b63d3bfe5",
+        "08bb0caefc0de47311456b5c"
+      ],
+      "sources": [
+        "sharedata_sens",
+        "moneyweb_sens"
+      ],
+      "content_versions": [
+        "0249dea50e02cbd09a895845e3acb0e06a067aa83a95cfa095d6eacb2d0b3207"
+      ],
+      "independent_origin_count": 1,
+      "automatic_corporate_action": false,
+      "observed_daily_date": "2026-09-17",
+      "first_observed_slot_start_at_or_after_release": "2026-09-17T16:30:00+02:00",
+      "basis": "POSTHOC_RELEASE_ALIGNMENT_NOT_TRADABLE_AVAILABILITY",
+      "historical_eligible_evidence_count": 0
+    },
+    {
+      "event_family_id": "f5d2ede416185976764f4ca6",
+      "published_at": "2026-09-22T11:00:00+00:00",
+      "headline": "SASOL LIMITED - Grant and Acceptance of a Share Award by a Director of a Major Subsidiary of Sasol Limited",
+      "evidence_ids": [
+        "e8e014d1731726e2371e76db",
+        "ca0643d4612363945f6cc9de"
+      ],
+      "sources": [
+        "sharedata_sens",
+        "moneyweb_sens"
+      ],
+      "content_versions": [
+        "001d44e4fd4eb3a3ddbe7013c84028a2e1fcb015304fcb1847337e37e5ba7fd2"
+      ],
+      "independent_origin_count": 1,
+      "automatic_corporate_action": false,
+      "observed_daily_date": "2026-09-22",
+      "first_observed_slot_start_at_or_after_release": "2026-09-22T13:00:00+02:00",
+      "basis": "POSTHOC_RELEASE_ALIGNMENT_NOT_TRADABLE_AVAILABILITY",
+      "historical_eligible_evidence_count": 0
+    },
+    {
+      "event_family_id": "a66e7eae345e47fee8a83ea6",
+      "published_at": "2026-09-25T06:00:00+00:00",
+      "headline": "SASOL LIMITED - Changes To Sasol Limited Board Of Directors",
+      "evidence_ids": [
+        "ca7f86b8722b28b8089f4f9f",
+        "dc3ea21f84fd97035d506545"
+      ],
+      "sources": [
+        "sharedata_sens",
+        "moneyweb_sens"
+      ],
+      "content_versions": [
+        "b58a382eb9a8e416cbcad57f8e2ff6424bb83b3c2773b15077cbec4e2226db8d"
+      ],
+      "independent_origin_count": 1,
+      "automatic_corporate_action": false,
+      "observed_daily_date": "2026-09-25",
+      "first_observed_slot_start_at_or_after_release": "2026-09-25T09:00:00+02:00",
+      "basis": "POSTHOC_RELEASE_ALIGNMENT_NOT_TRADABLE_AVAILABILITY",
+      "historical_eligible_evidence_count": 0
+    },
+    {
+      "event_family_id": "9717975cd0312095c5829b0e",
+      "published_at": "2026-09-25T07:36:00+00:00",
+      "headline": "SASOL LIMITED - Correction Announcement: Changes to Sasol Limited Board of Directors",
+      "evidence_ids": [
+        "8a08cd3159620153aa6be046",
+        "0fa243de05e6aa63a5d2c1be"
+      ],
+      "sources": [
+        "sharedata_sens",
+        "moneyweb_sens"
+      ],
+      "content_versions": [
+        "aa79aaf7d692b37311c4f0280d9f9ed7e9662025679e4467d3fb247ccb741127"
+      ],
+      "independent_origin_count": 1,
+      "automatic_corporate_action": false,
+      "observed_daily_date": "2026-09-25",
+      "first_observed_slot_start_at_or_after_release": "2026-09-25T10:00:00+02:00",
+      "basis": "POSTHOC_RELEASE_ALIGNMENT_NOT_TRADABLE_AVAILABILITY",
+      "historical_eligible_evidence_count": 0
+    },
+    {
+      "event_family_id": "a194e3491540b99e81b7d1ab",
+      "published_at": "2026-09-30T07:49:00+00:00",
+      "headline": "SASOL LIMITED - Dealings In Securities By Directors And Prescribed Officers Of Sasol Limited And Directors Of Major Subsidiaries Of Sasol Limited",
+      "evidence_ids": [
+        "d7ad6b43f46c77e555d29f03",
+        "5509a05bd11317147c40e259"
+      ],
+      "sources": [
+        "sharedata_sens",
+        "moneyweb_sens"
+      ],
+      "content_versions": [
+        "7c2bdbad3c460b536ba5139b9333f60d71155b4a0f089f99054496440ac97994"
+      ],
+      "independent_origin_count": 1,
+      "automatic_corporate_action": false,
+      "observed_daily_date": "2026-09-30",
+      "first_observed_slot_start_at_or_after_release": "2026-09-30T10:00:00+02:00",
+      "basis": "POSTHOC_RELEASE_ALIGNMENT_NOT_TRADABLE_AVAILABILITY",
+      "historical_eligible_evidence_count": 0
+    },
+    {
+      "event_family_id": "49da4a6652b0b7c7f841b07f",
+      "published_at": "2026-09-30T09:10:00+00:00",
+      "headline": "SASOL LIMITED - Appointment Of Independent Non-Executive Director And Audit Committee Member",
+      "evidence_ids": [
+        "c2d8aa73130d6ad242b06394",
+        "9504a44333b81aeeb085edd9"
+      ],
+      "sources": [
+        "sharedata_sens",
+        "moneyweb_sens"
+      ],
+      "content_versions": [
+        "902329cee62c75246d5ac7a371762d6129066cadd468d0f8bb663174b8e8c7b6"
+      ],
+      "independent_origin_count": 1,
+      "automatic_corporate_action": false,
+      "observed_daily_date": "2026-09-30",
+      "first_observed_slot_start_at_or_after_release": "2026-09-30T11:30:00+02:00",
+      "basis": "POSTHOC_RELEASE_ALIGNMENT_NOT_TRADABLE_AVAILABILITY",
+      "historical_eligible_evidence_count": 0
+    }
+  ],
+  "price_admission": "UNCHANGED_BLOCKED",
+  "corporate_action_completeness": "UNVERIFIED"
+}
