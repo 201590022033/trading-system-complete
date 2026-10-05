@@ -37,3 +37,5 @@ Implementation update: B1 completed locally; see LOCAL_BACKTEST_IMPLEMENTATION.m
 B2 completed locally: deterministic replay/accounting with frozen benchmark reconciliation. B3 is next; B5 real-data acceptance remains separate.
 
 B3 completed locally with market-specific synthetic verification. B4 chronological experiments next; real FX/gold execution evidence remains unresolved.
+
+B4 completed locally: bounded indicator trials and chronological locked evaluation. B5 audit/acceptance next. No strategy adopted.

@@ -1,3 +1,3 @@
-# Current milestone — B3
+# Current milestone — B4
 
-Date: 5 October 2026. Status: COMPLETED. Independent FX/gold adapters; 888 safe tests, four killed mutants, 54 protected artifacts. B1 b0586f7 and B2 d074291 committed. B4–B5 authorized but inactive. See [implementation record](../research/LOCAL_BACKTEST_IMPLEMENTATION.md).
+Date: 5 October 2026. Status: COMPLETED. Bounded chronological indicator runner, durable trial/final lock, controls and existing registry/metric integration. 894 safe tests, seven killed mutants, 54 protected artifacts. B5 authorized but inactive; data acceptance remains separate. See [implementation record](../research/LOCAL_BACKTEST_IMPLEMENTATION.md).
