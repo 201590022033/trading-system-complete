@@ -1,5 +1,13 @@
 # HR2 Historical Data Reconstruction
 
+## Current context — 5 October 2026
+
+The original module/design contract below is retained. Its delivered/planned labels describe that scope/checkpoint; use the current snapshot for later integration and deployment state.
+
+Yahoo daily archives exist but invalid individual OHLC still blocks strict replay. IG JSE history probes remain entitlement-blocked; Alpha Vantage JSE coverage is unverified and scheduled calls are off. Display estimates are excluded from trading/backtest evidence. See [current project state](../CURRENT_STATE.md) and [document index](../DOCUMENTATION_INDEX.md).
+
+---
+
 ## Frozen retrieval
 
 `historical_reconstruction.py` froze permitted public daily history on

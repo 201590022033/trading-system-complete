@@ -1,5 +1,13 @@
 # Asset-Specific Technical Research
 
+## Current context — 5 October 2026
+
+The original module/design contract below is retained. Its delivered/planned labels describe that scope/checkpoint; use the current snapshot for later integration and deployment state.
+
+Existing feature/regime/evaluation infrastructure remains reusable. New daily Swing technical/policy versions are isolated research; invalid OHLC and missing dated events still block admission. Six-family local backtests and 30-minute sector-relative radar are proposed, not validated or enabled. See [current project state](../CURRENT_STATE.md) and [document index](../DOCUMENTATION_INDEX.md).
+
+---
+
 HR7 creates a common point-in-time feature dataset with 25,384 rows across NPN,
 SASOL, BHP, IMPJ, SHPJ, ABSPJ, USD/ZAR, gold, Brent and the JSE All Share proxy.
 It is stored at `analysis/data/hr7/asset_technical_features.csv`; coverage and

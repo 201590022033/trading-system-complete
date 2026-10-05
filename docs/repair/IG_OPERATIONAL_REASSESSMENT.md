@@ -1,5 +1,13 @@
 # IG operational reassessment — 2026-09-19
 
+## Current context — 5 October 2026
+
+The original module/design contract below is retained. Its delivered/planned labels describe that scope/checkpoint; use the current snapshot for later integration and deployment state.
+
+Connected IG account reads and a self-reported manual Demo journal exist, while entitlement-specific data and order safety remain separate gates. Standard Bank/ViewPoint/Shyft/MT5 are not verified automatic connections in this workflow. No research/card enables Live execution. See [current project state](../CURRENT_STATE.md) and [document index](../DOCUMENTATION_INDEX.md).
+
+---
+
 Active milestone remains Operational demo workspace (ADR 0025). Historical
 component-complete headings do not establish deployed end-to-end acceptance.
 

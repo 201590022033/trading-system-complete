@@ -1,5 +1,13 @@
 # ADR 0042: Local daily data, cloud Swing hypothesis research
 
+## Current context — 5 October 2026
+
+This is a dated decision record. Its original rationale/status is retained; it is not a complete current capability inventory. Later additive decisions and the current snapshot determine deployed scope.
+
+The current system centers on the canonical paper workflow, exact strategy lineage, local daily OHLCV collection and isolated AI/news research. The six-family local backtest/radar loop remains proposed; no validated profitability, automatic promotion or Live execution is established. See [current project state](../CURRENT_STATE.md) and [document index](../DOCUMENTATION_INDEX.md).
+
+---
+
 Accepted 2026-10-04. Owner explicitly requests local daily OHLC storage and an
 online ongoing strategy research loop. Start at clean master 5bd04f1.
 

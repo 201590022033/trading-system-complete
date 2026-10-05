@@ -1,46 +1,20 @@
-# Market Data and Execution Capability Matrix
+# Market-data and execution capability matrix
 
-Accessed 2026-09-04. `UNKNOWN` means no confirming official retail documentation
-was found; it does not mean unsupported.
+Snapshot reviewed 5 October 2026; observations are from project probes, not universal vendor guarantees. See [current state](../CURRENT_STATE.md). Preserve source/instrument, currency, timeframe, availability and price/volume basis on every import.
 
-| Capability | Current research source | ViewPoint | Shyft Trader | Future alternative |
-|---|---|---|---|---|
-| Historical OHLC | Frozen HR2 Yahoo-derived files | Chart/history claimed; export rights UNKNOWN | UNKNOWN | Licensed data API |
-| Live quote | No | Real-time claimed; subscription terms UNKNOWN | By subscription | Licensed data API |
-| Bid/ask | No | UNKNOWN | UNKNOWN | Licensed streaming API |
-| Market depth | No | Level entitlement UNKNOWN | UNKNOWN | Licensed depth feed |
-| JSE equities | Six frozen equities | OST relationship confirmed | Migration implies JSE; exact list UNKNOWN | JSE-capable broker |
-| JSE futures | No | UNKNOWN | UNKNOWN | JSE derivatives broker |
-| CFDs | No | UNKNOWN | 5,600 advertised | Regulated broker API |
-| FX | Frozen USD/ZAR proxy | UNKNOWN | 160+ FX crosses advertised | Regulated FX API |
-| Order entry | No | Platform order handling claimed | Platform orders confirmed | Official broker API |
-| Order status | No | UNKNOWN | Confirmations/platform notifications | Official broker API |
-| Portfolio/positions | No | Portfolio guide linked | Account/portfolio terms confirmed | Official broker API |
-| Streaming API | No | UNKNOWN | UNKNOWN | Licensed vendor |
-| REST API | No | UNKNOWN | UNKNOWN | Official broker/data API |
-| Websocket | No | UNKNOWN | UNKNOWN | Official broker/data API |
-| Official automation allowed | No | UNKNOWN | UNKNOWN; algo order type is not API permission | Contract-dependent |
-| Demo/sandbox | Offline research only | UNKNOWN | UNKNOWN | Broker sandbox |
-| Underlying technology | Local files/code | IRESS confirmed | Saxo partnership confirmed | Provider-specific |
+| Source / component | Working capability | Blocked or unverified | Execution boundary |
+| --- | --- | --- | --- |
+| Yahoo public charts | Daily real OHLCV archive, quotes/charts, 17 active cash shares plus four chart ETFs | Invalid individual OHLC; no licensed deep 30-minute archive or certified liquidity | Research/paper only |
+| IG Demo API | Authentication, account/cash reads, tested JSE epic search | Tested equity details/DAY history returned 403 entitlement; cash-share volume semantics unverified | Read-only in current workflow; existing separate Demo gates; Live disabled |
+| Alpha Vantage | Private key setup, bounded client/cache and conditional repair code | Bounded discovery did not verify JSE coverage; free compact is not 20-year history | Scheduled calls off; no execution |
+| Moneyweb/SENS and configured news feed | Current policy-enabled article retrieval and persisted context | Historic dated SENS archive, completeness and pre-entry availability | Context only |
+| Monday market brief | Manual derived-research import and source-linked local Ollama cases | Unverified claims/time; future automatic ChatGPT delivery not connected | Up to +0.05 research attention only after corroboration |
+| Standard Bank OST / ViewPoint IRESS | Integration questions and discovery boundaries documented | Supported API, OHLCV/export rights and automated access not verified here | No automated trading connection |
+| Shyft | Research notes only | Entitled historical data/export/API not verified | No connected execution |
+| MT5 / EA bots | Owner option under consideration | IG account linkage, datasets and strategy validation not configured/verified here | No trained or deployed EA strategy |
+| HR11 / intraday core | Horizon/session/aggregation/cost/evaluation infrastructure | Real-data admission and validated intraday strategy | Placeholder/research; cannot activate from card |
+| Paper broker | Durable funded cash simulation, conservative risk and attributed outcomes | Real costs, borrow, derivative geometry and portfolio evidence | Simulator only |
 
-Sources: Standard Bank ViewPoint page,
-https://onlinesharetrading.standardbank.co.za/pages/OST/ViewPoint.html; Shyft
-Trader offering, https://www.shyft.co.za/en-ZA/what-shyft-trader-offers;
-migration notice, https://www.shyft.co.za/en-ZA/shyft-trading-platforms-migration;
-terms, https://www.shyft.co.za/en-ZA/terms-and-conditions.
+Cash traded-share volume, CFD contract volume, FX tick volume and spot gold volume are different data contracts. Do not substitute one for another without an explicit proxy label and evaluation. Daily chart display or API login is not proof of intraday entitlement.
 
-## Fastest safe execution-path ranking
-
-| Option | Estimated human time | Data latency | Reliability / development | Compliance risk | JSE/derivatives/live/automation/account |
-|---|---|---|---|---|---|
-| 1. Manual Shyft entry | 30–120 seconds (workflow estimate) | Subscription-dependent | High / low | Low when normal platform terms followed | JSE confirmed broadly; exact derivatives/live tier varies; no external automation; Shyft account |
-| 2. Ticket + copy/paste | 20–90 seconds (estimate) | Same as source feed | Medium-high / low | Low; transcription still required | Coverage follows chosen data source and Shyft account |
-| 3. Deep/pre-populated ticket | UNKNOWN | UNKNOWN | UNKNOWN / medium | UNKNOWN until officially supported | All capabilities and account requirements UNKNOWN |
-| 4. Official Shyft API + confirmation | UNKNOWN, potentially seconds | UNKNOWN | UNKNOWN / high | Low only under written API/licence terms | Saxo technology exists; retail entitlement and symbol coverage UNKNOWN |
-| 5. ViewPoint/IRESS integration | UNKNOWN | Real-time display confirmed | Platform mature / high | Retail interface/licensing UNKNOWN | IRESS ecosystem supports data/FIX; Standard Bank retail API entitlement UNKNOWN |
-| 6. Alternative official API | Seconds after review (estimate) | Provider-dependent | Provider-dependent / high | Lower with documented API | IG: CFDs/FX API; Saxo/IBKR: broad APIs; exact JSE instruments must be proven |
-
-Browser-click automation is excluded. The eventual ticket should contain
-instrument, side, current price and timestamp, entry/order type, target, stop,
-horizon, size, maximum risk, confidence/evidence, rationale, cost estimate,
-stale-data warning and market status.
+Display averaging never becomes data repair for tests/trading: estimates are flagged, volume is never invented, and strict OHLC policy admission remains closed. Sector-relative 30-minute radar and six-family local backtests remain proposed follow-up work.

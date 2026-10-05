@@ -1,5 +1,15 @@
 # Monday brief and research flags
 
+## Current context — 5 October 2026
+
+The original module/design contract below is retained. Its delivered/planned labels describe that scope/checkpoint; use the current snapshot for later integration and deployment state.
+
+Manual Monday briefs and local Ollama research cases now extend the existing source catalog. Distinct-publisher corroboration gates the +0.05 research attention boost; it never changes trade weights. Current single-publisher cases have zero flags, and historic SENS/event retrieval remains planned. See [current project state](../CURRENT_STATE.md) and [document index](../DOCUMENTATION_INDEX.md).
+
+Actual acceptance: 28 September/5 October briefs imported; CPU scan took about 6m38s; EARNINGS and INFLATION cases both referenced Moneyweb. They remain SOURCE_REVIEW_REQUIRED, with zero flags, zero boosts and zero historical samples. The latest fix admits only previously FLAGGED matching cases into history; uncorroborated cases cannot accumulate retrospective evidence.
+
+---
+
 Open Market AI / News → Sources → Monday market brief & research flags. Existing
 source controls also pause the local weekly scan. Import editions through the form
 after unlocking Portfolio controls, or use the private local importer:

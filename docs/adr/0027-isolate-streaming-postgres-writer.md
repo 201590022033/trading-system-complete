@@ -1,5 +1,13 @@
 # ADR 0027 — Isolate the streaming PostgreSQL writer
 
+## Current context — 5 October 2026
+
+This is a dated decision record. Its original rationale/status is retained; it is not a complete current capability inventory. Later additive decisions and the current snapshot determine deployed scope.
+
+Intraday CFD remains DEVELOPMENT/DATA_VALIDATION_REQUIRED. HR11/streaming engineering is reusable infrastructure, not an admitted strategy or verified cash-share volume feed. The current Swing deployment uses daily local uploads with streaming disabled. See [current project state](../CURRENT_STATE.md) and [document index](../DOCUMENTATION_INDEX.md).
+
+---
+
 Date: 2026-09-22. Status: accepted within the active Operational demo workspace.
 
 ## Context

@@ -1,0 +1,1561 @@
+# Historical snapshot — docs/roadmap/CURRENT_MILESTONE.md
+
+Archived during the 5 October 2026 reconciliation from `c2ef802`. The text below describes earlier checkpoint/design context, not current operational instructions. Original text is preserved; see [the current document](../roadmap/CURRENT_MILESTONE.md) and [current state](../CURRENT_STATE.md). Historical ACTIVE or planned labels do not activate work.
+
+Original relative links belong to the original source location; use the current-document link above for present guidance.
+
+---
+
+# Current Milestone
+
+## 2026-10-05 Monday brief / local research flags — completed workspace
+
+Start7144820. Owner-authorized source import, research priority and local Ollama
+semantic relationships. ADR0043 extends existing catalogue/dashboard and local
+collector. Separate append-only research records; no migration, production
+ranking/strategy change or live execution. Validation:48 focused /869 full safe tests pass,54 protected artifacts unchanged.
+JavaScript syntax and diff checks pass. Web/worker source deployed;28 September and5 October editions imported.
+Local CUDA failure diagnosed and CPU-only structured output verified. Actual
+local Ollama scan uploaded2 candidates, both SOURCE_REVIEW_REQUIRED with0 flags
+and0 boost because the articles share a publisher. Runtime was6m38s; no
+validated market correlation or historical sample is claimed. Uncorroborated
+prior cases cannot enter descriptive historical cohorts.
+Final live-run and deployment details belong in the workspace completion report.
+Historical archive coverage and automatic ChatGPT brief delivery remain open.
+
+## 2026-10-04 Local daily OHLC / online AI research — completed workspace
+
+Owner clarified the intended adaptive goal and authorized the local/cloud split.
+Start5bd04f1. ADR0042 implements local dated raw storage, private bounded ingress,
+LOCAL_UPLOAD paper source, separate research profile1.3.0, one daily Ollama Cloud
+hypothesis, frozen proposals and chronological historical comparisons in the
+Trading Strategies tab. Prior strategies/default1.0.1 remain unchanged. This is
+research refinement, not model-weight training, portfolio proof or promotion.
+First real local collection obtained21 charts. Source switch waits for verified
+upload. Local task07:30 requires powered-on signed-in PC; cloud worker08:00 SA.
+Source/calendar quality and prospective validation remain follow-up gates.
+Acceptance:57 focused and839 full safe tests pass;54 protected artifacts unchanged.
+JavaScript syntax and diff whitespace checks pass. First real historical baseline
+comparison has0 closed samples under strict OHLC gates; no profitability claim.
+Private task/token configured; deployment/upload/model evidence recorded in the
+completion report. No browser visual acceptance or native PostgreSQL acceptance.
+
+## 2026-10-04 Swing dated quality/averages — sole ACTIVE workspace
+
+Starting master 7f13876. ADR 0041 adds dated diagnostics, causal display averages
+and independent real prior-range checks. Raw charts and versioned Swing formulas
+remain unchanged. Estimates cannot supply ATR or resolve stop/target outcomes.
+Absent calendar sessions are not fabricated. All 815 safe tests pass; JavaScript
+syntax and diff whitespace checks pass. Verified source/calendar coverage remains
+the next prerequisite; these annotations do not unblock the frozen shadow policy.
+
+## 2026-10-04 Alpha Vantage setup/fallback — within the sole ACTIVE workspace
+
+Owner requests free-tier conditional Yahoo repair plus both local/Railway private
+setup. Starting clean f572634; baseline 786 safe tests pass. ADR 0040 implements
+bounded direct compact requests, verified JSE search/session/close identity,
+durable shared production cache/budget, negative caching and separate frozen
+shadow repairs. Original ranking/paper source and all strategy rules remain
+unchanged. Private setup preserves existing settings and skips deployments;
+live JSE coverage remains unverified until the owner supplies the key privately.
+Owner supplied it through the hidden prompt; private local and both Railway
+service updates completed without deployments. Five live search calls did not
+establish JSE coverage; foreign Sasol listings were rejected and the last search
+was provider-limited. Final 56 focused/807 safe tests pass; 54 protected artifacts
+unchanged. Read-only deployment uses the owner's existing push/deploy authorization.
+No actual JSE data repair is claimed. See the Alpha Vantage setup report.
+
+## 2026-10-04 IG Swing volume — within the sole ACTIVE workspace
+
+Owner authorized volume investigation and appropriate Swing data wiring. Starting
+clean master 2dbc272; baseline 773 safe tests pass. Authenticated Demo search finds
+three JSE candidate EPICs, but market detail and direct DAY history all return
+equity-access 403. ADR 0039 adds M12B volume diagnostics, bounded Demo probe and
+frozen worker/status/UI readiness plumbing. Actual price admission remains BLOCKED
+by entitlement and unverified cash/volume semantics; no fake volume or CFD cash
+substitution. No deployment, env change or orders. See the investigation report.
+Diagnostics acceptance: 64 focused / 786 full safe tests pass; 54 protected
+artifacts unchanged, JavaScript syntax and diff whitespace checks pass. Feed
+admission remains blocked; do not mark volume or OHLC repair complete.
+
+## 2026-10-04 Daily Swing shadow policy — within the sole ACTIVE workspace
+
+Owner explicitly requested the next daily policy/entry-exit simulation stage.
+Starting clean local master `f0f17f0`; baseline 760 safe tests pass. ADR 0038
+adds cash-only 1.2.0 shadow rules, frozen job/decision/entry/path/outcome lineage,
+conservative daily OHLC stop/target/gap replay, independent 3/4/5 observed-session
+exits and hypothetical 10/25/50 bps costs. Portfolio/status show separate policy
+evidence. No orders, sizing, new schema or learner/ranking promotion. All five
+prior profile definitions remain byte-equivalent as serialized snapshots;
+current benchmark remains 1.0.1 and old jobs opt out. Actual liquidity/calendar/
+costs/account M15 and empirical walk-forward remain unresolved admission gates.
+Acceptance complete locally: 97 focused tests and all 773 safe tests pass;
+all 54 protected artifacts unchanged. JavaScript syntax/offline UI checks pass.
+No native PostgreSQL or browser visual acceptance in this stage. See
+`docs/reports/2026-10-04-SWING-SHADOW-POLICY.md`. No push or deployment.
+
+## 2026-10-04 Strategy foundation revalidation — within the sole ACTIVE workspace
+
+Owner requested the foundation/shell milestone again. Clean remote master at
+`c27488b` already contains ADR 0035 foundation plus later attribution/technical
+shadow work. Preserve those implementations; no new milestone or trading
+behavior activated. Added exhaustive exact-version discovery and route-mutation
+safety tests. Baseline 758 safe tests, 126 focused checks and final 760 safe
+tests pass; all 54 protected artifacts unchanged. JavaScript syntax/offline
+UI checks pass. See `docs/reports/2026-10-04-STRATEGY-FOUNDATION-REVALIDATION.md`.
+No new migration, broker mutation, LIVE enablement, push or deployment.
+
+## 2026-10-03 Core Swing technical/horizon shadow — within the sole ACTIVE workspace
+
+After attribution commit `781c0ab`, owner explicitly requested completing the
+EMA/ATR and timeline gap. ADR 0037 adds separate immutable Swing 1.1.0 shadow
+definition (cash + mandatory ETF context). Yahoo adapter retains real normalized
+OHLC; worker computes full-history causal EMA20/50, Wilder RSI14/ATR14, relative
+volume, prior 10/20 structure and exact-date broad benchmark strength before
+retaining 60 daily bars. Technical UI displays values, missing inputs, shadow
+setup and structural/ATR 2R reference geometry. No synthetic OHLC.
+
+One exact-version feature decision per instrument/session and independent
+3/4/5 observed-session next-close labels feed M11 present/absent setup cohorts.
+Actual decision/availability/entry/exit/maturity clocks and negative outcomes
+are stored. Full feature values/definition are frozen on retry. Current profile,
+legacy momentum/RSI ranking, account config and three-session simulator remain
+benchmarks. Shadow setup thresholds are hypotheses, not optimized settings.
+No automatic promotion/live orders. Sector model, catalysts/calendar, actual
+OST costs, trailing/execution policy and cost-aware walk-forward remain gates.
+Verification: 758 safe tests pass; seven focused Swing tests cover Wilder
+smoothing, finite-history EMA, missing OHLC, future-data exclusion, benchmark
+alignment, SQLite/PostgreSQL-fixture label maturity and worker retry. Native
+PostgreSQL acceptance also passes distinct 3/4/5 labels, lineage, rollback and
+separate-process recovery in a disposable database. All 54 protected artifacts
+remain unchanged. JavaScript syntax/offline UI checks pass; no browser visual QA.
+No push or Railway deployment performed in this stage.
+
+## 2026-10-03 Strategy-specific attribution — within the sole ACTIVE workspace
+
+Owner authorized the planned attribution slice and imported Swing narrative
+comparison. ADR 0036 implements paired refs through canonical/paper/learning
+and reference evaluation chains; definitions and compact lineage indexes have
+paired SQLite 0011 / PostgreSQL 0006 migrations. New jobs pin Swing 1.0.1;
+old jobs/records/positions retain original absence. Account config/cash and
+legacy ranking/risk mathematics are preserved. Exact version/horizon isolation
+precedes learner fallback. API/UI distinguish evidence pools and legacy rows.
+See `docs/research/SWING_NARRATIVE_READINESS.md` for remaining indicators,
+policy, catalyst, cost and validation gaps, not a blanket completeness claim.
+
+Verification: baseline 740; final safe suite 751 passed; all 54 protected
+artifacts unchanged. JavaScript syntax and offline UI checks passed.
+Native PostgreSQL acceptance
+passed in a newly created isolated localhost database: migration/remigration,
+concurrent exactly-once fill, rollback, exact outcomes and separate-process
+recovery. Disposable test database removed; existing local/Railway data untouched.
+No push/deployment or live broker action. Owner's follow-up authorizes the
+next core Swing feature/horizon shadow slice after this acceptance/commit.
+
+## 2026-10-03 Strategy Profile foundation — within the sole ACTIVE workspace
+
+Owner requested repository audit then the bounded Strategy Profile Foundation
++ Trading Strategies dashboard shell. Baseline clean master at `e98b340`,
+729 safe tests passing. Inventory/conflicts/ownership, StrategyTarget relation,
+future attribution/migrations, tests and reversible stages are recorded in
+`docs/architecture/STRATEGY_PROFILE_IMPLEMENTATION_AUDIT.md` and ADR 0035.
+
+Implemented immutable exact-version profile/reference/capability contracts,
+an explicit-current registry, three profiles, read-only no-storage/provider API,
+backend-driven cards and exact-version detail. Swing links existing canonical
+Top 5; placeholders expose blockers without a trading workflow. Records remain
+unattributed until the separately planned vertical slice. No migration, config
+mutation, scoring/risk change, live execution or broker activation. Existing
+daily-ranking/three-session simulator semantics and legacy artifacts preserved.
+Operational cost/outcome/IG gates remain open, not superseded by card labels.
+
+Foundation acceptance complete locally: 740 safe tests pass (baseline 729),
+38 focused tests pass, JavaScript syntax and offline DOM interaction checks pass,
+and all 54 protected artifacts remain unchanged. Offline DOM checks are not
+browser visual verification. No push or Railway deployment is part of this
+foundation acceptance. Subsequent attribution and strategy validation stages
+remain planned, not implemented or approved for execution.
+
+## 2026-10-02 Yahoo history reconnection — within the sole ACTIVE workspace
+
+Reuse Yahoo/HR2 normalization and the M11 contextual learner for compact
+three-/four-session trend, pullback and breakout context (ADR 0034). All 18
+active catalog shares and four ETFs returned history since 2021, generally
+1,437 sessions; BHP 1,167 and Richemont 864. Raw hashed snapshots stay local;
+only compact summaries and matching daily evidence ship to Railway. Protected
+history is unchanged. Runtime inputs freeze matching evidence for retries,
+with causal generation clocks, exact benchmark identity and 90-day expiry.
+Top 5 cards display historical and temporal-holdout results separately from
+one-day ranking inputs. Ranking, broker orders and adaptive promotion unchanged.
+Current Ollama news remains attributed current context, never historical labels.
+Online candidate records now retain setup/context/source lineage; their existing
+three-session labels do not become four-session labels or a setup learner.
+
+Verification: 729 safe tests pass, JavaScript syntax passes and all 54 protected
+artifacts remain unchanged. The compact
+shipped report is 676,737 bytes, with 30,739 causally usable sessions through
+Oct 1. Raw downloads also contained the not-yet-completed Oct 2 bar, which is
+excluded. Quality gates quarantine Yahoo unit discontinuities in Satrix 40
+(Apr 25/29, 2025) and Vodacom (Jan 10/13, 2025), including affected benchmark
+comparisons; no price repair or profitable-outcome filtering. Current benchmark
+context can be UNKNOWN when Yahoo omits the cash share's exact usable session.
+Railway acceptance: code commit `6ba27ff` pushed to origin/master; web
+`0dbe5e74-b432-4b59-b4c2-eb6c2aef19ce` and worker
+`5242eb7a-e40f-4faa-9bcd-8f704327ccc9` SUCCESS on that SHA. Public health
+reports healthy PostgreSQL and live_execution=false. A read-only cloud preview
+using the actual stored 17 cash/four ETF charts resolves all 21 into historical
+context. Sasol is TREND; current exact-session broad-market context is UNKNOWN,
+not invented from a stale benchmark bar. Report source coverage is instrument
+specific (through Sep 30 or Oct 1). No DB snapshot was rewritten or additional
+paper trade placed for this preview. New matching evidence appears with the
+next fresh source-session cycle, scheduled Oct 3 02:00 SAST; actual worker
+snapshot persistence on that future cycle remains an acceptance follow-up.
+
+Measured locally: full 22-instrument matching snapshot is 44,328 bytes and
+4,558 bytes gzip before base64, rather than copied multi-year prices. The
+Railway active universe is 17 cash shares/four ETFs; the report also covers the
+remaining catalog share. No provider, LLM, volume or account-plan expansion.
+Budget/performance gates below remain open; the earlier six-year retention
+forecast must be remeasured with the additional compact per-day snapshot.
+
+## 2026-10-02 acceptance follow-through — within the sole ACTIVE workspace
+
+- [x] Prior market brief deployment ran a real completed cycle Oct 2 02:00 SAST:
+  17 cash candidate decisions, four ETF benchmark decisions; DEFENSIVE market;
+  no matured outcomes or fills. Operational collection is verified, not profit.
+- [x] Exact planned three-session paper outcomes now reach the matching learner;
+  one-day technical evidence remains separate. Historic rows are not relabelled.
+- [x] Delayed source-bar labels cannot enter before the actual decision timestamp.
+- [x] Four ETFs admitted to separate shadow research/API and visible when data or
+  actual cash are missing; no change to cash-account orders or live broker paths.
+- [x] Daily bounded cron exit, scheduled-idle status and lossless 90-day snapshot
+  compression implemented. Compact evidence has no automatic expiry (ADR 0033).
+- [x] Code commit `8d56b6c` pushed; web and cron worker SUCCESS on the same SHA.
+  Explicit additive PostgreSQL migration passed. A bounded real-data acceptance
+  cycle at 12:34:49 UTC persisted 17 fresh cash decisions and four separate ETF
+  decisions, zero fills and zero mature outcomes. Public ETF API returns all four
+  RESEARCH-ONLY entries. Manual worker restart processed zero duplicate jobs,
+  exited with SCHEDULED_IDLE, and next cron run is Oct 3 02:00 SAST.
+  Local verification: 719 safe tests (including missing ETF admission fixture);
+  54 protected artifacts unchanged;
+  changed registry/entrypoint tests and JavaScript syntax pass.
+- [ ] $5 budget gate CONDITIONAL: current usage ~$2.57, trial account refuses
+  $5 hard limit and alert. No $10 limit or subscription change was applied.
+- [ ] Outcome/performance acceptance awaits future sessions and 30 independent
+  comparisons. October 8 remains a review checkpoint, not promotion.
+
+Measured volume 143 MB/500 MB versus logical DB ~10 MB. Latest bounded report
+forecasts 6.00 years before storage review, with 100 MB free reserve
+and 2x overhead; online learning reads remain 5,000 rows/kind. Actual OST cash,
+fees and spread are unconfigured. Suggestions are manual, not trading approval.
+
+Actual account preference confirmed: Standard Bank OST (IRESS/ViewPoint now,
+awaiting Shyft). No further broker-mapping automation is required for this
+manual suggestion/paper workflow. Negative ETF direction means watch/avoid,
+not an executable cash short. No old snapshots were yet eligible for 90-day
+compression and no data was discarded during acceptance.
+
+Raw Railway metrics confirm worker memory usage is zero between scheduled runs
+(12:35–12:38 UTC), rather than merely inferring savings from an idle status.
+
+## 2026-10-01 daily market-first brief — within active demo workspace
+
+The Railway daily worker now includes four compact listed-ETF context series
+alongside its cash-share scan. A causal market/breadth snapshot and a bounded
+human-review brief are persisted with the existing ranking and displayed above
+the internal simulator. Later completed ETF bars label the frozen broad-market
+and sector benchmarks against cash, while candidate outcomes retain market
+state so selected-versus-other comparisons can be inspected by wider conditions. This
+does not modify canonical ranking, paper risk, ETF/SSF admission or live orders.
+See ADR 0032. Railway acceptance requires a fresh completed-session cycle;
+the complete offline safe suite passes 712 tests; focused market/closed-loop
+tests pass 20 tests, and the Portfolio JavaScript syntax check passes. Railway
+deployment state is recorded separately.
+
+
+## 2026-10-01 bounded candidate-panel repair — within active demo workspace
+
+The daily Railway paper path now records compact evidence for every screened
+cash share, not only selected Top-5 LONG ideas. Mature labels use a later
+completed close as a hypothetical entry and compare selected versus unselected
+shares in matched sessions. Legacy selected-only feedback no longer adjusts the
+rank; actual closed paper trades retain their governed evidence path. The
+Portfolio learning panel displays comparison counts and descriptive edge.
+Historical shadow-runtime jobs remain separate and unscheduled on Railway.
+See ADR 0031. No model promotion, Sharpe claim or live execution is implied.
+The offline safe suite passes 708 tests, the focused closed-loop suite passes
+16 tests, and the Portfolio JavaScript syntax check passes. Railway deployment
+and fresh candidate evidence still require separate verification.
+
+
+## 2026-10-01 session-aware daily collection repair
+
+Seven healthy v2 Railway jobs used only about 312 KB of additional database
+space but produced zero decisions because the exact 24-hour freshness boundary
+rejected every conservatively delayed daily bar. The v3 repair uses a bounded
+four-day daily-bar tolerance, fingerprints completed source sessions, stores a
+compact skip input when the session is unchanged, preserves the last valid
+ranking and reports `NO_USABLE_MARKET_DATA` for an empty provider result. The
+empty v2 week is not promoted or backfilled. See ADR 0030.
+
+- [x] Focused session/freshness/status suite passes: 27 tests.
+- [x] Full offline safe suite passes: 707 tests.
+- [x] Railway v3 web/worker deployment succeeded at commit `43e9d84`.
+- [x] First v3 cycle ranked five opportunities and recorded compact LONG
+  decisions for Sasol (rank 3) and Shoprite (rank 4) from the completed
+  2026-09-30 session; no outcome is mature yet.
+- [x] Post-acceptance database size is about 9.55 MB; the first v3 input is
+  about 23 KB and its two learning decisions total about 1.25 KB.
+- [x] IG streaming remains disabled and live execution remains false.
+
+## 2026-09-25 lean daily learning and storage repair
+
+The disposable Railway data was reset after PostgreSQL exhausted its 500 MB
+volume. The failure was caused by 149,303 GER40 tick observations plus repeated
+five-minute full-chart paper inputs; the learning/outcome tables were empty.
+
+The operational repair introduces `canonical-paper-loop-v2` and
+`ranked-long-swing-v1`. Railway paper work is scheduled once daily. Retry inputs
+retain at most 60 timestamp/close/volume bars per instrument. At most the Top 5
+LONG candidates are stored as compact, deduplicated decisions for each completed
+daily bar, then labelled after three later completed sessions with an explicit
+10 bps cost assumption. Matured outcomes enter the existing contextual learner;
+the 30-sample gate, shrinkage and research-only boundary remain intact. Simulated
+positions use a three-session horizon unless a daily-close stop/target or expiry
+occurs first.
+
+IG streaming is not part of this learning path and remains disabled. JSE cash
+shares are the only admitted paper universe. ETFs remain chart-only; SSFs remain
+blocked pending verified contract and cost evidence. No accuracy, profitability,
+live execution or production-weight promotion is claimed. See ADR 0029.
+
+- [x] Focused lean-loop suite passes: 30 tests.
+- [x] Full offline safe suite passes: 705 tests.
+- [x] Daily-swing sample count, three-session horizon and 30-sample gate are
+  visible through `/api/learning/status`.
+
+## 2026-09-23 technical snapshot consistency repair
+
+Top 5 and its technical review now use the same clicked opportunity snapshot,
+including session, evaluation time and identity. A single list response feeds
+the cards; asynchronous results cannot replace a newer instrument selection.
+Stored trend_state/volatility_state fields are rendered correctly. Cards expose
+directional and neutral technical counts rather than calling one directional
+indicator broad agreement. Historical HR7 controls/results are isolated in a
+collapsed archive and cleared on selection. Legacy mathematics, canonical
+ranking and durable account configuration remain unchanged.
+
+## 2026-09-23 stale Yahoo identity repair
+
+The active public cash-share catalog no longer requests the invalid `JDI.JO`
+symbol, which Yahoo returns as quote-not-found. The stale JD Group/JDIJ identity
+is retained as explicitly inactive metadata solely so the existing durable
+paper-account configuration remains byte-for-byte compatible; runtime loaders
+skip it before making a provider request. Clicks Group (`CLS`, Yahoo `CLS.JO`)
+was verified and admitted to the broader public catalog. It is not silently
+substituted into the existing durable paper account; that would require a
+deliberate v2 account migration. No historical record is relabelled and no
+broker mapping or execution capability is introduced.
+
+The Market chart selector also exposes four verified JSE-listed Satrix ETF
+securities (`STX40`, `STXFIN`, `STXRES`, `STXIND`) plus separately labelled
+Brent, gold, USD/ZAR and JSE-index CFD references. ETF views are actual listed
+security charts. CFD references are public underlying/index proxies, not IG
+contract prices; they exclude broker spread and financing. None enter ranking,
+cash-share sizing or execution.
+
+## 2026-09-23 screen-first research workflow
+
+The dashboard now reflects the canonical pipeline's actual ordering: choose an
+admitted universe, automatically screen all eligible instruments, rank the
+shortlist, review candidate technical evidence, and only then proceed to trade
+geometry, risk sizing and an optional paper worksheet. Top 5 cards link directly
+to the automatic technical evidence used by the ranking. The separate legacy
+full-analysis controls remain explicitly labelled as a six-share benchmark.
+
+The public-universe contract exposes JSE cash shares as available, index ETFs as
+not configured, and CFDs/SSFs as blocked until their asset-specific identity,
+cost, contract, margin/session and lifecycle evidence is verified. No new
+instrument, ranking behavior, risk rule or execution path is introduced. See
+ADR 0028.
+
+## 2026-09-22 Railway worker crash prevention
+
+The 2026-09-22 worker crash was traced to a shared PostgreSQL connection used
+concurrently by a Lightstreamer callback and main-thread job finalization. A
+dedicated, bounded PostgreSQL observation repository now isolates callback
+transactions from scheduler/job/heartbeat transactions. Disconnect drains the
+active callback, rejects later callbacks and closes the writer deterministically.
+See ADR 0027. Focused streaming and transaction validation passes 35 tests; no
+ranking, risk, execution or live-trading behavior changes.
+The complete safe suite passes 693 tests and all 54 protected artifacts remain
+unchanged.
+
+## 2026-09-22 local parity and paper worksheet checkpoint
+
+The default VS Code dashboard task now loads an explicitly localhost-only
+PostgreSQL URL from the ignored `.env.local`, while a separately named SQLite
+task remains available for isolated work. The local `trading` database on port
+5433 was migrated and the dashboard health contract reports
+`CONFIGURED_POSTGRES / AVAILABLE / SHADOW`. This is database-engine parity, not
+a copy of Railway production data.
+
+Canonical opportunity cards now provide a print-only, research-labelled paper
+trade worksheet plus a `Capture actual trade` handoff into the existing
+authenticated manual demo journal. The printout preserves ranking, provenance,
+uncertainty and blockers while leaving actual broker, quantity, price, time,
+stop, target, risk and outcome fields for the operator. Journal prefill carries
+only instrument, LONG/SHORT direction, `APP_INSPIRED` and attribution notes;
+actual execution facts remain user-entered. Neither action submits an order,
+changes broker cash or makes the record canonical learning evidence.
+Validation passes 692 safe offline tests, compilation of 208 Python files,
+JavaScript syntax checks and all 54 protected artifacts.
+
+## Operational demo workspace — ACTIVE 2026-09-19
+
+2026-09-20 connected-cash/manual-journal extension (ADR 0026): replaces the
+headline simulator seed with broker-reported available funds and dated display
+FX, adds per-account tabs and authenticated self-reported trade entry/closure.
+The original simulator remains separate. Manual outcome review is durable and
+causal but is not canonical strategy learning. See
+`docs/repair/CONNECTED_CASH_JOURNAL.md` for workflow and precise limits.
+
+User explicitly authorized deployment activation, IG demo integration, portfolio
+redesign and aggression controls after the deployed audit. ADR 0025 supersedes
+the earlier local-completion interpretation. This is the sole active milestone.
+
+2026-09-20 Ollama Cloud verification: the Railway web and worker services now
+carry the configured cloud model and secret through Railway variables. A bounded
+single-instrument analysis returned `llm_used=true` with `AI + keyword fallback`;
+Moonshot remains deliberately unconfigured. This satisfies the optional AI
+provider smoke check but does not alter ranking, risk, execution or promotion.
+
+2026-09-20 timeframe audit: the dashboard's one-day view now requests completed
+30-minute Yahoo bars for swing review. The canonical public ranking and ZAR paper
+loop remain explicitly daily-close (`1d`) until an authorized, verified JSE
+30-minute source and session/cost contract are available. HR11 `intraday_30m`
+remains research-only and cannot silently feed the daily production path.
+
+2026-09-20 M25 data probe: the authenticated IG Demo history endpoint returned
+165 complete `MINUTE_30` derived-mid Brent bars with zero malformed, incomplete,
+or duplicate rows and no truncation. Twelve interval discontinuities remain
+unclassified because an EPIC-specific session calendar is not yet verified; the
+bars remain research-only and were not persisted or evaluated.
+
+The corresponding IG market metadata returned bid `10014.8`, offer `10019.6`,
+tick size `1.0`, lot size `1.0`, minimum deal size `1.0`, and margin factor
+`1.5`, but `trading_hours` was empty and currency was unavailable. The observed
+4.8-point quote is retained as evidence only; commission, slippage, financing,
+and currency-aware cost admission remain blocked.
+An authenticated Version 4 lookup likewise omitted `openingHours` and returned
+an empty currency code; this is an upstream response limitation, not only a
+Version 3 adapter-normalization issue.
+
+The read-only indicative-costs endpoint accepted a bounded one-unit BUY probe
+and returned USD instrument currency, ZAR converted notional `622.191153`,
+opening/closing spread `0.1475581886496`, zero opening/closing commission and
+FX fee, overnight funding `-0.7836692434023048`, and daily FX fee
+`0.0077591014198248`. This is indicative broker evidence only; it is not an
+order and does not replace a versioned historical cost schedule.
+The evidence is preserved in
+`artifacts/research/m25_hr11_real_data/ig_30m_indicative_cost_probe_2026-09-20.json`.
+
+Deployed checkpoint: web and worker successfully deployed 825ac27; PostgreSQL
+contains completed paper jobs, rankings, audited controls and ten newly persisted
+Moneyweb analyses. Deployed cookie/Bearer authentication, aggression changes,
+pause/resume and queue requests passed; conservative/unpaused defaults restored.
+688 safe tests and all 54 protected artifacts pass. Portfolio browser and Top-5
+worker provenance verified. No market-session fill or production learned cell
+is claimed. IG credentials are now configured in Railway and deployed DEMO
+account reads pass. A concrete PRICE transport passed bounded local
+subscription/snapshot validation. Durable IG streaming ingestion is now wired
+into the worker (`workers/ig_streaming.py`) and persists observations to the
+shadow-learning ledger; deployment activation requires
+`IG_STREAM_ENABLED=1` and `IG_STREAM_INSTRUMENTS` in Railway. The public-share
+intent preview gate was repaired so cash-share opportunities without an IG EPIC
+can reach `READY_FOR_PREVIEW` while staying non-executable. Cloud AI is verified
+but this broader milestone is not complete. See
+docs/repair/IG_OPERATIONAL_REASSESSMENT.md for revised gates.
+
+## Canonical paper-loop repair — COMPLETE LOCALLY 2026-09-19
+
+User authorized Gates 2–5. See docs/repair/GATES_2_5_PLAN.md and ADR 0024.
+The earlier Gate 1 claim is corrected: causal paper strategy outcomes now affect
+M11/M13, and both displays consume the canonical ranking. Gates 2–5 connect the
+bounded daily-close ZAR cash-share paper model, including durable scheduling,
+M14 geometry, M15 cash/risk/aggression caps and restartable PaperBroker outcomes.
+664 safe tests, native PostgreSQL acceptance and all 54 protected artifacts pass.
+No live execution, deployment or profitability claim. Runtime configuration and
+broader portfolio/instrument scope remain as documented in PAPER_LOOP_RUNBOOK.md.
+All checkpoint notes below are historical; the operational milestone above is active.
+
+### Public-share research UI checkpoint — 2026-09-18
+
+The dashboard's fixed-six selection was expanded to the curated 18-share public
+catalog without changing the six-share operational benchmark. A bounded
+on-demand refresh now builds dated M11 effectiveness, M12 suitability and M10
+divergence evidence for M13 canonical ranking. Only ranked shares reach the
+read-only Top 5; incomplete/unavailable candidates are reported separately.
+The result remains in process memory until refresh/restart. See ADR 0022.
+
+### Gate 1 canonical opportunity pipeline — COMPLETE LOCALLY 2026-09-19
+
+The canonical M13 path now retains technical, causal regime, factual news/macro
+and persisted-learning input evidence on each ResearchOpportunity. The legacy
+70/30 scanner no longer supplies /api/opportunities; that compatibility route
+reads the canonical service, while the Top 5 UI continues to use the canonical
+v1 API. Missing evidence remains unavailable and future learned context cannot
+enter an earlier evaluation. See the Gate 1 repair plan and ADR 0023.
+
+Gates 2–5 remain disconnected: autonomous scheduling/outcomes, trade geometry,
+portfolio/aggression sizing, and PaperBroker closed-loop orchestration.
+
+### Forensic repair checkpoint — 2026-09-17
+
+Local repair batches cover causal inputs/horizons/costs, transactional ledgers,
+runtime composition and migrations, bounded MI/reliability/status, and acceptance
+hardening. Native PostgreSQL validation passed locally on PostgreSQL 18 at
+127.0.0.1:5433, including native write/read, rollback, separate-process verify,
+and repeatable migrations. No Railway deployment has occurred. MI network
+providers remain explicit approved host dependencies, never selected or called
+implicitly. See the
+[repair log](../research/SHADOW_REPAIR_LOG.md) and
+[migration runbook](../operations/SHADOW_MIGRATION_RUNBOOK.md).
+
+This is the only active milestone. Sections below are historical checkpoints,
+not concurrent work authorizations. No production signal or adaptive promotion.
+
+This milestone adds a bounded, broker-independent durable shadow loop. It
+persists causal observations, canonical `OperationalIntelligence.analyze()`
+shadow decisions, matured outcomes, and separately governed shadow evidence.
+Duplicate contributions are database-protected; missing outcomes are never
+guessed; production adaptive state is never mutated. Runtime reliability uses
+the shared configured repository. Railway remains one web service, one minimal
+bounded worker, and PostgreSQL; when no work is due, the worker does almost
+nothing. Historical research and broad analysis remain local/on-demand.
+
+## Technical Intelligence workspace — HISTORICAL CHECKPOINT 2026-09-16
+
+The dashboard now exposes a read-only technical evidence endpoint and a
+deterministic Technical Intelligence flow surface using the existing
+operational technical state. Indicator availability is explicit, unsupported
+families are not fabricated, and the existing Market AI ticker remains shared.
+See `docs/market_intelligence/INDICATOR_INVENTORY.md`. Technical mathematics,
+adaptive learning, regimes, risk, signals and broker boundaries are unchanged.
+
+## Market AI / News UI — HISTORICAL CHECKPOINT 2026-09-16
+
+The first presentation milestone extends the existing dashboard with a
+functional Market AI workspace, source controls, current narrative/theme and
+watch/investigate panels, provenance read access, and a backend-driven hybrid
+ticker read model. Empty, stale and unavailable states remain explicit. The
+technical decision tree, portfolio redesign, ViewPoint and IG remain deferred.
+
+## Market Intelligence Foundation — COMPLETE 2026-09-16
+
+This milestone extends the existing OI4 `market_intelligence` foundation. It
+adds additive document/analysis/provenance contracts, versioned persistence,
+bounded PDF primitives, deterministic Efficient Group discovery fixtures, a
+hybrid investigation watchlist and a research-priority-only bridge. Market AI
+cannot create signals, trades, broker calls, or modify technical/adaptive/risk
+behaviour. IG and ViewPoint remain parked.
+
+Acceptance evidence: migration 0003, fixture-based Efficient Group discovery,
+bounded PDF validation/hash/embedded extraction, structured fact/inference
+contracts, provider/model/schema/prompt-aware analysis caching, durable analysis
+and snapshot/provenance persistence, deterministic hybrid watchlist semantics,
+and canonical-instrument research priority are implemented. Focused and broad
+protected-boundary suites pass; external Efficient Group verification and UI
+remain deliberately deferred.
+
+## M30 — Bounded IG Demo Execution Validation [COMPLETE 2026-09-11]
+
+Added a manually invoked, two-phase Demo validation harness. Phase A constructs
+and audits an exact M29 request from an isolated synthetic chain but defaults to
+non-mutation. Phase B requires separate explicit authorization plus factual
+market/account/position preflight, a fresh M27 check and M28 PASS; one opening
+mutation is the maximum and unknown outcomes never retry.
+
+No external Demo order was authorized or sent. No instrument facts were invented,
+no position is auto-closed, and no LIVE, GUI or autonomous execution path exists.
+M25 external empirical HR11 validation remains pending/inconclusive.
+
+Next milestone: UNDEFINED — no post-M30 milestone is currently authorized [NOT STARTED].
+
+## M29 — IG Demo Order Submission [COMPLETE 2026-09-11]
+
+Added a backend-only IG Demo MARKET submission adapter gated by exact M28/M15
+identity, explicit flags and human permission, approved size/stop and account.
+Idempotency locks before send; ambiguous outcomes never retry; IG acknowledgement
+and confirmation remain distinct. Capability is implemented but runtime-disabled.
+
+No external Demo order was authorized or sent. No LIVE path, GUI control or
+autonomous orchestration exists. M25 external empirical HR11 validation remains
+pending/inconclusive.
+
+Next unfinished roadmap milestone: M30 — Bounded IG Demo Execution Validation [NOT STARTED].
+
+## M28 — IG Demo Execution Safety Gate [COMPLETE 2026-09-11]
+
+Added a pure IG Demo prerequisite gate with auditable PASS/FAIL/UNRESOLVED/
+NOT_CONFIGURED checks. Execution flag and human consent remain explicit, the
+M14/M15 chain and stop must resolve, M26/M27 state must be fresh/clean, and
+mapping, market, duplicate, conflict, kill-switch, FX, margin and provenance
+checks all fail closed. No broker payload, call, route or GUI action exists.
+
+Current adapter capability and M14/M15 state remain non-executable. M25 external
+empirical HR11 validation remains pending/inconclusive.
+
+Next unfinished roadmap milestone: M29 — IG Demo Order Submission [NOT STARTED].
+
+## M27 — Read-only Broker State Reconciliation [COMPLETE 2026-09-11]
+
+Added a pure immutable comparison boundary for broker and explicitly adapted
+internal snapshots. Exact identifiers, semantic field mappings, unit-aware
+quantity rules, configurable tolerances/skew, freshness and typed discrepancies
+remain auditable. No source is mutated and clean does not authorize trading.
+
+External reconciliation was not run because credentials were unavailable. M25
+external empirical HR11 validation remains pending/inconclusive.
+
+Next unfinished roadmap milestone: M28 — IG Demo Execution Safety Gate [NOT STARTED].
+
+## M26 — Read-only Broker Account and Position State [COMPLETE 2026-09-11]
+
+Added canonical account/position/snapshot contracts and an IG Demo GET-only
+normalizer. Balance terms, currency, margin unknowns, LONG/SHORT identity,
+EPIC-specific mappings, zero positions, endpoint failure, provenance and
+configurable freshness remain distinct. PaperBroker, legacy portfolio, M15 risk,
+GUI and execution are untouched.
+
+M25 external empirical HR11 validation remains pending/inconclusive until real
+data and factual session/calendar context are supplied.
+
+Next unfinished roadmap milestone: M27 — Read-only Broker State Reconciliation [NOT STARTED].
+
+## M25 — HR11 Real-data Validation [COMPLETE 2026-09-11]
+
+Added the registered data-source-only M25 experiment and strict IG Demo 5-minute
+history bridge into frozen HR11 completed-bar contracts. No parameters, features,
+signals, horizons, sessions, costs, evaluation or robustness rules changed.
+
+Local credentials and a factual EPIC session calendar were unavailable, so the
+external run was not performed. The additive artifact truthfully records no
+empirical metrics and an `INSUFFICIENT_EVIDENCE / INCONCLUSIVE` result. This is
+not a zero-trade strategy failure and does not alter prior HR11 history.
+
+Next unfinished roadmap milestone: M26 — Read-only Broker Account and Position State [NOT STARTED].
+
+## M24 — Real-time Market Streaming [COMPLETE 2026-09-11]
+
+Added canonical data-only IG Demo streaming contracts and normalization using
+documented Lightstreamer session metadata and PRICE identity. Quotes preserve
+bid/ask, explicit derived mid/spread, source/receipt time, market status,
+ordering, research grade and provenance. Health, staleness, unsubscribe and
+bounded reconnect remain isolated from execution and research orchestration.
+
+No production Lightstreamer transport was externally exercised here. No bars,
+persistence, orders, PaperBroker auto-fill, opportunity, policy, risk or intent
+side effects were added. M12A/M12B superseded old M22/M23; unfinished HR11
+real-data work remains M25.
+
+Next unfinished roadmap milestone: M25 — HR11 Real-data Validation [NOT STARTED].
+
+## M21 — PaperBroker [COMPLETE 2026-09-11]
+
+Added the generic BrokerAdapter capability boundary and a network-incapable,
+in-memory, PAPER-only broker. It accepts only broker-neutral canonical intents
+with matching M15 APPROVED/REDUCED risk, fills only from supplied causal prices
+under explicit slippage/cost configuration, retains order/fill/position/account
+state, forbids duplicate intents and silent reversal, and audits cancellation,
+close and reconciliation.
+
+Current unresolved M14/M15 records remain non-executable. Margin stays
+unavailable rather than invented; durable persistence is deferred. M12A/M12B
+already supersede old IG discovery/history placeholders, while IG streaming,
+account synchronization, Demo execution and reconciliation remain unfinished.
+No GUI action, external broker call, runtime switch or later milestone was added.
+See `docs/execution/M21_PAPER_BROKER.md`.
+
+The full safe suite passes 468 tests and all 39 protected research artifacts
+remain byte-identical.
+
+Next unfinished roadmap milestone: M24 — Real-time Market Streaming [NOT STARTED].
+
+## M20 — Early Read-Only Top-5 GUI [COMPLETE 2026-09-11]
+
+Added a dedicated canonical Top-5 dashboard tab consuming M19's read-only API.
+Cards preserve backend rank, score semantics, LONG/SHORT/WATCH/UNKNOWN,
+eligibility, regime, divergence, evidence, suitability, uncertainty, reasons and
+blockers. Expandable details display policy, unresolved stop, risk/null size,
+intent readiness and provenance without calculating business state in the
+browser.
+
+Empty/error states never substitute legacy recommendations. Legacy dashboard
+content remains intact. No production fixtures, aggressive polling, sizing,
+execution controls, broker action, runtime behavior, or M21 work was added. See
+`docs/ui/M20_TOP5_GUI.md`.
+
+The full safe suite passes 459 tests and all 39 protected research artifacts
+remain byte-identical.
+
+Next milestone: M21 — PaperBroker [NOT STARTED].
+
+## M19 — Canonical Opportunity / TradeIntent API [COMPLETE 2026-09-11]
+
+Added a storage-neutral canonical opportunity application service, explicit
+serializers, non-executable `trade-intent-preview-v1`, and read-only versioned
+Flask routes for opportunity list/detail, policy, risk and intent state. Top-N
+retains M13 rank and evidence. Ranking score is labelled comparative research,
+never probability. Unresolved M14 stops and null M15 sizes remain visible and
+produce an unresolved 409 intent response.
+
+The default canonical source is empty until supplied real upstream records.
+Legacy routes remain unchanged. No broker-native order fields, PaperBroker/IG
+submission, position mutation, runtime switch, GUI work, or M20 implementation
+was added. See `docs/api/M19_CANONICAL_OPPORTUNITY_API.md`.
+
+The full safe suite passes 450 tests and all 39 protected research artifacts
+remain byte-identical.
+
+Next milestone: M20 — Early Read-Only Top-5 GUI [NOT STARTED].
+
+## M18 — Canonical Metrics [COMPLETE 2026-09-11]
+
+Added `canonical-metrics-v1` with expanded MetricContext, immutable MetricResult,
+a definition registry, explicit gross/net expectancy, resolved-outcome hit rate,
+payoff metrics, canonical Sharpe/Sortino, drawdown/duration, volatility,
+position-state turnover, cost decomposition, profit factor, Calmar, exposure and
+separately versioned weighted expectancy. Invalid/unavailable metrics never
+become zero and sample depth remains visible.
+
+HR10's `mean / sample_std * sqrt(n)` remains `LEGACY_TSTAT_LIKE_V1`; frozen
+research was not rewritten. M16 criteria preserve metric versions and M17
+results can carry canonical results append-only. No thresholds, optimization,
+runtime, ranking, policy, risk, broker, execution, or M19 work was added. See
+`docs/research/M18_CANONICAL_METRICS.md`.
+
+The full safe suite passes 442 tests and all 39 protected research artifacts
+remain byte-identical.
+
+Next milestone: M19 — Canonical Opportunity / TradeIntent API [NOT STARTED].
+
+## M17 — Experiment Registry [COMPLETE 2026-09-11]
+
+Added immutable definition, data-boundary, factorial-design, run, result and
+decision contracts plus an append-only repository protocol/reference
+implementation. Single-treatment attribution is the default; factorial work
+must be explicit. Confirmatory preregistration, exact M16 target versions,
+MetricContext, causal OOS separation, negative evidence, deterministic safe
+configuration hashes and explicit baseline succession are preserved.
+
+HR7–HR11 remain legacy/pre-registry references and were not rewritten. Durable
+SQLite/PostgreSQL adapters are deferred together pending an additive canonical
+migration. No optimization, auto-promotion, baseline mutation, runtime, broker,
+execution, or M18 work was added. See
+`docs/research/M17_EXPERIMENT_REGISTRY.md`.
+
+The full safe suite passes 429 tests and all 39 protected research artifacts
+remain byte-identical.
+
+Next milestone: M18 — Canonical Metrics [NOT STARTED].
+
+## M16 — StrategyTarget [COMPLETE 2026-09-11]
+
+Added the immutable `strategy-target-v1` declaration and contextual criterion
+contracts. Hard and soft requirements remain independent, unset thresholds are
+`NOT_CONFIGURED`, and exact metric context plus IS/validation/OOS/walk-forward/
+forward-Demo/live stage identity is required. HR10's historical sample-scaled
+mean/std statistic is preserved as `LEGACY_TSTAT_LIKE_V1`; canonical annualized
+Sharpe requires explicit periodicity, annualization, overlap, return, cost and
+risk-free-rate context.
+
+Target assessment produces only research-review status and can never authorize
+promotion. No thresholds, candidate pass claims, optimization, strategy,
+ranking, TradePolicy, RiskEngine, runtime, broker, execution, or M17 behavior
+was introduced. See `docs/research/M16_STRATEGY_TARGET.md`.
+
+The full safe suite passes 419 tests and all 39 protected research artifacts
+remain byte-identical.
+
+Next milestone: M17 — Experiment Registry [NOT STARTED].
+
+## M15 — Risk & Exposure Engine [COMPLETE 2026-09-11]
+
+Added the broker-neutral `risk-exposure-v1` final-veto planning boundary over
+M14 `TradePolicy`. Typed operator limits, point-in-time portfolio state,
+instrument contract metadata, explicit FX conversion, immutable risk evaluation
+and non-executable approved-risk records preserve monetary stopped-loss sizing,
+downward-only lot rounding, margin/gearing constraints, instrument/sector/factual
+correlation exposure, and daily-loss/drawdown/kill-switch controls.
+
+No production limits were invented: every mandatory absent control is
+`NOT_CONFIGURED`. Missing stop, equity, margin, contract, currency or required FX
+evidence produces no size. Current M14 policies therefore remain unresolved and
+cannot become execution-ready. Legacy hard-coded personality sizing was not
+adopted. No runtime integration, broker request, order creation, portfolio
+mutation, optimization, live trading, or M16 implementation was added. See
+`docs/research/M15_RISK_EXPOSURE_ENGINE.md`.
+
+The full safe suite passes 404 tests and all 39 protected research artifacts
+remain byte-identical.
+
+Next milestone: M16 — StrategyTarget [NOT STARTED].
+
+## M12 — Instrument Selection & Suitability Learning [COMPLETE 2026-09-09]
+
+Added a canonical suitability evaluator around the existing instrument registry
+and M11 effectiveness records. Hard eligibility is separated from soft
+suitability; manual blocks, permissions, horizon support, data requirements and
+execution metadata remain decisive. Research suitability is distinct from
+execution suitability. Data grade, assumed versus observed costs, unknown
+liquidity, feature evidence, stability and regime coverage remain separate
+states. Discovered instruments remain candidate/research only.
+
+The safe suite passed 307 tests and all 39 immutable research artifacts remain
+unchanged. No ranking, portfolio selection, strategy weighting, dashboard,
+Railway or broker integration was added. See
+`docs/research/M12_INSTRUMENT_SUITABILITY.md`.
+
+## M12A — IG Discovery, Authentication & Canonical Market Mapping [COMPLETE 2026-09-10]
+
+Read-only IG discovery infrastructure is implemented with explicit DEMO/LIVE
+configuration, in-memory authentication, account discovery, market search,
+market detail normalization and distinct EPIC/product mappings. Automated local
+tests pass, and the operator separately verified all four read-only commands
+against IG Demo. No IG dealing or runtime integration is enabled. See
+`docs/integrations/IG_M12A_DISCOVERY.md`.
+
+Authentication diagnostics now make a read-only session attempt and retain
+sanitized HTTP status, IG error code, conservative error category and safe
+operator message. Credential, account, token, header, cookie and request-body
+values remain excluded. Two-factor requirements are reported but not automated.
+The safe suite passes 332 tests and all 39 immutable research artifacts
+remain unchanged.
+
+The LIVE validation error
+`validation.pattern.invalid.authenticationRequest.identifier` established that
+the configured value violated the v2 `/session` identifier pattern. M12A now
+uses explicit `IG_IDENTIFIER` semantics, validates IG's documented 1-30
+letter/digit/hyphen/underscore contract locally, retains `IG_USERNAME` only as
+an alias, and keeps `IG_ACCOUNT_ID` distinct. At M12A closure no IG execution
+or M12B work was active.
+
+The subsequent DEMO HTTP 200 exposed a response-mapping defect: `/session` v2
+returns `CST` and `X-SECURITY-TOKEN` in case-insensitive HTTP response headers,
+while the adapter had discarded headers and searched the JSON body. The adapter
+now requires and retains both tokens only in memory and does not mix v3 OAuth
+tokens into the v2 contract.
+
+Operator-provided external evidence confirms Demo authentication, enabled
+preferred CFD account discovery, distinct Brent EPIC/product-variant search and
+tradeable Brent market-detail normalization. Null currency, margin factor and
+trading hours remained explicit. The coding workspace did not access the
+operator account, and no account ID or secret is recorded.
+
+Next milestone: M12B — IG Historical Data Ingestion & Validation [COMPLETE].
+
+## M12B — IG Historical Data Ingestion & Validation [COMPLETE 2026-09-10]
+
+The local read-only candidate retrieves IG `/prices/{epic}` v3 history with an
+explicit documented resolution map, bounded pagination, canonical completed-bar
+normalization, preserved bid/ask/last OHLC components, versioned derived mids,
+UTC timestamps, provenance, duplicate/discontinuity/truncation diagnostics,
+research-only data grade and factual suitability evidence. No data is persisted,
+no scoring or runtime trading changes, and no HR11 rerun occurred. See
+`docs/integrations/IG_M12B_HISTORICAL_DATA.md`.
+
+The initial external history probe exposed an incorrect `Accept-Version` header.
+The URL path already retained `/gateway/deal`; the gateway defaulted the v3-only
+prices route to version 1 and returned HTML 404. The shared boundary now uses
+IG's documented `Version` header, safely anchors all endpoint paths beneath the
+gateway, and provides query-free route diagnostics.
+
+The operator subsequently retrieved non-truncated DAY (26 accepted/1 excluded),
+HOUR (39/6) and MINUTE_5 (457/70, two pages) history. External inspection proved
+the 70 sampled 5-minute exclusions were structurally complete and solely outside
+the requested range. The adapter now counts valid extra response records as
+`excluded_outside_range`, not malformed, while continuing to filter them.
+Malformed, incomplete, range and duplicate counters remain distinct; range-only
+exclusions do not make completeness `PARTIAL_MALFORMED`. Completeness is scoped
+to API response processing, not market-calendar coverage, and gap semantics stay
+`UNCLASSIFIED_INTERVAL_DISCONTINUITIES`.
+
+The full safe suite passes 363 tests; all 39 immutable research artifacts remain
+unchanged.
+
+The operator's final external IG Demo validation passed DAY, HOUR and MINUTE_5
+history. The 5-minute result contained 457 derived-mid research bars, zero
+malformed/incomplete/duplicate rows, 70 valid out-of-range exclusions, two pages
+and no truncation. It reported `COMPLETE_REQUESTED_RANGE`; 24 discontinuities
+remain `UNCLASSIFIED_INTERVAL_DISCONTINUITIES` because no EPIC-specific trading
+calendar exists. This proves IG Demo is a viable candidate source for later HR11
+validation, not full long-horizon depth or closure of the HR11 data gap. No HR11
+rerun occurred.
+
+The M12B `ai_config.py` change only prevents `.env` loading when the explicit
+safe-suite flag is set. It changes no AI decision, scoring, signal, execution or
+runtime trading behavior. The coding workspace did not access the operator
+account; Demo data remains `RESEARCH_DATA`, historical allowance and timezone
+limitations remain, and execution stays disabled.
+
+Next milestone: M13 — Opportunity Ranking [COMPLETE].
+
+## M13 — Opportunity Ranking [COMPLETE 2026-09-11]
+
+Added an additive `opportunity-ranking-v1` research boundary consuming canonical
+M3 identity, M9 regime, M10 divergence, M11 effectiveness, M12 suitability and
+factual M12A/M12B broker/data metadata. M12 hard eligibility is applied before
+scoring; blocked, unsupported and insufficient candidates remain auditable but
+unranked. Research-suitable execution-unsuitable candidates may remain labelled
+research opportunities.
+
+The transparent configurable 0–100 score combines suitability, effectiveness
+support, evidence depth, stability, causal directional strength, exact contextual
+regime support, unflattened divergence state and data quality, with separate
+uncertainty and known-cost penalties. It is explicitly a comparative research
+ranking score—not profit probability, trade confidence or expected return.
+Deterministic reasons, blockers, uncertainty and provenance are retained; top-N
+is a view and does not discard lower-ranked or negative evidence.
+
+No persistence, Flask/runtime integration, strategy change, TradePolicy,
+position sizing, portfolio optimization or broker execution was added. The full
+safe suite passes 375 tests and all 39 protected artifacts remain unchanged. See
+`docs/research/M13_OPPORTUNITY_RANKING.md`.
+
+Next milestone: M14 — TradePolicy [COMPLETE].
+
+## M14 — TradePolicy [COMPLETE 2026-09-11]
+
+Added a canonical, non-executable `trade-policy-v1` planning boundary over M13
+`ResearchOpportunity`. It reuses the existing versioned policy enums and
+`CandidateTradePolicy` snapshot, adding explicit unresolved enum states rather
+than forcing numeric geometry. The only evidence-supported directional family
+preserves HR11's causal next-observed-bar-open reference and canonical
+horizon-end exit; audit-only records cover blocked, insufficient and WATCH
+opportunities.
+
+No validated causal stop-distance implementation exists, so stop price/distance
+remain unresolved, target is optional/none, trailing is unsupported and even a
+directional plan is not ready for risk review. Invalidation remains distinct
+from stop loss. Reversal requires exit and separate new-policy review; it never
+auto-flips. Requested risk fraction, loss budget and gearing remain unset and
+unapproved.
+
+No TradeIntent, final sizing, margin/risk approval, portfolio calculation,
+persistence, runtime integration, paper preview, broker order or optimization
+was added. The full safe suite passes 387 tests and all 39 protected artifacts
+remain unchanged. See `docs/research/M14_TRADE_POLICY.md`.
+
+Next milestone: M15 — Risk & Exposure Engine [NOT STARTED].
+
+## M11 — Contextual Feature Effectiveness Learning [COMPLETE 2026-09-09]
+
+Added canonical research contracts for matured feature outcomes and contextual
+effectiveness estimates. The learner preserves causal availability/maturity
+boundaries, explicit gross/net outcomes, configurable minimum evidence,
+hierarchical fallback, prior shrinkage, optional recency weighting and negative
+evidence. It supports technical, divergence and causally supplied cross-asset
+features without fabricating unavailable inputs. Daily and intraday horizons
+remain distinct.
+
+No learned output is connected to scoring, ranking, risk, GUI, Railway or broker
+runtime. The safe suite passed 301 tests and all 39 immutable research artifacts
+remain unchanged. See `docs/research/M11_CONTEXTUAL_EFFECTIVENESS.md`.
+
+Next milestone: M12 — Instrument Selection & Suitability Learning [NOT STARTED].
+
+## M10 — Divergence & Disagreement Feature Implementation [COMPLETE 2026-09-09]
+
+Added the research-only `divergence-v1` feature family. It measures positive,
+negative, neutral and unavailable evidence separately, distinguishing low
+evidence, high agreement, high disagreement and directional dominance with
+residual conflict. Pair/group summaries retain instrument, horizon, availability,
+feature-version and optional regime context.
+
+Future inputs are excluded from earlier summaries; no learned weights, hindsight
+pivots or synthetic macro/news history are used. The feature family is not
+connected to scoring, ranking, risk, GUI, Railway or broker paths. The safe suite
+passed 296 tests and all 39 immutable research artifacts remain unchanged. See
+`docs/research/M10_DIVERGENCE_FEATURES.md`.
+
+Next milestone: M11 — Contextual Feature Effectiveness Learning [NOT STARTED].
+
+## M9 — Canonical Regime Engine & Versioning [COMPLETE 2026-09-09]
+
+Added `domain.features.regime` with a typed `MarketRegime` contract, explicit
+availability states, versioned regime definitions and a registry. Existing
+daily `regime-v1` and HR11 intraday regime semantics remain reference/legacy
+implementations with parity coverage. A parameterized candidate regime remains
+research-only; thresholds are supplied as configuration and missing macro or
+liquidity inputs remain explicit unknown/unavailable states.
+
+The full safe suite passed 291 tests and all 39 immutable research artifacts
+remain unchanged. Causal tests prove future observations cannot alter an earlier
+classification. No production runtime, scoring, ranking, GUI, Railway, broker
+or historical research behavior changed. See
+`docs/research/M9_REGIME_VERSIONING.md`.
+
+Next milestone: M10 — Divergence & Disagreement Feature Implementation [NOT STARTED].
+
+## M8 — Preserve & Migrate HR11 Causal Core [COMPLETE 2026-09-09]
+
+Added canonical `domain.market_data` facades for the preserved HR11 session,
+completed-bar aggregation, horizon, cross-asset and turnover-cost contracts.
+Intraday duration and daily session horizons have distinct identities.
+Availability-time joins, missing-data states, session boundaries, break rules,
+future-mutation invariance and position-transition costs remain unchanged.
+
+HR11 scripts and legacy tests remain compatible. Experimental signals, profiles
+and paper router were left unchanged and disconnected from production paths.
+The safe suite passed 286 tests; all 39 immutable research artifacts remain
+unchanged. No HR11 real-data rerun occurred and the known 180 insufficient-
+evidence cells were not reinterpreted. See
+`docs/research/M8_HR11_CAUSAL_CORE.md`.
+
+Next milestone: M9 — Canonical Regime Engine & Versioning [NOT STARTED].
+
+## M7 — Early Railway Foundation Validation [COMPLETE 2026-09-09]
+
+Railway Web and Worker services were externally validated by the operator.
+The Web service returned HTTP 200 from `/health` with `mode=RESEARCH`,
+`live_execution=false` and `database=CONFIGURED_POSTGRES`; Gunicorn bound the
+Railway port successfully. The Worker emitted heartbeats and recovered after
+redeployment. Real Railway PostgreSQL write/verify validation passed for source
+policy, evidence, clustered event and audit records, including UTC round-trip,
+transaction rollback and persistence across a fresh Web container.
+
+The local safe suite passed 281 tests and all 39 immutable research artifacts
+remained unchanged. Local tests cover fail-closed PostgreSQL configuration; no
+deliberate production outage test was performed. Supplied Railway logs exposed
+no secrets, and no trading behavior was activated. The distinction between
+local automated checks and operator-observed external evidence is recorded in
+`docs/research/M7_RAILWAY_FOUNDATION.md`.
+
+Next milestone: M8 — Preserve & Migrate HR11 Causal Core [NOT STARTED].
+
+## M6 — Persistence Abstraction Layer [COMPLETE 2026-09-09]
+
+Added the domain-oriented `StorageRepository` boundary with an SQLite adapter
+delegating existing `MarketIntelligenceStore` behavior and a PostgreSQL adapter
+activated only by `DATABASE_URL`. Added one additive clustered-event migration;
+source policies, evidence, audits and clustered events have contract coverage.
+No live PostgreSQL instance was available, so integration remains unvalidated.
+The safe suite passes 274 tests and all 39 protected artifacts remain unchanged.
+
+Next milestone: M7 — Early Railway Foundation Validation [NOT STARTED].
+
+## M5 — Event Provenance & Configurable Clustering Engine [COMPLETE 2026-09-09]
+
+Added an isolated deterministic Tier-2 event clusterer with versioned research
+policies, token-Jaccard similarity, entity overlap, bounded time windows,
+stable event IDs and causal `as_of` snapshots. Original EvidenceRecords and
+Tier-1 exact deduplication remain unchanged. No persistence schema or runtime
+scoring path changed. The safe suite passes 268 tests and all 39 protected
+artifacts remain unchanged.
+
+Next milestone: M6 — Persistence Abstraction Layer [NOT STARTED].
+
+## M4 — Canonical Source Registry Promotion [COMPLETE 2026-09-09]
+
+Promoted the existing OI4 source registry through an additive canonical facade.
+The 16 built-in policies, custom registration, enable/disable state, manual
+weights, audit behavior and SQLite restart persistence are preserved. Learned
+reliability remains a placeholder; collectors and evidence deduplication are
+unchanged. The safe suite passes 259 tests and all 39 protected artifacts match.
+
+Next milestone: M5 — Event Provenance & Configurable Clustering Engine [NOT STARTED].
+
+## M3 — Instrument Registry Reconciliation [COMPLETE 2026-09-09]
+
+Added the broker-neutral canonical instrument registry and mapping document.
+Legacy aliases, six operational equities and all nine enabled HR11 identities
+remain compatible. Discovery and execution mappings remain explicit and
+unresolved where unverified. The safe suite passes 254 tests; all 39 protected
+artifacts remain unchanged.
+
+Next milestone: M4 — Canonical Source Registry Promotion [NOT STARTED].
+
+## M0 — Baseline Freeze & Verification [COMPLETE 2026-09-09]
+
+- Preparation commit: `374fbae8d177b5e6da33382bcd72b2cd0a30cfed` on `master`.
+- Safe suite: 234 passed, 0 failed, 0 skipped, 30.202 seconds, Python 3.12.2
+  in `.venv-m0`, dependencies from `requirements.txt`.
+- Immutable HR11 baseline: 39 expected, 39 verified, 0 mismatched, 0 missing.
+- No trading/research computation, data migration, GUI or Railway behavior changed.
+- Completed 2026-09-09 (Africa/Johannesburg).
+- M1 completed 2026-09-09 as an additive contracts-only milestone.
+- M2 completed 2026-09-09 as a versioned registry and parity-only milestone.
+- Next milestone: M3 — Instrument Registry Reconciliation [NOT STARTED].
+
+## M1 — Canonical Domain Contracts [COMPLETE 2026-09-09]
+
+Added immutable, timezone-aware, serializable domain contracts under
+`domain/contracts/`. Focused tests cover contract invariants and failure modes;
+the complete safe suite passes 241 tests. Legacy behavior and historical
+artifacts remain unchanged.
+
+## M2 — Versioned Feature Registry & Semantic Parity Testing [COMPLETE 2026-09-09]
+
+Added isolated versioned feature definitions, legacy reference wrappers,
+candidate v2 calculators, registry lookup, parity tests and the semantic drift
+register. Legacy runtime paths remain unchanged; all 39 protected artifacts
+remain byte-for-byte verified. The safe suite passes 247 tests.
+
+**OI4 — Market-intelligence UI redesign [PAUSED 2026-09-09; not active]**
+
+Build a configurable market-intelligence layer and redesigned UI around three
+main views: Market AI/News, Technical Intelligence, and Portfolio/Trade Summary.
+Preserve the existing research, signal, ensemble and risk boundaries. No LLM or
+news item may directly generate an executable trade. Broker/execution integration
+remains prepare-only.
+
+Phase A delivers the foundational `market_intelligence` package: schemas,
+SQLite store with migrations, persisted source registry and additive tests.
+Later phases will add Efficient Group/Dawie Roodt ingestion, PDF analysis,
+Market AI structured narrative, dynamic ticker, technical explainability graph,
+portfolio summary UI and ViewPoint preparation.
+
+See [ADR 0024](../adr/0024-market-intelligence-pipeline.md).
+
+## Dashboard recovery check - 2026-09-08
+
+The dashboard was not listening on port 5000 at inspection; no evidence establishes
+that the quote ticker terminated the previous process. Reproduced an HTTP 500
+from the new sources endpoint: its module-level SQLite connection crossed request
+threads. Source routes now use request-scoped connections closed at teardown.
+Removed duplicate news/opportunity DOM containers and assigned the technical tab
+a unique ID in the template. Existing user edits were preserved.
+
+Validation: 29 focused feed, operational, UI, provider and legacy tests pass,
+including concurrent source requests and unique DOM/navigation IDs. Browser
+interaction remains unverified (Playwright is unavailable in this environment).
+The first recovery process inherited sandbox network restrictions (WinError 10013);
+Yahoo and Moneyweb both returned HTTP 200 outside the sandbox. Restarted the local
+dashboard with network access for public-provider verification. At 16:36 SAST,
+SOL intraday returned AVAILABLE (R210.62, provider bar 16:20 SAST), the JSE proxy
+chart returned AVAILABLE, and news exposed 25 headlines with Moneyweb/SENS
+AVAILABLE. News AI processing was still in progress; the preview was explicitly
+keyword-labelled, so completed AI inference is not claimed. OI4 remains ACTIVE.
+
+## SENS intake/cache hardening - 2026-09-08
+
+Follow-up to the reported overload: confirmed dashboard news has one shared
+in-flight refresh, a 300-second post-completion refresh interval, 100 retained
+headlines and at most eight AI requests per scan. Found no proof of the original
+crash. Closed two unbounded paths: SENS now streams at most 2 MiB of decompressed
+response bytes, closes oversized responses and reports RESPONSE_TOO_LARGE;
+non-retaining scanners keep at most 1,000 seen headlines (oldest evicted).
+The SENS parser uses lazy matches and caps output at 100 items. Scanner source
+intake enforces requested limits even if an adapter over-returns. Dashboard
+requests remain 20 Moneyweb / 15 SENS / 8 NewsAPI items per scan.
+
+Validation: 46 focused tests pass, including 1,000 pending polls producing one
+job, repeated 1,000-item source bursts retaining at most 100, outage retention,
+non-retaining dedup bounds and streamed-response early closure. Real bounded
+SENS fetch returned AVAILABLE with 15 items. Restarted the dashboard to load the
+fix. These checks establish bounded item counts/response size, not a long-duration
+memory soak or proof of the prior crash cause. OI4 remains ACTIVE.
+
+## Resume checkpoint - 2026-09-08 evening
+
+OI4 remains ACTIVE and incomplete. This checkpoint saves the in-progress source
+configuration/portfolio CSV UI plus dashboard recovery and SENS cache bounds.
+Local SQLite runtime data is ignored and is recreated/seeded at startup. Restored
+UTF-8 punctuation in dashboard assets during pre-commit review.
+Tomorrow: verify browser interactions and sustained memory use under news refresh;
+recheck local Ollama inference (latest running feed reported UNREACHABLE and used
+keyword fallback). Source configuration is persisted but is not yet connected to
+the existing dashboard collectors. The portfolio opportunities panel remains
+unpopulated. Do not infer full OI4 completion or successful AI from available news.
+
+## Previous milestone closure
+
+**ViewPoint broker integration + bounded Ollama recovery — COMPLETE 2026-09-08**
+
+Closed to enforce the Constitution rule of exactly one ACTIVE milestone. The
+ViewPoint adapter scaffold and safety tests are in place, but no authenticated
+ViewPoint payload, endpoint, selector, account, cash, position or order behavior
+has been verified. Legacy OST browser code remains unchanged. Local Ollama
+(0.33.2, `llama3`) is installed and verified on this laptop through the existing
+`SentimentProviders` boundary; the default `llama3.2:3b` is not present. The
+`OLLAMA_LOCAL_MODEL` and `OLLAMA_LOCAL_OPTIONS` settings are read from `.env`.
+Cloud/Kimi keys remain MISSING and OI3 remains deferred pending those provider
+verifications. HR12 is not started.
+
+See [ADR 0022](../adr/0022-viewpoint-broker-boundary.md).
+
+**OI3 DEFERRED/BLOCKED - Windows provider verification (2026-09-08)**
+
+Owner-authorized OI3 verification resumed from `1fc8994`; this pass completed
+available public-source checks and offline routing/discovery verification.
+Moneyweb RSS and SENS succeeded here; three Yahoo discovery symbols succeeded.
+Local Ollama (`llama3`) is installed, reachable and produces valid structured
+output through `SentimentProviders` and the dashboard `/api/feed/news` endpoint
+when CPU-only execution is enabled via `OLLAMA_LOCAL_OPTIONS={"num_gpu":0}`;
+cloud/Kimi keys are MISSING. Real AI summaries for retained headlines are now
+verified locally; provider failure/fallback coverage is expanded in
+`test_sentiment_providers.py`. AI-backed discovery and additional permitted
+commentary ingestion remain blocked until a verified feed/permission is available;
+Efficient Group remains manual-only and disabled.
+See [current evidence and exact blockers](../reports/OI3_WINDOWS_PROVIDER_VERIFICATION.md).
+No milestone is ACTIVE; HR12 is NOT STARTED. Historical checkpoints below remain
+as records of their dates and are superseded by this status where they differ.
+
+## HR11 completion checkpoint
+
+Completed all 15 implementation stages under the owner’s 2026-09-06 mandate.
+175 safe tests pass; 39 protected hashes match. The default research report has
+180 insufficient-evidence cells and no real intraday records or trades. See
+`HR11.md`, `HR11_REQUEST.md` and `docs/reports/HR11_REPORT.md`.
+No successor milestone has been activated.
+OI3 is DEFERRED, not complete; its outstanding work below is preserved.
+See ADR 0021 for the explicit milestone transition.
+
+## Deferred OI3 context
+
+OI2's offline acceptance did not establish a functioning current-data dashboard.
+OI3 restores automatically refreshed public market data, daily/intraday charts,
+and the existing macro sentiment scanner with retained headlines and explicit
+AI/fallback provenance. Preserve legacy research and execution boundaries.
+Acceptance requires provider-failure tests, browser interaction checks, and a
+documented real-provider smoke check; unavailable providers must remain visible.
+
+The referenced root `MASTER_VSCODE_AGENT_PROMPT.md` is absent. Follow AGENTS,
+the Constitution and the owner's explicit restoration request.
+
+## OI3 progress — 2026-09-05
+
+- [x] Restore cached public quotes and timestamped stock/index charts.
+- [x] Connect MacroSentimentScanner; retain and render headlines, macro impacts,
+  source links and per-item AI/keyword provenance.
+- [x] Keep pending loads responsive and preserve data on source failure.
+- [x] Validate 114 safe offline tests, real-provider browser flow, mobile layout,
+  and browser-only failure/retention fixtures.
+- [x] Confirm real Yahoo data and ten Moneyweb headlines in the running app.
+- [x] Add a separate broad-universe opportunity scan using current Yahoo
+  momentum/RSI plus matched public-news impacts; baseline quote cards are not
+  presented as the opportunity selection.
+- [x] Verify successful real AI comprehension and provider failure handling.
+  Local Ollama (`llama3`) now produces valid structured output for permitted
+  headlines through `SentimentProviders` and the dashboard. CPU-only execution is
+  configurable via `OLLAMA_LOCAL_OPTIONS`; fallback to keyword analysis is tested.
+  Cloud/Kimi routes remain unverified because keys are missing.
+- [ ] Connect additional permitted public sources and verify Ollama-backed
+  ticker discovery, including Efficient Group/public commentary where legally
+  accessible. Private Facebook access and SENS challenge bypass remain out of
+  scope.
+
+SENS returns HTTP 403; NewsAPI is unconfigured. These source states remain
+visible. OI3 remains DEFERRED; do not infer AI-feed completion from offline tests.
+See `docs/reports/OI3_RESTORATION_REPORT.md` for evidence and remaining work.
+
+## OI2 scope — activated 2026-09-04
+
+- [x] Inventory every substantive backend capability and its UI disposition.
+- [x] Add canonical instruments, data states, analysis runs and orchestration.
+- [x] Implement exactly 30 auditable evidence gates over real/available inputs.
+- [x] Wire separate market, news, technical, combined-analysis and scanner APIs.
+- [x] Build maintainable Flask templates/static dashboard navigation.
+- [x] Expose legacy BUY/SELL/HOLD while isolating rejected HR9/HR10 research.
+- [x] Keep broker handoff visibly locked; omit journaling while no suggestion is actionable.
+- [x] Validate offline, partial-failure and execution-safety behavior.
+
+OI2 must not tune HR9, alter HR10, read `.env`, automate broker login or expose
+any live-order endpoint.
+
+## OI2 acceptance record — 2026-09-04
+
+- [x] Six canonical JSE instruments map UI, research, Yahoo and Finnhub aliases.
+- [x] HR7 historical evidence drives the unchanged fixed-weight legacy scorer.
+- [x] All component responses disclose source, source time, retrieval time and state.
+- [x] Exactly 30 gates return, including explicit unavailable evidence.
+- [x] Current-public providers are opt-in and failures preserve partial output.
+- [x] No admitted strategy, executable suggestion or live-order endpoint exists.
+- [x] 104 safe offline tests pass; two environment tests remain excluded.
+- [x] Live local HTTP health and SOL analysis smoke requests returned 200.
+
+## UIR1 scope — activated 2026-09-04
+
+- [x] Search reachable/unreachable Git history, deleted paths, archives and the
+  protected `generate_app.py` worktree for the reported complete dashboard.
+- [x] Identify the actual origin and data state of every historical Flask UI.
+- [x] Map each reported feature to historical UI evidence and surviving backend.
+- [x] Stop before reconstruction because no recoverable implementation exists.
+- [x] Record security/provenance concerns without exposing credentials.
+
+UIR1 is an audit/recovery milestone. HR7–HR10 artifacts and OI1 safety
+boundaries remain immutable.
+
+## UIR1 acceptance record — 2026-09-04
+
+- [x] Confirmed `app.py` first appears at `332666a` as a simulated ticker.
+- [x] Found no templates/static dashboard in reachable, deleted or unreachable history.
+- [x] Confirmed `generate_app.py` audits HTML; it does not generate the application.
+- [x] Mapped all seven reported UI groups to surviving/missing backend capabilities.
+- [x] Determined that “30 steps” documents simulation iterations, not a 30-check confidence model.
+- [x] Identified no live data in the current UI and made no provider/network calls.
+- [x] Stopped without reconstructing or changing `app.py`.
+- [x] Preserved HR7–HR10, OI1, `.env` and unrelated worktree changes.
+
+## OI1 scope — activated 2026-09-04
+
+- [x] Build a responsive, unmistakably simulated decision-support card.
+- [x] Add a canonical provenance-rich `TradeSuggestion` safety contract.
+- [x] Keep all execution actions mock/manual and all provider writes disabled.
+- [x] Deepen ViewPoint/Shyft and alternative-provider research using official sources.
+- [x] Produce a concise Standard Bank API enquiry and execution-path comparison.
+- [x] Rank genuinely new predictive data families without tuning HR9.
+- [x] Run focused UI/safety tests and the full safe offline suite.
+
+OI1 cannot change the HR10 outcome, promote HR9, authenticate to a broker, or
+submit an order.
+
+## OI1 acceptance record — 2026-09-04
+
+- [x] Existing `/` route retained with desktop/tablet/phone decision hierarchy.
+- [x] Demo is fabricated, rejected and unmistakably simulated/not live.
+- [x] Stale, rejected, shadow, research and no-trade suggestions are non-actionable.
+- [x] Paper provider is the only implementation; live account modes and writes fail.
+- [x] Shyft's Saxo technology relationship confirmed; retail OpenAPI remains unknown.
+- [x] IG, Saxo and IBKR APIs documented without claiming unverified JSE coverage.
+- [x] JSE SENS/event data ranked first for the next predictive dataset milestone.
+- [x] 16 focused OI1/HR10 tests and 98 safe offline regression tests pass.
+- [x] Credential/network/browser probes and environment-dependent LLM script excluded.
+
+## HR10 scope — activated 2026-09-04
+
+- [x] Add horizon-aware purged and embargoed temporal folds.
+- [x] Evaluate realizable non-overlapping trades separately from overlapping
+  research observations.
+- [x] Stress costs and a predeclared, modest parameter grid.
+- [x] Apply transparent multiple-testing control and time-aware uncertainty.
+- [x] Assign every instrument × horizon cell exactly one deterministic admission
+  state without promoting any production signal.
+- [x] Preserve the four HR9 baselines and all immutable HR7–HR9 artifacts.
+- [x] Add a safe local UI review mode with unmistakable simulated-data labels.
+- [x] Document ViewPoint/Shyft capabilities, unknowns and vendor-neutral
+  read-only/paper integration boundaries.
+
+HR10 may complete with zero admitted cells. Live execution, authenticated
+scraping and production promotion remain outside this milestone.
+
+## HR10 acceptance record — 2026-09-04
+
+- [x] Evaluated 40 instrument × horizon cells; 0 admitted, 40 rejected, 0 insufficient.
+- [x] All cells fail uncertainty and BH-FDR gates; results do not justify promotion.
+- [x] Added predeclared 0/10/25-bps and 0.30/0.35/0.40 threshold grids.
+- [x] Added block-bootstrap confidence intervals and exact gate diagnostics.
+- [x] Focused HR7–HR10 suite passes 34 tests; safe offline suite passes 91 tests.
+- [x] Excluded credential/network/browser probes and the environment-dependent
+  LLM availability script from the safe suite.
+- [x] Confirmed simulated UI health/snapshot labels and no provider live writes.
+
+## HR9 acceptance record — 2026-09-04
+
+- [x] Preserved and hash-identified the 101,536-row pre-HR9 baseline.
+- [x] Extracted one authoritative versioned technical-signal definition.
+- [x] Unified HR8/HR9 on signal-state turnover cost semantics.
+- [x] Defined independent 1/3/5/20-session research targets.
+- [x] Logged evidence counts, versions, hashes, contributions and shadow status.
+- [x] Verified zero causal clock, duplicate-key, sample-gate and shadow violations.
+- [x] Compared legacy, static expanded, pre-HR9 and HR9 across three cost scenarios.
+- [x] Kept Flask, production signals, governance and brokers unchanged.
+- [x] Rejected adaptive promotion because net performance is not consistently
+  superior to the legacy benchmark.
+- [x] Focused HR8/HR9 suite passes 14 tests.
+
+## HR8 acceptance record — 2026-09-03
+
+- [x] Estimated effectiveness by indicator/instrument/profile/regime/volatility/horizon.
+- [x] Added costs, Wilson uncertainty, temporal stability and recency diagnostics.
+- [x] Added a 30-observation gate and 20-observation neutral-prior shrinkage.
+- [x] Bounded mature research reliability weights between 0.5 and 1.5.
+- [x] Ensured walk-forward weights see outcomes only after their horizon elapses.
+- [x] Persisted weak/harmful cells and kept all learned weights research-only.
+
+## HR7 acceptance record — 2026-09-03
+
+- [x] Built common point-in-time technical contexts for six JSE equities.
+- [x] Added separate USD/ZAR, gold, Brent and JSE-index research contexts.
+- [x] Joined Rand, commodity, global-risk and nominal-yield context by exact date.
+- [x] Preserved distinct instrument/profile/regime/horizon evaluation dimensions.
+- [x] Marked intraday and futures basis/OI/term-structure capabilities unavailable.
+- [x] Added future-mutation and missing-benchmark tests; changed no strategy weights.
+
+## HR6 acceptance record — 2026-09-03
+
+- [x] Implemented preceding-swing Fibonacci levels and contextual confluence fields.
+- [x] Ensured Fibonacci emits no automatic BUY/SELL action.
+- [x] Implemented all sixteen requested deterministic candlestick patterns.
+- [x] Added trend, support/resistance, volatility and optional volume context.
+- [x] Made next-bar confirmation unavailable until the next bar exists.
+- [x] Registered both families as deterministic shadow-only research features.
+
+## HR5 acceptance record — 2026-09-03
+
+- [x] Implemented full Tenkan, Kijun, current/projected cloud and Chikou context.
+- [x] Used the displaced source window for the cloud visible at decision time.
+- [x] Exposed cloud thickness/direction, Kijun distance, breakouts and TK cross strength.
+- [x] Added 78-bar OHLC capability gate and future-mutation tests.
+- [x] Registered Ichimoku as executable, deterministic and shadow-only.
+- [x] Deferred all asset/regime/horizon value claims to historical evaluation.
+
+## HR4 acceptance record — 2026-09-03
+
+- [x] Added modular versioned technical-feature definitions and computation results.
+- [x] Wrapped existing research calculators without duplicating production logic.
+- [x] Preserved capability and as-of-index gates, including aligned benchmarks.
+- [x] Registered all required families with honest implemented/planned status.
+- [x] Prevented planned Ichimoku/Fibonacci/candlestick entries from masquerading as code.
+- [x] Kept every registry computation research/shadow-only.
+
+## HR3 acceptance record — 2026-09-03
+
+- [x] Added point-in-time Rand trend, return, volatility and regime features.
+- [x] Separated USD gold from ZAR gold and DXY/yield/risk context.
+- [x] Separated Brent direction, momentum, volatility and Rand-denominated cost.
+- [x] Added platinum/palladium and Rand-translation features where exact dates align.
+- [x] Used prefix-only calculations, exact-date joins and no forward filling.
+- [x] Kept missing official macro vintages explicit and all features research-only.
+
+## HR2 acceptance record — 2026-09-03
+
+- [x] Froze dated daily OHLCV for six JSE equities and a JSE All Share proxy.
+- [x] Froze USD/ZAR, VIX, S&P 500, DXY, US10Y, Brent, gold, platinum and palladium proxies.
+- [x] Recorded per-file dates, row counts, provider symbols and SHA-256 hashes.
+- [x] Applied conservative next-day bar availability and no forward filling.
+- [x] Marked release-vintage SA macro, real yields and licensed derivatives unavailable.
+- [x] Documented proxy, adjustment, licensing and timestamp limitations.
+
+## HR1 acceptance record — 2026-09-03
+
+- [x] Added normalized raw/derived point-in-time feature and provenance contracts.
+- [x] Enforced timezone-aware event, availability and decision clocks.
+- [x] Added append-only persistence, stable identity and revision-aware as-of queries.
+- [x] Added explicit capability/missing-data and derived-lineage validation.
+- [x] Documented schema, storage, revisions, versioning and no-lookahead policy.
+- [x] Kept the store research/shadow-only and production behavior unchanged.
+
+## HR0 acceptance record — 2026-09-03
+
+- [x] Audited executable technical features rather than documentation/library availability.
+- [x] Classified implemented-and-used, implemented-but-unused and missing families.
+- [x] Confirmed Ichimoku, Fibonacci and deterministic candlestick families are absent.
+- [x] Identified `research_indicators.py` as the additive capability-gated extension point.
+- [x] Changed no strategy, score, threshold, weight or execution behavior.
+
+## M10 acceptance record — 2026-09-03
+
+- [x] Audited roadmap, tests, reports, source status and security boundaries.
+- [x] Produced `FUSION_COMPLETION_REPORT.md`.
+- [x] Selected **continue shadow collection**; production defaults remain legacy.
+- [x] Confirmed no live trading capability was added or enabled.
+- [x] Final focused suite passes: 41 tests.
+
+## M9 acceptance record — 2026-09-03
+
+- [x] Added profile/regime/adaptive explanations to researcher output through an adapter.
+- [x] Preserved researcher, Trader, Risk, Manager and Executor method interfaces.
+- [x] Added legacy/adaptive/bull/bear disagreement telemetry.
+- [x] Verified context-on/context-off proposal, risk and manager equivalence.
+- [x] Explicitly labelled simulated execution as paper-only.
+- [x] Focused suite passes: 41 tests.
+
+## M8 acceptance record — 2026-09-03
+
+- [x] Verified and documented access status for every named source category.
+- [x] Added independently configurable source policy, authority and poll intervals.
+- [x] Normalized source policy into evidence provenance and the reliability registry.
+- [x] Retained enabled Moneyweb/SENS collectors and disabled restricted/unverified automation.
+- [x] Disabled unauthenticated Reddit JSON fallback under current API terms.
+- [x] Focused suite passes: 38 tests.
+
+## M7 acceptance record — 2026-09-03
+
+- [x] Added prefix-only multi-horizon walk-forward evaluation.
+- [x] Added configurable costs, turnover, drawdown and close-path MFE/MAE.
+- [x] Added trend/volatility/profile segments, Wilson intervals and minimum-sample flags.
+- [x] Added legacy, technical-only, macro-only, source-only and adaptive ablations.
+- [x] Generated a six-ticker report with 760 daily observations per ticker.
+- [x] Recorded that missing contextual history and mixed results do not support promotion.
+- [x] Focused suite passes: 33 tests.
+
+## M6 acceptance record — 2026-09-03
+
+- [x] Added explainable adaptive fusion beside the unchanged legacy output.
+- [x] Added explicit regime/profile multipliers and minimum-sample-gated reliability.
+- [x] Logged factor contributions and legacy-vs-adaptive comparison in decision metadata.
+- [x] Kept public/default score, action, confidence and thresholds on the legacy path.
+- [x] Focused suite passes: 28 tests, including unavailable-regime safety coverage.
+
+## M5 acceptance record — 2026-09-03
+
+- [x] Added versioned ADX/DMI, ATR, MACD, Bollinger/z-score and relative-strength research features.
+- [x] Added relative-volume and median-dollar-volume features behind volume capability.
+- [x] Gated session VWAP/opening range behind explicit intraday OHLCV capability.
+- [x] Added per-feature availability/reason metadata and an explicit as-of boundary.
+- [x] Focused suite passes: 23 tests, including future-mutation no-lookahead coverage.
+
+## M4 acceptance record — 2026-09-03
+
+- [x] Added immutable, versioned sector/instrument profiles covering every required group.
+- [x] Moved ticker-specific legacy macro coefficients behind configurable profile selection.
+- [x] Preserved legacy scoring coefficients, thresholds and clamp with characterization tests.
+- [x] Added selected profile context to decision metadata as shadow-only output.
+- [x] Focused suite passes: 18 tests (the previous 14 plus 4 profile tests).
+
+## M3 acceptance record — 2026-09-03
+
+- [x] Added transparent `regime_engine.py` with versioned `MarketRegime` output.
+- [x] Added deterministic bull, bear, range, low/normal/high-volatility and risk-label tests.
+- [x] Added rolling stability report with 700 observations each for NPN, SASOL and BHP.
+- [x] Kept regime output research/shadow-only; production weights unchanged.
+
+## M2 acceptance record — 2026-09-03
+
+- [x] Added configurable in-memory `SourceRegistry` with source class and authority tier.
+- [x] Added SQLite `ReliabilityStore` for source outcomes by scope and horizon.
+- [x] Added conservative sample-size shrinkage toward a 50% prior.
+- [x] Added duplicate outcome protection and no-lookahead timestamp validation.
+- [x] Added ADR 0002 documenting the research-only boundary.
+- [x] Focused suite passes: 10 tests (`test_evidence.py`, `test_legacy_scoring.py`, `test_reliability_store.py`).
+
+## M1 acceptance record — 2026-09-03
+
+- [x] Added additive `evidence.py` without replacing `NewsItem`.
+- [x] Added stable evidence IDs from source/headline/publication time/URL.
+- [x] Added provenance fields for source class/tier, timestamps, mappings, sentiment, confidence, horizon and parser version.
+- [x] Added deduplication preserving first-seen order.
+- [x] Added ADR 0001 documenting the compatibility decision.
+- [x] Focused suite passes: 6 tests (`test_evidence.py`, `test_legacy_scoring.py`).
+- [x] Network/credential-bearing scripts were not run by discovery; they remain manual-only (`test_cloud.py`, `test_ost_login.py`, browser probes).
+
+## M0 acceptance record — 2026-09-03
+
+- [x] Read mandatory project docs; copied the bootstrap docs into this repository.
+- [x] Inspected Git state: engine and dashboard repositories were clean before M0 work.
+- [x] Confirmed `.env` and browser state are ignored and `.env` is not tracked; `.env.example` contains no secret values.
+- [x] Preserved existing user work; no destructive Git operations used.
+- [x] Core modules compile under Python 3.12.
+- [x] Added `test_legacy_scoring.py` with three characterization tests; all pass.
+- [x] Restored canonical six-ticker two-year backtest; 24 report rows and finite metrics.
+- [x] Recorded baseline findings in `backtest_report.md` and the indicator bible.
+- [x] Committed M0 baseline artifacts.
+
+## Laptop checkpoint — 2026-09-06
+
+HR11 is complete and pushed at `8b7c591`; HR12 has no tracked files or commits
+and is NOT STARTED. “O13” refers to OI3 (letter I), still DEFERRED/incomplete.
+No research milestone is active. The current non-research deliverable is the
+portable development environment and laptop handoff in `docs/LAPTOP_HANDOFF.md`.
+After setup, resume the OI3 provider verification/public-source checklist through
+an explicit roadmap activation; do not invent HR12 or promote HR11 signals.
+The Windows MCP cleanup remains blocked by absent Windows filesystem access.
+
+## Windows portability maintenance - 2026-09-06
+
+No research milestone activated; OI3 remains deferred and HR12 not started.
+Protected checkout bytes and UTF-8 diagnostics fixed; 184 safe tests pass on
+Windows Python 3.12.10. All 45 audited protected paths match committed bytes.
+See [validation](../handoffs/2026-09-06-WINDOWS-PORTABILITY.md).

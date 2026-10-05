@@ -1,5 +1,13 @@
 # ADR 0013: OI2 operational orchestration and truthful degradation
 
+## Current context — 5 October 2026
+
+This is a dated decision record. Its original rationale/status is retained; it is not a complete current capability inventory. Later additive decisions and the current snapshot determine deployed scope.
+
+The current dashboard has six sections including backend-populated Trading Strategies and the canonical Top-5. Older multi-agent/mock/merge designs remain historical context; they do not describe the default ranking path. Paper/connected cash and self-reported trades stay separate. See [current project state](../CURRENT_STATE.md) and [document index](../DOCUMENTATION_INDEX.md).
+
+---
+
 - Status: Accepted
 - Date: 2026-09-04
 

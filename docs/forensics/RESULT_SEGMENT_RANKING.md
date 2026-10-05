@@ -1,5 +1,13 @@
 # Result Segment Ranking
 
+## Current context — 5 October 2026
+
+The original findings, test counts, deployment restrictions and planned items below belong to their recorded checkpoint. They are preserved as evidence and must not be read as today's operating instructions.
+
+The current system centers on the canonical paper workflow, exact strategy lineage, local daily OHLCV collection and isolated AI/news research. The six-family local backtest/radar loop remains proposed; no validated profitability, automatic promotion or Live execution is established. See [current project state](../CURRENT_STATE.md) and [document index](../DOCUMENTATION_INDEX.md).
+
+---
+
 The table preserves all 24 frozen ticker/horizon combinations. “Net vs cash” is
 the reconstructed adaptive/raw-technical conditional mean net return relative
 to a zero-return, zero-turnover cash benchmark. It is **not** excess return over

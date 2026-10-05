@@ -1,5 +1,13 @@
 # M2 semantic drift register
 
+## Current context — 5 October 2026
+
+The original module/design contract below is retained. Its delivered/planned labels describe that scope/checkpoint; use the current snapshot for later integration and deployment state.
+
+Manual Monday briefs and local Ollama research cases now extend the existing source catalog. Distinct-publisher corroboration gates the +0.05 research attention boost; it never changes trade weights. Current single-publisher cases have zero flags, and historic SENS/event retrieval remains planned. See [current project state](../CURRENT_STATE.md) and [document index](../DOCUMENTATION_INDEX.md).
+
+---
+
 | Version IDs | Existing location | M2 candidate/reference | Confirmed difference |
 |---|---|---|---|
 | `feat_rsi_legacy_v1` / `feat_rsi_wilder_v2` | `data_pipeline.py:SignalGenerator.calculate_rsi_signal` | `domain/features/technical.py` | Legacy uses a simple mean over the latest 14 deltas; candidate uses Wilder recursive smoothing. |

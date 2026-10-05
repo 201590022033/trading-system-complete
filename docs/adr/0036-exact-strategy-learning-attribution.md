@@ -1,5 +1,13 @@
 # ADR 0036 — Exact strategy attribution without rewriting account history
 
+## Current context — 5 October 2026
+
+This is a dated decision record. Its original rationale/status is retained; it is not a complete current capability inventory. Later additive decisions and the current snapshot determine deployed scope.
+
+Canonical Swing remains pinned to 1.0.1 with exact new-record attribution. Separate 1.1.0 technical, 1.2.0 policy and 1.3.0 AI research do not replace M13 ranking/M14 policy/M15 veto. M16 targets are evaluation requirements, not execution approval; Live remains disabled. See [current project state](../CURRENT_STATE.md) and [document index](../DOCUMENTATION_INDEX.md).
+
+---
+
 Date: 2026-10-03. Status: Accepted. Scope: attribution-only vertical slice within
 the sole ACTIVE operational workspace, following ADR 0035.
 

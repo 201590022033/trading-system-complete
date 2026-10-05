@@ -1,5 +1,13 @@
 # M3 instrument identity mapping
 
+## Current context — 5 October 2026
+
+The original module/design contract below is retained. Its delivered/planned labels describe that scope/checkpoint; use the current snapshot for later integration and deployment state.
+
+The current system centers on the canonical paper workflow, exact strategy lineage, local daily OHLCV collection and isolated AI/news research. The six-family local backtest/radar loop remains proposed; no validated profitability, automatic promotion or Live execution is established. See [current project state](../CURRENT_STATE.md) and [document index](../DOCUMENTATION_INDEX.md).
+
+---
+
 The canonical registry is additive and broker-neutral. Existing operational
 identities map to six canonical cash-equity IDs; Yahoo symbols remain data
 symbols and are never copied into execution symbols.

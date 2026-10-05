@@ -1,5 +1,13 @@
 # M12A — IG Discovery, Authentication & Canonical Market Mapping
 
+## Current context — 5 October 2026
+
+The original module/design contract below is retained. Its delivered/planned labels describe that scope/checkpoint; use the current snapshot for later integration and deployment state.
+
+Yahoo daily archives exist but invalid individual OHLC still blocks strict replay. IG JSE history probes remain entitlement-blocked; Alpha Vantage JSE coverage is unverified and scheduled calls are off. Display estimates are excluded from trading/backtest evidence. See [current project state](../CURRENT_STATE.md) and [document index](../DOCUMENTATION_INDEX.md).
+
+---
+
 ## Status
 
 **COMPLETE — operator-verified read-only IG Demo validation 2026-09-10**

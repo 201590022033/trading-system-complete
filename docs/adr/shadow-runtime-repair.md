@@ -1,5 +1,13 @@
 # ADR: reuse MI serialization and repository-owned transactions
 
+## Current context — 5 October 2026
+
+This is a dated decision record. Its original rationale/status is retained; it is not a complete current capability inventory. Later additive decisions and the current snapshot determine deployed scope.
+
+Railway now hosts durable shared paper/research state and a bounded 08:00 SAST scheduled worker. Local daily collection is at 07:30 SAST. Earlier non-deployment statements are checkpoint-specific; new research records reuse the append-only ledger without a broad strategy migration. See [current project state](../CURRENT_STATE.md) and [document index](../DOCUMENTATION_INDEX.md).
+
+---
+
 Status: accepted for local repair; native PostgreSQL deployment validation pending.
 
 The audit found split runtime SQLite/PG state and independently committed writes

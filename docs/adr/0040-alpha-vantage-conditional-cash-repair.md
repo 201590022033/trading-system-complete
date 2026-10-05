@@ -1,5 +1,13 @@
 # ADR 0040 — Cached, conditional Alpha Vantage cash-bar repair
 
+## Current context — 5 October 2026
+
+This is a dated decision record. Its original rationale/status is retained; it is not a complete current capability inventory. Later additive decisions and the current snapshot determine deployed scope.
+
+Yahoo daily archives exist but invalid individual OHLC still blocks strict replay. IG JSE history probes remain entitlement-blocked; Alpha Vantage JSE coverage is unverified and scheduled calls are off. Display estimates are excluded from trading/backtest evidence. See [current project state](../CURRENT_STATE.md) and [document index](../DOCUMENTATION_INDEX.md).
+
+---
+
 Date: 2026-10-04. Status: implemented; actual JSE coverage awaits private-key probe.
 
 Owner requests a free-tier fallback only for invalid/missing Yahoo data and

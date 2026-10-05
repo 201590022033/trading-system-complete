@@ -1,5 +1,13 @@
 # Agent Constitution
 
+## Current context — 5 October 2026
+
+The requirements below remain governing constraints. This reconciliation adds navigation/current context without weakening the original safety or evidence rules.
+
+The current system centers on the canonical paper workflow, exact strategy lineage, local daily OHLCV collection and isolated AI/news research. The six-family local backtest/radar loop remains proposed; no validated profitability, automatic promotion or Live execution is established. See [current project state](../CURRENT_STATE.md) and [document index](../DOCUMENTATION_INDEX.md).
+
+---
+
 These rules are non-negotiable unless the user explicitly changes them.
 
 ## 1. Evolution before replacement

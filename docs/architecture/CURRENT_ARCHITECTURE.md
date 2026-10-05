@@ -1,413 +1,61 @@
-# Current Architecture — Observed Repository Baseline
+# Current architecture — 5 October 2026
 
-2026-10-05 ADR0043 adds a manually imported Monday brief source, authenticated
-local Ollama relationship ingress and research-only +0.05 attention flags.
-Local archive screens describe later close returns; no numerical correlation or
-trading-weight promotion. Existing daily collector optionally runs the scan.
-Future ChatGPT brief delivery and historical article retrieval are not connected.
+Use [current state](../CURRENT_STATE.md) for the operating snapshot and [target architecture](TARGET_ARCHITECTURE.md) for work not yet implemented. Earlier accumulated milestone notes are preserved in [the checkpoint archive](../history/CURRENT_ARCHITECTURE_PRE_2026-10-05.md).
 
-ADR0042 / research profile1.3.0 adds a local daily raw archive, authenticated
-bounded cloud snapshot and separate scheduled Ollama hypothesis/evaluation loop.
-LOCAL_UPLOAD paper source is explicit; public dashboard feeds remain separate.
-Research proposals do not change default1.0.1 or promote strategy parameters.
+## Canonical decision path
 
-Swing quality annotations (ADR 0041) are a separately versioned display-only
-extension to frozen evidence. Causal averages never mutate provider charts;
-independent real-window ranges do not change policy formulas/admission.
+```mermaid
+flowchart LR
+    Inputs[Canonical instruments and causal evidence] --> Rank[M13 opportunity ranking]
+    Rank --> Policy[M14 TradePolicy]
+    Policy --> Risk[M15 RiskEngine veto]
+    Risk --> Size[Paper sizing]
+    Size --> Paper[Paper broker and durable ledger]
+    Paper --> Outcomes[Attributed matured outcomes and M11 evaluation]
+    Targets[M16 evaluation targets] -. requirements .-> Outcomes
+    Profiles[Immutable Strategy Profile ID and version] -. lineage .-> Rank
+    Ledger[Shared persistence] --> UI[Dashboard and read-only Top-5 API]
+    Paper --> Ledger
+```
 
-## 2026-10-04 conditional Alpha Vantage Swing repair
+Relevant code lives in `application/opportunities/`, `domain/evaluation/`, `domain/policy/`, `domain/risk/`, `domain/strategy/`, `domain/broker/` and `persistence/`. `app.py` composes Flask/SocketIO and API blueprints. Default Top-5 reads committed worker state when the paper loop is configured; a web refresh is not another trading cycle.
 
-ADR 0040 adds private free-key setup, direct verified-symbol daily compact
-requests and durable shared production budget/cache (20/day, five/minute).
-Only invalid recent Yahoo bars trigger fallback; exact close/date/JSE identity
-gates retain raw OHLCV provenance. Separate frozen shadow charts feed technical
-labels and policy replay; original cash ranking/fills remain unchanged. No actual
-JSE coverage is claimed until a private-key probe succeeds. Free 100-bar history
-leaves older holes visible. No API key, synthetic data, migration or live execution.
+M13–M16 contracts are preserved. Registry references carry both `strategy_profile_id` and `strategy_profile_version`; selecting a card does not activate another decision engine. No broad strategy-column migration was added: compatible immutable records carry exact lineage, and old records stay unattributed. See [strategy profiles](../research/STRATEGY_PROFILES.md).
 
-## 2026-10-04 IG Swing data readiness
+## Research lanes
 
-ADR 0039 reuses M12B for volume-field coverage and opt-in Demo readiness checks.
-Worker input freezes compact diagnostics, exposed through committed paper status
-and Portfolio without web provider calls or replay refetches. Authenticated JSE
-candidate search succeeds but market detail and DAY history for Sasol/Naspers/
-Shoprite return equity-entitlement 403. Cash admission is blocked; no observed
-JSE volume, price substitution, source blending, cohort mixing or broker changes.
-Yahoo cash ranking/paper/shadow rules remain unchanged. See the IG volume report.
+Swing 1.0.1 remains canonical. Separate 1.1.0 technical shadow, 1.2.0 cash LONG daily policy replay, and 1.3.0 AI hypothesis comparisons keep independent attribution. The policy uses an observable later close, fixed structure/ATR stop and entry-based 2R target, conservative ambiguous-bar handling, 3/4/5 observed-session exits and hypothetical costs. It grants no M15 approval.
 
-## 2026-10-04 Daily Swing shadow policy
+Cloud hypothesis proposals are immutable and drawn from a bounded parameter family. Training precedes the holdout, with a purge; repeated holdout use is explicitly ineligible for automatic promotion. Daily attempt reservation and stored proposals prevent retries from spending another cloud model call. These are historical experiments, not a trained LLM or validated execution strategy.
 
-ADR 0038 adds cash-only 1.2.0 research/shadow policy and append-only daily OHLC
-replay beside the unchanged 1.0.1 ranking/paper benchmark and 1.1.0 feature
-cohorts. New jobs freeze definition/rules before acquisition. Later-close entry,
-fixed structural/ATR stop, 2R target, gap/ambiguous handling and separate 3/4/5
-session exits produce unit-price hypothetical cost scenarios, not orders.
-Observed entries/path bars and terminal outcomes survive retries/revisions.
-Old jobs opt out. Portfolio/status expose separate descriptive policy evidence.
-No schema migration, learning promotion or broker activation. Actual liquidity,
-calendar, costs/account feasibility/M15 and walk-forward gates remain open.
+Local weekly-news analysis stores briefs, source-linked cases, receipts and delivery outboxes. Distinct publishers and duplicate controls gate the small research attention boost. Only already FLAGGED historical cases qualify for the local descriptive screen; actual receipt time determines availability. See [weekly news research](../research/WEEKLY_NEWS_RESEARCH.md).
 
-## 2026-10-03 Swing technical/horizon shadow
+## Physical placement
 
-ADR 0037 adds `application.opportunities.swing_technical`: real daily OHLCV,
-EMA20/50, Wilder RSI/ATR14, relative volume, structure, matched benchmark and
-reference geometry. Worker freezes full-history features before truncating
-retry bars. Exact Swing 1.1.0 shadow decisions and 3/4/5 next-close labels feed
-M11 condition-cohort estimates; API technical/Portfolio views display them.
-This is separate from current 1.0.1 momentum/RSI ranking and three-session
-paper execution. No rule promotion or actual OST profitability evidence.
+```mermaid
+flowchart TB
+    Yahoo[Daily public Yahoo histories] --> Local[Home PC daily archive]
+    Local --> Upload[Authenticated complete daily snapshot]
+    Upload --> DB[Railway shared PostgreSQL research records]
+    DB --> Worker[Bounded 08:00 SAST worker]
+    Worker --> AI[Ollama Cloud bounded hypothesis]
+    AI --> Replay[Frozen baseline and candidate comparison]
+    Replay --> DB
+    DB --> Web[Railway dashboard/API]
+    Web --> News[Retrieved current source articles]
+    News --> LocalAI[Local Ollama weekly case analysis]
+    LocalAI --> Outbox[Local receipts and derived-case outbox]
+    Outbox --> Web
+```
 
-## 2026-10-03 exact strategy attribution
+The actual uploader sends all configured histories; selective radar packets are a future design. `SWING_DATA_SOURCE=LOCAL_UPLOAD` gates the cloud paper-input path. On-demand quotes/charts and news feed reads remain separate. Windows collection at 07:30 SAST precedes Railway's `0 6 * * *` scheduled worker at 08:00 SAST; the worker exits after its work. PostgreSQL is durable, shared and does not fall back to local SQLite on failure.
 
-ADR 0036 adds exact paired identity/version through new canonical research,
-paper and learning chains, preserving legacy absence. Swing `1.0.1` is pinned
-before new acquisition; `1.0.0` remains unchanged. Both-backend additive
-definition/reference tables preserve old account config, cash, positions and
-archives. M11 fallback cannot cross strategy version or requested horizon.
-API/Top5/Portfolio expose exact evidence pools; reference metrics/targets/
-experiments validate lineage without inventing thresholds or promotion.
-This does not add the narrative's EMA/ATR Swing decision rules. See
-`docs/research/SWING_NARRATIVE_READINESS.md` for the actual implementation gaps.
+Existing append-only ledger boundaries store the new research records; migrations for prior paper/shadow features remain explicit and additive. Startup never performs a production migration. Secrets remain private local/hosted configuration; dataset bodies and raw model outputs remain ignored runtime data.
 
-## 2026-10-03 Strategy Profile foundation
+## Presentation and safety
 
-ADR 0035 adds `domain/strategy` immutable profile/reference/capability contracts
-and an exact-version registry with explicit current-version pins. Three backend
-profiles declare Swing research/paper priority, Intraday CFD development/data
-validation and Long-Term Investment development. This is foundation-only,
-not yet attribution through existing M13–M16/paper/learning objects.
-`GET /api/v1/strategy-profiles` and current/exact-version detail routes expose
-read-only configuration without storage, providers, schedulers or broker calls.
-The new Trading Strategies tab renders these declarations; Swing links the ONE
-existing canonical screening/Top-5 workspace. Placeholders expose no trading
-workflow. Intended 3–5-session horizons do not alter one-day ranking or the
-three-session simulator. No weights, risk controls, account state, migration,
-historical relabelling, Demo activation or LIVE execution changed.
-See `STRATEGY_PROFILE_IMPLEMENTATION_AUDIT.md` for owner/module mapping and
-the staged attribution/migration/evaluation plan.
+Six dashboard sections expose separate paper, strategy, canonical ranking, news, technical and system states. Printable worksheets and a manual Demo journal are available behind existing operator controls. Connected IG cash keeps account/currency provenance separate from simulator cash; journal records are self-reported.
 
-## 2026-10-02 compact Yahoo swing context
+Read-only IG authentication/discovery is working, while tested JSE history is entitlement-blocked. Alpha Vantage repair logic exists but verified JSE coverage is unresolved and scheduled calls are disabled. Estimated display bars never become trade evidence. Intraday CFD and long-term cards remain truthful placeholders. Legacy multi-agent/60–30–10 benchmark code remains preserved without reconnecting it to canonical ranking. Broker Live execution remains disabled; Demo mutations require their own existing safety gates and authorization.
 
-ADR 0034 reconnects HR2 Yahoo normalization and the M11 contextual learner via
-an offline three-/four-session setup report for cash shares and all four ETFs.
-Raw hashed snapshots stay local; a compact versioned report ships with code.
-The daily loader freezes only matching setup/market cells, with later-close
-entry semantics, cost stress, temporal holdout and discontinuity exclusions.
-Read-only candidate API/Top 5 cards expose this separately from unchanged
-one-day ranking inputs. Candidate decisions/outcomes retain compact setup
-lineage. Online outcomes remain three-session; four-session online learning,
-intrabar stops, actual OST costs and production promotion are not implemented.
-Ollama is attributed current news context, not historical sentiment training.
-
-## 2026-10-02 scheduled ETF research and horizon repair
-
-ADR 0033 adds exact planned-session strategy feedback and separate mandatory
-ETF listing (`?asset_class=index_etf`), reusing context charts. ETFs do not enter
-cash simulator orders. Outcome entries must follow actual decision time.
-The daily Railway worker exits between cron runs; scheduled idle is not a crash.
-After 90 days input/ranking snapshots compress losslessly with ID read-through;
-compact evidence has no automatic expiry. OST/Shyft cash, fees and sizing are
-unconfigured and handoff is manual. The $5 cost gate is conditional, not a cap.
-
-## 2026-10-01 session-aware daily repair
-
-`railway-paper-zar-v3` retains the ADR 0029 daily, compact, long-only learning
-model but accepts completed daily bars across a bounded four-calendar-day
-weekend/holiday/provider-delay window. The worker fingerprints causally usable
-source-session timestamps. A repeated fingerprint stores only a compact
-`NO_NEW_COMPLETED_SESSION` input and does not run another paper cycle or replace
-the last valid ranking. Empty non-stale rankings with provider failures report
-`NO_USABLE_MARKET_DATA`. See ADR 0030.
-
-## 2026-09-25 lean daily swing learning
-
-After the disposable Railway database filled with unaggregated GER40 ticks and
-duplicated five-minute chart snapshots, the data was reset with user
-authorization. `canonical-paper-loop-v2` now schedules once daily, freezes at
-most 60 timestamp/close/volume bars per instrument, and records compact Top-5
-LONG decisions once per completed bar. `ranked-long-swing-v1` labels each
-decision after three later completed sessions using a declared 10 bps research
-cost. The existing contextual learner retains sparse/negative evidence and
-requires 30 samples before research ranking support can change. Legacy signal
-weights, broker execution and adaptive promotion remain unchanged. IG streaming
-is excluded from this loop and disabled operationally. The existing
-`/api/learning/status` response exposes the daily-swing horizon, eligible sample
-count and gate state separately from the older shadow-learning counters. See
-ADR 0029.
-
-The current technical review consumes the exact selected canonical opportunity
-snapshot. Frozen HR7 diagnostics are confined to a collapsed archive. UI
-confirmation descriptions report technical directional/neutral counts without
-changing the ranker's divergence mathematics or admitting new signals.
-
-This document describes the uploaded repository, not an aspirational redesign.
-
-## 2026-09-22 streaming transaction isolation
-
-An enabled IG streaming job uses a dedicated PostgreSQL repository for SDK
-callback observation writes. The worker's primary repository is reserved for
-scheduling, durable job transitions and heartbeat state. Disconnect drains an
-active callback under the writer lock, stops accepting later callbacks and
-closes the bounded writer connection. This prevents cross-thread savepoint
-interleaving while preserving immutable observation identity and read-only IG
-behavior. See ADR 0027.
-
-The dashboard's one-day chart view uses completed 30-minute public bars for
-swing review. This display contract is separate from the canonical public
-ranking and ZAR paper loop, which use daily completed closes (`1d`). The HR11
-`intraday_30m` contracts remain research-only until verified JSE history,
-session calendars and cost metadata are supplied; no intraday display bar can
-enter the daily ranking implicitly.
-
-## 2026-09-20 connected cash and manual journal
-
-`connected_accounts.py` aggregates normalized broker available funds by currency
-and environment. It reuses IG read-only snapshots (60-second cache) and the
-existing Yahoo chart source for dated, indicative USD/ZAR display conversion.
-`connected_portfolio_api.py` exposes account tabs and authenticated manual journal
-routes. `manual_demo_journal.py` reuses durable paper tables with an isolated
-namespace and record kinds, not strategy outcomes. No journal mutation alters
-broker funds, simulator cash, M13 weights or external orders. The dashboard
-headline excludes the internal simulator. See ADR 0026 and the connected-cash
-runbook. IG credentials are configured in Railway. The bounded streaming worker
-is implemented but remains disabled unless its explicit environment gate is set;
-no deployed ledger observation is claimed here.
-
-The 2026-09-22 UI extension prints a single canonical opportunity as a
-research-only paper worksheet and can prefill the existing manual journal with
-instrument, LONG/SHORT direction and unverified app-inspired attribution. It
-does not persist a proposed order or infer actual entry, quantity, stop, target,
-risk or outcome. The default Windows dashboard task uses an explicitly
-localhost-only PostgreSQL URL for runtime parity; SQLite remains an explicitly
-named isolated option, and no Railway database is cloned or attached.
-
-## 2026-09-19 operational deployment
-
-The daily Railway paper worker now freezes four listed ETF close series as
-context only (ADR 0032). It reports a broad-market ETF/breadth state and a
-human-review decision brief beside the existing canonical cash-share ranking.
-Market state is retained on compact candidate-panel outcomes for later
-conditional evaluation; it is not a replacement score or an admitted ETF order.
-
-The 2026-10-01 daily candidate-panel extension records one compact shadow
-decision per screened cash share and later labels selected and unselected
-shares using the same three-session close-to-close proxy. Matched-session
-comparisons are visible in Portfolio but do not alter the production ranking.
-Actual closed paper-trade outcomes retain the governed effectiveness path.
-The older persistent shadow worker jobs are not scheduled by the Railway
-paper heartbeat. See ADR 0031.
-
-Railway web and worker now share the migrated PostgreSQL paper account and
-`config/paper.railway.json`. The Portfolio & demo workspace reads equity,
-positions, pending proposals, fills, outcomes and learning from that ledger.
-Authenticated aggression/pause controls are persisted and audited separately
-from immutable account assumptions. Existing collector analyses are persisted
-with first-availability clocks and deduplicated versions, then consumed causally
-by the canonical worker. IG demo diagnostics and the read-only transport are
-implemented; worker activation remains explicitly gated and no deployed stream
-is claimed. Legacy shadow
-counters are explicitly separate from paper-outcome effectiveness learning.
-
-## 2026-09-19 canonical paper-loop repair
-
-`application/opportunities/paper_loop.py` now connects existing M11/M12/M13,
-paper M14 geometry, M15 sizing and PaperBroker through one locked durable account
-transaction. `workers/paper_loop.py` freezes inputs and schedules bounded jobs.
-Additive paper_accounts/paper_records migrations support SQLite and PostgreSQL.
-Configured web processes read committed rankings through paper_host; no scanner
-fallback. The unconfigured mode remains on-demand research only. See ADR 0024
-and docs/repair/PAPER_LOOP_RUNBOOK.md for causal clocks and exact model limits.
-
-## Existing core modules
-
-### `jse_adapter.py`
-Current integration boundary for:
-- Yahoo Finance price/history data;
-- Finnhub price support;
-- NewsAPI news;
-- Moneyweb SENS republication parsing;
-- Moneyweb RSS;
-- Reddit public/API collection;
-- Standard Bank OST adapter/browser integration;
-- JSE ticker mappings.
-
-### `data_pipeline.py`
-Current unified observation layer:
-- sliding price/VWAP buffers;
-- SMA trend signal;
-- RSI;
-- breakout detection;
-- simplified stochastic oscillator;
-- news aggregation;
-- `MarketObservation` and portfolio data structures.
-
-### `sentiment_analyzer.py`
-Current macro/news analysis:
-- deterministic mention detection;
-- keyword sentiment fallback;
-- optional local/cloud Ollama-compatible LLM analysis;
-- macro concepts including ZAR, GOLD, OIL and other asset/ticker mappings;
-- `MacroSentimentScanner`.
-
-### `signal_pipeline.py`
-Current direct signal fusion:
-- technical score weights: RSI 0.35, SMA 0.30, breakout 0.20, stochastic 0.15;
-- combined score: 0.60 technical + 0.30 sentiment + bounded macro adjustment;
-- hard-coded ticker macro overlays for weaker/stronger rand, gold and oil exposure;
-- buy/sell thresholds around +/-0.35.
-
-This fixed weighting is the primary target for **evolution**, not deletion.
-
-### `merged_simulation.py`
-Existing multi-agent governance:
-- BullishResearcher;
-- BearishResearcher;
-- GeneralResearchAgent;
-- LLMTraderAgent;
-- aggressive/neutral/conservative RiskAgents;
-- ManagerAgent;
-- ExecutionAgent;
-- portfolio/decision logging and labels.
-
-### `backtest.py`
-Existing walk-forward technical indicator research:
-- close-only historical sequence;
-- signal at t evaluated at t+horizon;
-- RSI/SMA/breakout/stochastic observations;
-- win rate and average aligned/forward returns;
-- explicit rule that research does not automatically alter production weights.
-
-### `evidence.py`
-Additive provenance boundary introduced in M1:
-- `EvidenceRecord` wraps existing `NewsItem` values;
-- stable evidence IDs support deduplication;
-- source identity/class/tier, timestamps, mappings, sentiment, confidence and parser version are preserved for future reliability learning.
-
-### `regime_engine.py`
-Research-only regime-v1 classifies trailing close history into independent labels:
-- trend: bull, bear or range;
-- volatility: low, normal or high;
-- risk: risk_on, neutral or risk_off;
-- version, confidence and feature snapshot are included in `MarketRegime`.
-`regime_backtest.py` measures rolling-label stability without changing production weights.
-
-### `market_profiles.py`
-Research/shadow sector and instrument context introduced in M4:
-- immutable, versioned profiles for required instrument and sector groups;
-- configurable, case-insensitive ticker-to-profile selection;
-- neutral single-stock fallback for unknown tickers;
-- legacy macro coefficients centralized without changing signal defaults;
-- selected profile identity included in signal decision metadata.
-
-### `research_indicators.py`
-Research-only expanded feature layer introduced in M5:
-- close-based MACD and Bollinger/z-score;
-- OHLC-gated ATR and ADX/DMI;
-- benchmark-gated relative strength and volume-gated liquidity features;
-- intraday OHLCV-gated session VWAP and opening range;
-- explicit unavailable reasons and an `as_of_index` no-lookahead boundary.
-
-### `adaptive_fusion.py`
-Explainable `adaptive-fusion-v1` introduced in M6:
-- normalized factor contributions with regime/profile multipliers;
-- minimum-sample-gated, bounded reliability multipliers;
-- full legacy/adaptive comparison in signal metadata;
-- shadow-only output; public signal score and action remain legacy-controlled.
-
-### `evaluation.py`
-M7 walk-forward evaluation layer:
-- 1/3/5/20-session legacy, component and adaptive ablations;
-- configurable spread, fee and slippage costs;
-- win-rate intervals, aligned/net returns, turnover, drawdown and close-path MFE/MAE;
-- trend, volatility and profile segmentation with minimum-sample flags;
-- explicit unavailable contextual series and prefix-only decision state.
-
-### `source_catalog.py`
-M8 policy boundary for specialist/community sources:
-- independent enable/status/access metadata and polling intervals;
-- authority-tier provenance normalization into `EvidenceRecord`;
-- conversion into the existing reliability `SourceRegistry`;
-- only existing permitted Moneyweb/SENS routes enabled by default;
-- licensed, permission-dependent and prohibited automation disabled explicitly.
-
-### `agent_intelligence.py` + `merged_simulation.py`
-M9 integration preserves the existing governance chain:
-- profile/regime/adaptive shadow context is attached to `MarketObservation`;
-- Bull/Bear/General text includes the context without changing stance/confidence;
-- Trader, Risk and Manager interfaces and decisions remain unchanged;
-- pairwise disagreement telemetry is returned for research logging;
-- portfolio execution remains simulated and is explicitly labelled `paper`.
-
-### `technical_signals.py` + `adaptive_technical_ensemble.py`
-HR9 research boundary:
-- one versioned authoritative technical-signal definition shared with HR8;
-- causal, bounded reliability weights using the HR8 evidence contract;
-- independent 1/3/5/20-session targets with evidence counts and contributions;
-- immutable pre-HR9 baseline and separately versioned v2 artifact;
-- shadow-only output with no Flask, governance or broker integration.
-
-### `hr10_robustness.py`
-HR10 offline admission boundary:
-- horizon-aware purged/embargoed expanding folds;
-- realizable non-overlapping trades alongside preserved HR9 diagnostics;
-- cost/threshold sensitivity, moving-block uncertainty and BH-FDR correction;
-- deterministic per-instrument/per-horizon shadow admission states.
-
-### `provider_interfaces.py`
-Vendor-neutral market-data/execution contracts. The sole concrete execution
-provider is paper preview-only; live submit/cancel operations hard-fail.
-OI1 adds explicit `ResearchDataProvider`, `SignalEngine`, `TradeSuggestion` and
-`BrokerAccount` boundaries. Trade suggestions validate provenance and clocks;
-rejected or stale suggestions cannot reach even paper preview.
-
-### `viewpoint_adapter.py` — ViewPoint broker boundary (2026-09-06)
-The additive scaffold separates broker-observed state from research signals:
-typed account, cash, position, open-order, mapping, prepared-order and
-reconciliation objects are available only from an explicitly available
-adapter. Unknown cash is not zero and blocks preparation; missing mappings,
-insufficient funds and duplicate pending orders fail closed. The adapter has
-no verified ViewPoint transport, endpoint or selector and its submission
-method always raises, leaving final review/submission to the authenticated
-user in the broker UI. Existing `ost_browser.py` remains an OST-specific
-historical/manual experiment and was not renamed or reused as ViewPoint.
-
-### `app.py` and `dashboard_feeds.py`
-Flask dashboard with current public quote cards, timestamped stock/index charts,
-and the retained `MacroSentimentScanner` news feed. A bounded background cache
-reuses the existing Yahoo and news adapters. Each item discloses AI versus
-keyword analysis and each provider exposes availability and source timestamps.
-The operational analysis panel retains its historical HR7 technical benchmark;
-current market and news components remain independently labelled. Broker writes
-are disabled. See `OI3_PUBLIC_FEEDS.md` for contracts and current limitations.
-
-OI2 replaced the earlier simulated inline ticker with a historical dashboard,
-but its offline completion did not establish current feed/chart/AI integration.
-OI3 restores those paths without recreating the unavailable original UI source.
-
-## Existing strengths
-- Good separation between ingestion, observations, signal fusion and governance.
-- Real SA/JSE adaptation already underway.
-- Existing backtest philosophy supports evidence-gated development.
-- Existing broker work can remain isolated/read-only.
-
-## Existing gaps
-- Adaptive contextual weights exist only in shadow mode and require evaluation.
-- Regime classifier informs shadow fusion but does not affect production output.
-- Profiles exist, but sector/regime-specific expanded indicator weighting is not yet implemented.
-- No normalized source-provenance/evidence store.
-- No source reliability history by sector/ticker/regime/time horizon.
-- Transaction costs are configurable in research evaluation; derivative spread/liquidity data remains unavailable.
-- Expanded features exist in research mode but are not yet fused or historically evaluated.
-- Legacy macro coefficients are explicit profile configuration; richer conditional macro features remain unimplemented.
-
-## HR11 short-term research extension — 2026-09-06
-
-`hr11_research.py` is a separate offline research entry point. Versioned
-`intraday_*` modules provide instrument identities, canonical completed bars,
-explicit sessions, technical-registry adapters, horizons, profiles, costs,
-availability-time cross-asset joins, research gates, prior-fold signal reliability,
-non-overlapping evaluation, paper previews and conservative robustness reports.
-The default universe has no real intraday history or verified contract cost
-schedules and reports insufficient evidence. Existing dashboard providers and
-daily HR8/HR9/HR10 code paths remain unchanged. See `docs/research/HR11_METHOD.md`
-and ADRs 0015–0021 for contracts and limitations.
+The architecture's current limiting factor is admissible evidence, not proof of an AI edge: cloud replay has zero closed holdout samples and the first weekly-news scan has zero corroborated flags.

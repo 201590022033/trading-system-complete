@@ -1,5 +1,13 @@
 # Source Forensics
 
+## Current context — 5 October 2026
+
+The original findings, test counts, deployment restrictions and planned items below belong to their recorded checkpoint. They are preserved as evidence and must not be read as today's operating instructions.
+
+Manual Monday briefs and local Ollama research cases now extend the existing source catalog. Distinct-publisher corroboration gates the +0.05 research attention boost; it never changes trade weights. Current single-publisher cases have zero flags, and historic SENS/event retrieval remains planned. See [current project state](../CURRENT_STATE.md) and [document index](../DOCUMENTATION_INDEX.md).
+
+---
+
 ## Producing observations
 
 No source supplied a historical score series to M7/M10. Source-only rows have

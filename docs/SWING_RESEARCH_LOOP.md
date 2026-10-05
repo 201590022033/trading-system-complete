@@ -1,49 +1,29 @@
-# Daily local collection and online Swing research
+# Daily Swing research loop — actual placement and boundaries
 
-Baseline hypothesis: liquid JSE cash shares (liquidity still needs validation),
-daily completed observations, EMA20/50 uptrend, breakout20 or EMA20 reclaim,
-RSI50–70, volume above previous20-day average and outperformance of STX40.
-Entry at the first later completed close within seven calendar days; stop at
-the lower of prior10-session low and signal-close-minus-ATR14; fixed2R target;
-three/four/five observed-session exits. Daily ambiguous stop/target uses stop
-first; hypothetical cost stress is10/25/50bps. No live trading.
+Reviewed 5 October 2026. See [current state](CURRENT_STATE.md), [profile versions](research/STRATEGY_PROFILES.md) and [the proposed six-family workflow](research/SIX_SWING_HYPOTHESES.md).
 
-Local daily task: `Trading System Local Swing Daily Data`, 07:30 South African
-time while powered on and signed in. Stores full daily one-year snapshots at
-`runtime/local-swing-data/YYYY-MM-DD.json` and `latest.json`. Keeps the local copy
-if upload fails. Run `python scripts/collect_swing_data.py --retry-upload` to retry
-saved data without fetching again. It does not invoke Alpha Vantage; provider
-coverage/repair remains unverified, and its existing bounded fallback is separate.
+## Collection and durable state
 
-Private setup: `powershell.exe -NoProfile -ExecutionPolicy Bypass -File
-scripts/configure_swing_research.ps1 -PythonPath <project-python> -ConfigureRailway`.
-This uses a process-only execution-policy override, preserves other .env settings,
-generates a private upload token and registers the daily task. Railway must be
-linked to the correct production project before setting variables. No key in chat.
+`scripts/collect_swing_data.py` collects real completed Yahoo daily histories, validates identity/timeframe/ZAR and rejects estimated inputs. It retains ignored dated/latest raw files under `runtime/local-swing-data/` and uploads a bounded authenticated snapshot to `POST /api/v1/swing-research/datasets`. The current collection contains 21 chart histories: 17 active cash shares and four ETFs. Data bodies and upload secrets are never Git artifacts.
 
-Cloud working copy: POST `/api/v1/swing-research/datasets`, bearer authenticated.
-Read-only status: GET `/api/v1/swing-research/status`. Worker sets
-`SWING_RESEARCH_ENABLED=1`; after a confirmed upload set
-`SWING_DATA_SOURCE=LOCAL_UPLOAD` to stop its direct Yahoo daily polling. Keep
-news scanning and dashboard live chart/quote reads separate. Worker remains
-scheduled at08:00 SA (cron06UTC; SWING_WORKER_CRON_HOUR=6). This follows the
-existing next-UTC-midnight availability convention. A late local upload waits
-for the next cloud run or explicit evaluation. Explicit bounded first evaluation:
-`python scripts/run_swing_research.py`; same one-attempt daily budget applies.
+The configured Windows task **Trading System Local Swing Daily Data** runs at 07:30 SAST with start-when-available behavior and a 20-minute limit. It requires the PC powered on and the user signed in. Raw daily bars are archived once per UTC collection day. Upload failure is visible and does not authorize invented replacement data.
 
-Ollama Cloud receives technical/training evidence and proposes one registered
-volume/RSI/holding-period variation. A chronological historical comparison is
-stored with a frozen proposal, parameters/model/context/dataset/version and
-shown in Trading Strategies. Zero samples or unavailable AI are disclosed.
-The old strategy is never automatically replaced. This does not retrain Ollama.
+Railway stores snapshots/proposals/runs through the existing append-only research ledger under `swing-research-v1`. `SWING_DATA_SOURCE=LOCAL_UPLOAD` is active, so the scheduled paper-input path fails closed without usable uploads. Independent dashboard quote/chart and source-news reads can still call their existing providers.
 
-Missing local uploads become visible as stale/missing, rather than fallback
-downloads or invented prices. Keep the existing source until a first upload is
-confirmed. Rollback of the source switch: `SWING_DATA_SOURCE=YAHOO`; research can
-be disabled with `SWING_RESEARCH_ENABLED=0`. Neither setting enables live trading.
-Task can be disabled through Windows Task Scheduler without deleting data.
+## Bounded cloud comparisons
 
-Limitations: exchange calendar, source OHLC anomalies, actual liquidity/fees,
-corporate actions, prospective validation and portfolio risk remain unresolved.
-The initial grid refines volume/RSI/holding time only; stop/target-rule refinement
-needs its own versioned evaluation contract. See ADR0042.
+Railway's worker runs `0 6 * * *`, at 08:00 SAST, and exits after bounded work. The web service and PostgreSQL remain reachable/durable. Swing research is enabled. One UTC-day cloud attempt is reserved before generation; retries reuse immutable proposals and cached datasets.
+
+Swing 1.3.0 freezes a bounded proposal for relative volume (1/1.2/1.5), RSI ceiling (65/70), and 3/4/5-session hold. It compares against 1.2.0 on chronological real-data slices: at least 130 observed sessions, training before the final 47 sessions, six purged sessions and 40 held-out dates. The model sees training context and past training comparisons, never held-out outcomes. Reusing the holdout is marked `NOT_ELIGIBLE_PROSPECTIVE_WALK_FORWARD_REQUIRED`.
+
+The first real proposal was 1.2 volume, RSI 65, hold four. Both baseline and candidate produced zero closed holdout samples and 680 blocked/unresolved checks. Incomplete source OHLC prevented proof of performance. This is not 680 losing trades, continuous model-weight learning or an adopted strategy.
+
+## Local news research
+
+When `WEEKLY_NEWS_RESEARCH_ENABLED=1`, a successful daily upload precedes the bounded local weekly-news scan. Local Ollama interprets retrieved article/brief context, saves raw responses/receipts and delivers validated derived cases through an idempotent outbox. See [weekly news guide](research/WEEKLY_NEWS_RESEARCH.md). Current accepted cases are single-publisher and unflagged; no priority boost or historical sample was earned.
+
+## Difference from the requested next loop
+
+Today's uploader sends all configured charts and the 1.3.0 technical comparison runs on Railway. The owner's next target moves full six-family technical backtests/calculations to the home PC, retrieves verified historical events, refines admitted daily triggers with real 30-minute bars and uploads selective investigations. That complete radar/backtest loop is still proposed, not installed. Cloud availability does not compensate for missing local data or an offline PC.
+
+Alpha Vantage scheduled calls are off both locally and on Railway. IG JSE daily history remains entitlement-blocked. Display estimates never enter replay. Default canonical profile 1.0.1, paper safety controls, and disabled Live execution remain unchanged.

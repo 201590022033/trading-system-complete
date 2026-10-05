@@ -1,39 +1,13 @@
-# Predictive Research Reset
+# Next research milestone — six-family contracts and real data
 
-## Why not retune HR9
+Reconciled 5 October 2026. See [roadmap](../roadmap/ROADMAP.md), [current readiness](SWING_NARRATIVE_READINESS.md), [six hypotheses](SIX_SWING_HYPOTHESES.md) and [target architecture](../architecture/TARGET_ARCHITECTURE.md). Earlier SENS/intraday prioritization notes remain in [the historical research plan](../history/NEXT_SIGNAL_RESEARCH_PRE_2026-10-05.md).
 
-HR10 rejected all 40 HR9 instrument × horizon cells under uncertainty,
-multiple-testing, cost, drawdown and stability gates. Selecting more technical
-thresholds after seeing those outcomes would expand researcher degrees of
-freedom without adding information. HR9 remains a benchmark, not the basis of
-the next strategy.
+The owner's requested goal is local technical research and adaptive event memory for 3–5-session Swing strategies, then selective Railway investigations. First freeze six hypothesis families and their universe/vehicle, benchmark, volume basis, entry/exit, costs, data-admission and event-availability contracts. A price-only FX branch must be explicitly separate from a share-volume rule; gold must identify its actual vehicle.
 
-## Candidate ranking
+Daily technical backtests come first: bounded indicator families, older-date training, purged future testing, sufficient controls/denominators, costs and independent samples. Highest historical win rate alone is not selection evidence. Strict OHLC defects currently prevent a closed cloud holdout sample; resolve admission rather than substitute estimated bars.
 
-| Rank | Information family | Predictive rationale | Availability/history | Cost/licensing | Timestamp and short-horizon fit |
-|---:|---|---|---|---|---|
-| 1 | JSE SENS and structured corporate events | Authoritative, instrument-specific information shocks | Real-time and EOD products exist; historical single-stock API product documented | Licensed JSE/distributor route required | Strong event clock; suitable from intraday through multi-session |
-| 2 | Intraday trade/quote liquidity: bid/ask, volume, spread and imbalance | Adds state absent from daily technical data; measures executable conditions | Requires licensed Level 1/2 or broker feed and historical intraday store | Potentially material | Excellent if exchange/source timestamps and auctions are preserved |
-| 3 | Causally aligned cross-market leads | USD/ZAR, gold, Brent, PGM, global index/futures and overseas listings may lead JSE names | Daily proxies exist; licensed intraday history still needed | Mixed | Strong only with trading calendars, venue hours and release delays modelled |
-| 4 | Scheduled macro/fundamental events | Surprise and regime information beyond prices | SARB/Stats SA/issuer sources; vintage reconstruction required | Often public, engineering intensive | High around events; exact publication/availability clocks essential |
-| 5 | Licensed financial news/sentiment | May accelerate interpretation of unscheduled events | Historical full text and redistribution rights difficult | Often expensive | Potentially strong but source timestamps and revisions matter |
-| 6 | Uncontrolled social sentiment | Lead discovery in isolated cases | Unstable access and weak authority | Permission/API constraints | Too noisy to be a primary feature |
+Then admit real 30-minute history when available, with same-slot prior-session volume and sector-relative movement. Keep daily-only results separate from intraday-refined results. A signal known at a daily close cannot justify an earlier entry that day; never synthesize intraday bars from daily OHLC.
 
-## Recommended next implementation
+Historic SENS/news/economic retrieval remains a crucial data milestone. Retrieve source documents with verified publication/receipt/availability, then use local Ollama for short categorized descriptions. Later explanations remain post-move labels rather than pre-entry features. Weekly briefs are research leads and do not establish a historical event archive or price correlation.
 
-Implement one formal dataset milestone combining **JSE SENS event timing and
-classification** with issuer mapping. It introduces genuinely new authoritative
-information and can first be evaluated on daily/session horizons using the
-existing point-in-time store. In parallel only as data procurement—not signal
-development—obtain sample licensed Level 1/2 intraday data for one liquid JSE
-instrument to assess feasibility.
-
-Intraday 5/15/30/60-minute and same-day targets must be a separate dataset and
-evaluation universe. Required fields include exchange event/receive timestamps,
-bid/ask and sizes, trades/volume, session/auction state, corrections, instrument
-reference data and market calendar. It must not be merged with HR10 results.
-
-JSE documentation confirms live and EOD SENS products, technical samples, live
-equity/derivative feeds and FIX/MITCH gateways; access is not necessarily retail:
-https://clientportal.jse.co.za/technical-library/trading-and-market-data-documentation
-and https://www.jse.co.za/market-data/market-announcements (accessed 2026-09-04).
+Only after these foundations should selective radar cases and control summaries replace today's complete-history uploads. Railway can retain investigations and bounded proposals while local engines test them. Prospective walk-forward acceptance and M15/account gates precede promotion. Intraday CFD, long-term investment and Live execution are separate later programs.

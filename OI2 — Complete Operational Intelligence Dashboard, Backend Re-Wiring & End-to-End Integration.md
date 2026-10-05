@@ -1,5 +1,13 @@
 # OI2 — COMPLETE OPERATIONAL INTELLIGENCE DASHBOARD, BACKEND RE-WIRING & END-TO-END INTEGRATION
 
+## Current context — 5 October 2026
+
+The original module/design contract below is retained. Its delivered/planned labels describe that scope/checkpoint; use the current snapshot for later integration and deployment state.
+
+Manual Monday briefs and local Ollama research cases now extend the existing source catalog. Distinct-publisher corroboration gates the +0.05 research attention boost; it never changes trade weights. Current single-publisher cases have zero flags, and historic SENS/event retrieval remains planned. See [current project state](docs/CURRENT_STATE.md) and [document index](docs/DOCUMENTATION_INDEX.md).
+
+---
+
 You are working autonomously overnight in the existing:
 
 `trading-system-complete`

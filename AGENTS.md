@@ -1,5 +1,13 @@
 # AGENTS.md — Mandatory Entry Point
 
+## Current context — 5 October 2026
+
+The requirements below remain governing constraints. This reconciliation adds navigation/current context without weakening the original safety or evidence rules.
+
+The current system centers on the canonical paper workflow, exact strategy lineage, local daily OHLCV collection and isolated AI/news research. The six-family local backtest/radar loop remains proposed; no validated profitability, automatic promotion or Live execution is established. See [current project state](docs/CURRENT_STATE.md) and [document index](docs/DOCUMENTATION_INDEX.md).
+
+---
+
 This repository is an **Adaptive South African Market Intelligence Platform**, not a generic trading bot.
 
 ## Before changing code
@@ -12,7 +20,7 @@ Read, in order:
 6. `docs/roadmap/CURRENT_MILESTONE.md`
 7. Only domain docs relevant to the active milestone.
 
-`MASTER_VSCODE_AGENT_PROMPT.md` is the execution mandate; the Constitution is the governing contract.
+`MASTER_VSCODE_AGENT_PROMPT.md` was referenced by the earlier handoff but is not present in this checkout. Do not invent its contents; use the mandatory files above and the Constitution as the available governing contract.
 
 ## Non-negotiable rules
 - Evolve existing code; do not rewrite without an ADR.

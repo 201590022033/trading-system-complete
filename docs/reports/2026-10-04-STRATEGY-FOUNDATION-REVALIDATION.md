@@ -1,5 +1,13 @@
 # Strategy foundation revalidation — 2026-10-04
 
+## Current context — 5 October 2026
+
+The original findings, test counts, deployment restrictions and planned items below belong to their recorded checkpoint. They are preserved as evidence and must not be read as today's operating instructions.
+
+Canonical Swing remains pinned to 1.0.1 with exact new-record attribution. Separate 1.1.0 technical, 1.2.0 policy and 1.3.0 AI research do not replace M13 ranking/M14 policy/M15 veto. M16 targets are evaluation requirements, not execution approval; Live remains disabled. See [current project state](../CURRENT_STATE.md) and [document index](../DOCUMENTATION_INDEX.md).
+
+---
+
 ## Repository and scope
 
 Verified origin `https://github.com/201590022033/trading-system-complete.git`,

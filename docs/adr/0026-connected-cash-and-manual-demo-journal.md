@@ -1,5 +1,13 @@
 # ADR 0026 — Connected cash and account-linked manual demo journal
 
+## Current context — 5 October 2026
+
+This is a dated decision record. Its original rationale/status is retained; it is not a complete current capability inventory. Later additive decisions and the current snapshot determine deployed scope.
+
+Connected IG account reads and a self-reported manual Demo journal exist, while entitlement-specific data and order safety remain separate gates. Standard Bank/ViewPoint/Shyft/MT5 are not verified automatic connections in this workflow. No research/card enables Live execution. See [current project state](../CURRENT_STATE.md) and [document index](../DOCUMENTATION_INDEX.md).
+
+---
+
 2026-09-20. Extension of the sole ACTIVE operational demo workspace milestone.
 
 The headline must not use the internal simulator's invented starting capital.

@@ -1,5 +1,13 @@
 # Bull/Bear Indicator Forensics
 
+## Current context — 5 October 2026
+
+The original findings, test counts, deployment restrictions and planned items below belong to their recorded checkpoint. They are preserved as evidence and must not be read as today's operating instructions.
+
+Existing feature/regime/evaluation infrastructure remains reusable. New daily Swing technical/policy versions are isolated research; invalid OHLC and missing dated events still block admission. Six-family local backtests and 30-minute sector-relative radar are proposed, not validated or enabled. See [current project state](../CURRENT_STATE.md) and [document index](../DOCUMENTATION_INDEX.md).
+
+---
+
 This analysis evaluates only the four indicators that actually generated legacy
 technical signals. Figures are pooled across six tickers, use overlapping
 close-to-close outcomes, and are gross of costs; they are diagnostic, not

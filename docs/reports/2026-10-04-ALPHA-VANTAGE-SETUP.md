@@ -1,5 +1,13 @@
 # Alpha Vantage free-key setup and guarded Yahoo repair
 
+## Current context — 5 October 2026
+
+The original findings, test counts, deployment restrictions and planned items below belong to their recorded checkpoint. They are preserved as evidence and must not be read as today's operating instructions.
+
+Yahoo daily archives exist but invalid individual OHLC still blocks strict replay. IG JSE history probes remain entitlement-blocked; Alpha Vantage JSE coverage is unverified and scheduled calls are off. Display estimates are excluded from trading/backtest evidence. See [current project state](../CURRENT_STATE.md) and [document index](../DOCUMENTATION_INDEX.md).
+
+---
+
 Starting clean master f572634e8fe88f02180aabb25c7ff2c74b10ec68.
 Baseline 786 safe tests pass. Final 56 focused tests and 807 full safe tests pass
 (56.282 seconds). All 54 protected artifacts unchanged. JavaScript syntax,

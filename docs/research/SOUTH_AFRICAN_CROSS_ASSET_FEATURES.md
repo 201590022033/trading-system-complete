@@ -1,5 +1,13 @@
 # South African Cross-Asset Features
 
+## Current context — 5 October 2026
+
+The original module/design contract below is retained. Its delivered/planned labels describe that scope/checkpoint; use the current snapshot for later integration and deployment state.
+
+Existing feature/regime/evaluation infrastructure remains reusable. New daily Swing technical/policy versions are isolated research; invalid OHLC and missing dated events still block admission. Six-family local backtests and 30-minute sector-relative radar are proposed, not validated or enabled. See [current project state](../CURRENT_STATE.md) and [document index](../DOCUMENTATION_INDEX.md).
+
+---
+
 HR3 derives 84 research columns across 2,781 union-calendar dates in
 `analysis/data/hr3/cross_asset_features.csv`. The manifest records version,
 coverage and file hash.

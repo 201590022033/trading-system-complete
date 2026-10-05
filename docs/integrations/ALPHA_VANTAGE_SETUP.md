@@ -1,51 +1,25 @@
-# Alpha Vantage private setup and Yahoo repair
+# Alpha Vantage setup and current disabled state
 
-Run the reviewed setup from the repository in PowerShell:
+Reviewed 5 October 2026. Keys were saved privately locally and on Railway. **Current `ALPHA_VANTAGE_ENABLED=0` on both local and cloud services.** The bounded probes did not verify JSE identity/history coverage. Do not interpret a saved key or a download advertisement as proof of access.
 
-```powershell
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File ./scripts/configure_alpha_vantage.ps1
-```
+## Helper behavior versus deployed settings
 
-Paste the private API key into its hidden prompt, never chat. This preserves other
-local .env settings and saves ALPHA_VANTAGE_API_KEY on Railway production web and
-worker using stdin and --skip-deploys. No service is restarted. ALPHA_VANTAGE_ENABLED
-is 1 for future Railway deployments, 0 locally to reserve the manual-probe budget.
-Only a non-secret setup receipt is written under ignored .cache. LocalOnly is an
-optional switch. Do not run a variable-list command: it prints other secrets.
-The execution-policy override applies only to this setup process; machine-wide
-policy is not changed. If Railway fails after the local key is saved, rerun with
-UseSavedLocalKey to privately reuse it without another prompt. The setup selects
-the native/.cmd CLI and checks exit status, allowing harmless deprecation warnings
-on Windows PowerShell 5 without printing native command output.
-
-Validate one actual JSE instrument with the local project Python environment:
+`scripts/configure_alpha_vantage.ps1` prompts privately, preserves other local settings and uses stdin/native Railway CLI calls with `--skip-deploys`. It leaves local scheduled requests disabled, but **its Railway branch writes `ALPHA_VANTAGE_ENABLED=1`** for a future deployment. That is helper behavior, not today's verified cloud setting. Do not rerun the cloud branch simply to repeat setup: doing so changes the intended disabled configuration. Prefer `-LocalOnly` for an additional local key save; a reviewed future cloud key rotation must preserve the disabled flags privately afterward.
 
 ```powershell
-python -m scripts.alpha_vantage_probe SASOL
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File ./scripts/configure_alpha_vantage.ps1 -LocalOnly
 ```
 
-The probe consumes up to two calls: symbol search and compact daily history if a
-unique South African ZAR identity is found. Defaults use the ignored persistent
-runtime/alpha-vantage-probe.db, capped at five calls/rolling day. Reuse this same
-cache path; creating new databases bypasses that local budget. Output is safe
-status, symbol, bar count and price basis, never key or raw error. Exit 0 means
-history returned after identity gates; exit 2 means configuration/coverage/access
-unresolved. If JSE_SYMBOL_UNVERIFIED, do not assume Alpha Vantage covers the JSE.
+The execution-policy override is confined to this process. `-UseSavedLocalKey` reuses a previously saved local key without printing it. Never paste a key/password into chat or print Railway variable listings. Setup receipts under ignored `.cache` contain no secret and do not prove coverage or deployment.
 
-On the later code deployment, the daily Swing loader first acquires Yahoo charts.
-No fallback calls occur for good data, duplicate completed sessions or web status
-reads. Invalid recent bars trigger cached discovery/history; identical closing
-prices, same session, raw OHLCV and verified search identity are required. Only
-the separate research/shadow chart is repaired; ranking and cash simulator source
-stay unchanged. Dashboard paper-model section reports repaired/unresolved dates
-and coverage/quota states. Frozen input prevents refetching on worker retry.
+## Explicit coverage checks
 
-Production makes at most 20 requests/rolling day and five/minute across its shared
-repository, leaving five for local checks. Requests outside these clients still
-consume the same provider key. Local scheduled fallback remains disabled; do not
-enable additional independently budgeted clients without reassigning the cap.
-Keys and downloaded series remain runtime data, not committed source artifacts.
+`python -m scripts.alpha_vantage_probe SASOL` is a manual external request, excluded from safe tests. It uses the same persistent ignored probe cache and a five-call rolling-day budget; a symbol/history probe may use up to two calls. Reusing the cache preserves that budget. Exit 0 means verified history returned; exit 2 means coverage/configuration unresolved. `JSE_SYMBOL_UNVERIFIED` must not be treated as a data success.
 
-Free TIME_SERIES_DAILY compact supplies up to 100 observations. It cannot repair
-older invalid bars or deliver a 20-year dataset. Whole invalid/missing charts and
-ambiguous prices remain blocked. There is no simulated or LLM-generated fallback.
+Five actual bounded discovery calls did not establish unique South African ZAR coverage; foreign listings and provider-limit responses were not used to repair JSE bars. Free `TIME_SERIES_DAILY` compact is limited to up to 100 observations in this client's contract; it cannot supply the advertised 20-year JSE history or repair every older defect.
+
+## Existing conditional repair logic
+
+When explicitly enabled on a provider-fetch path, repair is only for invalid Yahoo research bars, using verified symbol/session/currency and matching real close. Good charts, duplicate sessions, status reads and worker retries do not trigger another call. The code's shared production limit is 20 requests per rolling day and five per minute, reserving five calls for local checks under the user's 25-call allowance. Other tools using the same key can still consume that allowance.
+
+Current local daily collection does not call Alpha Vantage. The cloud's `LOCAL_UPLOAD` paper-input mode does not perform provider fallback. No automatic request is enabled to fill these defects, and there is no LLM-generated OHLCV fallback. See [provider matrix](MARKET_DATA_EXECUTION_MATRIX.md).

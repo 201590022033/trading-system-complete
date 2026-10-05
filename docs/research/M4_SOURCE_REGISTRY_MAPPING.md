@@ -1,5 +1,13 @@
 # M4 source registry mapping
 
+## Current context — 5 October 2026
+
+The original module/design contract below is retained. Its delivered/planned labels describe that scope/checkpoint; use the current snapshot for later integration and deployment state.
+
+Manual Monday briefs and local Ollama research cases now extend the existing source catalog. Distinct-publisher corroboration gates the +0.05 research attention boost; it never changes trade weights. Current single-publisher cases have zero flags, and historic SENS/event retrieval remains planned. See [current project state](../CURRENT_STATE.md) and [document index](../DOCUMENTATION_INDEX.md).
+
+---
+
 The canonical `domain.registry.source.CanonicalSourceRegistry` wraps the
 existing `market_intelligence.SourceRegistry`, which in turn delegates all
 SQLite CRUD, enable/disable updates, manual weights and audit records to

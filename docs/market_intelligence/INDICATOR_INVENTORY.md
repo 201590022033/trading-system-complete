@@ -1,5 +1,12 @@
 # Technical indicator inventory
 
+## Current context — 5 October 2026
+
+The original feature/profile contract below is retained as its delivery checkpoint. Existing regime and feature registries are reused. Separate Swing 1.1.0 now adds EMA20/50, Wilder RSI/ATR14, relative volume and independent 3/4/5-session labels; 1.2.0 adds cash-only daily policy replay and 1.3.0 adds bounded AI hypothesis comparisons. These are research lanes and do not change default ranking weights. Invalid OHLC, verified sector/FX/commodity context, actual event availability and prospective evaluation remain admission gates. The complete local six-family engine and 30-minute radar are proposed. See [current state](../CURRENT_STATE.md), [Swing readiness](../research/SWING_NARRATIVE_READINESS.md) and [document index](../DOCUMENTATION_INDEX.md).
+
+
+---
+
 This inventory records the repository's existing implementation; the UI does
 not add or recompute technical mathematics.
 

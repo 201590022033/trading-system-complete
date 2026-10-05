@@ -1,5 +1,13 @@
 # OI2 Operational Dashboard
 
+## Current context — 5 October 2026
+
+The original module/design contract below is retained. Its delivered/planned labels describe that scope/checkpoint; use the current snapshot for later integration and deployment state.
+
+The current dashboard has six sections including backend-populated Trading Strategies and the canonical Top-5. Older multi-agent/mock/merge designs remain historical context; they do not describe the default ranking path. Paper/connected cash and self-reported trades stay separate. See [current project state](../CURRENT_STATE.md) and [document index](../DOCUMENTATION_INDEX.md).
+
+---
+
 OI2 is a thin Flask interface over `OperationalIntelligence`. The browser never
 manufactures evidence: it invokes separate market, technical, news, full-analysis,
 and universe-scan endpoints. An `AnalysisRun` records independently timestamped

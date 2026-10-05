@@ -1,96 +1,37 @@
-# Target Architecture — Evolutionary Adaptive Intelligence Layer
+# Target architecture — local research and selective cloud memory
 
-ADR0043 introduces weekly derived context → local semantic relationships → local
-historical archive screen → research flags. Later historical retrieval, dated
-SENS/economic events, sector controls and walk-forward testing must precede any
-market-correlation claim or trading-weight promotion.
+This document is a proposal for the next phase, not a description of implemented capabilities. Compare with [current architecture](CURRENT_ARCHITECTURE.md), [current state](../CURRENT_STATE.md), and [six swing hypotheses](../research/SIX_SWING_HYPOTHESES.md). Original target plans remain in [the dated archive](../history/TARGET_ARCHITECTURE_PRE_2026-10-05.md).
 
-2026-10-04 owner-directed split: local daily OHLC archive → authenticated working
-snapshot → online scheduled AI hypothesis research → frozen experiment and
-chronological comparison → prospective validation → reviewed strategy version.
-ADR0042 implements through retrospective comparison only; no automatic adoption.
+The owner's objective is adaptive 3–5-session strategy research: retain raw data and calculate technical evidence locally, detect unusual volume and sector-relative movement, retrieve dated news/SENS/economic context, then persist meaningful investigations and comparisons on Railway. AI proposes and categorizes; causal backtests, costs, controls and risk gates determine what survives.
 
-## 2026-10-03 strategy-oriented evolution
-
-The owner now directs future canonical development around explicit, versioned
-Trading Strategy Profiles. ADR 0035 implements only the foundation and dashboard
-discovery shell. Mature M3–M16, source/news, risk and paper components are reused;
-the older multi-agent governance below remains a benchmark, not the new canonical
-strategy orchestrator. Target Swing pipeline:
-
-`exact StrategyProfile → universe → causal market data/features/catalysts/regime
-→ suitability → M13 ranking → Top 5 → M14 policy → execution feasibility/M15 risk
-→ paper execution → outcome → exact-version evaluation/learning`
-
-StrategyTarget remains a separate versioned evaluation-requirements contract.
-Future generated objects must pin profile ID/version before computation and
-retain exact lineage; old decisions stay LEGACY_UNATTRIBUTED. Shared raw data may
-remain strategy-neutral. Research ordering is distinct from account economics
-and position sizing; M15 remains the final veto. Swing is the first strategy to
-mature. Intraday CFD and long-term investing remain truthful development
-placeholders until their separate data/validation gates pass. No optimized
-weights, generic timeframe switch, live execution or automatic promotion.
-See the implementation audit for staged scope, conflicts and migrations.
-
-2026-09-19: the bounded canonical PAPER vertical slice is implemented (ADR 0024).
-It does not promote adaptive production weights, provide live execution or solve
-cross-broker capital allocation. Target capabilities below remain aspirational
-unless explicitly documented in the current architecture and repair runbook.
-
-## Design principle
-Insert context and learning **around the current pipeline**. Keep the existing governance system as the decision consumer.
-
-```text
-Collectors / adapters already in repo
-        |
-        v
-UnifiedDataPipeline
-        |
-        +--> Evidence / provenance normalization
-        |       |
-        |       +--> Source Reliability Engine
-        |
-        +--> Market Regime Engine
-        |
-        +--> Sector + Instrument Context Engine
-        |
-        +--> Macro / cross-asset features
-        |
-        v
-Adaptive Signal Fusion Engine
-        |
-        +--> legacy fixed score in parallel (benchmark)
-        +--> adaptive score in shadow mode
-        |
-        v
-Existing Bull / Bear / General Researchers
-        v
-Existing Trader -> Risk Agents -> Manager -> Executor
+```mermaid
+flowchart TD
+    D[Local daily real OHLCV archive] --> Q[Identity, sessions, corporate actions and quality admission]
+    Q --> H[Six independent hypothesis families]
+    H --> B[Daily technical backtest: train, purge, holdout and controls]
+    B --> R[Local radar: unusual same-slot volume and sector-relative price]
+    R --> I[Retrieve real historical or current 30-minute bars when available]
+    I --> E[Retrieve dated SENS, news and economic documents]
+    E --> O[Local Ollama referenced short descriptions and event categories]
+    O --> U[Idempotent selective upload with lineage and availability times]
+    U --> C[Railway durable investigations, dashboard and experiment comparisons]
+    C --> P[Bounded new hypothesis proposals returned for local tests]
+    P --> B
+    C --> G[Separate evidence and safety gate before any promotion]
 ```
 
-## Required architectural properties
-- Legacy output remains available as a benchmark and rollback path.
-- Adaptive weighting must be explainable: which sources/features contributed and by how much.
-- Regime and sector context are explicit objects, not scattered `if ticker == ...` rules.
-- Reliability is learned by **source x sector/ticker x regime x horizon**, with shrinkage/fallback when samples are small.
-- Backtests can reproduce historical decisions without future leakage.
-- Live broker writes are outside this target roadmap.
+## Contracts to establish first
 
-## Market-data and execution boundary
+Freeze each hypothesis ID/version, dated universe membership, instrument/vehicle identity, actual price/volume basis, sector/commodity/FX benchmark, entry/exit rules and allowed modes. Keep training inputs separate from future labels, and record receipt, publication and tradable availability independently. Store denominator/control summaries for untriggered days locally so radar-selected cases do not become a biased backtest.
 
-Future provider adapters sit beside, not inside, research evaluation. A trade
-ticket may consume a timestamped, state-labelled `MarketDataProvider` snapshot;
-an `ExecutionProvider` may initially preview only. The target workflow is:
+Equity radar draft thresholds are 1.5× the same 30-minute slot's prior-20-session volume and approximately 1.5 standardized units of sector-relative movement. They need validation; no such radar is currently enabled. FX/gold need separate verified volume contracts; spot/tick proxies cannot impersonate JSE traded shares. Never synthesize 30-minute bars from daily OHLC.
 
-`data → analysis → suggested ticket → human review → supported broker handoff → user confirmation`
+Event retrieval must precede Ollama interpretation. Record evidence as VERIFIED_BEFORE_ENTRY, POST_MOVE_EXPLANATION, PUBLISH_TIME_UNKNOWN or NO_VERIFIED_EVENT_FOUND. Later explanations cannot become earlier entry signals. Preserve source IDs, timestamps and uncertainty rather than inventing a catalyst. Weekly briefs are leads, with research-only priority, not a second confirming source.
 
-No authenticated broker adapter or automatic live order path exists in HR10.
+## Placement and evolution
 
-OI1 formalizes the handoff objects:
+Extend the existing registry, causal feature/evaluation infrastructure, paper ledger, news catalog and outboxes. Start by aligning the six-family contracts and real-data admission, then implement local daily backtests, optional intraday refinement, dated event retrieval and selective upload in dependency order. Do not start all six as separate unconstrained bots.
 
-`MarketDataProvider → ResearchDataProvider → SignalEngine → TradeSuggestion → human review → ExecutionProvider → BrokerAccount`
+Current daily archives/uploads and the cloud 1.3.0 comparison loop are reusable foundations. They do not yet supply the complete local engine or adaptive event taxonomy. Parameter evaluation and event memory are distinct from LLM weight fine-tuning. An always-available web/database service can retain state while bounded workers run on schedule; continuous CPU inference is not required for a 3–5-day strategy.
 
-Market and research data retain separate provenance. The canonical suggestion
-is non-actionable unless it is admitted, unexpired and directional. Provider
-preview remains paper-only; a later live adapter cannot be inferred from these
-interfaces and requires its own safety milestone.
+No automatic promotion, Live broker execution, ranking-weight changes, or legacy multi-agent reconnection belongs to this target without a separate milestone and evidence. Prospective walk-forward acceptance, sufficient independent outcomes, actual costs/liquidity and M15 veto remain required.

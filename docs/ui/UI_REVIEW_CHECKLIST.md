@@ -1,44 +1,20 @@
-# UI Human Review Checklist
+# Dashboard review checklist — current application
 
-## Start locally
+Reviewed 5 October 2026. Start using [Quick Start](../../QUICKSTART.md); see [current dashboard behavior](DECISION_UI.md). The old simulated-ticker checklist is [archived](../history/UI_REVIEW_CHECKLIST_PRE_2026-10-05.md).
 
-From the repository root:
+Review the six dashboard sections against [current state](../CURRENT_STATE.md):
 
-```bash
-.venv/bin/python app.py
-```
+- Portfolio & demo: distinguish simulated capital from connected cash, Demo from Live, original currency from dated ZAR conversion, and self-reported journal entries from verified broker fills.
+- Trading Strategies: cards reflect backend capability/limitation state; Swing default is 1.0.1; Intraday CFD and Long-Term Investment have truthful development states. Selecting a card changes no strategy weights or execution mode.
+- Canonical Top-5: committed opportunities expose source freshness and policy/risk blocks. Read-only refresh does not start another pipeline or reconnect the old multi-agent score.
+- Technical Intelligence: show real-data provenance, blocked dates and explicit estimated display flags. No estimated OHLC or invented volume enters replay. A chart is not evidence of licensed historical intraday access.
+- Market AI / News: identify unverified brief claims, article references, actual receipt times, publisher independence, failures and pending states. A single publisher earns no corroboration boost/flag.
+- System: distinguish web/database health and worker completion from data availability or strategy performance.
 
-Open `http://127.0.0.1:5000/`. This page is a simulated ticker prototype. It
-does not display HR9/HR10 recommendations and does not use live market data.
+Check empty/error/stale states as well as success. Read-only profile discovery must work without credentials. Protected worksheet/journal/brief imports require existing operator authentication; do not expose tokens in links or screenshots. Print a worksheet only as a local review artifact; it must not submit an order.
 
-## Current routes and data flow
+Current acceptance includes zero closed first cloud holdout trades and zero first-news historical flags. The proposed local six-family backtest/radar workflow is not a completed dashboard feature. No UI control can override M15 or enable Live execution.
 
-- `/`: single inline Flask template containing the ticker table.
-- `/api/snapshot`: simulated snapshot with explicit `SIMULATED`, `RESEARCH`,
-  and `live: false` metadata.
-- `/health`: process health and simulated-state metadata.
-- Socket.IO `ticker_update`: one-second in-memory random-walk prices from
-  `INSTRUMENTS` in `app.py`; no broker, research artifact or credential access.
-
-## Review questions
-
-- Can I immediately tell this is simulated research data, not live data?
-- Can I tell immediately which instrument I am looking at?
-- Can I find a suggested BUY / SELL / NO TRADE direction? (Currently absent.)
-- Can I see the intended horizon? (Currently absent.)
-- Can I tell how strong or weak the evidence is, and why? (Currently absent.)
-- Can I distinguish model confidence from historical return? (Currently absent.)
-- Can I see downside, stop, target, position sizing and maximum risk? (Absent.)
-- Can I see data source, age and timestamp? (Simulation state/time only.)
-- Is anything visually prominent that does not help a decision?
-- What is needed immediately before placing a manual trade?
-
-## Feedback → future task
-
-| Screen/element | Clear/confusing/redundant | Desired change | Priority | Safety/data dependency |
-|---|---|---|---|---|
+| Screen/element | Observed issue | Desired change | Priority | Evidence/data dependency |
+| --- | --- | --- | --- | --- |
 | | | | | |
-
-Future decision screen priority: instrument; BUY/SELL/NO TRADE; horizon; price
-and timestamp; entry/stop/target; risk and size; evidence; rationale; execution
-availability. Diagnostics should be secondary. This is a concept, not a live UI.

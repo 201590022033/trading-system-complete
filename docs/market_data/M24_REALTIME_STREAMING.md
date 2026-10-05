@@ -1,5 +1,13 @@
 # M24 — Real-time Market Streaming
 
+## Current context — 5 October 2026
+
+The original module/design contract below is retained. Its delivered/planned labels describe that scope/checkpoint; use the current snapshot for later integration and deployment state.
+
+Intraday CFD remains DEVELOPMENT/DATA_VALIDATION_REQUIRED. HR11/streaming engineering is reusable infrastructure, not an admitted strategy or verified cash-share volume feed. The current Swing deployment uses daily local uploads with streaming disabled. See [current project state](../CURRENT_STATE.md) and [document index](../DOCUMENTATION_INDEX.md).
+
+---
+
 M24 is a data-only canonical streaming layer. M12A/M12B superseded the old M22
 IG discovery and M23 IG history placeholders. Unfinished HR11 real-data
 validation remains M25 and was not performed here.

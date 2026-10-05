@@ -1,5 +1,13 @@
 # Shadow-learning forensic repair log
 
+## Current context — 5 October 2026
+
+The original module/design contract below is retained. Its delivered/planned labels describe that scope/checkpoint; use the current snapshot for later integration and deployment state.
+
+Railway now hosts durable shared paper/research state and a bounded 08:00 SAST scheduled worker. Local daily collection is at 07:30 SAST. Earlier non-deployment statements are checkpoint-specific; new research records reuse the append-only ledger without a broad strategy migration. See [current project state](../CURRENT_STATE.md) and [document index](../DOCUMENTATION_INDEX.md).
+
+---
+
 Baseline: `ea3f3a7ef229f333832d2b68ebd7b3370d117379`. Local repairs only; no push
 or deployment is authorized. One web service, one bounded worker, PostgreSQL.
 

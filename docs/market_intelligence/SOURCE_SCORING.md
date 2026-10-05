@@ -1,5 +1,15 @@
 # Source Reliability and Learning Engine
 
+## Current context — 5 October 2026
+
+The original module/design contract below is retained. Its delivered/planned labels describe that scope/checkpoint; use the current snapshot for later integration and deployment state.
+
+Manual Monday briefs and local Ollama research cases now extend the existing source catalog. Distinct-publisher corroboration gates the +0.05 research attention boost; it never changes trade weights. Current single-publisher cases have zero flags, and historic SENS/event retrieval remains planned. See [current project state](../CURRENT_STATE.md) and [document index](../DOCUMENTATION_INDEX.md).
+
+Source-reliability scoring and weekly research priority are distinct. The new capped +0.05 attention adjustment must not be inserted into M13 trade weights, authority scores or risk permission. Semantic overlap and distinct domains alone do not prove economic causation.
+
+---
+
 ## Goal
 Learn **how much to trust each evidence source in context**, not whether a source is globally "good" or "bad".
 

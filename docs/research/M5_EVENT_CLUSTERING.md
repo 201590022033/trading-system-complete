@@ -1,5 +1,13 @@
 # M5 event clustering
 
+## Current context — 5 October 2026
+
+The original module/design contract below is retained. Its delivered/planned labels describe that scope/checkpoint; use the current snapshot for later integration and deployment state.
+
+Manual Monday briefs and local Ollama research cases now extend the existing source catalog. Distinct-publisher corroboration gates the +0.05 research attention boost; it never changes trade weights. Current single-publisher cases have zero flags, and historic SENS/event retrieval remains planned. See [current project state](../CURRENT_STATE.md) and [document index](../DOCUMENTATION_INDEX.md).
+
+---
+
 Existing Tier-1 exact deduplication remains `evidence.deduplicate_evidence()`;
 it preserves the first `EvidenceRecord` for each stable evidence ID. M5 adds an
 isolated Tier-2 `EventClusterer` that never deletes or rewrites those records.

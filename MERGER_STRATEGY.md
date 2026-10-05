@@ -1,5 +1,13 @@
 # LLM-Enhanced Trading System Merger Strategy
 
+## Current context — 5 October 2026
+
+The original module/design contract below is retained. Its delivered/planned labels describe that scope/checkpoint; use the current snapshot for later integration and deployment state.
+
+Canonical Swing remains pinned to 1.0.1 with exact new-record attribution. Separate 1.1.0 technical, 1.2.0 policy and 1.3.0 AI research do not replace M13 ranking/M14 policy/M15 veto. M16 targets are evaluation requirements, not execution approval; Live remains disabled. See [current project state](docs/CURRENT_STATE.md) and [document index](docs/DOCUMENTATION_INDEX.md).
+
+---
+
 ## Executive Summary
 You have two complementary systems:
 - **rania321**: Excellent UI + governance + multi-agent decision pipeline (but simulated data)

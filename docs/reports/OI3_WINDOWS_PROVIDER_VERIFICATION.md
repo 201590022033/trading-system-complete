@@ -1,5 +1,13 @@
 # OI3 Windows provider verification - 2026-09-06
 
+## Current context — 5 October 2026
+
+The original findings, test counts, deployment restrictions and planned items below belong to their recorded checkpoint. They are preserved as evidence and must not be read as today's operating instructions.
+
+The current dashboard has six sections including backend-populated Trading Strategies and the canonical Top-5. Older multi-agent/mock/merge designs remain historical context; they do not describe the default ranking path. Paper/connected cash and self-reported trades stay separate. See [current project state](../CURRENT_STATE.md) and [document index](../DOCUMENTATION_INDEX.md).
+
+---
+
 OI3 remains **DEFERRED/BLOCKED**, not complete. The owner resumed only its
 outstanding provider/source/discovery verification from `1fc8994`. This pass
 does not activate HR12 or change HR11 results. Prior browser acceptance remains

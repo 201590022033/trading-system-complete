@@ -1,5 +1,13 @@
 # Adaptive Fusion (Shadow Mode)
 
+## Current context — 5 October 2026
+
+The original module/design contract below is retained. Its delivered/planned labels describe that scope/checkpoint; use the current snapshot for later integration and deployment state.
+
+Manual Monday briefs and local Ollama research cases now extend the existing source catalog. Distinct-publisher corroboration gates the +0.05 research attention boost; it never changes trade weights. Current single-publisher cases have zero flags, and historic SENS/event retrieval remains planned. See [current project state](../CURRENT_STATE.md) and [document index](../DOCUMENTATION_INDEX.md).
+
+---
+
 `adaptive_fusion.py` implements `adaptive-fusion-v1` beside the legacy score.
 `JSESignalEngine` still returns its original fixed score, action, confidence and
 threshold behavior. The adaptive result is explanatory metadata only.

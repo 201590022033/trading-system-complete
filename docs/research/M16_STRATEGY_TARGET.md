@@ -1,5 +1,15 @@
 # M16 StrategyTarget
 
+## Current context — 5 October 2026
+
+The original module/design contract below is retained. Its delivered/planned labels describe that scope/checkpoint; use the current snapshot for later integration and deployment state.
+
+Canonical Swing remains pinned to 1.0.1 with exact new-record attribution. Separate 1.1.0 technical, 1.2.0 policy and 1.3.0 AI research do not replace M13 ranking/M14 policy/M15 veto. M16 targets are evaluation requirements, not execution approval; Live remains disabled. See [current project state](../CURRENT_STATE.md) and [document index](../DOCUMENTATION_INDEX.md).
+
+StrategyTarget remains a performance/evaluation requirement object. It is distinct from StrategyProfile identity/capabilities; neither can override M15 or turn research evidence into execution authority.
+
+---
+
 ## Purpose
 
 `strategy-target-v1` declares multidimensional research and risk requirements

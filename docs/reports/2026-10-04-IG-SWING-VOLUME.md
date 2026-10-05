@@ -1,5 +1,13 @@
 # IG Swing volume investigation
 
+## Current context — 5 October 2026
+
+The original findings, test counts, deployment restrictions and planned items below belong to their recorded checkpoint. They are preserved as evidence and must not be read as today's operating instructions.
+
+Yahoo daily archives exist but invalid individual OHLC still blocks strict replay. IG JSE history probes remain entitlement-blocked; Alpha Vantage JSE coverage is unverified and scheduled calls are off. Display estimates are excluded from trading/backtest evidence. See [current project state](../CURRENT_STATE.md) and [document index](../DOCUMENTATION_INDEX.md).
+
+---
+
 Starting clean master: 2dbc272132cc444d91ebb2e9ce85a5ab422b827a.
 Baseline: 773 safe tests pass in 56.798 seconds.
 Validation: 64 focused tests pass; full safe suite 786 tests passes in 55.717
