@@ -24,6 +24,8 @@ When `WEEKLY_NEWS_RESEARCH_ENABLED=1`, a successful daily upload precedes the bo
 
 ## Difference from the requested next loop
 
+The [agreed feedback design](research/ADAPTIVE_SWING_FEEDBACK_LOOP.md) now describes independent hypothesis reviews and explicit indicator selection. The [local engine specification](research/LOCAL_BACKTEST_ENGINE_SPEC.md) must pass its staged acceptance before the complete loop is implemented. Neither document changes today's collector, cloud replay or schedules.
+
 Today's uploader sends all configured charts and the 1.3.0 technical comparison runs on Railway. The owner's next target moves full six-family technical backtests/calculations to the home PC, retrieves verified historical events, refines admitted daily triggers with real 30-minute bars and uploads selective investigations. That complete radar/backtest loop is still proposed, not installed. Cloud availability does not compensate for missing local data or an offline PC.
 
 Alpha Vantage scheduled calls are off both locally and on Railway. IG JSE daily history remains entitlement-blocked. Display estimates never enter replay. Default canonical profile 1.0.1, paper safety controls, and disabled Live execution remain unchanged.

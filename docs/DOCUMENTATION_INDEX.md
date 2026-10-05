@@ -12,6 +12,9 @@ Current guides describe today's accepted code/settings. Module contracts retain 
 
 | Document | Reconciliation treatment |
 | --- | --- |
+| [docs/research/LOCAL_BACKTEST_ENGINE_SPEC.md](research/LOCAL_BACKTEST_ENGINE_SPEC.md) | Engine-first specification, independent verification and implementation gates — proposed |
+| [docs/research/ADAPTIVE_SWING_FEEDBACK_LOOP.md](research/ADAPTIVE_SWING_FEEDBACK_LOOP.md) | Six independent hypothesis loops and explicit indicator reconsideration — proposed |
+| [docs/adr/0046-backtest-engine-before-adaptive-loop.md](adr/0046-backtest-engine-before-adaptive-loop.md) | Engine acceptance before adaptive/cloud/dashboard rollout |
 | [docs/research/SWING_RULE_REFINEMENT.md](research/SWING_RULE_REFINEMENT.md) | New source-backed proposal 0.2 — no runtime changes |
 | [docs/adr/0045-swing-rule-research-contract.md](adr/0045-swing-rule-research-contract.md) | Research-design decision — parameters remain unvalidated |
 | [AGENTS.md](../AGENTS.md) | Current governance — requirements preserved |

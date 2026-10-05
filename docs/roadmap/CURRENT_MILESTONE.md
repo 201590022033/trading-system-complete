@@ -1,4 +1,14 @@
-# Current milestone — source-backed Swing hypothesis refinement
+# Current milestone — engine-first feedback design
+
+Date: 5 October 2026. Starting branch/HEAD: `master@8a0e7c11a1b2714cd7ffcdd5cbfe0e013e74b148`. Status: COMPLETED — documentation/planning only. This is B0 in the engine plan; B1 implementation has not started. No implementation milestone is ACTIVE.
+
+Deliverables: [feedback and indicator review design](../research/ADAPTIVE_SWING_FEEDBACK_LOOP.md), [engine requirements, independent verification matrix and B1–B5 plan](../research/LOCAL_BACKTEST_ENGINE_SPEC.md), [ADR 0046](../adr/0046-backtest-engine-before-adaptive-loop.md), and navigation/roadmap/current-state updates.
+
+Acceptance: inspect current replay/registry/metrics and limitations, check all introduced document links and documentation-only diff, run full offline safe suite and protected-artifact verifier; commit milestone-sized documentation. Record results before completion. No actual backtest, engine build, strategy accuracy, provider/model call, deployment or trading change is claimed.
+
+Results: all 869 safe software tests passed in 60.949 seconds; all 54 protected artifacts passed; 272 relative targets across eleven changed/new Markdown documents resolved; `git diff --check` passed. Source inspection confirmed current replay's observed-session, fixed-LONG and hypothetical-cost limitations, and existing experiment/metric contracts. Documentation-only review passed; no new runtime tests were added for this planning task. These results establish repository/document safety, not acceptance of the proposed engine or evidence of an edge.
+
+## Previous completed milestone — source-backed Swing hypothesis refinement
 
 Date: 5 October 2026. Starting branch/HEAD: `master@a9d9185460613fb8b0b8f798406d131d0f8e7c57`. Status: COMPLETED. This is a proposal/documentation milestone, not an infrastructure implementation. No implementation milestone is ACTIVE.
 

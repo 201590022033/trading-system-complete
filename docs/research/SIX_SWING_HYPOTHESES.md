@@ -6,6 +6,8 @@ The six families are selected JSE stock, mining/resources, industrial/global exp
 
 ## Refinement 0.2 — entry, trailing, exit and momentum personality
 
+The subsequent [feedback-loop design](ADAPTIVE_SWING_FEEDBACK_LOOP.md) makes indicator addition/replacement/removal an explicit experiment per hypothesis. The [backtest-engine acceptance contract](LOCAL_BACKTEST_ENGINE_SPEC.md) is now the first implementation dependency: prove the shared simulator and each market adapter before tuning these candidate strategies or rewiring the dashboard. FX and gold retain independent indicators, tests, costs and activity semantics.
+
 The [source-backed rule refinement](SWING_RULE_REFINEMENT.md) now supplements and takes precedence over the basic candidate rules in draft 0.1 below. It defines separate continuation/reclaim/recovery setups; delayed ATR versus structural trailing; independent 3/4/5-session exits; a volume flag distinct from its learnable contribution; pooled sector/share momentum profiles; and nested local walk-forward/ablation tests. Its sector matrix explicitly covers all six families. No candidate is claimed accurate, and no installed strategy or infrastructure is changed.
 
 ---

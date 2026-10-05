@@ -6,6 +6,8 @@ The [rule refinement 0.2](../research/SWING_RULE_REFINEMENT.md) defines bounded 
 
 The owner's objective is adaptive 3–5-session strategy research: retain raw data and calculate technical evidence locally, detect unusual volume and sector-relative movement, retrieve dated news/SENS/economic context, then persist meaningful investigations and comparisons on Railway. AI proposes and categorizes; causal backtests, costs, controls and risk gates determine what survives.
 
+The owner has now prioritised the [local backtest engine contract](../research/LOCAL_BACKTEST_ENGINE_SPEC.md) before the wider rollout. Gates B1–B5 establish deterministic replay, accounting, independent FX/gold adapters and chronological indicator selection. The [feedback loop](../research/ADAPTIVE_SWING_FEEDBACK_LOOP.md) explicitly reconsiders adding/replacing/removing indicators, with separate hypothesis tests. These are documented proposals, not installed capabilities. See [ADR 0046](../adr/0046-backtest-engine-before-adaptive-loop.md).
+
 ```mermaid
 flowchart TD
     D[Local daily real OHLCV archive] --> Q[Identity, sessions, corporate actions and quality admission]

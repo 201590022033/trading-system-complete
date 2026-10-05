@@ -68,6 +68,8 @@ Current historical screening uses real local closes after actual receipt, and on
 
 ## Safety and unresolved work
 
+The latest owner decision is engine-first: [local backtest acceptance contract](research/LOCAL_BACKTEST_ENGINE_SPEC.md), then [six-hypothesis feedback and indicator reconsideration](research/ADAPTIVE_SWING_FEEDBACK_LOOP.md). Documentation/planning only; no new simulator, FX/gold adapter, adaptive rule or dashboard rewire has been installed.
+
 LIVE execution is disabled. Demo order boundaries remain separately gated; research versions and dashboard cards authorize no order. Standard Bank OST, ViewPoint/IRESS, Shyft and MT5 are not verified automatic data/execution connections in this workflow. No broad persistence migration was needed for profiles or the newer append-only research records.
 
 Before strategy promotion: obtain admissible real OHLCV, verify corporate actions and sessions, establish actual volume semantics/liquidity, retrieve dated event evidence, model real account fees/spreads, and run prospective walk-forward comparisons with sufficient independent samples. A running website, accepted dataset, or completed LLM response does not satisfy these gates.

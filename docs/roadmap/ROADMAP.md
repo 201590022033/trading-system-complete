@@ -16,16 +16,18 @@ This is the current dependency sequence. [Current state](../CURRENT_STATE.md) is
 
 ## Recommended next milestone
 
-**Six-family Swing hypothesis contracts and admissible-data plan** — proposed, not ACTIVE. Specify entry/exit/volume/benchmark/event contracts separately for selected JSE stock, mining/resources, industrial/global exposure, banks/financials, USD/ZAR and gold. Audit real-data coverage before defining automatic radar admission.
+**B1: local backtest data/time contracts and independent oracle harness** — proposed, not ACTIVE. The owner has prioritised proving the engine before the wider loop. The [engine specification](../research/LOCAL_BACKTEST_ENGINE_SPEC.md) inventories reusable code and defines B1–B5 acceptance. First freeze offline fixtures, session/availability manifests, admission rules and independently hand-calculated daily replay expectations. Six-family input requirements inform these contracts; strategy optimisation and new cloud behaviour wait.
 
 [Refinement 0.2](../research/SWING_RULE_REFINEMENT.md) now specifies the candidate entry/trailing/exit matrix, volume contribution controls and pooled momentum-personality tests. These proposed parameters still require data admission and implementation; none is an installed or validated rule.
 
-Then, in order:
+Then, in order (each gate is a separate milestone):
 
-1. Implement local daily causal backtests with controls, bounded indicator searches and immutable experiment lineage.
-2. Admit optional real 30-minute data and same-slot volume/sector-relative radar with documented missing-data states.
-3. Retrieve verified dated SENS/news/economic records before local Ollama categorization; enforce point-in-time availability.
-4. Send selective derived investigations plus denominator/control summaries to Railway with durable local outboxes.
-5. Run prospective walk-forward comparisons, realistic cost/liquidity sensitivity and sufficient independent samples before any promotion.
+1. B2: deterministic daily replay, trailing and portfolio accounting; conservative fills, costs and causal invariants; preserve legacy replay benchmark.
+2. B3: independent FX/gold adapters and synthetic market-specific tests, without broker mutations.
+3. B4: bounded indicator selection, nested chronological evaluation, contamination/trial register and eligible/control cohorts.
+4. B5: independently audit a verified real-data slice, stress costs/liquidity, compare genuine intraday evidence where available and record engine acceptance/limitations.
+5. Freeze six hypothesis catalogues and run local historical candidates plus prospective shadow comparisons. [Feedback design](../research/ADAPTIVE_SWING_FEEDBACK_LOOP.md) keeps indicator reviews independent per hypothesis.
+6. Add optional real 30-minute radar/refinement, dated event retrieval and local Ollama categorisation, then selective evidence/control uploads and the feedback dashboard in dependency order.
+7. Require sufficient independent prospective evidence and existing risk gates before adopting any research version. No automatic production promotion.
 
 Do not collapse semantic news matching into measured price correlation, FX tick volume into traded-share volume, or historical holdout comparisons into prospective proof. Intraday CFD and long-term investment remain separate later programs. Live execution is outside this roadmap. Exactly one milestone may be ACTIVE; completed historical documents do not start another.
