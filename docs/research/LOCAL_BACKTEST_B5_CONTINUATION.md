@@ -1,5 +1,7 @@
 # B5 autonomous continuation — 5 October 2026
 
+Owner subsequently approved closing B5 as PARTIAL_CLOSED and beginning R1 read-only research integration. The earlier incomplete/full-acceptance statements below remain evidence limits, not the active milestone status. No admission requirement was weakened. See ADR 0051 and CURRENT_MILESTONE.
+
 ## Latest independent audit preparation
 
 Subsequent browser research captured 33 official 2026 Sasol SENS PDFs, the issuer FY2026 financial statements and 32 ordinary dividend rows. All 32 amounts match OST; two payment dates differ. Original issuer S471745 establishes that No. 81 pays ordinary shares on 13 March 2023 while 24 March belongs to ADRs. Issuer archive list dates also differ from JSE publication dates; they are not availability clocks. Evidence remains in the chat outputs; source bodies and broker data are not committed.

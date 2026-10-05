@@ -1,4 +1,10 @@
-# Current milestone — B5 real-data acceptance resumed
+# Current milestone — R1 read-only research integration
+
+Owner approved B5's partial close and proceeding on 5 October 2026. B5 is PARTIAL_CLOSED, not fully accepted: its software/source/accounting preparation is delivered while real-data admission and provider semantics remain deferred gates. Zero admitted real trades. ADR 0051 records the explicit scope change.
+
+R1 is ACTIVE: integrate a bounded safe report summary into the existing Trading Strategies dashboard through a read-only API. Show source comparisons, dated verification and unresolved data gates; retain unavailable states. No provider calls or engine replay on refresh. IG runtime access is a separate check, not an assumed integration benefit. Acceptance includes safe schema/tamper refusal, a reviewed local preview, focused/full safe tests and protected checks.
+
+## Historical B5 checkpoints
 
 Latest continuation: source research now includes 33 official Sasol SENS PDFs and issuer dividend corroboration. A separately written offline cash oracle prepares 36 conditional observed-price probes and passes 72 directional fee comparisons. No manifest/replay admission bypass occurred; real trades admitted remain zero. RAW/action and provider interval/volume contracts remain unresolved. Cash-only research scope is permitted by the original specification; real broker fills and historical invoices limit execution readiness, while unsupported real FX/gold can remain blocked. See ADR 0050 and the latest section of `LOCAL_BACKTEST_B5_CONTINUATION.md`. No following milestone is active.
 
