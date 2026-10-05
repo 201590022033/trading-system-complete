@@ -40,6 +40,8 @@ Current settings include `SWING_DATA_SOURCE=LOCAL_UPLOAD`, `SWING_RESEARCH_ENABL
 
 The owner's intended next architecture is daily local calculations and backtests, selective 30-minute radar events sent to Railway, and six separately tested hypotheses. The full local backtest/radar/event loop is **not yet implemented**. Do not infer it from the daily uploader or cloud research panel.
 
+The [Swing rule refinement 0.2](research/SWING_RULE_REFINEMENT.md) adds source-backed candidate entry/trailing/exit experiments, volume-weight learning and measured sector/share momentum profiles to that proposal. It changes documentation only; candidates are not registered, backtested or activated by writing them down.
+
 ## What AI does and learns
 
 Local Ollama categorizes candidate relationships between a manually imported Monday brief and retrieved articles. It cannot independently search the web without a retrieval tool. It produces referenced descriptions, not OHLCV. The installed local model observed in this session is `llama3:latest`; weekly research uses CPU because the observed GPU driver rejected the CUDA/PTX workload. The weekly request has a 480-second bound; ordinary news sentiment keeps its existing timeout.

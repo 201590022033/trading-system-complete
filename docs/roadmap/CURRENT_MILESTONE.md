@@ -1,4 +1,14 @@
-# Current milestone — project documentation reconciliation
+# Current milestone — source-backed Swing hypothesis refinement
+
+Date: 5 October 2026. Starting branch/HEAD: `master@a9d9185460613fb8b0b8f798406d131d0f8e7c57`. Status: COMPLETED. This is a proposal/documentation milestone, not an infrastructure implementation. No implementation milestone is ACTIVE.
+
+Deliverable: [rule refinement 0.2](../research/SWING_RULE_REFINEMENT.md), linked into the six hypotheses, target architecture, current state, roadmap and document index. Primary South African studies are cited with scope/limits; no per-sector accuracy is fabricated. [ADR 0045](../adr/0045-swing-rule-research-contract.md) preserves isolation from installed profile versions and safety boundaries.
+
+Acceptance: validate new document links/diffs, run the full safe suite and protected-artifact verifier, and verify only Markdown changes. The plan specifies separate entry setups, causal delayed trails, 3/4/5-session exits, volume ablations/weights, pooled personalities and nested chronological testing. No actual backtest or strategy promotion is claimed.
+
+Results: 869 software tests passed in 61.120 seconds; all 54 protected artifacts passed; introduced relative links/document index checks passed and the diff is documentation-only. These checks establish repository safety, not strategy accuracy. Provider/model calls, data collection, ranking weights, hosted settings and broker permissions were unchanged.
+
+## Previous completed milestone — project documentation reconciliation
 
 Date: 5 October 2026. Starting code/branch: `master`, `c2ef802ef31ae087915ad73c76e075df09310a4a`. Status: COMPLETED. No milestone is currently ACTIVE; the next research milestone remains proposed. Earlier accumulated milestone notes are preserved in [the checkpoint archive](../history/CURRENT_MILESTONE_PRE_2026-10-05.md).
 

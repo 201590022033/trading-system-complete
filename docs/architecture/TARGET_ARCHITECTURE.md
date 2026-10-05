@@ -2,6 +2,8 @@
 
 This document is a proposal for the next phase, not a description of implemented capabilities. Compare with [current architecture](CURRENT_ARCHITECTURE.md), [current state](../CURRENT_STATE.md), and [six swing hypotheses](../research/SIX_SWING_HYPOTHESES.md). Original target plans remain in [the dated archive](../history/TARGET_ARCHITECTURE_PRE_2026-10-05.md).
 
+The [rule refinement 0.2](../research/SWING_RULE_REFINEMENT.md) defines bounded entry/trailing/exit comparisons, separate volume activity/evidence/risk contracts, pooled sector/share personalities and nested causal tests. South African studies motivate experiments but establish no per-sector 3–5-session indicator winner.
+
 The owner's objective is adaptive 3–5-session strategy research: retain raw data and calculate technical evidence locally, detect unusual volume and sector-relative movement, retrieve dated news/SENS/economic context, then persist meaningful investigations and comparisons on Railway. AI proposes and categorizes; causal backtests, costs, controls and risk gates determine what survives.
 
 ```mermaid

@@ -12,6 +12,8 @@ Current guides describe today's accepted code/settings. Module contracts retain 
 
 | Document | Reconciliation treatment |
 | --- | --- |
+| [docs/research/SWING_RULE_REFINEMENT.md](research/SWING_RULE_REFINEMENT.md) | New source-backed proposal 0.2 — no runtime changes |
+| [docs/adr/0045-swing-rule-research-contract.md](adr/0045-swing-rule-research-contract.md) | Research-design decision — parameters remain unvalidated |
 | [AGENTS.md](../AGENTS.md) | Current governance — requirements preserved |
 | [ARCHITECTURE.md](../ARCHITECTURE.md) | Current guide — rewritten; prior text archived |
 | [MERGED_SIMULATION_GUIDE.md](../MERGED_SIMULATION_GUIDE.md) | Module/design contract — original scope retained with current-context note |

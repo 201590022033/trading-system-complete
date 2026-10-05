@@ -18,6 +18,8 @@ This is the current dependency sequence. [Current state](../CURRENT_STATE.md) is
 
 **Six-family Swing hypothesis contracts and admissible-data plan** — proposed, not ACTIVE. Specify entry/exit/volume/benchmark/event contracts separately for selected JSE stock, mining/resources, industrial/global exposure, banks/financials, USD/ZAR and gold. Audit real-data coverage before defining automatic radar admission.
 
+[Refinement 0.2](../research/SWING_RULE_REFINEMENT.md) now specifies the candidate entry/trailing/exit matrix, volume contribution controls and pooled momentum-personality tests. These proposed parameters still require data admission and implementation; none is an installed or validated rule.
+
 Then, in order:
 
 1. Implement local daily causal backtests with controls, bounded indicator searches and immutable experiment lineage.

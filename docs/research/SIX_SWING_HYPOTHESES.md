@@ -4,6 +4,10 @@ Reconciled 5 October 2026. The draft below is retained from the local conceptual
 
 The six families are selected JSE stock, mining/resources, industrial/global exposure, banks/financials, USD/ZAR and gold. They need separate price/volume/benchmark and event contracts; FX/gold do not inherit a cash-equity volume rule. Freeze these contracts and data admission before the local backtest milestone.
 
+## Refinement 0.2 — entry, trailing, exit and momentum personality
+
+The [source-backed rule refinement](SWING_RULE_REFINEMENT.md) now supplements and takes precedence over the basic candidate rules in draft 0.1 below. It defines separate continuation/reclaim/recovery setups; delayed ATR versus structural trailing; independent 3/4/5-session exits; a volume flag distinct from its learnable contribution; pooled sector/share momentum profiles; and nested local walk-forward/ablation tests. Its sector matrix explicitly covers all six families. No candidate is claimed accurate, and no installed strategy or infrastructure is changed.
+
 ---
 
 # Six Swing hypotheses and local/cloud flow — conceptual draft 0.1
