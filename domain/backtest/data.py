@@ -107,4 +107,6 @@ class Manifest:
             if activity_required and (b.activity is None or self.activity_basis != 'TRADED_SHARES'):
                 raise ValueError('verified traded-share activity required')
             rows.append(b)
+        if any(a.available_at >= b.available_at for a,b in zip(rows,rows[1:])):
+            raise ValueError('out-of-order availability unsupported; do not reorder sessions')
         return tuple(rows)

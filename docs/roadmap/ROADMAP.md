@@ -35,3 +35,5 @@ Do not collapse semantic news matching into measured price correlation, FX tick 
 Implementation update: B1 completed locally; see LOCAL_BACKTEST_IMPLEMENTATION.md for evidence. B2 remains next.
 
 B2 completed locally: deterministic replay/accounting with frozen benchmark reconciliation. B3 is next; B5 real-data acceptance remains separate.
+
+B3 completed locally with market-specific synthetic verification. B4 chronological experiments next; real FX/gold execution evidence remains unresolved.

@@ -1,7 +1,7 @@
 """Deterministic close-proxy daily cash replay, versioned away from Swing 1.2.0."""
 from dataclasses import dataclass, asdict
 from datetime import datetime, timedelta
-from decimal import Decimal, ROUND_FLOOR, ROUND_HALF_UP
+from decimal import Decimal, ROUND_FLOOR, ROUND_HALF_UP, localcontext
 from domain.backtest.data import number as N
 from domain.evaluation.experiment import configuration_hash, utc
 
@@ -103,10 +103,21 @@ class CashEquity:
 
     def rate(self, session): return Decimal(1)
     def financing(self, position, session, previous): return ZERO
+    def configuration(self):
+        return dict(version=self.version, multiplier=str(self.multiplier), lot=str(self.lot), margin_fraction=str(self.margin_fraction))
 
 
 def replay(manifests, signals, *, as_of, initial_cash, account_currency='ZAR',
            costs=Costs(), actions=(), adapters=None):
+    with localcontext() as context:
+        context.prec=28
+        context.rounding=ROUND_HALF_UP
+        return _replay(manifests,signals,as_of=as_of,initial_cash=initial_cash,
+                       account_currency=account_currency,costs=costs,actions=actions,adapters=adapters)
+
+
+def _replay(manifests, signals, *, as_of, initial_cash, account_currency,
+            costs, actions, adapters):
     """Pure function; restart by replaying frozen inputs. All fills are hypothetical.
 
     Orders reserve max_notional at signal time; same-timestamp ID breaks ties.
@@ -126,8 +137,10 @@ def replay(manifests, signals, *, as_of, initial_cash, account_currency='ZAR',
     rows = {}; schedule = {}; events = []; histories = {k:[] for k in by_id}
     for m in manifests:
         adapter = adapters[m.instrument]; adapter.validate(m)
-        if m.currency != account_currency and isinstance(adapter, CashEquity):
+        if m.currency != account_currency and type(adapter) is CashEquity:
             raise ValueError('explicit conversion adapter required')
+        if hasattr(adapter,'account_currency') and adapter.account_currency!=account_currency:
+            raise ValueError('adapter account currency mismatch')
         if not m.sessions: raise ValueError('calendar required')
         rows[m.instrument] = m.admit(m.sessions[0].key,m.sessions[-1].key,now,
                                     activity_required=adapter.activity_required)
@@ -267,7 +280,7 @@ def replay(manifests, signals, *, as_of, initial_cash, account_currency='ZAR',
     result=dict(engine_version=VERSION,execution_enabled=False,grade='SYNTHETIC' if all(m.grade=='SYNTHETIC' for m in manifests) else 'ASSUMPTION_LIMITED',
                 dataset_hashes={m.instrument:m.sha256 for m in manifests},
                 config_hash=configuration_hash(dict(signals=[asdict(s) for s in signals],costs=asdict(costs),actions=[asdict(a) for a in actions],
-                    initial_cash=str(initial),account_currency=account_currency,adapters={k:a.version for k,a in adapters.items()})),
+                    initial_cash=str(initial),account_currency=account_currency,adapters={k:a.configuration() for k,a in adapters.items()})),
                 ledger=ledger,decisions=decisions,trades=trades,equity=equity,cash=str(cash),reserved=str(reserved),
                 pending_orders=sorted(orders),open_positions=sorted(positions),cost_basis=costs.basis,
                 limitations=['FULL_FILL_ASSUMPTION','CLOSE_PROXY_NOT_BROKER_FILL','DAILY_INTRABAR_PATH_UNKNOWN'])
