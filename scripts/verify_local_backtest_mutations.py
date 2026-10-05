@@ -10,6 +10,7 @@ import unittest
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT))
 import test_local_backtest_engine as checks
+import test_local_backtest_ost_costs as ost_checks
 
 
 def main():
@@ -19,6 +20,7 @@ def main():
         'stop_order':("elif hit_stop:", "elif hit_stop and not hit_target:"),
         'duplicate_fill':("post(at,sid,'FEE',-fee)", "post(at,sid,'ENTRY',-capital); post(at,sid,'FEE',-fee)"),
         'removed_fee':("post(at,sid,'FEE',-fee)", "post(at,sid,'FEE',ZERO)"),
+        'purchase_tax_on_exit':("fee=costs.fee(notional,-s.side)", "fee=costs.fee(notional,s.side)"),
     }
     killed=[]
     for name,(old,new) in mutations.items():
@@ -29,9 +31,13 @@ def main():
             module=importlib.util.module_from_spec(spec); sys.modules[spec.name]=module
             spec.loader.exec_module(module)
             original=checks.replay; checks.replay=module.replay
+            original_ost=ost_checks.replay; ost_checks.replay=module.replay
             try:
-                result=unittest.TextTestRunner(stream=io.StringIO()).run(unittest.defaultTestLoader.loadTestsFromTestCase(checks.LocalReplayTests))
-            finally: checks.replay=original; sys.modules.pop(spec.name,None)
+                suite=unittest.TestSuite((unittest.defaultTestLoader.loadTestsFromTestCase(checks.LocalReplayTests),
+                                         unittest.defaultTestLoader.loadTestsFromTestCase(ost_checks.OSTReplayCostsTests)))
+                result=unittest.TextTestRunner(stream=io.StringIO()).run(suite)
+            finally:
+                checks.replay=original; ost_checks.replay=original_ost; sys.modules.pop(spec.name,None)
             if result.wasSuccessful(): raise RuntimeError('SURVIVED: '+name)
             killed.append({'mutation':name,'failures':len(result.failures),'errors':len(result.errors)})
     import json

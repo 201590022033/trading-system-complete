@@ -31,8 +31,11 @@ class Costs:
     def fill(self, price, direction):
         return price * (1 + direction * (self.spread_bps/2+self.slippage_bps)/10000)
 
-    def fee(self, notional):
+    def fee(self, notional, direction=1):
         return money(max(self.minimum_fee, abs(notional)*self.fee_bps/10000))
+
+    def validate(self, manifests):
+        """Generic hypothetical costs have no broker/product applicability claim."""
 
 
 @dataclass(frozen=True)
@@ -134,6 +137,7 @@ def _replay(manifests, signals, *, as_of, initial_cash, account_currency,
     now = utc(as_of, 'as_of'); initial = money(N(initial_cash))
     if initial <= 0: raise ValueError('positive initial cash required')
     manifests = tuple(manifests); signals = tuple(signals); actions = tuple(actions)
+    costs.validate(manifests)
     by_id = {m.instrument:m for m in manifests}
     if len(by_id) != len(manifests) or len({s.id for s in signals}) != len(signals):
         raise ValueError('duplicate instrument or signal identity')
@@ -186,7 +190,7 @@ def _replay(manifests, signals, *, as_of, initial_cash, account_currency,
     def close(key,b,price,reason,ambiguous=False):
         p=positions.pop(key); s=p['signal']; adapter=adapters[key]; rate=adapter.rate(b.session)
         fill=costs.fill(price,-s.side); notional=p['qty']*fill*adapter.multiplier*rate
-        fee=costs.fee(notional)
+        fee=costs.fee(notional,-s.side)
         if adapter.margin_fraction == 1:
             proceeds=notional
         else:
@@ -273,10 +277,10 @@ def _replay(manifests, signals, *, as_of, initial_cash, account_currency,
                 unit=fill*adapter.multiplier*rate*adapter.margin_fraction
                 qty=min(s.risk_budget/(risk*adapter.multiplier*rate),s.max_notional/unit)
                 qty=(qty/adapter.lot).to_integral_value(rounding=ROUND_FLOOR)*adapter.lot
-                while qty>0 and money(qty*unit)+costs.fee(qty*fill*adapter.multiplier*rate)>min(s.max_notional,cash-reserved): qty-=adapter.lot
+                while qty>0 and money(qty*unit)+costs.fee(qty*fill*adapter.multiplier*rate,side)>min(s.max_notional,cash-reserved): qty-=adapter.lot
                 if qty<=0:
                     decisions.append(dict(id=sid,at=at.isoformat(),state='NO_CAPITAL')); continue
-                capital=money(qty*unit); fee=costs.fee(qty*fill*adapter.multiplier*rate)
+                capital=money(qty*unit); fee=costs.fee(qty*fill*adapter.multiplier*rate,side)
                 post(at,sid,'ENTRY',-capital,price=str(fill),quantity=str(qty),
                      spread_impact=str(money(qty*close_price*adapter.multiplier*rate*costs.spread_bps/20000)),
                      slippage_impact=str(money(qty*close_price*adapter.multiplier*rate*costs.slippage_bps/10000))); post(at,sid,'FEE',-fee)

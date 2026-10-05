@@ -1,5 +1,19 @@
 # Current milestone — B5 real-data acceptance resumed
 
+## Autonomous continuation — 5 October 2026
+
+Owner requested autonomous completion. This continuation resolved the official daily calendar/access gate and implemented the outstanding directional cash fee adapter; **full B5 remains BLOCKED on external evidence**, with zero admitted real trades. No following milestone is active.
+
+Browser-acquired JSE notice 380/2025 and EquityMarketTradingHours PDFs were frozen and inspected. The 1 September–2 October window has 23 weekdays excluding the green-marked 24 September public holiday; broad equity hours are explicitly 09:00–17:00 SAST. This establishes the daily schedule, not every trade-reporting phase or the chart's interval convention.
+
+OST native history export contains 8,457 unique dates from 1994–2026. Pilot high/low/close/volume matches IRESS daily on 23/23 dates and Sharenet on ten available dates. IRESS 391 intraday observations aggregate to all 23 daily OHLC values; daily volume remains larger on every date. A native IRESS OHLC CSV in Downloads has 177 UTC-stamped rows matching the captured table interpreted in SAST on all 177; it contains no volume. The bar start/end convention and adjustment/volume policy remain unverified.
+
+Opt-in `OSTCashShareCosts` reuses the published component formula, includes fees in sizing, applies purchase-only tax and rejects inappropriate products. ADR 0049 records scope and assumptions. 368 post-hoc cost/daily-capacity cases were generated; maximum modeled position is 0.024953% of observed daily volume, which does not certify closing liquidity or full fills. ShareData's detailed calendar required Premium, the 2016 broker chart guide did not define volume/timestamp filters, and both available local .env files still lacked complete IG credentials. No subscription, terms acceptance, authentication credential export or broker mutation was performed.
+
+Verification: 26 focused tests pass; 921/921 safe tests pass in 87.851s; five engine/cost and three selection mutations killed; protected 54/54 pass. Existing equity/FX/gold example semantic hashes remain identical. Stress report reproduces byte-identically. Remaining gates: complete action/adjustment evidence; provider interval/volume semantics; reconstructed historical availability contract; historical account tariff/quotes/fill evidence; own real FX/gold product evidence. See `docs/research/LOCAL_BACKTEST_B5_CONTINUATION.md` for artifact navigation and resolution criteria.
+
+## Earlier checkpoints
+
 Historical SENS integration/test slice completed locally on 5 October 2026: ShareData ten full-text notices, Moneyweb ten search leads with subscriber body still gated, Sharenet one public full-text notice. Twenty-one records group into ten releases in the same Sasol window; zero qualify as September point-in-time evidence. 917 safe tests and 54 protected artifacts passed; the final capture-provenance hardening passed 17 focused tests. Offline context audit reproduced byte-identically. See [SENS evidence and operating interface](../research/LOCAL_SENS_HISTORY.md). Full B5 remains BLOCKED on the external acceptance evidence below; no following milestone is active. The earlier acquisition/audit results are preserved as a checkpoint.
 
 Date: 5 October 2026. Status: BLOCKED on external acceptance evidence; the resumed acquisition/audit slice is completed locally. Starting master HEAD 9ce6ea0ed416e7ec4db13621579c271b43c4cf4a; working tree was clean, expected origin verified. Owner authorized full B5 with flexible use of existing Yahoo, IG and Alpha Vantage integrations. No following milestone is active; wider integration remains deferred.

@@ -54,6 +54,8 @@ B5 final software verification: 900/900 safe tests passed in 86.320s; 31 local t
 
 ## B5 resumed full provider attempt — 5 October 2026
 
+Latest autonomous continuation: official daily calendar/hours resolved and opt-in directional OST fees implemented; 921 safe tests, eight killed defects and 54 protected artifacts pass. Full external acceptance remains blocked. See [current continuation](LOCAL_BACKTEST_B5_CONTINUATION.md); earlier source/access limitations below are dated checkpoints.
+
 Owner authorized flexible Yahoo/IG/Alpha Vantage acquisition. Fresh Yahoo SOL daily and actual 30-minute observations, provider/source receipts, an offline source comparison and public cash-share fee sensitivity are frozen under `artifacts/research/local_b5_2026_10_05/`. Six independent source/fee tests added; existing replay, default strategies and provider collector behavior unchanged. Details and remaining evidence are in [the dated acceptance attempt](LOCAL_BACKTEST_REAL_DATA_ACCEPTANCE.md).
 
 Final checks: 906 safe tests passed in 86.994 seconds, seven disposable defects killed, protected artifacts 54/54 passed. The report reproduced byte-identically with no credentials or requests. Daily numeric quality passes the 23-bar observation check; all 23 intraday aggregates fail complete daily OHLCV reconciliation. No verified-calendar/action-complete real window or real trades were admitted. Full B5 remains externally blocked; no following milestone activated.
