@@ -19,10 +19,14 @@ risk, sizing and execution paths do not consume these records.
 
 The local daily collector optionally invokes a bounded local-only Ollama scan
 after successful OHLC upload (`WEEKLY_NEWS_RESEARCH_ENABLED=1`). One durable model
-attempt per UTC day; no cloud fallback. Saved outboxes retry without another model
+automatic attempt per UTC day, plus at most four explicit repair retries via
+`--retry-failed`; no cloud fallback. Failed model state is surfaced on the dashboard.
+The weekly local request has a bounded480-second timeout and an8192-token context
+default and CPU-only inference by default; existing sentiment requests retain their45-second default.
+Saved outboxes retry without another model
 call. Inputs are at most 20 dated real article URLs from the existing public news
 feed, the current brief (14-day freshness gate), and registered cash-share IDs.
-The model proposes at most five semantic relationships, not numerical correlations.
+The model proposes at most two semantic relationships, not numerical correlations.
 Unknown references, future/stale articles, non-finite confidence and unknown
 instruments are rejected. Same URLs, same publishers and strongly similar headlines
 do not earn the research boost. Distinct publishers are still not proof of source
@@ -43,3 +47,8 @@ remain separate work. This implementation does not invent archival articles.
 Automatic delivery from the existing ChatGPT Monday task is not connected. Import
 the attached past editions now; future editions can be pasted into the dashboard
 until an actual permitted feed/connector is established. No duplicate reminder.
+
+Generation uses an Ollama JSON schema with real article-ID and instrument enums,
+two-case/two-reference limits and required confidence/category fields. Independent
+validation remains mandatory. See https://docs.ollama.com/capabilities/structured-outputs.
+Rejected output remains private locally; it cannot earn attention or trading weight.

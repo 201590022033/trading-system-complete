@@ -5,8 +5,10 @@
 Start7144820. Owner-authorized source import, research priority and local Ollama
 semantic relationships. ADR0043 extends existing catalogue/dashboard and local
 collector. Separate append-only research records; no migration, production
-ranking/strategy change or live execution. Validation:34 focused /867 full safe tests pass,54 protected artifacts unchanged.
-JavaScript syntax and diff checks pass. Deployment/live import pending.
+ranking/strategy change or live execution. Validation:48 focused /869 full safe tests pass,54 protected artifacts unchanged.
+JavaScript syntax and diff checks pass. Web/worker source deployed;28 September and5 October editions imported.
+Local CUDA failure diagnosed; CPU-only structured-output repair under validation.
+Final live-run and deployment details belong in the workspace completion report.
 Historical archive coverage and automatic ChatGPT brief delivery remain open.
 
 ## 2026-10-04 Local daily OHLC / online AI research — completed workspace

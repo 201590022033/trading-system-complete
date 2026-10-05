@@ -4,7 +4,7 @@ from datetime import datetime, timedelta, timezone
 import json
 import os
 import unittest
-from unittest.mock import patch
+from unittest.mock import patch, Mock
 from pathlib import Path
 import tempfile
 from flask import Flask
@@ -151,6 +151,15 @@ class WeeklyBriefTests(unittest.TestCase):
                     response = client.post("/api/market-intelligence/weekly-brief/scan", json=payload, headers={"Authorization": "Bearer test"})
                     self.assertEqual(response.status_code, 202, response.json)
                 self.assertEqual(len(status(self.repo, NOW)["scans"]), 1)
+                self.assertEqual(status(self.repo, NOW)["scans"][0]["state"], "LOCAL_OLLAMA_SCAN_COMPLETE")
+                failed = {**payload, "matches": [], "articles": [], "state": "LOCAL_OLLAMA_UNAVAILABLE_OR_INVALID_RESPONSE"}
+                response = client.post("/api/market-intelligence/weekly-brief/scan", json=failed, headers={"Authorization": "Bearer test"})
+                self.assertEqual(response.status_code, 202, response.json)
+                states = [s["state"] for s in status(self.repo, NOW)["scans"]]
+                self.assertIn("LOCAL_OLLAMA_UNAVAILABLE_OR_INVALID_RESPONSE", states)
+                failed["matches"] = payload["matches"]
+                failed["articles"] = payload["articles"]
+                self.assertEqual(client.post("/api/market-intelligence/weekly-brief/scan", json=failed, headers={"Authorization": "Bearer test"}).status_code, 422)
                 payload["provider"] = "invented"
                 self.assertEqual(client.post("/api/market-intelligence/weekly-brief/scan", json=payload, headers={"Authorization": "Bearer test"}).status_code, 422)
 
@@ -169,6 +178,47 @@ class PostgresWeeklyBriefParityTests(WeeklyBriefTests):
         self.repo.initialize = lambda: None
         self.brief = import_brief(self.repo, {"edition_date": "2026-10-05", "text": "Weekly banking context"}, NOW-timedelta(minutes=1))
         self.items = normalize_items(articles(), NOW)
+
+
+class LocalWeeklyRunnerTests(unittest.TestCase):
+    def fixture(self, folder):
+        from scripts import weekly_news_research as runner
+        now = datetime.now(timezone.utc)
+        brief = {"brief_id": "weekly-brief-test", "text": "Banking and macro context", "edition_date": now.date().isoformat(),
+                 "received_at": (now-timedelta(minutes=1)).isoformat()}
+        items = [{**a, "timestamp": (now-timedelta(hours=1)).isoformat()} for a in articles()]
+        status_response = Mock(); status_response.json.return_value = {"enabled": True, "briefs": [brief]}
+        feed_response = Mock(); feed_response.json.return_value = {"data": {"items": items}}
+        get = lambda url, **_: status_response if url.endswith("weekly-brief") else feed_response
+        env = {"SWING_RESEARCH_URL": "https://research.example", "SWING_DATA_UPLOAD_TOKEN": "test",
+               "WEEKLY_NEWS_OLLAMA_MODEL": "installed-model"}
+        return runner, env, get
+
+    def test_local_only_bounded_inference_and_outbox_retry_no_second_model_call(self):
+        with tempfile.TemporaryDirectory() as folder:
+            runner, env, get = self.fixture(folder)
+            upload = Mock(status_code=202)
+            with patch.object(runner, "ROOT", Path(folder)), patch("requests.get", side_effect=get), patch("requests.post", return_value=upload), patch("sentiment_providers.SentimentProviders._request", return_value='{"matches":[]}') as model:
+                self.assertEqual(runner.run(env)["state"], "LOCAL_RESEARCH_UPLOADED")
+                self.assertEqual(runner.run(env)["state"], "LOCAL_RESEARCH_UPLOADED")
+                self.assertEqual(model.call_count, 1)
+                self.assertEqual(model.call_args.args[0].name, "ollama_local")
+                self.assertEqual(model.call_args.args[0].model, "installed-model")
+                self.assertEqual(model.call_args.kwargs["timeout"], (5,480))
+                schema = model.call_args.kwargs["format_schema"]
+                self.assertEqual(schema["properties"]["matches"]["maxItems"], 2)
+                refs = schema["properties"]["matches"]["items"]["properties"]["evidence_ids"]["items"]["enum"]
+                self.assertEqual(len(refs), 2)
+                self.assertTrue(list((Path(folder)/"runtime"/"weekly-news-research").glob("*-outbox.json")))
+
+    def test_failure_visible_and_daily_budget_prevents_automatic_retry(self):
+        with tempfile.TemporaryDirectory() as folder:
+            runner, env, get = self.fixture(folder)
+            with patch.object(runner, "ROOT", Path(folder)), patch("requests.get", side_effect=get), patch("requests.post", return_value=Mock(status_code=202)) as upload, patch("sentiment_providers.SentimentProviders._request", side_effect=ValueError("invalid response")) as model:
+                self.assertEqual(runner.run(env)["state"], "LOCAL_OLLAMA_UNAVAILABLE_OR_INVALID_RESPONSE")
+                self.assertEqual(upload.call_args.kwargs["json"]["state"], "LOCAL_OLLAMA_UNAVAILABLE_OR_INVALID_RESPONSE")
+                self.assertEqual(runner.run(env)["state"], "LOCAL_DAILY_MODEL_BUDGET_ALREADY_USED")
+                self.assertEqual(model.call_count, 1)
 
 
 if __name__ == "__main__":

@@ -136,7 +136,7 @@ class SentimentProviders:
             return result
         return None
 
-    def _request(self, provider, prompt):
+    def _request(self, provider, prompt, *, timeout=(5,45), format_schema=None):
         headers = {'Authorization':'Bearer '+provider.key} if provider.key else {}
         if provider.name == 'kimi':
             payload = {'model':provider.model, 'messages':[{'role':'user','content':prompt}],
@@ -144,14 +144,14 @@ class SentimentProviders:
             if provider.model == 'kimi-k3':
                 payload['reasoning_effort'] = 'low'
             response = self.transport.post(provider.host+'/chat/completions', headers=headers,
-                                           json=payload, timeout=(5,45), allow_redirects=False)
+                                           json=payload, timeout=timeout, allow_redirects=False)
         else:
             payload = {'model':provider.model,'prompt':prompt,'stream':False}
             if provider.name == 'ollama_local':
-                payload['format'] = 'json'
+                payload['format'] = format_schema or 'json'
                 payload['options'] = {'num_predict':1024, **self._local_options}
             response = self.transport.post(provider.host+'/api/generate', headers=headers,
-                                           json=payload, timeout=(5,45), allow_redirects=False)
+                                           json=payload, timeout=timeout, allow_redirects=False)
         response.raise_for_status()
         data = response.json()
         if provider.name == 'kimi':

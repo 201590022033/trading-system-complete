@@ -54,6 +54,9 @@ def create_weekly_brief_blueprint(factory):
             if payload["provider"] != "ollama_local":
                 raise ValueError("Local Ollama attribution required")
             model = text(payload["model"], 100)
+            scan_state = payload.get("state", "LOCAL_OLLAMA_SCAN_COMPLETE")
+            if scan_state not in {"LOCAL_OLLAMA_SCAN_COMPLETE", "LOCAL_OLLAMA_UNAVAILABLE_OR_INVALID_RESPONSE"} or (scan_state != "LOCAL_OLLAMA_SCAN_COMPLETE" and matches):
+                raise ValueError("Invalid local scan state")
             cases = []
             for match in matches:
                 cid = "weekly-case-"+digest({"brief": brief["brief_id"], "match": match, "version": VERSION})
@@ -76,7 +79,7 @@ def create_weekly_brief_blueprint(factory):
                               "articles": [items[r] for r in match["evidence_ids"]],
                               "historical_research": {"state": state, "samples": cleaned}})
             record = {"brief_id": brief["brief_id"], "received_at": observed.isoformat(), "provider": "ollama_local",
-                      "model": model, "cases": cases, "state": "LOCAL_OLLAMA_SCAN_COMPLETE", "version": VERSION,
+                      "model": model, "cases": cases, "state": scan_state, "version": VERSION,
                       "live_execution": False, "trading_weight": 0}
             rid = "weekly-scan-"+digest(record)
             if not repository.paper_record(rid):

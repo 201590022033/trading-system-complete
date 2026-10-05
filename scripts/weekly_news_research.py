@@ -10,9 +10,9 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
 
-def run(env, *, brief_file=None, edition_date=None):
+def run(env, *, brief_file=None, edition_date=None, retry_failed=False):
     import requests
-    from market_intelligence.weekly_brief import local_scan
+    from market_intelligence.weekly_brief import local_scan, normalize_items, response_schema
     from application.opportunities.public_research import public_share_catalog
     from sentiment_providers import SentimentProviders
     now = datetime.now(timezone.utc)
@@ -48,7 +48,8 @@ def run(env, *, brief_file=None, edition_date=None):
     if outbox.exists():
         payload = json.loads(outbox.read_text(encoding="utf-8"))
     else:
-        if receipt.exists():
+        attempts = json.loads(receipt.read_text(encoding="utf-8")).get("attempts", 1) if receipt.exists() else 0
+        if receipt.exists() and (not retry_failed or attempts >= 5):
             return {"state": "LOCAL_DAILY_MODEL_BUDGET_ALREADY_USED"}
         feed = requests.get(url.rstrip("/")+"/api/feed/news", timeout=30, allow_redirects=False)
         feed.raise_for_status()
@@ -56,6 +57,8 @@ def run(env, *, brief_file=None, edition_date=None):
         provider = SentimentProviders(environ=env)
         local = provider.providers[0]
         local.model = env.get("WEEKLY_NEWS_OLLAMA_MODEL") or local.model
+        provider._local_options = {"num_ctx": 8192, "num_predict": 1536, "temperature": 0, "num_gpu": 0,
+                                   **provider._local_options}
         charts_path = ROOT / "runtime" / "local-swing-data" / "latest.json"
         charts = json.loads(charts_path.read_text(encoding="utf-8")).get("charts", {}) if charts_path.exists() else {}
         history = []
@@ -66,13 +69,23 @@ def run(env, *, brief_file=None, edition_date=None):
         for case in history:
             unique.setdefault(case["case_id"], case)
         def model_call(prompt):
-            receipt.write_text(json.dumps({"started_at": now.isoformat(), "provider": "ollama_local"}), encoding="utf-8")
-            return provider._request(local, prompt)
+            receipt.write_text(json.dumps({"started_at": now.isoformat(), "provider": "ollama_local", "attempts": attempts+1}), encoding="utf-8")
+            raw = provider._request(local, prompt, timeout=(5,480),
+                                    format_schema=response_schema(normalize_items(items, now), public_share_catalog()))
+            (folder / (now.date().isoformat()+"-model-response.txt")).write_text(raw, encoding="utf-8")
+            return raw
         try:
             result = local_scan(brief, items, charts, list(unique.values()), now,
                                 model_call, public_share_catalog())
-        except Exception:
-            return {"state": "LOCAL_OLLAMA_UNAVAILABLE_OR_INVALID_RESPONSE", "trading_weight": 0}
+        except Exception as exc:
+            # Record a bounded failure without exposing provider errors or keys.
+            (folder / (now.date().isoformat()+"-failure.json")).write_text(json.dumps({
+                "failure_type": type(exc).__name__, "at": now.isoformat()}), encoding="utf-8")
+            payload = {"brief_id": brief["brief_id"], "received_at": now.isoformat(), "provider": "ollama_local",
+                       "model": local.model, "matches": [], "articles": [],
+                       "state": "LOCAL_OLLAMA_UNAVAILABLE_OR_INVALID_RESPONSE"}
+            requests.post(base+"/scan", json=payload, headers=headers, timeout=30, allow_redirects=False)
+            return {"state": payload["state"], "trading_weight": 0}
         if result["state"] != "LOCAL_OLLAMA_SCAN_COMPLETE":
             return {"state": result["state"], "trading_weight": 0}
         fields = ("category", "description", "instrument_ids", "evidence_ids", "confidence")
@@ -91,10 +104,11 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--brief-file")
     parser.add_argument("--edition-date")
+    parser.add_argument("--retry-failed", action="store_true", help="At most four bounded manual retries after repairing a failed local scan")
     args = parser.parse_args()
     from ai_config import project_environment
     try:
-        result = run(project_environment(), brief_file=args.brief_file, edition_date=args.edition_date)
+        result = run(project_environment(), brief_file=args.brief_file, edition_date=args.edition_date, retry_failed=args.retry_failed)
     except Exception:
         result = {"state": "WEEKLY_RESEARCH_UNAVAILABLE_LOCAL_DATA_RETAINED"}
     print(json.dumps(result))

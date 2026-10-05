@@ -13,7 +13,11 @@ collector, after a successful OHLC upload. The scanner calls local Ollama only,
 using existing `OLLAMA_HOST` / `OLLAMA_LOCAL_MODEL`; an optional
 `WEEKLY_NEWS_OLLAMA_MODEL` selects an installed model for this scan alone.
 It requires the PC and model
-to be available. One attempt per UTC day; saved output retries cost no model call.
+to be available. One automatic attempt per UTC day; saved output retries cost no model call.
+After repairing a local model failure, `--retry-failed` allows at most four additional manual
+attempts that day. Failures appear in the dashboard. Local research defaults to CPU
+inference to avoid the observed incompatible CUDA driver and has a bounded
+480-second request timeout; existing news scans retain their45-second default.
 An explicit `python scripts/weekly_news_research.py` performs the same bounded scan.
 
 Local briefs, attempt receipts, outboxes, provenance and category cases live in
