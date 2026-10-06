@@ -1,5 +1,7 @@
 # R1 local backtest research integration
 
+6 October update: main local installation and tab-flow verification are now completed; see [installation record](MAIN_DASHBOARD_LOCAL_VERIFICATION.md). Hosted deployment remains separate.
+
 Completed locally on 5 October 2026 under ADR 0051. The owner accepted B5 as partially closed: software verified, real-data acceptance pending. The Trading Strategies dashboard now displays a dated, read-only evidence summary. This is a report interface, not an engine or provider execution interface.
 
 ## Operating interface

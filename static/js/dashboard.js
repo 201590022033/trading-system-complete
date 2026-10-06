@@ -505,8 +505,8 @@ const currentRefresh=document.createElement('button');
 currentRefresh.textContent='Refresh current technical evidence';
 currentRefresh.onclick=async()=>{canonicalRecords=[]; await loadAutomaticTechnicalScreen($('#instrument').value);};
 controls.appendChild(currentRefresh);
-document.body.classList.add('portfolio-view');
-document.querySelector('nav button[data-tab="portfolio"]').classList.add('active');
+
+document.querySelector('nav button[data-tab="trading-strategies"]').classList.add('active');
 action('#refresh-account-status',refreshAccountStatus);
 action('#import-portfolio',async()=>{ const result=await post('/api/portfolio/csv',{csv:$('#portfolio-csv').value}); $('#portfolio-status').textContent=`Imported ${result.count} position(s) · CSV snapshot only`; renderPortfolio(result.rows); });
 $('#instrument').onchange=selectedChanged;

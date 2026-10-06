@@ -1,5 +1,7 @@
 # Current milestone — R1 read-only research integration
 
+6 October 2026 continuation: R1 is installed in the main local checkout, with a reusable Windows launcher and sanitized summary in ignored runtime storage. Trading Strategies opens first; Portfolio & demo is last. Browser checks cover all six tabs. Full safe suite: 926 tests passed in 87.585s after resolving resource contention. IG local endpoint reports CREDENTIALS_MISSING; history/entitlements remain unverified. Hosted deployment remains future work. See [main local verification](../research/MAIN_DASHBOARD_LOCAL_VERIFICATION.md).
+
 Owner approved B5's partial close and proceeding on 5 October 2026. B5 is PARTIAL_CLOSED, not fully accepted: its software/source/accounting preparation is delivered while real-data admission and provider semantics remain deferred gates. Zero admitted real trades. ADR 0051 records the explicit scope change.
 
 R1 is COMPLETED LOCALLY: a bounded safe report summary is integrated into the existing Trading Strategies dashboard through a read-only API. It shows source comparisons, dated verification and unresolved data gates, with unavailable states. No provider calls or engine replay on refresh. IG runtime access remains a separate check. Five focused tests, 926 full safe tests (87.712s), all 54 protected checks and local browser review passed. See [operating interface](../research/LOCAL_BACKTEST_RESEARCH_INTEGRATION.md). Main/hosted installation and runtime IG checks remain future work; no next milestone is active.
