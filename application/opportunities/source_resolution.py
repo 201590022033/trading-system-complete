@@ -39,7 +39,16 @@ def parse_iress_export(raw, instrument_id, origin_symbol, acquired_at, now):
     for index, row in enumerate(reader):
         if index >= 10000:
             raise ValueError('maximum 10000 IRESS rows')
-        session = datetime.strptime(row['Date'].strip(), '%d/%m/%Y').date().isoformat()
+        raw_date = row['Date'].strip()
+        if raw_date.endswith('Z'):
+            # ViewPoint's Copy action labels the JSE session at 22:00 UTC on
+            # the preceding calendar day. Convert it to SAST before auditing.
+            source_time = datetime.fromisoformat(raw_date.replace('Z', '+00:00'))
+            if source_time.time() != datetime.min.time().replace(hour=22) or source_time.utcoffset() != timedelta(0):
+                raise ValueError('unexpected IRESS copied session timestamp')
+            session = source_time.astimezone(timezone(timedelta(hours=2))).date().isoformat()
+        else:
+            session = datetime.strptime(raw_date, '%d/%m/%Y').date().isoformat()
         if session in seen:
             raise ValueError('duplicate IRESS session')
         seen.add(session)

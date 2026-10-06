@@ -1,4 +1,8 @@
-# Current milestone - R6 multi-source price resolution
+# Current milestone — R7 ViewPoint whole-source verification
+
+R7 COMPLETED WITH NO SOURCE PROMOTION, 6 October 2026. Signed-in ViewPoint exposed complete daily OHLCV tables for Sasol, STX40, STXFIN, STXRES and STXIND. Four new sector candidates were captured and registered locally, 250 completed sessions each through 5 October. All five candidate histories match OST on 250/250 overlapping closes; their high/low and volume discrepancies remain visible. The local parser accepts ViewPoint's Copy CSV timestamp format and excludes the live session. Chart controls and available Iress documentation did not establish corporate-action adjustment, volume eligibility, revisions or historical as-of availability. OST stays primary, all IRESS candidates stay local, and B5/historical AI admission remains closed. The full safe suite passed 968 tests; protected verification passed 54/54. See [R7 evidence](../research/MULTI_SOURCE_PRICE_RESOLUTION.md#r7-viewpoint-check--6-october-2026) and ADR 0057. No following milestone is active.
+
+# R6 multi-source price resolution
 
 R6 COMPLETED, 6 October 2026. The local dashboard and daily collector automatically audit complete-source alternatives alongside the OST primary JSE research feed. The earlier ViewPoint/IRESS Sasol table is registered as a separate 250-bar OHLCV candidate with 250/250 OST close agreement; saved Yahoo histories are checked for invalid OHLC without fallback. Every registered stock gets a next source action, and the dashboard accepts future exact-identity IRESS daily exports locally. ShareData and JSE remain explicit access/format routes; SharePoint is optional storage. No cross-provider bar fields are mixed, no alternative is uploaded or promoted, and historical AI/B5 source-semantics gates remain in place. All 967 safe tests and 54 protected checks pass. See [R6 operating record](../research/MULTI_SOURCE_PRICE_RESOLUTION.md) and ADR 0056.
 

@@ -1,3 +1,7 @@
+# R7 ViewPoint whole-source verification
+
+R7 COMPLETED WITH NO PROMOTION, 6 October 2026. Sasol and all four registered sector ETFs now have separate, hash-backed local IRESS OHLCV candidates with 250 completed sessions each. All 1,250 compared closes match OST; high/low and volume differences are recorded separately. ViewPoint's copied UTC timestamps are mapped to SAST sessions and the live day is excluded. Provider adjustment, volume, revision and historical availability semantics remain unverified, so OST is still primary and historical AI/B5 gates remain closed. See [evidence](../research/MULTI_SOURCE_PRICE_RESOLUTION.md#r7-viewpoint-check--6-october-2026) and ADR 0057. No following milestone is active.
+
 # R6 multi-source price resolution
 
 R6 COMPLETED, 6 October 2026. Local source-resolution checks now run on dashboard refresh and as part of the existing daily collector. Sasol's separate IRESS full-OHLCV history is a 250-bar candidate aligned on 250 OST closes; archived Yahoo bars remain quality diagnostics, not a fallback. Each of 22 registered stocks has a next acquisition or verification action. The local dashboard accepts bounded IRESS daily exports without credentials; ShareData/JSE require verified export/access contracts, and SharePoint is storage only. There is no field-level blending or automatic research/AI promotion. B5 remains PARTIAL_CLOSED. See [operating record](../research/MULTI_SOURCE_PRICE_RESOLUTION.md) and ADR 0056.

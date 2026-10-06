@@ -45,6 +45,14 @@ class SourceResolutionTests(unittest.TestCase):
             self.assertFalse(report['real_data_admitted'])
             self.assertIsNone(self.dataset()['charts']['SASOL']['bars'][0]['open'])
 
+    def test_viewpoint_copy_utc_dates_map_to_jse_sessions_and_skip_live_day(self):
+        copied = (b'Date,Open,High,Low,Close,Volume\n'
+                  b'2026-10-04T22:00:00.000Z,950,1100,900,1000,"1,200"\n'
+                  b'2026-10-05T22:00:00.000Z,960,1110,910,1010,"300"\n')
+        chart = parse_iress_export(copied, 'SASOL', 'SOL.JSE', NOW.isoformat(), NOW)
+        self.assertEqual([bar['timestamp'] for bar in chart['bars']], ['2026-10-05'])
+        self.assertEqual(chart['bars'][0]['volume'], 1200)
+
     def test_wrong_identity_bad_headers_duplicate_and_invalid_prices_rejected(self):
         for raw, origin in ((IRESS, 'SSL.JSE'), (b'Date,Open\n01/09/2026,1', 'SOL.JSE'),
                             (IRESS + IRESS.splitlines()[1] + b'\n', 'SOL.JSE'),
