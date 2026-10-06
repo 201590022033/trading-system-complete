@@ -51,11 +51,12 @@
     const target=document.querySelector('#swing-research-status');
     if (!target) return;
     try {
-      const result=await read('/api/v1/swing-research/status'), run=result.last_run;
-      const metric=row=>row ? `${row.sample_count} completed samples; mean net return at 25bps ${row.mean_net_return_by_cost_bps?.['25']==null?'unavailable':(100*row.mean_net_return_by_cost_bps['25']).toFixed(2)+'%'}` : 'Not tested';
-      target.innerHTML=`<p>Data: ${esc(result.state)} · collected ${esc(result.source_observed_at || 'not yet')}</p>
-        <p>AI research: ${esc(run?.state || 'Waiting for first scheduled evaluation')} · validation ${esc(run?.validation_state || 'not yet')}</p>
-        ${run ? `<p>Evaluated: ${esc(run.evaluated_at)}. ${esc(run.promotion)}</p><p>Baseline holdout: ${esc(metric(run.holdout_baseline))}</p><p>Proposed variant: ${esc(run.proposal ? JSON.stringify(run.proposal.parameters) : 'No accepted AI proposal')} · ${esc(run.proposal?.provider || 'unavailable')} / ${esc(run.proposal?.model || 'unavailable')}</p><p>${esc(run.proposal?.rationale || '')}</p><p>Variant holdout: ${esc(metric(run.holdout_variant))}</p><p class="muted">${esc((run.limitations || []).join(' '))}</p>` : ''}`;
+      const result=await read('/api/v1/learning/overview'), run=result.ai_comparison || {};
+      if(result.state!=='AVAILABLE') throw Error('Research source unavailable');
+      target.innerHTML=`<p>Research records: ${esc(result.runtime)} · ${esc(result.database)}. Data: ${esc(result.data_state)} · collected ${esc(result.source_observed_at || 'not yet')}.</p>
+        <p>AI research: ${esc(run.state || 'Waiting for first scheduled evaluation')} · ${esc(run.provider || 'unavailable')} · validation ${esc(run.validation || 'not yet')}.</p>
+        <p>Evaluated: ${esc(run.evaluated_at || 'not yet')}. Baseline holdout: ${esc(run.baseline_holdout_samples ?? 'Unavailable')} completed samples; candidate holdout: ${esc(run.candidate_holdout_samples ?? 'Unavailable')}.</p>
+        <p class="muted">No automatic strategy promotion. Supplemental inputs and prospective outcome progress are shown below.</p>`;
     } catch(error) { target.textContent='Research status unavailable; no learning result is assumed.'; }
   }
   document.querySelector('#refresh-strategies').addEventListener('click',load);

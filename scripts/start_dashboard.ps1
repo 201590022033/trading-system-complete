@@ -1,6 +1,7 @@
 param(
     [int]$Port = 5000,
-    [string]$ReportDirectory = ''
+    [string]$ReportDirectory = '',
+    [switch]$Background
 )
 $ErrorActionPreference = 'Stop'
 $dashboardRoot = Split-Path -Parent $PSScriptRoot
@@ -12,6 +13,16 @@ $env:HOST = '127.0.0.1'
 $env:PORT = [string]$Port
 $env:OPENBLAS_NUM_THREADS = '1'
 $env:OMP_NUM_THREADS = '1'
+if ($Background) {
+    $dashboardLogs = Join-Path $dashboardRoot 'runtime'
+    New-Item -ItemType Directory -Path $dashboardLogs -Force | Out-Null
+    $dashboardProcess = Start-Process -FilePath $dashboardPython -ArgumentList 'app.py' `
+        -WorkingDirectory $dashboardRoot -WindowStyle Hidden -PassThru `
+        -RedirectStandardOutput (Join-Path $dashboardLogs 'dashboard.stdout.log') `
+        -RedirectStandardError (Join-Path $dashboardLogs 'dashboard.stderr.log')
+    [pscustomobject]@{ State = 'STARTED_IN_BACKGROUND'; ProcessId = $dashboardProcess.Id; URL = "http://127.0.0.1:$Port/" }
+    exit 0
+}
 Push-Location $dashboardRoot
 try { & $dashboardPython app.py }
 finally { Pop-Location }

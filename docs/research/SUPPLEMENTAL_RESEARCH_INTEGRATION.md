@@ -21,3 +21,11 @@ Operating command (from main checkout):
 The existing daily collection/upload subsequently retains current supplements. Fresh genuine later single-source exports remain required for prospective maturation. No private browser credentials or account/position information is included in uploads. Deployment uses a tracked-file Git archive, retaining existing hosted environment and schedule.
 
 Ten new integration tests cover v1 compatibility, v2 roundtrip and provenance, malformed/future/stale receipts, invalid/estimated data, benchmark missing-open preservation, source expiry, unchanged canonical inputs and historical AI evaluation, worker freeze/deduplication and source-aware maturity. Final full safe suite: 950 tests passed in 88.271 seconds. All 54 protected checks passed before rollout; live deployment receipts follow below.
+
+## Linux packaging verification
+
+The first CLI archive exported the Linux startup shell script with Windows CRLF, causing a web gateway error despite deployment status SUCCESS. Added *.sh text eol=lf to existing .gitattributes and verified the new archive contains LF-only startup bytes before redeploying. Worker Python entrypoint/cron were unaffected. Hosted verification requires public HTTP health and source status, not deployment status alone. Protected checks remain intact.
+
+## Restart and final UI checks
+
+Owner requested recheck/restart. Added an optional -Background switch to the existing Windows launcher, using Start-Process with WindowStyle Hidden, project environment/loopback binding and ignored stdout/stderr logs. Launcher AST parsing passed; the detached project Python process remains healthy after the command ends. Local and Railway health/overview endpoints return HTTP 200. Main browser now labels the top research card RAILWAY/POSTGRESQL and separates current AVAILABLE Sasol preview from old frozen PARTIAL evidence. Source receipt and all pending/matured counts verified visibly. Final safe suite: 950 tests passed in 87.733s; 54 protected checks and both JavaScript syntax checks passed. A final static-display deployment follows the already accepted data upload.
