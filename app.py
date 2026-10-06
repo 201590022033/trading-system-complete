@@ -46,7 +46,11 @@ def canonical_refresh_runner():
                        if news_snapshot.get("state") in {"AVAILABLE", "PARTIAL"}
                        and news_snapshot.get("data") and news_snapshot.get("last_success") else None)
         learned = persisted_shadow_evidence(repository, evaluated_at=evaluated_at)
-        return refresh_public_research(evaluated_at=evaluated_at, news_report=news_report,
+        from application.opportunities.ost_data import read_primary, LocalOSTFetcher, SCHEMA
+        from application.opportunities.swing_research import latest_dataset
+        primary = latest_dataset(repository) if os.environ.get('RAILWAY_ENVIRONMENT_ID') else read_primary()
+        research_fetcher = LocalOSTFetcher(primary, evaluated_at) if primary and primary.get('schema') == SCHEMA else None
+        return refresh_public_research(fetcher=research_fetcher, evaluated_at=evaluated_at, news_report=news_report,
                                        learned_evidence=learned, strategy_profile=profile.reference)
     finally:
         repository.close()
@@ -69,6 +73,8 @@ from application.opportunities.local_backtest_reports import create_local_backte
 app.register_blueprint(create_local_backtest_blueprint())
 from application.opportunities.learning_overview import create_learning_overview_blueprint
 app.register_blueprint(create_learning_overview_blueprint(runtime_repository))
+from application.opportunities.ost_data_api import create_ost_blueprint
+app.register_blueprint(create_ost_blueprint(runtime_repository))
 from market_intelligence.weekly_brief_api import create_weekly_brief_blueprint
 app.register_blueprint(create_weekly_brief_blueprint(runtime_repository))
 from application.opportunities.operator_api import create_operator_blueprint, has_access

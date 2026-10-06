@@ -29,6 +29,9 @@ def initialize(repository):
 
 
 def validate_dataset(payload, now):
+    if isinstance(payload, dict) and payload.get('schema') == 'local-swing-dataset-v3':
+        from .ost_data import normalize
+        return normalize(payload, now)
     from market_chart_registry import MARKET_CHART_INSTRUMENTS
     if not isinstance(payload, dict) or payload.get("schema") not in {"local-swing-dataset-v1", "local-swing-dataset-v2"}:
         raise ValueError("dataset schema required")
@@ -105,13 +108,18 @@ def latest_dataset(repository):
 
 class UploadedFetcher:
     """Paper composition can read uploaded charts without any provider network."""
-    def __init__(self, repository):
+    def __init__(self, repository, clock=None):
         self.repository = repository
+        self.clock = clock or (lambda: datetime.now(timezone.utc))
 
     def get_chart(self, symbol, period):
         dataset = latest_dataset(self.repository)
         if dataset:
-            for chart in dataset["charts"].values():
+            charts = dataset['charts']
+            if dataset.get('schema') == 'local-swing-dataset-v3':
+                from .ost_data import fresh_charts
+                charts = fresh_charts(dataset, self.clock())
+            for chart in charts.values():
                 if chart["symbol"] == symbol:
                     result = deepcopy(chart)
                     # Preserve Yahoo's JSE daily session representation for
@@ -218,6 +226,9 @@ def run_research(repository, now, proposer=cloud_proposal):
     dataset = latest_dataset(repository)
     if not dataset or now-timestamp(dataset["observed_at"]) > timedelta(days=4):
         return {"state": "WAITING_FOR_CURRENT_LOCAL_DATA", "live_execution": False}
+    if dataset.get('schema') == 'local-swing-dataset-v3':
+        return {'state': 'OST_SOURCE_SEMANTICS_UNVERIFIED', 'live_execution': False,
+                'historical_evaluation_allowed': False, 'model_called': False}
     dates = sorted({r["timestamp"] for c in dataset["charts"].values() for r in c["bars"]})
     if len(dates) < 130:
         return {"state": "MORE_HISTORY_REQUIRED", "live_execution": False}

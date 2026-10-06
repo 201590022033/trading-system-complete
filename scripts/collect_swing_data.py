@@ -62,7 +62,18 @@ def main():
     folder.mkdir(parents=True, exist_ok=True)
     latest = folder / "latest.json"
     now = datetime.now(timezone.utc)
-    if args.retry_upload:
+    from application.opportunities.ost_data import read_primary, fresh_charts, SCHEMA, POLICY
+    primary = read_primary(folder)
+    if primary is not None:
+        dataset = {'schema': SCHEMA, 'source_policy': POLICY, 'observed_at': now.isoformat(),
+                   'charts': fresh_charts(primary, now)}
+        if not dataset['charts']:
+            print(json.dumps({'state': 'OST_EXPORTS_EXPIRED', 'charts': 0, 'yahoo_fallback': False}))
+            return 2
+        dataset = validate_dataset(dataset, now)
+        from application.opportunities.ost_data import atomic_json
+        atomic_json(latest, dataset)
+    elif args.retry_upload:
         dataset = json.loads(latest.read_text(encoding="utf-8"))
     else:
         receipt = folder / "collection-day.txt"
@@ -79,7 +90,7 @@ def main():
             (folder / (now.date().isoformat()+".json")).write_text(raw, encoding="utf-8")
             receipt.write_text(now.date().isoformat())
     supplemental = folder / 'supplemental.json'
-    if supplemental.exists():
+    if supplemental.exists() and primary is None:
         dataset = attach_supplements(dataset, json.loads(supplemental.read_text(encoding='utf-8')), now)
         staged = latest.with_suffix('.tmp')
         staged.write_text(json.dumps(dataset, allow_nan=False), encoding='utf-8')

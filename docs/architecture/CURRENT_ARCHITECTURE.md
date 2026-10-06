@@ -83,3 +83,8 @@ R4 integrates provenance-preserving supplemental IRESS Sasol and OST STX40 chart
 ## R4 deployed state, 6 October 2026
 
 The v2 supplemental research lane is installed in local and hosted runtimes, with durable source receipts in Railway PostgreSQL. The API reports current Sasol inputs AVAILABLE while preserving the separate last frozen worker snapshot and genuine pending labels. The canonical Yahoo lane and historical AI evaluation remain unchanged. The local Windows launcher supports a hidden persistent background process. Final web deployment 8c0d6f26-26a3-40bf-a802-8fdf9f74c5af and worker deployment c7a6ffee-5a94-4cba-8b3a-c71d2752414e are successful; public health and overview endpoints return HTTP 200. B5 source semantics/admission remain deferred.
+
+
+## R5 OST primary research path
+
+Dataset v3 carries whole-source OST HLCV charts and explicit source receipts for registered cash shares and sector ETFs. A local-only import route and credential-free batch CLI save ignored runtime copies; the existing collector performs authenticated cloud upload. UploadedFetcher and on-demand JSE research use fresh OST charts without Yahoo fallback after v3 activation. Hosted import is disabled. The dashboard reports per-instrument coverage and source expiry. Missing opening prices and invalid HLC remain visible. Historical AI comparison is gated while source semantics are unverified. Older v1/v2 datasets and frozen records remain readable. Gold and USD/ZAR reference charts are outside the OST equity contract. See ADR 0055 and the [onboarding guide](../research/OST_PRIMARY_ONBOARDING.md).

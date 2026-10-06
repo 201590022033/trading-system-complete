@@ -265,7 +265,9 @@ def candidate_from_chart(key, chart, *, evaluated_at, news_report=None, learned_
             "asset_class": data.get("asset_class", "cash_equity"),
             "catalog": "jse_adapter.JSE_TICKERS", "data_symbol": data["yahoo_symbol"],
             "last_usable_session": (clocks[-1] - timedelta(days=1)).date().isoformat(),
-            "research_pipeline": VERSION, "cost_assumption_bps": COST_BPS})
+            "research_pipeline": VERSION, "cost_assumption_bps": COST_BPS,
+            **({'source_provenance': chart['provenance'], 'research_only': True,
+                'historical_evaluation_allowed': False} if chart.get('provenance') else {})})
     divergence = summarize(signals, evaluated_at, DivergenceConfig(max(2, len(signals)), 1),
                            instrument_id=canonical.instrument_id, horizon_id="1d")
     return OpportunityCandidate(canonical, suitability, divergence, effectiveness,

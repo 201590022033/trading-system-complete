@@ -41,6 +41,9 @@ def validate_receipt(key, chart, observed):
 
 
 def current_research_charts(dataset, now):
+    if (dataset or {}).get('schema') == 'local-swing-dataset-v3':
+        from .ost_data import fresh_charts
+        return fresh_charts(dataset, now)
     result = {}
     for key, chart in (dataset or {}).get('research_charts', {}).items():
         acquired = timestamp(chart['provenance']['acquired_at'])

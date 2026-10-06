@@ -31,7 +31,9 @@ def completed_session_identity(charts, cutoff):
             continue
     if not sessions:
         return None, sessions
-    ordered = tuple(sorted(sessions.items()))
+    ordered = tuple(sorted((key, (session, charts[key]['provenance']['provider'],
+        charts[key]['provenance']['origin_symbol']) if charts[key].get('provenance') else session)
+        for key, session in sessions.items()))
     return stable_id("paper-completed-sessions", *ordered), sessions
 
 
@@ -105,6 +107,8 @@ def compose_paper_worker(repository, config, *, fetcher=None, clock=None, strate
                     continue
                 acquired[key] = chart
                 charts[key] = {name: chart[name] for name in ("symbol", "currency", "interval")}
+                if chart.get('provenance'):
+                    charts[key]['provenance'] = chart['provenance']
                 charts[key]["bars"] = [
                     {**{name: bar.get(name) for name in ("timestamp", "close", "volume")},
                      **{name: bar[name] for name in ("open", "high", "low") if bar.get(name) is not None}}
@@ -154,7 +158,9 @@ def compose_paper_worker(repository, config, *, fetcher=None, clock=None, strate
         research_fetch = getattr(fetcher, 'get_research_chart', None) if callable(getattr(type(fetcher), 'get_research_chart', None)) else None
         if callable(research_fetch):
             from .supplemental_data import MAPPINGS
-            for key, mapping in MAPPINGS.items():
+            from .ost_data import catalog as ost_catalog
+            mappings = {**MAPPINGS, **{key: (row['symbol'],) for key, row in ost_catalog().items()}}
+            for key, mapping in mappings.items():
                 supplement = research_fetch(mapping[0], observed_at)
                 if supplement is not None:
                     shadow_acquired[key] = supplement

@@ -13,6 +13,7 @@ $env:HOST = '127.0.0.1'
 $env:PORT = [string]$Port
 $env:OPENBLAS_NUM_THREADS = '1'
 $env:OMP_NUM_THREADS = '1'
+$env:OST_LOCAL_IMPORT_ENABLED = '1'
 if ($Background) {
     $dashboardLogs = Join-Path $dashboardRoot 'runtime'
     New-Item -ItemType Directory -Path $dashboardLogs -Force | Out-Null
