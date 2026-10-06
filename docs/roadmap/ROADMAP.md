@@ -1,3 +1,7 @@
+# R6 multi-source price resolution
+
+R6 COMPLETED, 6 October 2026. Local source-resolution checks now run on dashboard refresh and as part of the existing daily collector. Sasol's separate IRESS full-OHLCV history is a 250-bar candidate aligned on 250 OST closes; archived Yahoo bars remain quality diagnostics, not a fallback. Each of 22 registered stocks has a next acquisition or verification action. The local dashboard accepts bounded IRESS daily exports without credentials; ShareData/JSE require verified export/access contracts, and SharePoint is storage only. There is no field-level blending or automatic research/AI promotion. B5 remains PARTIAL_CLOSED. See [operating record](../research/MULTI_SOURCE_PRICE_RESOLUTION.md) and ADR 0056.
+
 # R5 Standard Bank primary research onboarding
 
 R5 COMPLETED, 6 October 2026. OST-native export onboarding, source receipts, local dashboard coverage and the no-Yahoo-fallback primary JSE research path are implemented. Six instruments are installed locally and uploaded to Railway: Sasol, Naspers, STX40, STXFIN, STXRES and STXIND; the other 16 registered candidates await exports. Browser sign-in stays with the owner and credentials remain offline. Missing opens, HLC errors and unverified provider semantics gate historical AI and real-data admission. Gold/USDZAR need separate source/product contracts; B5 remains PARTIAL_CLOSED. See [operating record](../research/OST_PRIMARY_ONBOARDING.md) and ADR 0055.

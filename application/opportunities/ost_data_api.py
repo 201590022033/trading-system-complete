@@ -26,6 +26,9 @@ def create_ost_blueprint(factory, folder=ROOT):
             try: data = latest_dataset(repo)
             finally: repo.close()
         result = coverage(data, now)
+        from .source_resolution import audit, local_audit
+        result['source_resolution'] = (audit(data, now) if os.environ.get('RAILWAY_ENVIRONMENT_ID')
+                                       else local_audit(data, now, folder))
         result['local_import_available'] = local_import_allowed()
         return jsonify(result)
 
@@ -49,6 +52,27 @@ def create_ost_blueprint(factory, folder=ROOT):
             return jsonify(result), 201
         except (ValueError, KeyError, TypeError, UnicodeError, OverflowError):
             return jsonify(error='Export rejected. Check OST headers, selected instrument, actual capture time, numeric values and duplicates.'), 422
+
+    @bp.post('/api/v1/ost/alternative-import')
+    def import_alternative():
+        if not local_import_allowed() or request.headers.get('Origin') != request.host_url.rstrip('/'):
+            return jsonify(error='Alternative import requires the local dashboard and same-origin request'), 403
+        if request.content_length is None or request.content_length > 2_700_000:
+            return jsonify(error='Maximum request size is 2.7 MB'), 413
+        try:
+            from .source_resolution import install_iress_candidate, local_audit
+            data = request.get_json(silent=True)
+            if not isinstance(data, dict) or data.get('instrument_confirmed') is not True or data.get('provider') != 'IRESS':
+                raise ValueError('exact provider and instrument confirmation required')
+            now = datetime.now(timezone.utc)
+            chart = install_iress_candidate(data['csv'].encode('utf-8'), data['instrument_id'],
+                data['origin_symbol'], data['acquired_at'], now, folder)
+            report = local_audit(read_primary(folder), now, folder)
+            return jsonify({'state': 'WHOLE_SOURCE_CANDIDATE_REGISTERED_LOCAL_ONLY',
+                'instrument_id': chart['instrument_id'], 'resolution': report['instruments'][chart['instrument_id']],
+                'primary_policy_unchanged': True, 'real_data_admitted': False}), 201
+        except (ValueError, KeyError, TypeError, UnicodeError, OverflowError):
+            return jsonify(error='IRESS candidate rejected. Check exact JSE symbol, daily CSV columns, capture time and OHLCV values.'), 422
 
     @bp.errorhandler(Exception)
     def failed(exc):

@@ -73,6 +73,8 @@ def main():
         dataset = validate_dataset(dataset, now)
         from application.opportunities.ost_data import atomic_json
         atomic_json(latest, dataset)
+        from application.opportunities.source_resolution import local_audit
+        atomic_json(folder / 'source-resolution-latest.json', local_audit(dataset, now, folder))
     elif args.retry_upload:
         dataset = json.loads(latest.read_text(encoding="utf-8"))
     else:

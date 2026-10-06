@@ -5,6 +5,10 @@
   const esc=x=>String(x ?? '—').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   let status, files=[];
   const output=panel.querySelector('#ost-result');
+  const actions={IMPORT_OST_HISTORY:'Import OST history',VERIFY_IRESS_SOURCE_SEMANTICS:'Check IRESS adjustment, volume and availability definitions',
+    REVIEW_SOURCE_DISAGREEMENT:'Review IRESS/OST close mismatch',REFRESH_IRESS_EXPORT:'Refresh IRESS export',
+    REIMPORT_IRESS_EXPORT:'Restore the original IRESS export',
+    OBTAIN_FULL_OHLCV_EXPORT:'Find a complete OHLCV export',VERIFY_SOURCE_SEMANTICS:'Check provider definitions'};
   async function load() {
     try {
       const response=await fetch('/api/v1/ost/onboarding',{cache:'no-store',signal:AbortSignal.timeout(15000)});
@@ -14,7 +18,12 @@
         ? 'Primary JSE research source: Standard Bank OST. Missing or expired exports remain unavailable; no Yahoo fallback.'
         : 'Standard Bank is the preferred source. Import your first verified export to activate the primary research feed.';
       panel.querySelector('#ost-coverage').innerHTML=`<div class="table-scroll"><table><caption>Stock and sector onboarding coverage</caption><thead><tr><th>Instrument / sector</th><th>Coverage</th><th>Completed session / bars</th><th>Missing opens / HLC errors</th><th>Export</th></tr></thead><tbody>${status.instruments.map(r=>`<tr><td>${esc(r.ost_code)} · ${esc(r.name)}<br>${esc(r.sector)}</td><td>${esc(r.state)}</td><td>${esc(r.last_session)} / ${r.bars}</td><td>${r.missing_open_bars} / ${r.invalid_hlc_bars}</td><td><a href="${esc(r.history_url)}" target="_blank" rel="noopener">OST history</a></td></tr>`).join('')}</tbody></table></div><p>Gold and USD/ZAR: source and product contracts still required; public reference charts are separate.</p>`;
+      const resolved=status.source_resolution?.instruments || {};
+      const sasolRoute=resolved.SASOL;
+      panel.querySelector('#ost-source-resolution').innerHTML=`<p role="status">Sasol opening-price route: ${esc(sasolRoute?.alternatives?.IRESS?.state==='WHOLE_SOURCE_OHLCV_CANDIDATE' ? `IRESS ${sasolRoute.alternatives.IRESS.bars}-bar full-source candidate; ${sasolRoute.alternatives.IRESS.overlap_sessions} OST closes align. Next: ${actions[sasolRoute.next_action]}.` : actions[sasolRoute?.next_action] || 'Check local source candidates.')}</p><details><summary>Source checks and next steps for each stock</summary><p>Sources are checked as whole histories. The dashboard never borrows an opening price from another feed. SharePoint can store approved files; it does not supply market prices.</p><div class="table-scroll"><table><thead><tr><th>Instrument</th><th>Next step</th><th>IRESS</th><th>Archived Yahoo</th></tr></thead><tbody>${status.instruments.map(r=>{const q=resolved[r.instrument_id] || {};return `<tr><td>${esc(r.ost_code)}</td><td>${esc(actions[q.next_action] || q.next_action)}</td><td>${esc(q.alternatives?.IRESS?.state)}${q.alternatives?.IRESS?.bars ? ` · ${q.alternatives.IRESS.bars} bars, ${q.alternatives.IRESS.overlap_sessions} aligned closes, ${q.alternatives.IRESS.close_mismatches} close mismatches` : ''}</td><td>${esc(q.alternatives?.YAHOO?.state)}${q.alternatives?.YAHOO?.bars ? ` · ${q.alternatives.YAHOO.invalid_ohlc_bars} invalid bars` : ''}</td></tr>`}).join('')}</tbody></table></div><p><a href="https://www.sharedata.co.za/v2/Scripts/Directory/FAQ/faq_General.aspx" target="_blank" rel="noopener">ShareData access</a> · <a href="https://www.jse.co.za/data/historical-data" target="_blank" rel="noopener">JSE historical data</a>. Their export rights and format need verification before import.</p></details>`;
       panel.querySelector('#ost-import-controls').hidden=!status.local_import_available;
+      panel.querySelector('#iress-import-controls').hidden=!status.local_import_available;
+      panel.querySelector('#iress-instrument').innerHTML='<option value="">Choose the exact instrument</option>'+status.instruments.map(r=>`<option value="${esc(r.instrument_id)}">${esc(r.ost_code)}.JSE · ${esc(r.name)}</option>`).join('');
       panel.querySelector('#ost-local-note').textContent=status.local_import_available
         ? 'Sign in directly to OST, use Save To Excel on price history or save the displayed CSV, then select the files below. Imports are stored locally; the existing scheduled upload transfers the bounded research dataset.'
         : 'Imports are available in the local dashboard. This view displays coverage only.';
@@ -54,5 +63,28 @@
     finally {button.disabled=false;}
   });
   panel.querySelector('#ost-refresh').addEventListener('click',load);
+  panel.querySelector('#iress-import-form').addEventListener('submit',async event=>{
+    event.preventDefault();
+    const button=panel.querySelector('#iress-import');button.disabled=true;
+    const result=panel.querySelector('#iress-result');
+    try {
+      const instrument_id=panel.querySelector('#iress-instrument').value;
+      const item=status.instruments.find(r=>r.instrument_id===instrument_id);
+      const file=panel.querySelector('#iress-file').files[0];
+      if(!item || !file || file.size>2500000) throw Error('Select an exact instrument and an IRESS CSV under 2.5 MB.');
+      const stamp=panel.querySelector('#iress-captured').value;
+      if(!stamp) throw Error('Enter the actual source capture time.');
+      result.textContent='Checking the complete independent history…';
+      const response=await fetch('/api/v1/ost/alternative-import',{method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({provider:'IRESS',instrument_id,origin_symbol:item.ost_code+'.JSE',
+          acquired_at:new Date(stamp+'+02:00').toISOString(),csv:await file.text(),
+          instrument_confirmed:panel.querySelector('#iress-confirm').checked}),signal:AbortSignal.timeout(30000)});
+      const saved=await response.json();
+      if(!response.ok) throw Error(saved.error || 'Candidate check failed');
+      result.textContent=`${item.ost_code}: ${saved.resolution.alternatives.IRESS.state}. The OST primary feed and model gate remain unchanged.`;
+      await load();
+    } catch(error) {result.textContent=error.message;}
+    finally {button.disabled=false;}
+  });
   load();
 })();

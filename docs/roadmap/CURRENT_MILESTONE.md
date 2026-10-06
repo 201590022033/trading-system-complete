@@ -1,4 +1,8 @@
-# Current milestone - R5 Standard Bank primary onboarding
+# Current milestone - R6 multi-source price resolution
+
+R6 COMPLETED, 6 October 2026. The local dashboard and daily collector automatically audit complete-source alternatives alongside the OST primary JSE research feed. The earlier ViewPoint/IRESS Sasol table is registered as a separate 250-bar OHLCV candidate with 250/250 OST close agreement; saved Yahoo histories are checked for invalid OHLC without fallback. Every registered stock gets a next source action, and the dashboard accepts future exact-identity IRESS daily exports locally. ShareData and JSE remain explicit access/format routes; SharePoint is optional storage. No cross-provider bar fields are mixed, no alternative is uploaded or promoted, and historical AI/B5 source-semantics gates remain in place. All 967 safe tests and 54 protected checks pass. See [R6 operating record](../research/MULTI_SOURCE_PRICE_RESOLUTION.md) and ADR 0056.
+
+# R5 Standard Bank primary onboarding
 
 R5 COMPLETED, 6 October 2026. Standard Bank OST is the primary JSE research source with no Yahoo fallback in that lane. The owner signs into OST independently; a bounded, credential-free local import accepts its native HTML-table `.xls` exports and CSV, maps each to an exact registered instrument, hashes the raw bytes and uploads a fresh v3 snapshot through the existing collector. Six series are installed in local and Railway storage: Sasol, Naspers, STX40 and all three sector ETFs. The other 16 registered candidates wait for exports. Dashboard coverage reports actual sessions, missing opens, HLC errors and freshness. Historical AI evaluation remains gated by unverified source/action/volume/availability semantics. Frozen records and strategy rules remain unchanged. Gold/USDZAR need separate source/product contracts; B5 remains PARTIAL_CLOSED. See [operating record](../research/OST_PRIMARY_ONBOARDING.md) and ADR 0055.
 

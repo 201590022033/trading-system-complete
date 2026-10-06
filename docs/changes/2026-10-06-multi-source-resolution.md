@@ -1,0 +1,3 @@
+# R6 multi-source price resolution — 6 October 2026
+
+Added an exact-identity, bounded IRESS daily OHLCV candidate parser and raw receipt archive; registered the previously captured Sasol table. The local dashboard and existing daily collector now compute the same per-stock source-resolution plan, showing IRESS overlap, archived Yahoo quality, and ShareData/JSE access routes. Added a same-origin local IRESS candidate import form and endpoint. No primary dataset, AI gate or trading decision changed. Verification: 967 safe tests, 54 protected artifacts, JavaScript syntax, local browser review and local API health passed.

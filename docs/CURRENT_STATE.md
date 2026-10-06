@@ -1,5 +1,9 @@
 # Current project state — 5 October 2026
 
+## R6 current override — 6 October 2026
+
+The local dashboard now reports a per-stock multi-source resolution action and validates separately captured ViewPoint/IRESS daily histories. Sasol has a 250-bar IRESS whole-source OHLCV candidate with 250 matching OST closes. Saved Yahoo histories are checked for structural defects without becoming fallback prices. The scheduled collector saves the same local audit. ShareData and JSE are potential export routes pending format/access evidence; SharePoint can store files but cannot supply prices. The OST primary feed and historical AI/B5 safety gates remain unchanged.
+
 ## R5 current override — 6 October 2026
 
 Standard Bank OST is now the primary JSE research source after local v3 onboarding; no Yahoo fallback supplies missing OST instruments to that lane. Signed-in native price-history exports for Sasol, Naspers, STX40, STXFIN, STXRES and STXIND are installed locally and uploaded to Railway; 16 registered instruments still await exports. The local dashboard accepts bounded CSV or native HTML-table `.xls` files without broker credentials. All six series are HLCV with missing opens, and sector data has visible HLC inconsistencies. Historical AI, B5 real-data admission, gold and USD/ZAR product contracts remain gated. The older checkpoint statements below describe prior Yahoo behavior and are retained for chronology.

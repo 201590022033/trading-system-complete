@@ -156,7 +156,10 @@ class OSTOnboardingTests(unittest.TestCase):
                 date=(now-timedelta(days=2)).strftime('%d %b %Y')
                 body['exports'][0]['csv']='Date,Closing (c),High (c),Low (c),Volume\n'+date+',1000,1100,900,100\n'
                 self.assertEqual(client.post('/api/v1/ost/import',json=body,headers=headers).status_code,201)
-                self.assertTrue(client.get('/api/v1/ost/onboarding').json['primary_active'])
+                status = client.get('/api/v1/ost/onboarding').json
+                self.assertTrue(status['primary_active'])
+                self.assertEqual(status['source_resolution']['instruments']['SASOL']['next_action'],
+                                 'OBTAIN_FULL_OHLCV_EXPORT')
                 with patch.dict('os.environ',{'RAILWAY_ENVIRONMENT_ID':'production'}):
                     self.assertEqual(client.post('/api/v1/ost/import',json=body,headers=headers).status_code,403)
 
