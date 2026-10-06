@@ -1,4 +1,8 @@
-# R8 price-source contract audit
+# R9 prospective source evidence
+
+R9 COMPLETED LOCALLY, 6 October 2026: immutable source-specific OST/IRESS import captures establish an actual observation record and surface subsequent revisions. Unresolved provider definitions are accepted as shadow-research risk, with historical AI/B5 and execution gates unchanged. See [R9 record](../research/PROSPECTIVE_PRICE_EVIDENCE_R9.md) and ADR 0059. No following milestone active.
+
+## Prior R8 record
 
 R8 EVIDENCE AUDIT COMPLETED WITH SOURCE PROMOTION BLOCKED, 6 October 2026. A dated Sasol 2024 corporate-action probe now includes a separate 263-session IRESS daily OHLCV capture; all 263 OST closes and the event-week HLCV observations agree. Broker/Iress chart guides still leave adjustment, volume, revisions and historical as-of semantics unspecified. The next dependency is a dated provider definition, not more candidate stock coding or another event capture. OST remains primary research HLCV; IRESS histories remain local candidates; historical AI/B5 admission stays closed. See [R8 evidence](../research/PRICE_SOURCE_SEMANTICS_R8.md) and ADR 0058. No following milestone is active.
 

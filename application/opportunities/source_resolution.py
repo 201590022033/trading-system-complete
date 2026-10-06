@@ -100,6 +100,8 @@ def install_iress_candidate(raw, instrument_id, origin_symbol, acquired_at, now,
     raw_path = archive / (instrument_id + '-IRESS-' + chart['source_sha256'] + '.csv')
     if not raw_path.exists():
         raw_path.write_bytes(raw)
+    from .prospective_prices import record_capture
+    record_capture(folder, instrument_id, 'IRESS', chart, chart['acquired_at'], chart['source_sha256'])
     atomic_json(folder / 'alternative-sources.json', result)
     return chart
 

@@ -1,4 +1,10 @@
-# Current milestone — R8 price-source contract audit
+# Current milestone — R9 prospective source evidence
+
+R9 completed locally, 6 October 2026. Each newly imported OST or IRESS export now creates an immutable, provider-specific capture containing its actual acquisition timestamp, raw-source hash and validated daily bars. The local onboarding status reports captures, subsequently observed sessions and revisions. Old imported histories are not relabelled as historical point-in-time observations. Outcomes require later captured sessions; no outcome or performance claim is made from today's baseline. Verification: 969 safe tests and 54/54 protected checks pass. See [R9 research record](../research/PROSPECTIVE_PRICE_EVIDENCE_R9.md) and ADR 0059.
+
+R8's unresolved price/volume definitions and B5 PARTIAL_CLOSED status remain in force. Historical AI admission and live execution remain blocked. This milestone does not depend on a bank reply. No following milestone is active.
+
+## Prior R8 record
 
 R8 EVIDENCE AUDIT COMPLETED; HISTORICAL SOURCE PROMOTION BLOCKED, 6 October 2026. Renewed OST access verified a dated Sasol 200-cent ex-dividend example. The owner's signed-in IRESS chart subsequently supplied a separate 263-session daily OHLCV capture spanning that event: 263/263 OST closes match, and all overlapping HLCV matches for 11–15 March 2024. The older raw capture and audit are retained locally without replacing the current Sasol candidate. Standard Bank's ViewPoint charting guide and the visible feeds still do not define raw/adjusted prices, volume eligibility, corrections or historical as-of availability. No historical AI/B5 gate changed; broker launch terms were not accepted. Full safe verification passed 968 tests and protected checks passed 54/54 before this docs/evidence-only continuation. See [R8 evidence](../research/PRICE_SOURCE_SEMANTICS_R8.md) and ADR 0058. No following milestone is active.
 

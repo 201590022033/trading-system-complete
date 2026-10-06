@@ -220,6 +220,10 @@ def install_exports(exports, now, folder=ROOT):
             suffix = '.xls' if entry['raw'].lstrip().lower().startswith((b'<div', b'<table')) else '.csv'
             path = archive / (entry['instrument_id'] + '-' + digest + suffix)
             if not path.exists(): path.write_bytes(entry['raw'])
+        from .prospective_prices import record_capture
+        for key, chart in parsed.items():
+            receipt = chart['provenance']
+            record_capture(folder, key, 'OST', chart, receipt['acquired_at'], receipt['source_sha256'])
         latest = folder / 'latest.json'
         if latest.exists() and not old:
             (folder / 'before-ost-primary.json').write_bytes(latest.read_bytes())

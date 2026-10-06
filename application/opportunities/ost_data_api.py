@@ -29,6 +29,9 @@ def create_ost_blueprint(factory, folder=ROOT):
         from .source_resolution import audit, local_audit
         result['source_resolution'] = (audit(data, now) if os.environ.get('RAILWAY_ENVIRONMENT_ID')
                                        else local_audit(data, now, folder))
+        if not os.environ.get('RAILWAY_ENVIRONMENT_ID'):
+            from .prospective_prices import capture_summary
+            result['prospective_prices'] = capture_summary(folder)
         result['local_import_available'] = local_import_allowed()
         return jsonify(result)
 
