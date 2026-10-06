@@ -46,6 +46,8 @@ repomix-output.xml
 *.sqlite*
 *.pdf
 /runtime/
+/outputs/
+/work/
 /.learning-state/
 /.cache/
 /.pytest_cache/
