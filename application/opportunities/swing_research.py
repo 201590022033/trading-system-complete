@@ -313,5 +313,6 @@ def research_status(repository, now):
     return {"state": "LOCAL_DATA_RECEIVED" if dataset else "WAITING_FOR_LOCAL_DATA",
             "data_state": "STALE" if dataset and now-timestamp(dataset["observed_at"]) > timedelta(days=4) else "CURRENT" if dataset else "MISSING",
             "source_observed_at": dataset["observed_at"] if dataset else None,
+            "current_evaluation_gate": ("OST_SOURCE_SEMANTICS_UNVERIFIED" if dataset and dataset.get('schema') == 'local-swing-dataset-v3' else None),
             "last_run": records[0] if records else None, "live_execution": False,
             "research_inputs": input_status(dataset, now)}

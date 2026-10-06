@@ -77,6 +77,7 @@ def project(paper, research, learning, *, source, now):
         'worker': {k: worker.get(k) for k in ('status', 'last_heartbeat_at', 'next_scheduled_at')},
         'paper_state': paper.get('state'), 'data_state': research.get('data_state'),
         'source_observed_at': research.get('source_observed_at'),
+        'current_evaluation_gate': ('OST_SOURCE_SEMANTICS_UNVERIFIED' if research.get('current_evaluation_gate') == 'OST_SOURCE_SEMANTICS_UNVERIFIED' else None),
         'decision_at': paper.get('last_evaluated_at'),
         'feature_strategy': {'id': technical.get('strategy_profile_id'), 'version': technical.get('strategy_profile_version')},
         'decisions_in_read_window': decisions, 'read_limit': technical.get('read_limit'),
