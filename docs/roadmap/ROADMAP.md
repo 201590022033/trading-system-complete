@@ -1,4 +1,8 @@
-# R9 prospective source evidence
+# R10 prospective price outcomes
+
+R10 COMPLETED LOCALLY, 6 October 2026: same-source, forward-only 3/4/5 observed-session price cohorts are available from future captures. No actual cohort exists yet; B5/historical AI and execution gates remain closed. See [R10 record](../research/PROSPECTIVE_PRICE_OUTCOMES_R10.md) and ADR 0060. No following milestone active.
+
+## Prior R9 record
 
 R9 COMPLETED LOCALLY, 6 October 2026: immutable source-specific OST/IRESS import captures establish an actual observation record and surface subsequent revisions. Unresolved provider definitions are accepted as shadow-research risk, with historical AI/B5 and execution gates unchanged. See [R9 record](../research/PROSPECTIVE_PRICE_EVIDENCE_R9.md) and ADR 0059. No following milestone active.
 

@@ -1,4 +1,8 @@
-# Current milestone — R9 prospective source evidence
+# Current milestone — R10 prospective price outcomes
+
+R10 completed locally, 6 October 2026. The local onboarding status now computes 3/4/5 observed-session price-only shadow cohorts from dated OST or IRESS captures. It uses only the newest completed session in each capture as an anchor, requires a later capture for each exit, keeps providers separate, and excludes revised endpoints. It reports sample and pending counts, assumed 10 bps round-trip net returns, and unresolved calendar/action definitions. With zero actual capture files at implementation time, there are no real samples or return claims. Verification: 970 safe tests and 54/54 protected checks pass. See [R10 record](../research/PROSPECTIVE_PRICE_OUTCOMES_R10.md) and ADR 0060. Historical B5/AI admission, strategy promotion and live execution remain unchanged. No following milestone is active.
+
+## Prior R9 record
 
 R9 completed locally, 6 October 2026. Each newly imported OST or IRESS export now creates an immutable, provider-specific capture containing its actual acquisition timestamp, raw-source hash and validated daily bars. The local onboarding status reports captures, subsequently observed sessions and revisions. Old imported histories are not relabelled as historical point-in-time observations. Outcomes require later captured sessions; no outcome or performance claim is made from today's baseline. Verification: 969 safe tests and 54/54 protected checks pass. See [R9 research record](../research/PROSPECTIVE_PRICE_EVIDENCE_R9.md) and ADR 0059.
 
