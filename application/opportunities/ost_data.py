@@ -1,5 +1,6 @@
 """Credential-free OST export onboarding; whole-source prospective research."""
 import csv
+from html.parser import HTMLParser
 from copy import deepcopy
 from datetime import datetime, timedelta, timezone
 from hashlib import sha256
@@ -20,6 +21,55 @@ LOCK = RLock()
 ROOT = Path(__file__).resolve().parents[2] / 'runtime/local-swing-data'
 RECEIPT_FIELDS = {'provider', 'origin_symbol', 'source_sha256', 'acquired_at',
                   'purpose', 'price_basis', 'volume_basis', 'historical_availability'}
+
+
+class _OSTHistoryTable(HTMLParser):
+    """Read only the price-history grid from OST's HTML-disguised .xls export."""
+    def __init__(self):
+        super().__init__(convert_charrefs=True)
+        self.in_table = False
+        self.in_row = False
+        self.in_cell = False
+        self.cell = []
+        self.row = []
+        self.rows = []
+
+    def handle_starttag(self, tag, attrs):
+        if tag == 'table' and dict(attrs).get('id', '').endswith('_gvHistory'):
+            self.in_table = True
+        elif self.in_table and tag == 'tr':
+            self.in_row, self.row = True, []
+        elif self.in_row and tag in ('td', 'th'):
+            self.in_cell, self.cell = True, []
+
+    def handle_data(self, data):
+        if self.in_cell:
+            self.cell.append(data)
+
+    def handle_endtag(self, tag):
+        if self.in_cell and tag in ('td', 'th'):
+            self.row.append(''.join(self.cell).strip())
+            self.in_cell = False
+        elif self.in_row and tag == 'tr':
+            self.rows.append(self.row)
+            if len(self.rows) > 10001:
+                raise ValueError('maximum 10000 source rows')
+            self.in_row = False
+        elif self.in_table and tag == 'table':
+            self.in_table = False
+
+
+def _history_text(raw):
+    source = raw.decode('utf-8-sig')
+    if not source.lstrip().lower().startswith(('<div', '<table')):
+        return source
+    table = _OSTHistoryTable()
+    table.feed(source)
+    if not table.rows:
+        raise ValueError('OST price-history table required')
+    output = io.StringIO()
+    csv.writer(output).writerows(table.rows)
+    return output.getvalue()
 
 
 def catalog():
@@ -72,18 +122,18 @@ def normalize(payload, now):
 def parse_export(raw, key, acquired_at, now):
     """Strict observed OST cents header contract; never invent an open."""
     registry = catalog()
-    if key not in registry or not isinstance(raw, bytes) or not 0 < len(raw) <= 2_000_000:
-        raise ValueError('registered instrument and bounded CSV required')
+    if key not in registry or not isinstance(raw, bytes) or not 0 < len(raw) <= 2_500_000:
+        raise ValueError('registered instrument and bounded OST export required')
     acquired = timestamp(acquired_at)
     if acquired > now or now - acquired > timedelta(days=4):
         raise ValueError('fresh acquisition timestamp required')
-    reader = csv.DictReader(io.StringIO(raw.decode('utf-8-sig')))
+    reader = csv.DictReader(io.StringIO(_history_text(raw)))
     required = {'Date', 'Closing (c)', 'High (c)', 'Low (c)', 'Volume'}
     columns = set(reader.fieldnames or ())
     allowed = required | {'Opening (c)', '# Deals', 'Value (R)', 'Move (%)', 'DY', 'EY', 'PE'}
     if not required <= columns or columns - allowed:
         raise ValueError('OST cents history headers required')
-    bars, seen = [], set()
+    source_rows, seen = [], set()
     for index, row in enumerate(reader):
         if index >= 10000:
             raise ValueError('maximum 10000 source rows')
@@ -91,6 +141,13 @@ def parse_export(raw, key, acquired_at, now):
         if session in seen:
             raise ValueError('duplicate session')
         seen.add(session)
+        if _available_at(session) <= now:
+            source_rows.append((session, row))
+    # Native OST exports often extend decades back. Validate all source identities,
+    # but numerical admission applies to the bounded newest 600 completed sessions.
+    source_rows.sort(key=lambda item: item[0])
+    bars = []
+    for session, row in source_rows[-600:]:
         bar = {'timestamp': session, 'open': None}
         for field, column in [('high', 'High (c)'), ('low', 'Low (c)'), ('close', 'Closing (c)'), ('volume', 'Volume')]:
             value = float(row[column].replace(',', '').replace(' ', '').replace('\xa0', ''))
@@ -102,9 +159,7 @@ def parse_export(raw, key, acquired_at, now):
             if not math.isfinite(value) or value <= 0:
                 raise ValueError('invalid actual opening price')
             bar['open'] = value
-        if _available_at(session) <= now:
-            bars.append(bar)
-    bars.sort(key=lambda b: b['timestamp'])
+        bars.append(bar)
     if not bars:
         raise ValueError('no completed sessions')
     instrument = registry[key]
@@ -162,7 +217,8 @@ def install_exports(exports, now, folder=ROOT):
         archive = folder / 'ost-exports'; archive.mkdir(exist_ok=True)
         for entry in exports:
             digest = sha256(entry['raw']).hexdigest()
-            path = archive / (entry['instrument_id'] + '-' + digest + '.csv')
+            suffix = '.xls' if entry['raw'].lstrip().lower().startswith((b'<div', b'<table')) else '.csv'
+            path = archive / (entry['instrument_id'] + '-' + digest + suffix)
             if not path.exists(): path.write_bytes(entry['raw'])
         latest = folder / 'latest.json'
         if latest.exists() and not old:

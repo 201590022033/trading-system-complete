@@ -38,6 +38,22 @@ class OSTOnboardingTests(unittest.TestCase):
         self.assertEqual(next(r for r in coverage(data, NOW)['instruments'] if r['instrument_id']=='SASOL')['state'], 'OHLCV_PRESENT')
         self.assertFalse(chart['historical_evaluation_allowed'])
 
+    def test_native_excel_html_export_uses_bounded_recent_completed_sessions(self):
+        rows = ''.join(f'<tr><td>{day:02d} Sep 2026</td><td>1000</td><td>1100</td><td>900</td><td>100</td></tr>'
+                       for day in range(1, 31))
+        raw = ('<div><table id="Main_gvHistory"><tr><th>Date</th><th>Closing (c)</th>'
+               '<th>High (c)</th><th>Low (c)</th><th>Volume</th></tr>' + rows +
+               '<tr><td>05 Oct 2026</td><td>1200</td><td>1300</td><td>1100</td><td>200</td></tr>' +
+               '<tr><td>06 Oct 2026</td><td>999</td><td>1000</td><td>900</td><td>1</td></tr>' +
+               '</table></div>').encode()
+        chart = parse_export(raw, 'ETF_STXFIN', NOW.isoformat(), NOW)
+        self.assertEqual(len(chart['bars']), 31)
+        self.assertEqual(chart['bars'][-1]['timestamp'], '2026-10-05')
+        self.assertEqual(chart['bars'][-1]['close'], 12)
+        self.assertIsNone(chart['bars'][-1]['open'])
+        with self.assertRaises(ValueError):
+            parse_export(b'<div><table><tr><td>Account</td></tr></table></div>', 'ETF_STXFIN', NOW.isoformat(), NOW)
+
     def test_unknown_identity_bad_headers_nonfinite_and_duplicate_rejected(self):
         for key, raw in [('SSL', RAW), ('SASOL', b'Date,Close\n05 Oct 2026,10'),
                          ('SASOL', RAW.replace(b'1000,', b'nan,')),
@@ -132,7 +148,7 @@ class OSTOnboardingTests(unittest.TestCase):
             with patch.dict('os.environ',{'OST_LOCAL_IMPORT_ENABLED':'1'},clear=True):
                 self.assertEqual(client.post('/api/v1/ost/import',json=body).status_code,403)
                 self.assertEqual(client.post('/api/v1/ost/import',json=body,headers={'Origin':'https://evil.example'}).status_code,403)
-                self.assertEqual(client.post('/api/v1/ost/import',data='x'*2100001,headers=headers).status_code,413)
+                self.assertEqual(client.post('/api/v1/ost/import',data='x'*2700001,headers=headers).status_code,413)
                 bad={**body,'instrument_confirmed':False}
                 self.assertEqual(client.post('/api/v1/ost/import',json=bad,headers=headers).status_code,422)
                 # Clock independent valid payload: derive dates from actual test time.

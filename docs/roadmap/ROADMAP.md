@@ -1,6 +1,6 @@
 # R5 Standard Bank primary research onboarding
 
-R5 ACTIVE, 6 October 2026. Owner selected OST as the preferred JSE research source. Multi-instrument export onboarding, source receipts, local dashboard coverage and no-fallback primary path are implemented. Pilot Sasol/STX40 HLCV is installed locally. Deployment and hosted ingestion checks precede milestone close. Gold/USDZAR and provider-action semantics remain separate gates. See [operating record](../research/OST_PRIMARY_ONBOARDING.md) and ADR 0055.
+R5 COMPLETED, 6 October 2026. OST-native export onboarding, source receipts, local dashboard coverage and the no-Yahoo-fallback primary JSE research path are implemented. Six instruments are installed locally and uploaded to Railway: Sasol, Naspers, STX40, STXFIN, STXRES and STXIND; the other 16 registered candidates await exports. Browser sign-in stays with the owner and credentials remain offline. Missing opens, HLC errors and unverified provider semantics gate historical AI and real-data admission. Gold/USDZAR need separate source/product contracts; B5 remains PARTIAL_CLOSED. See [operating record](../research/OST_PRIMARY_ONBOARDING.md) and ADR 0055.
 
 # R4 integration completion
 

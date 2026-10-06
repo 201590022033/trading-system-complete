@@ -33,8 +33,8 @@ def create_ost_blueprint(factory, folder=ROOT):
     def import_export():
         if not local_import_allowed() or request.headers.get('Origin') != request.host_url.rstrip('/'):
             return jsonify(error='Import requires the local dashboard and same-origin request'), 403
-        if request.content_length is None or request.content_length > 2_100_000:
-            return jsonify(error='Maximum request size is 2.1 MB'), 413
+        if request.content_length is None or request.content_length > 2_700_000:
+            return jsonify(error='Maximum request size is 2.7 MB'), 413
         try:
             data = request.get_json(silent=True)
             if not isinstance(data, dict) or data.get('instrument_confirmed') is not True:

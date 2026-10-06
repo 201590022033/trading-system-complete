@@ -20,7 +20,7 @@ def main():
     for row in rows:
         path = Path(row['path'])
         if not path.is_absolute(): path = args.manifest.parent / path
-        if path.stat().st_size > 2_000_000: raise ValueError('bounded file required')
+        if path.stat().st_size > 2_500_000: raise ValueError('bounded file required')
         exports.append({'instrument_id': row['instrument_id'], 'acquired_at': row['acquired_at'], 'raw': path.read_bytes()})
     result = install_exports(exports, datetime.now(timezone.utc))
     print(json.dumps({'state': 'OST_PRIMARY_INSTALLED_LOCALLY', 'imported': [r['instrument_id'] for r in exports],

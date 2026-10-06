@@ -1,5 +1,9 @@
 # Current project state — 5 October 2026
 
+## R5 current override — 6 October 2026
+
+Standard Bank OST is now the primary JSE research source after local v3 onboarding; no Yahoo fallback supplies missing OST instruments to that lane. Signed-in native price-history exports for Sasol, Naspers, STX40, STXFIN, STXRES and STXIND are installed locally and uploaded to Railway; 16 registered instruments still await exports. The local dashboard accepts bounded CSV or native HTML-table `.xls` files without broker credentials. All six series are HLCV with missing opens, and sector data has visible HLC inconsistencies. Historical AI, B5 real-data admission, gold and USD/ZAR product contracts remain gated. The older checkpoint statements below describe prior Yahoo behavior and are retained for chronology.
+
 This is the current operating snapshot, reconciled against code at `c2ef802` and the dated acceptance records. Settings and provider results below are observations from that checkpoint, not promises of permanent availability. See the [document index](DOCUMENTATION_INDEX.md), [recent changes](changes/2026-09-21-to-2026-10-05.md), [current architecture](architecture/CURRENT_ARCHITECTURE.md), and [target architecture](architecture/TARGET_ARCHITECTURE.md).
 
 ## What is running

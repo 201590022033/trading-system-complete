@@ -16,7 +16,7 @@
       panel.querySelector('#ost-coverage').innerHTML=`<div class="table-scroll"><table><caption>Stock and sector onboarding coverage</caption><thead><tr><th>Instrument / sector</th><th>Coverage</th><th>Completed session / bars</th><th>Missing opens / HLC errors</th><th>Export</th></tr></thead><tbody>${status.instruments.map(r=>`<tr><td>${esc(r.ost_code)} · ${esc(r.name)}<br>${esc(r.sector)}</td><td>${esc(r.state)}</td><td>${esc(r.last_session)} / ${r.bars}</td><td>${r.missing_open_bars} / ${r.invalid_hlc_bars}</td><td><a href="${esc(r.history_url)}" target="_blank" rel="noopener">OST history</a></td></tr>`).join('')}</tbody></table></div><p>Gold and USD/ZAR: source and product contracts still required; public reference charts are separate.</p>`;
       panel.querySelector('#ost-import-controls').hidden=!status.local_import_available;
       panel.querySelector('#ost-local-note').textContent=status.local_import_available
-        ? 'Sign in directly to OST, export price history, then select the CSV files below. Imports are stored locally; the existing scheduled upload transfers the bounded research dataset.'
+        ? 'Sign in directly to OST, use Save To Excel on price history or save the displayed CSV, then select the files below. Imports are stored locally; the existing scheduled upload transfers the bounded research dataset.'
         : 'Imports are available in the local dashboard. This view displays coverage only.';
     } catch(error) {panel.querySelector('#ost-summary').textContent='OST coverage unavailable. No source readiness assumed.';}
   }
@@ -24,7 +24,7 @@
     files=Array.from(event.target.files || []);
     const options=(selected)=>status.instruments.map(r=>`<option value="${esc(r.instrument_id)}" ${r.ost_code===selected?'selected':''}>${esc(r.ost_code)} · ${esc(r.name)}</option>`).join('');
     panel.querySelector('#ost-file-mappings').innerHTML=files.map((file,index)=>{
-      const match=status.instruments.find(r=>file.name.replace(/\.csv$/i,'').toUpperCase()===r.ost_code);
+      const match=status.instruments.find(r=>file.name.replace(/\.(csv|xls)$/i,'').toUpperCase()===r.ost_code);
       return `<label>${esc(file.name)} — instrument <select data-ost-file="${index}" required><option value="">Choose the exact instrument</option>${options(match?.ost_code)}</select></label>`;
     }).join('');
   });
@@ -32,7 +32,7 @@
     event.preventDefault();
     const button=panel.querySelector('#ost-import');button.disabled=true;
     try {
-      if(!files.length || files.length>34 || files.reduce((n,f)=>n+f.size,0)>1800000) throw Error('Select 1–34 CSV files, at most 1.8 MB in total.');
+      if(!files.length || files.length>34 || files.reduce((n,f)=>n+f.size,0)>2500000) throw Error('Select 1–34 OST CSV/native Excel exports, at most 2.5 MB in total. Import large files separately.');
       const stamp=panel.querySelector('#ost-captured').value;
       if(!stamp) throw Error('Enter the actual export capture time.');
       // Explicit SAST offset; do not interpret the date in the browser timezone.

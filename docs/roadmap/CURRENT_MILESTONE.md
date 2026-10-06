@@ -1,6 +1,6 @@
 # Current milestone - R5 Standard Bank primary onboarding
 
-R5 ACTIVE, 6 October 2026. Owner authorized Standard Bank as preferred primary JSE source, local credential-free batch onboarding and dashboard coverage. User signs into OST independently. Reuse existing collector, parser contracts, bounded API and worker; no Yahoo fallback in the primary lane. Preserve missing opens and unverified provider semantics, frozen records and strategy rules. Gold/USDZAR remain source-contract gates. Validate local/cloud cutover and no model/order side effects before completion.
+R5 COMPLETED, 6 October 2026. Standard Bank OST is the primary JSE research source with no Yahoo fallback in that lane. The owner signs into OST independently; a bounded, credential-free local import accepts its native HTML-table `.xls` exports and CSV, maps each to an exact registered instrument, hashes the raw bytes and uploads a fresh v3 snapshot through the existing collector. Six series are installed in local and Railway storage: Sasol, Naspers, STX40 and all three sector ETFs. The other 16 registered candidates wait for exports. Dashboard coverage reports actual sessions, missing opens, HLC errors and freshness. Historical AI evaluation remains gated by unverified source/action/volume/availability semantics. Frozen records and strategy rules remain unchanged. Gold/USDZAR need separate source/product contracts; B5 remains PARTIAL_CLOSED. See [operating record](../research/OST_PRIMARY_ONBOARDING.md) and ADR 0055.
 
 # Current milestone - R4 supplemental research integration
 
