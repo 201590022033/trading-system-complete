@@ -1,3 +1,7 @@
+# R8 price-source contract audit
+
+R8 EVIDENCE AUDIT COMPLETED WITH SOURCE PROMOTION BLOCKED, 6 October 2026. A dated Sasol 2024 corporate-action probe and renewed OST history confirm the event and surrounding price observations, while broker/Iress chart guides leave adjustment, volume, revisions and historical as-of semantics unspecified. The captured IRESS year does not include the event. The next dependency is a provider definition and an older SOL chart capture, not more candidate stock coding. OST remains primary research HLCV; IRESS histories remain local candidates; historical AI/B5 admission stays closed. See [R8 evidence](../research/PRICE_SOURCE_SEMANTICS_R8.md) and ADR 0058. No following milestone is active.
+
 # R7 ViewPoint whole-source verification
 
 R7 COMPLETED WITH NO PROMOTION, 6 October 2026. Sasol and all four registered sector ETFs now have separate, hash-backed local IRESS OHLCV candidates with 250 completed sessions each. All 1,250 compared closes match OST; high/low and volume differences are recorded separately. ViewPoint's copied UTC timestamps are mapped to SAST sessions and the live day is excluded. Provider adjustment, volume, revision and historical availability semantics remain unverified, so OST is still primary and historical AI/B5 gates remain closed. See [evidence](../research/MULTI_SOURCE_PRICE_RESOLUTION.md#r7-viewpoint-check--6-october-2026) and ADR 0057. No following milestone is active.

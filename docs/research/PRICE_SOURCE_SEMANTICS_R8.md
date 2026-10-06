@@ -1,0 +1,25 @@
+# R8 JSE price-source contract audit — 6 October 2026
+
+## Decision
+
+**Do not promote ViewPoint/IRESS or OST historical bars into a whole-source backtest or historical AI evaluation.** The five local IRESS OHLCV candidates remain useful for prospective shadow diagnostics. OST remains the chosen primary JSE research feed, with its missing Open and observed HLC errors retained explicitly. No source fields are combined. B5 remains PARTIAL_CLOSED and admits zero real trades.
+
+## What was checked
+
+The signed-in Standard Bank OST SOL price-history view exposes Date, Closing (c), High (c), Low (c), Volume, deals and value, but no Open or adjustment/volume definition. The saved 2,000-row SOL export has SHA256 `ebacdc302d898b1d737f721ebe74710578d53143d296513392817a7af57556fd`. The broker's [ViewPoint charting guide](https://securities.standardbank.co.za/ost/sp/FrontOfficeSecure/ContentManagement/TransferFile.aspx?resource=%5CDownloadableDocument%5CHow%20to%20Guides%5CViewPoint%20UserGuide%20-%20%20Charting.pdf&method=Open), read through the signed-in OST platform page, is 20 pages (download SHA256 `0b8ace6722609ca98a403211fc67d230dbee6a055aa07783d27a0cf4ffb0c760`) and explains chart settings/drawing tools. It does not specify RAW versus adjusted historical prices, daily volume eligibility, revision policy or historical as-of availability. The [Iress ViewPoint user guide](https://www.iress.com/media/documents/AU_ViewPoint_User_Guide.pdf) describes charting and dividend widgets but likewise does not supply these contracts. A chart's Dividends overlay is an event display, not evidence of how its OHLC is adjusted.
+
+The independent five-instrument comparison in [R7](MULTI_SOURCE_PRICE_RESOLUTION.md#r7-viewpoint-check--6-october-2026) has 1,250/1,250 matching OST/IRESS closes. High/low differences occur on every instrument. Volume differs for SOL and STX40 on 8 December 2025 and 19 January 2026, and for STXRES on 19 January 2026. As a concrete provider question, STX40's 19 January daily volume is 108,459 in OST versus 1,024,005 in IRESS; identical closes cannot settle the volume rule. The earlier Sasol 30-minute sums also disagree with the IRESS daily volume on all 23 tested sessions. Neither difference should be repaired or assumed to be an off-book trade rule without a provider definition.
+
+## Dated Sasol action probe
+
+[Sasol's original 26 February 2024 SENS](https://www.sasol.com/sasol-sens/202402260002a-s485997) declares a 200-cent ordinary interim dividend: cum-dividend last trade 12 March, ex-dividend 13 March, payment 18 March 2024. OST's saved `SOL` dividend record agrees on amount, last-trade and payment dates. Its saved price history reports 12 March close 14,059 cents and 13 March close 14,178 cents (12 March high/low 14,380/13,803; 13 March 14,279/13,551). The observed close rose across the ex-date; this market move cannot establish whether either history is adjusted. The IRESS captures cover only 6 October 2025–5 October 2026, so the 2024 ex-date is **outside their captured window**. [Sasol's FY2025 analyst information](https://www.sasol.com/sites/default/files/2025-12/Additional%20Information%20for%20Analysts%2030%20June%202025.pdf) says no ordinary 2025 dividend was declared. No action within the current IRESS capture can substitute for the older test.
+
+| Contract item | Current evidence | Required to close |
+| --- | --- | --- |
+| Cash-share price adjustment and corporate actions | Event dates/amount corroborated; historical chart adjustment undefined | Dated provider definition of raw/adjusted OHLC and all action types, plus SOL before/after series across 13 March 2024 |
+| Daily volume and intraday eligibility | Cross-provider and daily/intraday differences quantified | Provider definition of included trade types, reporting phases, corrections and units for each interval |
+| Revision policy | One present-day capture per instrument | Provider rule for late/corrected trades and corporate-action backfills, with version or change timestamps where available |
+| Point-in-time availability | Actual capture receipts exist from October 2026 | Source as-of/release/revision record showing what bars and action knowledge were available at each historical decision time |
+| Data rights and automation | Signed-in browser table and credential-free local import work | Broker/provider terms or supported export/API route for recurring research capture without storing login credentials |
+
+The next acquisition is a dated provider response or technical data specification for these five items, followed by an IRESS SOL chart capture spanning the 2024 ex-date if the entitlement allows it. A matching 2024 OHLC series would be a cross-check, not a substitute for the provider's adjustment and availability definitions. If that evidence cannot be obtained, use newly captured prospective sessions for learning labels while keeping historical AI/backtest claims blocked. The broker launch page says launching ViewPoint agrees to terms, so no launch/terms acceptance was performed during this audit.

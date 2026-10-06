@@ -1,4 +1,8 @@
-# Current milestone — R7 ViewPoint whole-source verification
+# Current milestone — R8 price-source contract audit
+
+R8 EVIDENCE AUDIT COMPLETED; HISTORICAL SOURCE PROMOTION BLOCKED, 6 October 2026. Renewed OST access verified a dated Sasol 200-cent ex-dividend example and its surrounding 2024 price rows. Standard Bank's ViewPoint charting guide and the visible OST history do not define raw/adjusted prices, volume eligibility, corrections or historical as-of availability. The existing IRESS captures begin in October 2025, so the 2024 event cannot yet be tested in that feed. Cross-provider price and volume differences remain unresolved. No historical AI/B5 gate changed; broker launch terms were not accepted. Full safe verification passed 968 tests and protected checks passed 54/54. See [R8 evidence](../research/PRICE_SOURCE_SEMANTICS_R8.md) and ADR 0058. No following milestone is active.
+
+# R7 ViewPoint whole-source verification
 
 R7 COMPLETED WITH NO SOURCE PROMOTION, 6 October 2026. Signed-in ViewPoint exposed complete daily OHLCV tables for Sasol, STX40, STXFIN, STXRES and STXIND. Four new sector candidates were captured and registered locally, 250 completed sessions each through 5 October. All five candidate histories match OST on 250/250 overlapping closes; their high/low and volume discrepancies remain visible. The local parser accepts ViewPoint's Copy CSV timestamp format and excludes the live session. Chart controls and available Iress documentation did not establish corporate-action adjustment, volume eligibility, revisions or historical as-of availability. OST stays primary, all IRESS candidates stay local, and B5/historical AI admission remains closed. The full safe suite passed 968 tests; protected verification passed 54/54. See [R7 evidence](../research/MULTI_SOURCE_PRICE_RESOLUTION.md#r7-viewpoint-check--6-october-2026) and ADR 0057. No following milestone is active.
 
