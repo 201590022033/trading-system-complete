@@ -1,6 +1,6 @@
 import unittest
 from datetime import datetime, timezone
-from scripts.check_swing_data_readiness import coverage, recover_sasol
+from scripts.check_swing_data_readiness import coverage, recover_sasol, recover_benchmark
 
 
 class ReadinessTests(unittest.TestCase):
@@ -44,6 +44,28 @@ class ReadinessTests(unittest.TestCase):
         self.assertEqual(r['invalid_ohlc_total'],1)
         self.assertEqual(r['charts']['SASOL']['unfinished_bars_excluded'],1)
         self.assertEqual(r['charts']['SASOL']['last_completed_session'],'2026-10-05')
+
+    def test_benchmark_close_recovery_keeps_open_missing_and_excludes_today(self):
+        raw=b'Date,Closing (c),High (c),Low (c),Volume\n06 Oct 2026,10311,10549,10227,801\n05 Oct 2026,10227,10470,10165,504250\n'
+        b=recover_benchmark(raw,self.now)
+        self.assertEqual(len(b['bars']),1)
+        self.assertEqual(b['bars'][0]['close'],102.27)
+        self.assertIsNone(b['bars'][0]['open'])
+        self.assertFalse(b['real_data_admitted'])
+
+    def test_benchmark_duplicate_nonpositive_close_and_nonfinite_volume_rejected(self):
+        header=b'Date,Closing (c),High (c),Low (c),Volume\n'
+        row=b'05 Oct 2026,10227,10470,10165,504250\n'
+        for raw in (header+row+row, header+row.replace(b'10227',b'0'),header+row.replace(b'504250',b'nan')):
+            with self.assertRaises(ValueError):recover_benchmark(raw,self.now)
+
+    def test_benchmark_bad_hlc_is_reported_never_repaired(self):
+        raw=b'Date,Closing (c),High (c),Low (c),Volume\n05 Oct 2026,10227,10470,10300,504250\n'
+        b=recover_benchmark(raw,self.now)
+        self.assertEqual(b['invalid_hlc_sessions'],['2026-10-05'])
+        self.assertEqual(b['bars'][0]['low'],103)
+        self.assertIsNone(b['bars'][0]['open'])
+        self.assertFalse(b['upload_eligible'])
 
 
 if __name__ == '__main__':

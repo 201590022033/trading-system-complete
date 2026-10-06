@@ -12,6 +12,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from application.opportunities.swing_data_quality import real_ohlc
 from application.opportunities.public_research import _available_at
+from application.opportunities.swing_technical import snapshot
 
 
 def coverage(dataset, now):
@@ -70,10 +71,41 @@ def recover_sasol(raw, reference, now):
                             'ALIGNED_BENCHMARK_SESSIONS']}
 
 
+def recover_benchmark(raw, now):
+    """OST STX40 history is HLCV: missing opens remain missing."""
+    rows = list(csv.DictReader(io.StringIO(raw.decode('utf-8-sig'))))
+    if not 1 <= len(rows) <= 10000:
+        raise ValueError('bounded OST history required')
+    bars = []
+    seen = set()
+    import math
+    for row in rows:
+        stamp = datetime.strptime(row['Date'], '%d %b %Y').date().isoformat()
+        if stamp in seen:
+            raise ValueError('duplicate OST sessions')
+        seen.add(stamp)
+        bar = {'timestamp': stamp, 'open': None}
+        for field, column in (('close','Closing (c)'),('high','High (c)'),('low','Low (c)'),('volume','Volume')):
+            value = float(row[column].replace(',', '').replace(' ', ''))
+            bar[field] = value if field == 'volume' else value/100
+        if not all(math.isfinite(bar[k]) and bar[k] > 0 for k in ('close','high','low')) or not math.isfinite(bar['volume']) or bar['volume'] < 0:
+            raise ValueError('invalid OST HLCV')
+        if _available_at(stamp) <= now:
+            bars.append(bar)
+    bars.sort(key=lambda b: b['timestamp'])
+    return {'schema':'stx40-source-recovery-v1', 'source':'OST_STX40_DAILY_HISTORY',
+        'source_sha256':hashlib.sha256(raw).hexdigest(), 'checked_at':now.isoformat(),
+        'symbol':'STX40.JO', 'currency':'ZAR', 'provider_currency':'ZAc', 'interval':'1d',
+        'bars':bars[-600:], 'missing_fields':['open'], 'purpose':'BENCHMARK_CLOSE_RETURN_ONLY',
+        'invalid_hlc_sessions':[b['timestamp'] for b in bars[-600:] if not b['low'] <= b['close'] <= b['high']],
+        'real_data_admitted':False, 'upload_eligible':False}
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--dataset', type=Path, default=ROOT/'runtime/local-swing-data/latest.json')
     parser.add_argument('--iress-sasol', type=Path)
+    parser.add_argument('--ost-stx40', type=Path, help='Explicitly identified STX40 cash ETF HLCV export')
     parser.add_argument('--output', type=Path, required=True)
     args = parser.parse_args()
     now = datetime.now(timezone.utc)
@@ -87,6 +119,16 @@ def main():
         benchmark = dataset['charts'].get('ETF_STX40', {}).get('bars', [])
         sessions = {b['timestamp'][:10] for b in benchmark if _available_at(b['timestamp']) <= now}
         report['sasol_recovery']['sessions_missing_from_benchmark'] = [b['timestamp'] for b in recovered['bars'] if b['timestamp'] not in sessions]
+        if args.ost_stx40:
+            benchmark = recover_benchmark(args.ost_stx40.read_bytes(), now)
+            (args.output/'STX40-source-recovery.json').write_text(json.dumps(benchmark, indent=2, allow_nan=False))
+            feature = snapshot(recovered, evaluated_at=now, benchmark_chart=benchmark)
+            report['paired_source_diagnostic'] = {'scope':'OFFLINE_NUMERICAL_DIAGNOSTIC_ONLY',
+                'real_data_admitted':False, 'upload_eligible':False, 'feature':feature,
+                'benchmark_source_sha256':benchmark['source_sha256'],
+                'benchmark_last_completed_session':benchmark['bars'][-1]['timestamp'] if benchmark['bars'] else None,
+                'benchmark_missing_fields':benchmark['missing_fields'],
+                'benchmark_invalid_hlc_sessions':benchmark['invalid_hlc_sessions']}
     (args.output/'Coverage-audit.json').write_text(json.dumps(report, indent=2, allow_nan=False))
     print(json.dumps({'state': 'AUDIT_SAVED_NO_UPLOAD', 'charts': len(report['charts']),
                       'invalid_ohlc_total': report['invalid_ohlc_total']}))

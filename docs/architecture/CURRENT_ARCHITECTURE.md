@@ -73,3 +73,5 @@ Local implementation navigation: [operating interface](../research/LOCAL_BACKTES
 The isolated replay now supports opt-in directional OST cash-share cost sensitivity through `domain.backtest.costs.OSTCashShareCosts`, reusing the existing published component diagnostic. It includes purchase-only tax and fees during sizing, and rejects non-ZAR/non-equity manifests. This does not wire a broker or change canonical costs. Official pilot daily sessions are now verified; action, intraday volume/interval and execution evidence still block B5 acceptance. See ADR 0049 and the [continuation record](../research/LOCAL_BACKTEST_B5_CONTINUATION.md).
 
 6 October R3: offline readiness command reuses completion/OHLC validation and recovers a separate hashed IRESS Sasol series. It does not feed or mutate cloud datasets, frozen decisions or admission. See ADR 0053 and DATA_READINESS_AUDIT.md.
+
+R3 continuation captures OST STX40 HLCV and uses completed closes for an offline benchmark comparison. Missing opens and inconsistent HLC stay explicit. Numeric Sasol coverage is complete in the separate paired diagnostic; cloud inputs and admission gates are unchanged.
