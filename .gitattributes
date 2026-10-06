@@ -8,3 +8,5 @@
 /indicator_effectiveness.py -text -filter -ident !working-tree-encoding
 /cross_asset_features.py -text -filter -ident !working-tree-encoding
 /market_profiles.py -text -filter -ident !working-tree-encoding
+
+*.sh text eol=lf
