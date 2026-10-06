@@ -1,6 +1,6 @@
 # Current milestone - R4 supplemental research integration
 
-R4 ACTIVE, 6 October 2026. Owner requested integration. Add provenance-preserving research-only supplemental charts for recovered Sasol and OST STX40. Preserve canonical Yahoo inputs, frozen decisions, model budgets and B5 admission. Verify local/cloud ingress, scheduled worker consumption and dashboard visibility.
+R4 COMPLETED, 6 October 2026. Provenance-preserving supplements are installed locally and accepted in Railway PostgreSQL: 250 IRESS Sasol OHLCV bars and 600 OST STX40 benchmark bars through 5 October. Current Sasol numerical preview is AVAILABLE. The original 21 canonical charts, frozen decisions, accounting and historical AI evaluation remain unchanged. Source/action/volume/availability semantics remain unverified and B5 remains PARTIAL_CLOSED with real-data admission false. All 950 safe tests (87.733s), 54 protected checks, JavaScript syntax checks, Windows background-launch verification and visible dashboard review passed. Final web and worker deployments are successful; local and hosted health/overview return HTTP 200. Existing next scheduled worker: 7 October at 08:00 SAST; no manual worker/model cycle was forced. Outcomes remain 25 pending / zero matured per horizon. Genuine fresh exports are required; acquisition receipts expire after four days. No following milestone is active. See [integration record](../research/SUPPLEMENTAL_RESEARCH_INTEGRATION.md).
 
 # Current milestone — R3 broker-source continuation
 

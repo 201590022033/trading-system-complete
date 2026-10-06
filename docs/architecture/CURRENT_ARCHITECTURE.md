@@ -78,3 +78,8 @@ R3 continuation captures OST STX40 HLCV and uses completed closes for an offline
 
 
 R4 integrates provenance-preserving supplemental IRESS Sasol and OST STX40 charts through dataset v2 for prospective shadow research only. Canonical Yahoo inputs, historical AI evaluation, worker schedule and B5 gates remain intact. See ADR 0054 and SUPPLEMENTAL_RESEARCH_INTEGRATION.md.
+
+
+## R4 deployed state, 6 October 2026
+
+The v2 supplemental research lane is installed in local and hosted runtimes, with durable source receipts in Railway PostgreSQL. The API reports current Sasol inputs AVAILABLE while preserving the separate last frozen worker snapshot and genuine pending labels. The canonical Yahoo lane and historical AI evaluation remain unchanged. The local Windows launcher supports a hidden persistent background process. Final web deployment 8c0d6f26-26a3-40bf-a802-8fdf9f74c5af and worker deployment c7a6ffee-5a94-4cba-8b3a-c71d2752414e are successful; public health and overview endpoints return HTTP 200. B5 source semantics/admission remain deferred.
