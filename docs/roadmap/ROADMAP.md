@@ -1,5 +1,7 @@
 # Roadmap — reconciled 5 October 2026
 
+6 October R2 COMPLETED LOCALLY: collector consolidated in the main checkout with successful saved upload; dashboard shows runtime-labelled frozen decisions, pending/matured 3/4/5-session labels and control/AI evidence. Railway learning is already scheduled; local zeros are a separate database. Verification: 932 safe tests, 54 protected checks and browser review. Real-data gates and all strategy rules are unchanged. Future observed sessions and complete OHLC remain required; no next milestone active. See ADR 0052 and [connection record](../research/DAILY_LEARNING_CONNECTION.md).
+
 6 October continuation: R1 installed in the main local dashboard; research-first navigation and Portfolio last verified in browser. Local IG credentials are absent. See [main installation](../research/MAIN_DASHBOARD_LOCAL_VERIFICATION.md); hosted deployment and real-data gates remain deferred.
 
 This is the current dependency sequence. [Current state](../CURRENT_STATE.md) is the capability inventory; [recent changes](../changes/2026-09-21-to-2026-10-05.md) is the dated implementation history. Earlier accumulated roadmap entries remain in [the checkpoint archive](../history/ROADMAP_PRE_2026-10-05.md). Old ACTIVE labels there are historical, not concurrent work.

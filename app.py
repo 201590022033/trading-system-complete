@@ -67,6 +67,8 @@ from application.opportunities.swing_research_api import create_research_bluepri
 app.register_blueprint(create_research_blueprint(runtime_repository))
 from application.opportunities.local_backtest_reports import create_local_backtest_blueprint
 app.register_blueprint(create_local_backtest_blueprint())
+from application.opportunities.learning_overview import create_learning_overview_blueprint
+app.register_blueprint(create_learning_overview_blueprint(runtime_repository))
 from market_intelligence.weekly_brief_api import create_weekly_brief_blueprint
 app.register_blueprint(create_weekly_brief_blueprint(runtime_repository))
 from application.opportunities.operator_api import create_operator_blueprint, has_access

@@ -1,0 +1,9 @@
+# ADR 0052 — Daily learning runtime and collector consolidation
+
+Accepted 6 October 2026 for owner-authorized R2. Railway already owns the scheduled paper/Swing decisions, 3/4/5-session forward labels and bounded AI hypothesis comparisons in PostgreSQL. The main local dashboard uses a separate SQLite database; its zero counters do not describe Railway. The Windows collector still runs from an isolated checkout.
+
+Consolidate the existing collector task and private sync configuration into the main checkout without resetting either database or changing strategy rules. Add a read-only learning overview with explicit LOCAL versus RAILWAY provenance. An explicitly configured local dashboard may read the existing public status endpoints of the pinned Railway deployment; it never proxies arbitrary URLs, credentials, accounts, raw data or write requests. Hosted installations use their own database to avoid recursive calls.
+
+Reuse frozen Swing 1.1.0 decisions/observational condition cohorts and 1.3.0 baseline/candidate reports. Show decision counts, pending/matured 3/4/5-session labels, present/absent controls, quality blocks and hypothetical cost basis. Forward-close outcomes are not stop/target fills, independent episodes, model-weight training or B5 admission. The collector/upload and scheduled worker remain separate; dashboard refresh never schedules learning, runs replay or calls a model.
+
+Acceptance: verify existing upload/worker and database ownership, successful main-checkout retry of the saved upload, schedule action relocation, bounded/fail-closed status projection tests, causal multi-session tests, full safe suite/protected checks, and main dashboard browser review. Missing source quality and genuinely future outcomes remain blocked/pending; no automatic promotion or live execution.
