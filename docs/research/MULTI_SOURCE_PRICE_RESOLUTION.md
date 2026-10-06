@@ -16,3 +16,5 @@ Source route status is deliberately evidence-based:
 | SharePoint | Optional storage for approved source files | It creates no market prices. [Microsoft documentation](https://learn.microsoft.com/en-us/sharepoint/sharepoint-storage-planning) |
 
 The comparison does not certify corporate-action adjustment, volume coverage, historical point-in-time availability, exchange calendar or execution prices. It never promotes IRESS, Yahoo or a future source into the OST primary lane automatically. B5 stays PARTIAL_CLOSED and historical AI remains gated. R6 removes the repeated investigative dead end by making source evidence and the next acquisition/verification action part of the normal workflow.
+
+Railway displays the generic provider route and explicitly labels alternative exports as local-only. It does not hold the captured IRESS table or pre-cutover Yahoo archive; the local dashboard is authoritative for those source-candidate checks.

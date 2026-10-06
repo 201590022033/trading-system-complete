@@ -33,7 +33,9 @@ class SourceResolutionTests(unittest.TestCase):
             archived = {'charts': {'SASOL': {'bars': [
                 {'timestamp': '2026-09-01', 'open': None, 'high': 11, 'low': 9, 'close': 10}]}}}
             (folder / 'before-ost-primary.json').write_text(json.dumps(archived))
-            report = local_audit(self.dataset(), NOW, folder)['instruments']['SASOL']
+            complete_report = local_audit(self.dataset(), NOW, folder)
+            self.assertEqual(complete_report['candidate_scope'], 'LOCAL_SOURCE_ARCHIVE')
+            report = complete_report['instruments']['SASOL']
             self.assertEqual(report['alternatives']['IRESS']['state'], 'WHOLE_SOURCE_OHLCV_CANDIDATE')
             self.assertEqual(report['alternatives']['IRESS']['overlap_sessions'], 11)
             self.assertEqual(report['alternatives']['IRESS']['close_mismatches'], 0)

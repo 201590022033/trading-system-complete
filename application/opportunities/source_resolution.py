@@ -151,6 +151,7 @@ def audit(dataset, now, alternatives=None, yahoo_archive=None):
             'whole_source_only': True, 'real_data_admitted': False}
     return {'schema': 'price-source-resolution-v1', 'checked_at': now.isoformat(),
         'instruments': result, 'primary_policy_unchanged': True,
+        'candidate_scope': 'PROVIDER_ROUTE_ONLY',
         'source_semantics_verified': False, 'real_data_admitted': False,
         'sharepoint_role': 'OPTIONAL_FILE_STORAGE_NOT_MARKET_DATA_PROVIDER'}
 
@@ -165,6 +166,7 @@ def local_audit(dataset, now, folder=ROOT):
         result = audit(dataset, now)
         result['candidate_archive_state'] = 'UNAVAILABLE_INVALID_LOCAL_ARCHIVE'
         return result
+    result['candidate_scope'] = 'LOCAL_SOURCE_ARCHIVE'
     for key, providers in candidates.get('charts', {}).items():
         chart = providers.get('IRESS')
         if chart and key in result['instruments']:
