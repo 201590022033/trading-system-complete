@@ -30,7 +30,7 @@ def initialize(repository):
 
 def validate_dataset(payload, now):
     from market_chart_registry import MARKET_CHART_INSTRUMENTS
-    if not isinstance(payload, dict) or payload.get("schema") != "local-swing-dataset-v1":
+    if not isinstance(payload, dict) or payload.get("schema") not in {"local-swing-dataset-v1", "local-swing-dataset-v2"}:
         raise ValueError("dataset schema required")
     observed = timestamp(payload["observed_at"])
     if observed > now or now-observed > timedelta(days=4):
@@ -65,8 +65,23 @@ def validate_dataset(payload, now):
                 clean[field] = value
             normalized.append(clean)
         cleaned[key] = {"symbol": chart["symbol"], "interval": "1d", "currency": "ZAR", "bars": normalized}
-    return {"schema": payload["schema"], "observed_at": observed.isoformat(), "source": "LOCAL_YAHOO_DAILY_RAW",
+    result = {"schema": payload["schema"], "observed_at": observed.isoformat(), "source": "LOCAL_YAHOO_DAILY_RAW",
             "charts": cleaned, "calendar": "OBSERVED_PROVIDER_SESSIONS_NOT_VERIFIED", "estimates_admitted": False}
+    if payload['schema'] == 'local-swing-dataset-v2':
+        from .supplemental_data import MAPPINGS, validate_receipt
+        supplements = payload.get('research_charts')
+        if not isinstance(supplements, dict) or not 1 <= len(supplements) <= 2 or set(supplements)-set(MAPPINGS):
+            raise ValueError('bounded supplemental research required')
+        normalized = validate_dataset({'schema':'local-swing-dataset-v1',
+            'observed_at':payload['observed_at'], 'charts':supplements}, now)['charts']
+        for key, chart in normalized.items():
+            chart['provenance'] = validate_receipt(key, {**chart, 'provenance':supplements[key]['provenance']}, observed)
+            chart['research_only'] = True
+            chart['historical_evaluation_allowed'] = False
+        result['research_charts'] = normalized
+    elif payload.get('research_charts'):
+        raise ValueError('v2 required for supplemental data')
+    return result
 
 
 def accept_dataset(repository, payload, now):
@@ -106,6 +121,15 @@ class UploadedFetcher:
                         row["timestamp"] += "T00:00:00+02:00"
                     return result
         raise ValueError("local upload unavailable")
+
+    def get_research_chart(self, symbol, now):
+        from .supplemental_data import current_research_charts
+        for chart in current_research_charts(latest_dataset(self.repository), now).values():
+            if chart['symbol'] == symbol:
+                for row in chart['bars']:
+                    row['timestamp'] += 'T00:00:00+02:00'
+                return chart
+        return None
 
 
 def validate_proposal(raw):
@@ -274,7 +298,9 @@ def run_research(repository, now, proposer=cloud_proposal):
 def research_status(repository, now):
     dataset = latest_dataset(repository)
     records = repository.paper_records(ACCOUNT, "research-run", as_of=now.isoformat(), limit=1)
+    from .supplemental_data import input_status
     return {"state": "LOCAL_DATA_RECEIVED" if dataset else "WAITING_FOR_LOCAL_DATA",
             "data_state": "STALE" if dataset and now-timestamp(dataset["observed_at"]) > timedelta(days=4) else "CURRENT" if dataset else "MISSING",
             "source_observed_at": dataset["observed_at"] if dataset else None,
-            "last_run": records[0] if records else None, "live_execution": False}
+            "last_run": records[0] if records else None, "live_execution": False,
+            "research_inputs": input_status(dataset, now)}

@@ -174,6 +174,13 @@ def record_and_label(repository, account_id, snapshots, charts, *, evaluated_at,
     for decision in decisions:
         if reference(decision) != ref or decision["instrument_key"] not in charts:
             continue
+        current_source = charts[decision['instrument_key']].get('provenance')
+        frozen_source = decision['features'].get('source_provenance')
+        if current_source or frozen_source:
+            # A provider switch cannot silently label a previously frozen decision.
+            if not current_source or not frozen_source or any(current_source[k] != frozen_source[k]
+                    for k in ('provider', 'origin_symbol', 'price_basis', 'volume_basis')):
+                continue
         try:
             bars = usable_bars(charts[decision["instrument_key"]], now)
             later = [bar for bar in bars if _available_at(bar["timestamp"]) > timestamp(decision["decision_at"])]
@@ -197,6 +204,8 @@ def record_and_label(repository, account_id, snapshots, charts, *, evaluated_at,
                  "matured_at": _available_at(exit_bar["timestamp"]).isoformat(),
                  "recorded_at": now.isoformat(), "gross_return": gross,
                  "net_return_assumed": gross-.001, "round_trip_cost_bps_assumed": 10,
+                 **({'source_provenance': current_source, 'research_only': True,
+                     'historical_evaluation_allowed': False} if current_source else {}),
                  "basis": "NEXT_OBSERVABLE_CLOSE_FORWARD_RETURN_NOT_STOP_TARGET_SIMULATION"})
     outcomes = [row for row in repository.paper_records(account_id, OUTCOME_KIND, as_of=now.isoformat(), limit=READ_LIMIT)
                 if reference(row) == ref]

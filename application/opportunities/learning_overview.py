@@ -63,6 +63,13 @@ def project(paper, research, learning, *, source, now):
     run = research.get('last_run') or {}
     candidate = paper.get('candidate_learning') or {}
     worker = learning.get('worker_status') or {}
+    inputs = research.get('research_inputs') or {}
+    input_charts = {}
+    for key in ('SASOL', 'ETF_STX40'):
+        row = (inputs.get('charts') or {}).get(key)
+        if row:
+            input_charts[key] = {k: row.get(k) for k in ('provider','source_sha256','acquired_at','last_session','bars','purpose')}
+    input_sasol = inputs.get('sasol') or {}
     return {'schema': 'daily-learning-overview-v1', 'state': 'AVAILABLE',
         'runtime': source, 'database': 'POSTGRESQL' if source == 'RAILWAY' else learning.get('database_backend', 'LOCAL'),
         'retrieved_at': now.isoformat(), 'live_execution': False, 'automatic_promotion': False,
@@ -77,6 +84,9 @@ def project(paper, research, learning, *, source, now):
         'sasol': {'state': sasol.get('state'), 'session': sasol.get('session'),
                   'missing': sasol.get('missing', []),
                   'invalid_ohlc_days': (sasol.get('data_quality') or {}).get('invalid_ohlc_count')},
+        'research_inputs': {'state': inputs.get('state', 'UNAVAILABLE'), 'charts': input_charts,
+            'sasol': {k: input_sasol.get(k) for k in ('state','session','missing')},
+            'real_data_admitted': False, 'historical_evaluation_allowed': False},
         'selected_vs_other': {'decisions': candidate.get('decision_count'),
                               'outcomes': candidate.get('outcome_count'),
                               'independent_sessions': candidate.get('nonoverlapping_paired_sessions')},

@@ -31,6 +31,23 @@ def collect(now, fetcher, keys):
     return {"schema": "local-swing-dataset-v1", "observed_at": now.isoformat(), "charts": charts}
 
 
+def attach_supplements(dataset, supplement, now):
+    from copy import deepcopy
+    from application.opportunities.supplemental_data import current_research_charts
+    from application.opportunities.swing_research import validate_dataset
+    result = deepcopy(dataset)
+    # Upload observation is not the provider acquisition time.
+    result['observed_at'] = now.isoformat()
+    charts = current_research_charts(supplement, now)
+    if charts:
+        result.update(schema='local-swing-dataset-v2', research_charts=charts)
+    else:
+        result['schema'] = 'local-swing-dataset-v1'
+        result.pop('research_charts', None)
+    validate_dataset(result, now)
+    return result
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--upload", action="store_true")
@@ -61,6 +78,12 @@ def main():
             os.replace(staged, latest)
             (folder / (now.date().isoformat()+".json")).write_text(raw, encoding="utf-8")
             receipt.write_text(now.date().isoformat())
+    supplemental = folder / 'supplemental.json'
+    if supplemental.exists():
+        dataset = attach_supplements(dataset, json.loads(supplemental.read_text(encoding='utf-8')), now)
+        staged = latest.with_suffix('.tmp')
+        staged.write_text(json.dumps(dataset, allow_nan=False), encoding='utf-8')
+        os.replace(staged, latest)
     if args.upload or args.retry_upload:
         from urllib.parse import urlparse
         import requests

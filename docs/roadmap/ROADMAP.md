@@ -51,3 +51,6 @@ B3 completed locally with market-specific synthetic verification. B4 chronologic
 B4 completed locally: bounded indicator trials and chronological locked evaluation. B5 audit/acceptance next. No strategy adopted.
 
 B5 software/audit delivery complete; external-data acceptance BLOCKED. No subsequent milestone activated. 900 safe tests and 54 protected artifacts pass; seven defects killed.
+
+
+R4 integrates provenance-preserving supplemental IRESS Sasol and OST STX40 charts through dataset v2 for prospective shadow research only. Canonical Yahoo inputs, historical AI evaluation, worker schedule and B5 gates remain intact. See ADR 0054 and SUPPLEMENTAL_RESEARCH_INTEGRATION.md.

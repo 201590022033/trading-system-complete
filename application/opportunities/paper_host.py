@@ -150,6 +150,15 @@ def compose_paper_worker(repository, config, *, fetcher=None, clock=None, strate
         from .swing_technical import snapshot as swing_snapshot
         from .alpha_vantage_data import configured_client, repair_chart
         shadow_acquired = {**acquired, **acquired_context}
+        supplemental_keys = []
+        research_fetch = getattr(fetcher, 'get_research_chart', None) if callable(getattr(type(fetcher), 'get_research_chart', None)) else None
+        if callable(research_fetch):
+            from .supplemental_data import MAPPINGS
+            for key, mapping in MAPPINGS.items():
+                supplement = research_fetch(mapping[0], observed_at)
+                if supplement is not None:
+                    shadow_acquired[key] = supplement
+                    supplemental_keys.append(key)
         alpha_report = {"state": "NOT_CONFIGURED", "live_execution": False, "instruments": {}}
         try:
             alpha = configured_client(repository)
@@ -159,19 +168,23 @@ def compose_paper_worker(repository, config, *, fetcher=None, clock=None, strate
         if alpha is not None:
             alpha_report["state"] = "YAHOO_FIRST_CONDITIONAL_FALLBACK"
             for key in alpha.ordered_keys(shadow_acquired):
+                if key in supplemental_keys:
+                    continue
                 chart = shadow_acquired[key]
                 try:
                     shadow_acquired[key], alpha_report["instruments"][key] = repair_chart(alpha, chart, observed_at)
                 except Exception:
                     alpha_report["instruments"][key] = {"state": "REPAIR_UNAVAILABLE"}
         shadow_input = {}
-        if any(row.get("repaired_sessions") for row in alpha_report["instruments"].values()):
+        if supplemental_keys or any(row.get("repaired_sessions") for row in alpha_report["instruments"].values()):
             shadow_input["swing_charts"] = {key: {**chart, "bars": chart["bars"][-FROZEN_HISTORY_BARS:]}
                                            for key, chart in shadow_acquired.items()}
         from .ig_swing_data import configured_investigation
         ig_swing_data = configured_investigation(config.universe, observed_at)
         swing_technical = {key: {**swing_snapshot(chart, evaluated_at=observed_at,
             benchmark_chart=shadow_acquired.get(BENCHMARK)),
+            **({'source_provenance': chart['provenance'], 'research_only': True,
+                'historical_evaluation_allowed': False} if key in supplemental_keys else {}),
             **({"data_repair": alpha_report["instruments"][key]} if key in alpha_report["instruments"] else {})}
             for key, chart in shadow_acquired.items()}
         return {"charts": charts, "context_charts": context_charts,

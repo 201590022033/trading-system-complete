@@ -75,3 +75,6 @@ The isolated replay now supports opt-in directional OST cash-share cost sensitiv
 6 October R3: offline readiness command reuses completion/OHLC validation and recovers a separate hashed IRESS Sasol series. It does not feed or mutate cloud datasets, frozen decisions or admission. See ADR 0053 and DATA_READINESS_AUDIT.md.
 
 R3 continuation captures OST STX40 HLCV and uses completed closes for an offline benchmark comparison. Missing opens and inconsistent HLC stay explicit. Numeric Sasol coverage is complete in the separate paired diagnostic; cloud inputs and admission gates are unchanged.
+
+
+R4 integrates provenance-preserving supplemental IRESS Sasol and OST STX40 charts through dataset v2 for prospective shadow research only. Canonical Yahoo inputs, historical AI evaluation, worker schedule and B5 gates remain intact. See ADR 0054 and SUPPLEMENTAL_RESEARCH_INTEGRATION.md.
