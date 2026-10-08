@@ -45,6 +45,14 @@ Final review also found a validation failure could return a locally attached cha
 
 Final verification: 38 focused tests, 980 safe offline tests (92.942 seconds), 54/54 protected artifact checks and JavaScript syntax check pass. Local dashboard restarted hidden and verified visibly. Capture and source evidence are retained in ignored runtime storage, not committed broker files.
 
+## Hosted acceptance
+
+Code commit `59f84d4b8377949a9a1d0d7cefd26c1be64e44cf` is pushed. Railway web deployment `ddf19789-9357-4cdd-9291-3f5dda82d799` and worker deployment `9088517e-92c0-4410-9ca3-aaadd27530b6` succeeded. The normal authenticated collector upload returned success; its optional weekly model hook was disabled for this invocation only. Both services retain SHADOW configuration and PostgreSQL, with no migration or hosted settings change.
+
+Hosted status, onboarding, learning overview and health checks verify the same IRESS raw hash/acquisition, 536 completed bars, Open R237.30, ATR14 8.7517905282 and AVAILABLE/no missing inputs. Hosted exact differences agree with the local independent oracle. Canonical Sasol remains the same OST 600-bar HLCV history through 5 October. B5 admission and execution remain false; historical AI gate is `OST_SOURCE_SEMANTICS_UNVERIFIED`. Frozen decision time/counts/features/horizon counts remain unchanged. The worker's existing 8 October 06:03 UTC heartbeat is unchanged; next scheduled run is 9 October 06:00 UTC / 08:00 SAST. No manual worker/model cycle was forced. Older frozen PARTIAL evidence remains visible until a genuinely new scheduled observation, separate from current AVAILABLE preview.
+
+The independent reviewer inspected the hosted receipt and accepted numerical integration closure. R11 is complete; the broker-cost investigation remains partial as documented below. Hosted verification is retained in `diagnostics/2026-10-08-hosted-verification.json`; no private account evidence is uploaded.
+
 ## Cost inspection and bounded remaining evidence
 
 The [official OST tariff page](https://onlinesharetrading.standardbank.co.za/standimg/OST/fees-and-costs.html) was inspected on 8 October. It has no established effective date and conflicting Strate footnotes; its statutory table supports the existing cash-share sensitivity: brokerage 0.5%, minimum R110 excluding VAT; purchase-only STT 0.25%; Strate 0.006018% bounded by R6.29/R142.20; levy 0.00033%. Dated account-specific applicability, levy VAT and invoice rounding remain unverified. No cost adapter was changed.
