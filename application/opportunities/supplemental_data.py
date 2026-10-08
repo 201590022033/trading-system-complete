@@ -43,7 +43,15 @@ def validate_receipt(key, chart, observed):
 def current_research_charts(dataset, now):
     if (dataset or {}).get('schema') == 'local-swing-dataset-v3':
         from .ost_data import fresh_charts
-        return fresh_charts(dataset, now)
+        result = fresh_charts(dataset, now)
+        for key, chart in dataset.get('research_charts', {}).items():
+            # An explicitly selected expired research receipt does not silently
+            # fall back to another provider for the same numerical snapshot.
+            result.pop(key, None)
+            acquired = timestamp(chart['provenance']['acquired_at'])
+            if acquired <= now and now-acquired <= timedelta(days=4):
+                result[key] = deepcopy(chart)
+        return result
     result = {}
     for key, chart in (dataset or {}).get('research_charts', {}).items():
         acquired = timestamp(chart['provenance']['acquired_at'])
@@ -62,10 +70,16 @@ def input_status(dataset, now):
         'schema': (dataset or {}).get('schema'), 'real_data_admitted': False,
         'historical_evaluation_allowed': False,
         'charts': {key: {'provider': c['provenance']['provider'],
+            'origin_symbol': c['provenance']['origin_symbol'],
+            **{field: c['provenance'][field] for field in ('price_basis', 'volume_basis', 'historical_availability')},
             'source_sha256': c['provenance']['source_sha256'],
             'acquired_at': c['provenance']['acquired_at'],
             'last_session': c['bars'][-1]['timestamp'],
-            'bars': len(c['bars']), 'purpose': c['provenance']['purpose']} for key,c in charts.items()},
+            'bars': len(c['bars']), 'purpose': c['provenance']['purpose'],
+            'missing_open_bars': sum(b.get('open') is None for b in c['bars']),
+            'latest_open': c['bars'][-1].get('open')} for key,c in charts.items()},
         'sasol': {'state': feature['state'], 'session': feature.get('session'),
-                  'missing': feature.get('missing', [])} if feature else None,
+                  'missing': feature.get('missing', []), 'values': feature.get('values'),
+                  'provider': sasol['provenance']['provider'],
+                  'latest_open': sasol['bars'][-1].get('open')} if feature else None,
         'limitations': 'Current input preview, not a frozen decision or matured outcome. Source adjustment/actions, volume and historical availability remain unverified.'}

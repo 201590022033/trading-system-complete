@@ -116,6 +116,20 @@ def normalize(payload, now):
         chart.update(provenance={**p, 'acquired_at': acquired.isoformat()},
                      research_only=True, historical_evaluation_allowed=False)
     cleaned.update(schema=SCHEMA, source='STANDARD_BANK_OST_DAILY_EXPORT', source_policy=POLICY)
+    if 'research_charts' in payload:
+        # A complete alternative chart is a separate numerical shadow input.
+        # It never replaces or supplies individual fields to the OST chart.
+        research = payload['research_charts']
+        if not isinstance(research, dict) or set(research) != {'SASOL'}:
+            raise ValueError('explicit Sasol IRESS research chart required')
+        from .supplemental_data import validate_receipt
+        normalized = validate_dataset({'schema': 'local-swing-dataset-v1',
+            'observed_at': payload['observed_at'], 'charts': research}, now)['charts']
+        for key, chart in normalized.items():
+            chart['provenance'] = validate_receipt(key,
+                {**chart, 'provenance': research[key]['provenance']}, observed)
+            chart.update(research_only=True, historical_evaluation_allowed=False)
+        cleaned['research_charts'] = normalized
     return cleaned
 
 

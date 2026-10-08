@@ -9,7 +9,7 @@ from flask import Flask
 from application.opportunities.ost_data import SCHEMA, POLICY, parse_export
 from application.opportunities.ost_data_api import create_ost_blueprint
 from application.opportunities.source_resolution import (
-    audit, install_iress_candidate, local_audit, parse_iress_export,
+    audit, install_iress_candidate, local_audit, parse_iress_export, _comparison,
 )
 
 NOW = datetime(2026, 10, 6, 12, tzinfo=timezone.utc)
@@ -21,6 +21,22 @@ IRESS = ('Date,Open,High,Low,Close,% Change,% Change vs Average,Volume\n' +
 
 
 class SourceResolutionTests(unittest.TestCase):
+    def test_exact_one_cent_and_volume_differences_have_independent_expected_counts(self):
+        # Fixed integer answers avoid the old >.01 binary-float comparator.
+        base = {'bars': [dict(timestamp='2026-07-16', open=None, high=290.42, low=276.52, close=280.01, volume=100),
+                         dict(timestamp='2026-02-04', open=None, high=144.03, low=135.56, close=140, volume=200)]}
+        other = {'bars': [dict(timestamp='2026-07-16', open=280, high=290.43, low=276.52, close=280.01, volume=101),
+                          dict(timestamp='2026-02-04', open=140, high=144.03, low=135.55, close=140, volume=200)]}
+        report = _comparison(base, other)
+        self.assertEqual((report['high_low_mismatches'], report['close_mismatches'], report['volume_mismatches']), (2,0,1))
+        self.assertEqual(report['open_missing_primary'], 2)
+        self.assertEqual(report['session_differences'], [
+            {'session':'2026-07-16','fields':{'high':{'primary':29042,'alternative':29043,'delta':1,'unit':'ZAc'},
+               'volume':{'primary':100,'alternative':101,'delta':1,'unit':'VOLUME_UNITS_UNVERIFIED'}}},
+            {'session':'2026-02-04','fields':{'low':{'primary':13556,'alternative':13555,'delta':-1,'unit':'ZAc'}}}])
+        other['bars'][0]['volume'] = 101.5
+        with self.assertRaises(ValueError): _comparison(base, other)
+
     def dataset(self):
         return {'schema': SCHEMA, 'source_policy': POLICY, 'observed_at': NOW.isoformat(),
                 'charts': {'SASOL': parse_export(OST, 'SASOL', NOW.isoformat(), NOW)}}

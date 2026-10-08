@@ -1,6 +1,8 @@
 """Read-only multi-source OHLCV candidates; never splice provider fields."""
 import csv
 from datetime import datetime, timedelta, timezone
+from copy import deepcopy
+from decimal import Decimal
 from hashlib import sha256
 import io
 import json
@@ -83,6 +85,44 @@ def read_candidates(folder=ROOT):
     return json.loads(path.read_text(encoding='utf-8')) if path.exists() else {'schema': SCHEMA, 'charts': {}}
 
 
+def attach_iress_research(dataset, now, folder=ROOT):
+    """Bind the complete Sasol numerical research chart to actual archived bytes."""
+    result = deepcopy(dataset)
+    result.pop('research_charts', None)
+    if result.get('schema') != 'local-swing-dataset-v3':
+        return result
+    try:
+        candidate = read_candidates(folder).get('charts', {}).get('SASOL', {}).get('IRESS')
+        if not candidate:
+            return result
+        raw = (folder / 'alternative-exports' /
+            ('SASOL-IRESS-' + candidate['source_sha256'] + '.csv')).read_bytes()
+        if sha256(raw).hexdigest() != candidate['source_sha256']:
+            raise ValueError('IRESS raw receipt hash mismatch')
+        acquired = timestamp(candidate['acquired_at'])
+        if not timedelta(0) <= now-acquired <= timedelta(days=4):
+            raise ValueError('IRESS research receipt expired')
+        # Reproduce the capture's completed window, rather than treating its
+        # then-live trailing row as complete when the raw bytes are read later.
+        parsed = parse_iress_export(raw, 'SASOL', 'SOL.JSE', candidate['acquired_at'], acquired)
+        if parsed != candidate:
+            raise ValueError('IRESS candidate differs from archived observations')
+        chart = {key: parsed[key] for key in ('symbol', 'currency', 'interval', 'bars')}
+        chart['provenance'] = {key: parsed[key] for key in
+            ('provider', 'origin_symbol', 'source_sha256', 'acquired_at',
+             'price_basis', 'volume_basis', 'historical_availability')}
+        chart['provenance']['purpose'] = 'OHLCV'
+        from .ost_data import normalize
+        # Preview/upload observation can be later than the saved OST import.
+        # Build separately so failed normalization cannot leak an attachment.
+        return normalize({**result, 'observed_at': now.isoformat(),
+                          'research_charts': {'SASOL': chart}}, now)
+    except (ValueError, KeyError, TypeError, OSError, UnicodeError, OverflowError):
+        # Canonical OST collection may continue, but no invalid alternative
+        # enters the numerical lane or acquires a new receipt timestamp.
+        return result
+
+
 def install_iress_candidate(raw, instrument_id, origin_symbol, acquired_at, now, folder=ROOT):
     chart = parse_iress_export(raw, instrument_id, origin_symbol, acquired_at, now)
     existing = read_candidates(folder)
@@ -109,15 +149,42 @@ def install_iress_candidate(raw, instrument_id, origin_symbol, acquired_at, now,
 def _comparison(primary, alternative):
     base = {b['timestamp'][:10]: b for b in primary['bars']}
     joined = [(base[b['timestamp']], b) for b in alternative['bars'] if b['timestamp'] in base]
-    return {'overlap_sessions': len(joined),
-        'close_mismatches': sum(abs(a['close']-b['close']) > 0.01 for a,b in joined),
-        'high_low_mismatches': sum(abs(a['high']-b['high']) > 0.01 or abs(a['low']-b['low']) > 0.01 for a,b in joined),
-        'volume_mismatches': sum(abs(a['volume']-b['volume']) > 0 for a,b in joined)}
+    counts = {field + '_mismatches': 0 for field in ('open', 'high', 'low', 'close', 'volume')}
+    missing = {'open_missing_primary': 0, 'open_missing_candidate': 0}
+    differences, hl_dates = [], 0
+    for a, b in joined:
+        fields = {}
+        for field in ('open', 'high', 'low', 'close', 'volume'):
+            x, y = a.get(field), b.get(field)
+            if x is None or y is None:
+                if field == 'open':
+                    missing['open_missing_primary'] += x is None
+                    missing['open_missing_candidate'] += y is None
+                continue
+            scale = 1 if field == 'volume' else 100
+            x, y = Decimal(str(x))*scale, Decimal(str(y))*scale
+            if x != x.to_integral_value() or y != y.to_integral_value():
+                raise ValueError('whole cents and volume units required for source comparison')
+            x, y = int(x), int(y)
+            if x != y:
+                counts[field + '_mismatches'] += 1
+                fields[field] = {'primary': x, 'alternative': y, 'delta': y-x,
+                    'unit': 'VOLUME_UNITS_UNVERIFIED' if field == 'volume' else 'ZAc'}
+        hl_dates += bool(set(fields) & {'high', 'low'})
+        if fields:
+            differences.append({'session': b['timestamp'], 'fields': fields})
+    return {'overlap_sessions': len(joined), **counts, **missing,
+        'high_low_mismatches': hl_dates, 'session_differences': differences,
+        'comparison_basis': 'EXACT_INTEGER_CENTS_AND_VOLUME_UNITS'}
 
 
 def audit(dataset, now, alternatives=None, yahoo_archive=None):
     """Resolve the next evidence action per stock without changing any input chart."""
     primary = (dataset or {}).get('charts', {})
+    uploaded_research = alternatives is None and bool((dataset or {}).get('research_charts'))
+    if uploaded_research:
+        alternatives = {'charts': {key: {'IRESS': {**chart, **chart['provenance'], 'instrument_id': key}}
+            for key, chart in dataset['research_charts'].items()}}
     candidates = (alternatives or {}).get('charts', {})
     legacy = (yahoo_archive or {}).get('charts', {})
     result = {}
@@ -162,7 +229,7 @@ def audit(dataset, now, alternatives=None, yahoo_archive=None):
             'whole_source_only': True, 'real_data_admitted': False}
     return {'schema': 'price-source-resolution-v1', 'checked_at': now.isoformat(),
         'instruments': result, 'primary_policy_unchanged': True,
-        'candidate_scope': 'PROVIDER_ROUTE_ONLY',
+        'candidate_scope': 'UPLOADED_RESEARCH_RECEIPT' if uploaded_research else 'PROVIDER_ROUTE_ONLY',
         'source_semantics_verified': False, 'real_data_admitted': False,
         'sharepoint_role': 'OPTIONAL_FILE_STORAGE_NOT_MARKET_DATA_PROVIDER'}
 

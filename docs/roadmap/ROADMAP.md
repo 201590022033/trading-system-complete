@@ -1,4 +1,8 @@
-# R10 prospective price outcomes
+# R11 IRESS numerical Open routing
+
+8 October 2026: a separate whole-source IRESS Sasol research chart extends v3 collection/upload without replacing canonical OST. Current numerical inputs are AVAILABLE through 7 October, with observed Open, aligned fresh OST benchmark and explicit unverified definitions. Two R10 captures have no mature outcomes. Exact integer comparisons retain all unresolved high/low/volume differences. B5/historical AI/execution gates remain closed. See [R11 record](../research/IRESS_OPEN_ROUTING_R11.md) and ADR 0061. Final hosted integration verification is active; no next milestone has begun.
+
+## Prior R10 record
 
 R10 COMPLETED LOCALLY, 6 October 2026: same-source, forward-only 3/4/5 observed-session price cohorts are available from future captures. No actual cohort exists yet; B5/historical AI and execution gates remain closed. See [R10 record](../research/PROSPECTIVE_PRICE_OUTCOMES_R10.md) and ADR 0060. No following milestone active.
 

@@ -1,5 +1,9 @@
 # Current project state — 5 October 2026
 
+## R11 current override — 8 October 2026
+
+Sasol's separate full IRESS chart now reaches numerical shadow research through OST v3 collection and normalization. Current input through 7 October is AVAILABLE with observed daily Open R237.30 and an aligned freshly exported OST STX40 benchmark. Canonical OST Sasol history still has no Open. Two immutable IRESS captures yield zero mature R10 outcomes; provider high/low/volume differences remain explicit. Historical B5 admission/AI evaluation and live execution stay gated. Cost evidence remains assumption-limited after a supposedly delayed CFD page automatically fetched a paid quote; no order was submitted and further authenticated navigation stopped. See [R11 evidence](research/IRESS_OPEN_ROUTING_R11.md).
+
 ## R6 current override — 6 October 2026
 
 The local dashboard now reports a per-stock multi-source resolution action and validates separately captured ViewPoint/IRESS daily histories. Sasol has a 250-bar IRESS whole-source OHLCV candidate with 250 matching OST closes. Saved Yahoo histories are checked for structural defects without becoming fallback prices. The scheduled collector saves the same local audit. ShareData and JSE are potential export routes pending format/access evidence; SharePoint can store files but cannot supply prices. The OST primary feed and historical AI/B5 safety gates remain unchanged.

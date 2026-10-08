@@ -26,9 +26,12 @@ def create_ost_blueprint(factory, folder=ROOT):
             try: data = latest_dataset(repo)
             finally: repo.close()
         result = coverage(data, now)
-        from .source_resolution import audit, local_audit
+        from .source_resolution import audit, local_audit, attach_iress_research
         result['source_resolution'] = (audit(data, now) if os.environ.get('RAILWAY_ENVIRONMENT_ID')
                                        else local_audit(data, now, folder))
+        from .supplemental_data import input_status
+        preview_data = data if os.environ.get('RAILWAY_ENVIRONMENT_ID') or not data else attach_iress_research(data, now, folder)
+        result['numerical_research'] = input_status(preview_data, now)
         if not os.environ.get('RAILWAY_ENVIRONMENT_ID'):
             from .prospective_prices import capture_summary, prospective_outcomes
             result['prospective_prices'] = capture_summary(folder)

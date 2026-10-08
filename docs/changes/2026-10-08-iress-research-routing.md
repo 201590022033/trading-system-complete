@@ -1,0 +1,5 @@
+# 8 October 2026 — IRESS numerical Open routing
+
+Extended the existing OST v3 collector, validation and research selector with a separate raw-bound Sasol IRESS chart. Observed Open now reaches numerical technical shadow calculations, without changing canonical OST fields, historical AI admission, frozen decisions or execution. Day-two capture and fresh OST benchmark produce AVAILABLE inputs through 7 October. Exact-cent/whole-unit audits expose unresolved provider differences locally and from the uploaded chart.
+
+Three independent investigations and reviewer reconciliation preceded implementation; failed expectations were diagnosed before continuation. Final local verification: 38 focused tests, 980 safe tests and 54 protected checks. Broker cost evidence remains assumption-limited following an unexpected 19c quotes-bank deduction from a supposedly delayed CFD route; no order was submitted and authenticated navigation stopped. See [R11 evidence](../research/IRESS_OPEN_ROUTING_R11.md) and ADR 0061.

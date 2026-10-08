@@ -70,7 +70,8 @@ def main():
         if not dataset['charts']:
             print(json.dumps({'state': 'OST_EXPORTS_EXPIRED', 'charts': 0, 'yahoo_fallback': False}))
             return 2
-        dataset = validate_dataset(dataset, now)
+        from application.opportunities.source_resolution import attach_iress_research
+        dataset = validate_dataset(attach_iress_research(dataset, now, folder), now)
         from application.opportunities.ost_data import atomic_json
         atomic_json(latest, dataset)
         from application.opportunities.source_resolution import local_audit
