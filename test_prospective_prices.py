@@ -7,6 +7,53 @@ from application.opportunities.prospective_prices import capture_summary, prospe
 
 
 class ProspectivePriceTests(unittest.TestCase):
+    def test_morning_receipts_count_completed_anchors_not_acquisition_dates(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            folder = Path(tmp)
+            for index in range(3):
+                session = f'2026-10-{6 + index:02d}'
+                bars = [{'timestamp': session, 'high': 12, 'low': 9, 'close': 11}]
+                record_capture(folder, 'SASOL', 'IRESS', {'bars': bars},
+                               f'2026-10-{7 + index:02d}T07:00:00+00:00', f'{index:064x}')
+                summary = capture_summary(folder)['sources'][0]
+                self.assertEqual(summary['later_observed_sessions'], index)
+                self.assertFalse(summary['prospective_outcome_ready'])
+            outcomes = prospective_outcomes(folder)['sources'][0]
+            self.assertEqual(outcomes['first_seen_sessions'], 3)
+            self.assertTrue(all(c['clean_samples'] == 0 and c['pending'] == 3
+                                for c in outcomes['cohorts'].values()))
+
+    def test_readiness_counts_one_anchor_per_export_and_keeps_four_session_threshold(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            folder = Path(tmp)
+            def capture(index, sessions, acquired):
+                bars = [{'timestamp': session, 'high': 12, 'low': 9, 'close': 11}
+                        for session in sessions]
+                record_capture(folder, 'SASOL', 'IRESS', {'bars': bars}, acquired, f'{index:064x}')
+            capture(0, ['2026-09-01', '2026-10-01'], '2026-10-02T07:00:00+00:00')
+            capture(1, ['2026-10-02', '2026-10-05', '2026-10-06'], '2026-10-07T07:00:00+00:00')
+            capture(2, ['2026-10-06'], '2026-10-07T08:00:00+00:00')
+            summary = capture_summary(folder)['sources'][0]
+            self.assertEqual(summary['later_observed_sessions'], 1)
+            for index, day in enumerate((7, 8, 9), 3):
+                capture(index, [f'2026-10-{day:02d}'], f'2026-10-{day + 1:02d}T07:00:00+00:00')
+                summary = capture_summary(folder)['sources'][0]
+                self.assertEqual(summary['later_observed_sessions'], index - 1)
+                self.assertEqual(summary['prospective_outcome_ready'], index == 5)
+
+    def test_readiness_rejects_live_stale_and_invalid_newest_rows(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            folder = Path(tmp)
+            for index, (session, acquired, close) in enumerate((
+                    ('2026-10-06', '2026-10-07T07:00:00+00:00', 11),
+                    ('2026-10-08', '2026-10-08T07:00:00+00:00', 11),
+                    ('2026-10-07', '2026-10-12T07:00:00+00:00', 11),
+                    ('2026-10-09', '2026-10-10T07:00:00+00:00', 15))):
+                record_capture(folder, 'SASOL', 'IRESS', {'bars': [
+                    {'timestamp': session, 'high': 12, 'low': 9, 'close': close}]},
+                    acquired, f'{index:064x}')
+            self.assertEqual(capture_summary(folder)['sources'][0]['later_observed_sessions'], 0)
+
     def test_forward_only_same_source_horizons_and_revision_exclusion(self):
         with tempfile.TemporaryDirectory() as tmp:
             folder = Path(tmp)

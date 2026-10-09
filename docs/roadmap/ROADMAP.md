@@ -1,5 +1,7 @@
 # R11 IRESS numerical Open routing
 
+9 October continuation: scheduled capture 3/6 and separate OST Sasol/STX40 exports uploaded and verified through completed 8 October. Reviewer-approved capture-counter defect fixed; three IRESS anchors still yield no mature outcomes. Actual one-CFD fees/financing corroborated by a dated statement and current account tariffs observed read-only, with private evidence offline. B5/source semantics/AI/execution gates unchanged; no new feature milestone active. See [capture and evidence record](../research/R10_CAPTURE_2026_10_09.md).
+
 R11 COMPLETED, 8 October 2026: a separate whole-source IRESS Sasol research chart extends v3 collection/upload without replacing canonical OST. Local and hosted numerical inputs are AVAILABLE through 7 October, with observed Open, aligned fresh OST benchmark and explicit unverified definitions. Two R10 captures have no mature outcomes. Exact integer comparisons retain all unresolved high/low/volume differences. Independent hosted acceptance verifies provenance, immutable frozen decisions and unchanged B5/historical AI/execution gates. Cost investigation remains assumption-limited. See [R11 record](../research/IRESS_OPEN_ROUTING_R11.md) and ADR 0061. No following milestone is active.
 
 ## Prior R10 record

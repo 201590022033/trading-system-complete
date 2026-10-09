@@ -46,6 +46,8 @@ def capture_summary(folder):
             revisions = 0
             recent_sessions = set()
             later_sessions = set()
+            baseline_session = None
+            baseline_acquired = None
             latest = None
             for path in files:
                 capture = json.loads(path.read_text(encoding='utf-8'))
@@ -55,6 +57,23 @@ def capture_summary(folder):
                 if first is None or acquired < first:
                     first = acquired
                 latest = max(latest, acquired) if latest else acquired
+                # A morning receipt anchors yesterday's completed session, not
+                # the receipt's calendar date. Each later export contributes at
+                # most its newest session; older context is never prospective.
+                newest = max(capture['bars'], key=lambda bar: bar['timestamp'], default=None)
+                if newest:
+                    session = newest['timestamp'][:10]
+                    session_time = timestamp(session + 'T00:00:00+00:00')
+                    from .public_research import _available_at
+                    eligible = (acquired - timedelta(days=4) <= session_time <= acquired
+                                and _available_at(session) <= acquired
+                                and newest.get('close') and newest.get('high') and newest.get('low')
+                                and newest['low'] <= newest['close'] <= newest['high'])
+                    if eligible:
+                        if baseline_session is None:
+                            baseline_session, baseline_acquired = session, acquired
+                        elif acquired > baseline_acquired and session > baseline_session:
+                            later_sessions.add(session)
                 for bar in capture['bars']:
                     session = bar['timestamp'][:10]
                     digest = sha256(json.dumps(bar, sort_keys=True).encode()).hexdigest()
@@ -66,8 +85,6 @@ def capture_summary(folder):
                     session_time = timestamp(session + 'T00:00:00+00:00')
                     if acquired - timedelta(days=4) <= session_time <= acquired:
                         recent_sessions.add(session)
-                    if first and session_time.date() > first.date() and session_time <= acquired:
-                        later_sessions.add(session)
             result['sources'].append({'instrument_id': instrument.name, 'provider': provider.name,
                 'captures': len(files), 'first_captured_at': first.isoformat(),
                 'latest_captured_at': latest.isoformat(), 'recent_observed_sessions': len(recent_sessions),

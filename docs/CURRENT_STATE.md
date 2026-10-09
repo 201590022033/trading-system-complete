@@ -1,5 +1,9 @@
 # Current project state — 5 October 2026
 
+## 9 October 2026 operating update
+
+Scheduled capture 3/6 is uploaded: separate full IRESS Sasol OHLCV and canonical OST Sasol/STX40 histories through completed 8 October. Current numerical preview AVAILABLE; Open R243.63 and ATR14 9.0474. Three immutable IRESS receipts, zero revisions, 0 clean/3 pending per horizon; corrected R9 counter shows two later sessions. Actual one-CFD brokerage/VAT/financing and current account tariffs were inspected read-only and reconciled in private local evidence. No trade or admission change. Earlier frozen PARTIAL decisions remain dated evidence; imports after the scheduled worker do not rerun learning. 983 tests and 54 protected checks pass. See [9 October evidence](research/R10_CAPTURE_2026_10_09.md).
+
 ## R11 current override — 8 October 2026
 
 Sasol's separate full IRESS chart now reaches numerical shadow research through OST v3 collection and normalization. Current input through 7 October is AVAILABLE with observed daily Open R237.30 and an aligned freshly exported OST STX40 benchmark. Canonical OST Sasol history still has no Open. Two immutable IRESS captures yield zero mature R10 outcomes; provider high/low/volume differences remain explicit. Historical B5 admission/AI evaluation and live execution stay gated. Cost evidence remains assumption-limited after a supposedly delayed CFD page automatically fetched a paid quote; no order was submitted and further authenticated navigation stopped. See [R11 evidence](research/IRESS_OPEN_ROUTING_R11.md).
